@@ -1,2 +1,9 @@
 <div>City: {{ weatherGov.city$ | async | json }}</div>
-<div>Apparent temp: {{ weatherGov.apparentTemp$ | async | json }}</div>
+<div style="display: block;">
+  <canvas
+    baseChart
+    chartType="line"
+    [labels]="labels$ | async"
+    [datasets]="dataSets$ | async"
+  ></canvas>
+</div>
