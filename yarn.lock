@@ -4923,6 +4923,14 @@ methods@~1.1.2:
   resolved "https://registry.yarnpkg.com/methods/-/methods-1.1.2.tgz#5529a4d67654134edcc5266656835b0f851afcee"
   integrity sha1-VSmk1nZUE07cxSZmVoNbD4Ua/O4=
 
+micro-dash@^6.4.0:
+  version "6.4.0"
+  resolved "https://registry.yarnpkg.com/micro-dash/-/micro-dash-6.4.0.tgz#6050f6fb05b71eb711261cfaf9fdac3718ca1e49"
+  integrity sha512-+IiOyiJS9LeS9n1H7PzHBLO3UFy3awpiGy/SVxYyUvQTbh002d3a1JXy1QcX61Va+hxxrxjK9qHbDzXuOnv9Dw==
+  dependencies:
+    tslib "^1.9.0"
+    utility-types "^3.4.1"
+
 micromatch@^3.1.10, micromatch@^3.1.4:
   version "3.1.10"
   resolved "https://registry.yarnpkg.com/micromatch/-/micromatch-3.1.10.tgz#70859bc95c9840952f359a068a3fc49f9ecfac23"
@@ -6481,6 +6489,13 @@ s-ng-dev-utils@^0.10.0:
     tslib "^1.9.0"
     tslint-config-prettier "^1.18.0"
 
+s-rxjs-utils@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/s-rxjs-utils/-/s-rxjs-utils-2.3.0.tgz#ba95271eea8da2cac3cbb476727908845fabb0d4"
+  integrity sha512-x/LK2944NWUH8TEZoFaAtTUfL5Akt2GIiSVu7ghBu+6/fKpERHwg7H/LmJiz4VtATFX+nFESPI6aMtpEsMAZwA==
+  dependencies:
+    tslib "^1.9.0"
+
 safe-buffer@5.1.2, safe-buffer@~5.1.0, safe-buffer@~5.1.1:
   version "5.1.2"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.1.2.tgz#991ec69d296e0313747d59bdfd2b745c35f8828d"
@@ -7701,6 +7716,11 @@ util@^0.11.0:
   integrity sha512-HShAsny+zS2TZfaXxD9tYj4HQGlBezXZMZuM/S5PKLLoZkShZiGk9o5CzukI1LVHZvjdvZ2Sj1aW/Ndn2NB/HQ==
   dependencies:
     inherits "2.0.3"
+
+utility-types@^3.4.1:
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/utility-types/-/utility-types-3.7.0.tgz#51f1c29fa35d4267488345706efcf3f68f2b1933"
+  integrity sha512-mqRJXN7dEArK/NZNJUubjr9kbFFVZcmF/JHDc9jt5O/aYXUVmopHYujDMhLmLil1Bxo2+khe6KAIVvDH9Yc4VA==
 
 utils-merge@1.0.1:
   version "1.0.1"
