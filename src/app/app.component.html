@@ -1,9 +1,7 @@
-<div style="display: block;">
-  <canvas
-    baseChart
-    chartType="line"
-    [labels]="labels$ | async"
-    [datasets]="dataSets$ | async"
-    [options]="chartOptions$ | async"
-  ></canvas>
-</div>
+<canvas
+  baseChart
+  chartType="line"
+  [labels]="labels$ | async"
+  [datasets]="dataSets$ | async"
+  [options]="chartOptions$ | async"
+></canvas>

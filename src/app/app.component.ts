@@ -29,6 +29,8 @@ export class AppComponent {
           title: { display: true, text: `${city} Hourly Forecast` },
           elements: { line: { fill: false } },
           spanGaps: true,
+          responsive: true,
+          maintainAspectRatio: false,
           scales: {
             yAxes: [
               { position: "left", id: "dynamic", ticks: { beginAtZero: true } },
