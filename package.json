@@ -9,7 +9,8 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "worker-start": "http-server -p 8080 -c-1 dist/weather",
-    "prettier-all": "prettier --write \"**/*.{html,js,json,md,scss,ts,yml}\""
+    "prettier-all": "prettier --write \"**/*.{html,js,json,md,scss,ts,yml}\"",
+    "deploy": "ng build --prod --output-path docs --base-href /weather/"
   },
   "private": true,
   "dependencies": {
