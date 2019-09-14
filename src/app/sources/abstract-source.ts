@@ -16,7 +16,7 @@ export interface Conditions {
   amountOfPrecipitation?: number;
 }
 
-export abstract class AbstractClient {
+export abstract class AbstractSource {
   forecast$: Observable<Forecast>;
 
   constructor(injector: Injector) {

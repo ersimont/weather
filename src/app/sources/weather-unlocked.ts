@@ -1,4 +1,4 @@
-import { AbstractClient, Forecast } from "./abstract-client";
+import { AbstractSource, Forecast } from "./abstract-source";
 import { HttpClient } from "@angular/common/http";
 import { Injectable, Injector } from "@angular/core";
 
@@ -6,7 +6,7 @@ const APP_ID = "b08df994";
 const APP_KEY = "1fecb6d4e7a5696a9adbfc19c7baef8c";
 
 @Injectable({ providedIn: "root" })
-export class WeatherUnlocked extends AbstractClient {
+export class WeatherUnlocked extends AbstractSource {
   constructor(private httpClient: HttpClient, injector: Injector) {
     super(injector);
   }

@@ -14,6 +14,15 @@
     "typeRoots": ["node_modules/@types"],
     "lib": ["es2018", "dom"],
 
+    //
+    // Simonton Software additions
+    //
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "strict": true,
+
     // temp
     "skipLibCheck": true
   },

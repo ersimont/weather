@@ -1,14 +1,13 @@
-import { Component, Injector, Input, OnInit } from "@angular/core";
+import { Component, Injector, Input } from "@angular/core";
 import { combineLatest, Observable } from "rxjs";
 import { ChartDataSets, ChartOptions } from "chart.js";
 import { DatePipe } from "@angular/common";
 import { GpsCoordsService } from "../gps-coords.service";
-import { WeatherGov } from "../clients/weather-gov";
-import { WeatherUnlocked } from "../clients/weather-unlocked";
+import { WeatherGov } from "../sources/weather-gov";
+import { WeatherUnlocked } from "../sources/weather-unlocked";
 import { flatten, get, times } from "micro-dash";
-import { map, startWith, switchMap } from "rxjs/operators";
-import { cache, logValues } from "s-rxjs-utils";
-import { Conditions, Forecast } from "../clients/abstract-client";
+import { map } from "rxjs/operators";
+import { Conditions, Forecast } from "../sources/abstract-source";
 import { DirectiveSuperclass } from "s-ng-utils";
 
 @Component({
@@ -27,7 +26,6 @@ export class GraphComponent extends DirectiveSuperclass {
 
   constructor(
     datePipe: DatePipe,
-    gpsCoordsService: GpsCoordsService,
     injector: Injector,
     weatherGov: WeatherGov,
     weatherUnlocked: WeatherUnlocked,
@@ -36,7 +34,7 @@ export class GraphComponent extends DirectiveSuperclass {
 
     const thisHour = new Date().setMinutes(0, 0, 0);
     const timestamps = times(24, (i) => thisHour + i * 3600000);
-    this.labels = timestamps.map((t) => datePipe.transform(t, "h a"));
+    this.labels = timestamps.map((t) => datePipe.transform(t, "h a")!);
 
     const weatherGovDataSets$ = combineLatest(
       weatherGov.forecast$,
@@ -53,10 +51,7 @@ export class GraphComponent extends DirectiveSuperclass {
     this.dataSets$ = combineLatest(
       weatherGovDataSets$,
       weatherUnlockedDataSets$,
-    ).pipe(
-      map(flatten),
-      logValues("flattened"),
-    );
+    ).pipe(map(flatten));
   }
 }
 

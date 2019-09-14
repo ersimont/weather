@@ -1,10 +1,10 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, Injector } from "@angular/core";
-import { AbstractClient, Conditions, Forecast } from "./abstract-client";
+import { AbstractSource, Conditions, Forecast } from "./abstract-source";
 import { GpsCoords } from "../gps-coords.service";
 
 @Injectable({ providedIn: "root" })
-export class WeatherGov extends AbstractClient {
+export class WeatherGov extends AbstractSource {
   constructor(private httpClient: HttpClient, injector: Injector) {
     super(injector);
   }
