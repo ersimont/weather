@@ -1,36 +1,29 @@
 import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
+import { Injectable, Injector } from "@angular/core";
 import { AbstractClient, Conditions, Forecast } from "./abstract-client";
-import { get } from "micro-dash";
 import { GpsCoords } from "../gps-coords.service";
 
 @Injectable({ providedIn: "root" })
 export class WeatherGov extends AbstractClient {
-  constructor(private httpClient: HttpClient) {
-    super();
+  constructor(private httpClient: HttpClient, injector: Injector) {
+    super(injector);
   }
 
   async fetch(gpsCoords: [number, number]): Promise<Forecast> {
-    try {
-      const pointRes = await this.fetchPoint(gpsCoords);
-      const point = pointRes.properties;
-      const forecast = getForecastFromPoint(point);
-
-      const zoneRes = await this.fetchZone(point);
-      const zone = zoneRes.properties;
-      addZoneInfo(forecast, zone);
-
-      return forecast;
-    } catch (ex) {
-      if (
-        get(ex, ["error", "type"]) ===
-        "https://api.weather.gov/problems/InvalidPoint"
-      ) {
-        return { city: "Not available at this location" };
-      } else {
-        throw ex;
-      }
-    }
+    // try {
+    const pointRes = await this.fetchPoint(gpsCoords);
+    const zoneRes = await this.fetchZone(pointRes.properties);
+    return extractForecast(zoneRes.properties);
+    // } catch (ex) {
+    //   if (
+    //     get(ex, ["error", "type"]) ===
+    //     "https://api.weather.gov/problems/InvalidPoint"
+    //   ) {
+    //     return { city: "Not available at this location" };
+    //   } else {
+    //     throw ex;
+    //   }
+    // }
   }
 
   private fetchPoint(gpsCoords: GpsCoords) {
@@ -44,13 +37,8 @@ export class WeatherGov extends AbstractClient {
   }
 }
 
-function getForecastFromPoint(point: any) {
-  const location = point.relativeLocation.properties;
-  const forecast: Forecast = { city: `${location.city}, ${location.state}` };
-  return forecast;
-}
-
-function addZoneInfo(forecast: Forecast, zone: any) {
+function extractForecast(zone: any) {
+  const forecast: Forecast = {};
   addFromZone(forecast, zone, "temperature");
   addFromZone(forecast, zone, "apparentTemperature");
   addFromZone(forecast, zone, "dewPoint", "dewpoint");
@@ -67,6 +55,7 @@ function addZoneInfo(forecast: Forecast, zone: any) {
     "quantitativePrecipitation",
   );
   addFromZone(forecast, zone, "windSpeed");
+  return forecast;
 }
 
 function addFromZone(

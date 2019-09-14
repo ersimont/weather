@@ -1,7 +1,12 @@
-<canvas
-  baseChart
-  chartType="line"
-  [labels]="labels"
-  [datasets]="dataSets$ | async"
-  [options]="chartOptions$ | async"
-></canvas>
+<app-graph
+  [showWeatherGov]="showWeatherGov"
+  [showWeatherUnlocked]="showWeatherUnlocked"
+></app-graph>
+<label>
+  <input type="checkbox" [(ngModel)]="showWeatherGov" />
+  Weather.gov
+</label>
+<label>
+  <input type="checkbox" [(ngModel)]="showWeatherUnlocked" />
+  Weather Unlocked
+</label>

@@ -6541,6 +6541,13 @@ s-ng-dev-utils@^0.10.0:
     tslib "^1.9.0"
     tslint-config-prettier "^1.18.0"
 
+s-ng-utils@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/s-ng-utils/-/s-ng-utils-1.0.0.tgz#efccd91b4929f736946ab933a25fbb686a7cab70"
+  integrity sha512-p5cU/zv4hr2UpsFhM+wkP4sW3dkMNY+whyuoaCI1buxbThp4yy8WId2SzoYbJaL/mKWbM4bX5JkNj5DsbfYGDw==
+  dependencies:
+    tslib "^1.9.0"
+
 s-rxjs-utils@^2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/s-rxjs-utils/-/s-rxjs-utils-2.3.0.tgz#ba95271eea8da2cac3cbb476727908845fabb0d4"

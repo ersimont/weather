@@ -1,7 +1,9 @@
-import { GpsCoords } from "../gps-coords.service";
+import { GpsCoords, GpsCoordsService } from "../gps-coords.service";
+import { Observable } from "rxjs";
+import { startWith, switchMap } from "rxjs/operators";
+import { Injector } from "@angular/core";
 
 export interface Forecast {
-  city: string;
   [timestamp: number]: Conditions;
 }
 
@@ -15,5 +17,14 @@ export interface Conditions {
 }
 
 export abstract class AbstractClient {
-  abstract async fetch(gpsCoords: GpsCoords): Promise<Forecast>;
+  forecast$: Observable<Forecast>;
+
+  constructor(injector: Injector) {
+    this.forecast$ = injector.get(GpsCoordsService).$.pipe(
+      switchMap(this.fetch.bind(this)),
+      startWith({}),
+    );
+  }
+
+  protected abstract async fetch(gpsCoords: GpsCoords): Promise<Forecast>;
 }
