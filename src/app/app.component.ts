@@ -72,7 +72,7 @@ export class AppComponent {
           chancesOfPrecipitation,
           amountOfPrecipitation,
           windSpeed,
-        ]) => [
+        ]): ChartDataSets[] => [
           {
             label: "Temperature",
             data: dates.map((date) => temperature[date]),
@@ -97,6 +97,7 @@ export class AppComponent {
             label: "Chance of Precipitation",
             data: dates.map((date) => chancesOfPrecipitation[date]),
             yAxisID: "percentage",
+            fill: true,
           },
           {
             label: "Amount of Precipitation",

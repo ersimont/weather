@@ -33,7 +33,6 @@ export class WeatherGov {
     this.zone$ = point$.pipe(
       switchMap((point) => httpClient.get<any>(point.forecastGridData)),
       pluck("properties"),
-      logValues("grid"),
       cache(),
     );
 
