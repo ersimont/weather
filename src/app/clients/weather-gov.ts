@@ -10,7 +10,13 @@ import { get, keyBy, mapValues } from "micro-dash";
 export class WeatherGov {
   city$: Observable<string>;
   dates$: Observable<Array<Date>>;
-  apparentTemp$: Observable<Record<number, number>>;
+
+  temperature$: Observable<Record<number, number>>;
+  apparentTemperature$: Observable<Record<number, number>>;
+  dewPoint$: Observable<Record<number, number>>;
+  chanceOfPrecipitation$: Observable<Record<number, number>>;
+  amountOfPrecipitation$: Observable<Record<number, number>>;
+  windSpeed$: Observable<Record<number, number>>;
 
   private zone$: Observable<any>;
 
@@ -37,6 +43,7 @@ export class WeatherGov {
         (relativeLocation) =>
           `${relativeLocation.city}, ${relativeLocation.state}`,
       ),
+      startWith(""),
     );
     this.dates$ = this.zone$.pipe(
       map((zone) =>
@@ -44,7 +51,17 @@ export class WeatherGov {
       ),
       startWith({}),
     );
-    this.apparentTemp$ = this.getZoneValues$("apparentTemperature");
+
+    this.temperature$ = this.getZoneValues$("temperature");
+    this.apparentTemperature$ = this.getZoneValues$("apparentTemperature");
+    this.dewPoint$ = this.getZoneValues$("dewpoint");
+    this.chanceOfPrecipitation$ = this.getZoneValues$(
+      "probabilityOfPrecipitation",
+    );
+    this.amountOfPrecipitation$ = this.getZoneValues$(
+      "quantitativePrecipitation",
+    );
+    this.windSpeed$ = this.getZoneValues$("windSpeed");
   }
 
   private getZoneValues$(key: string) {
