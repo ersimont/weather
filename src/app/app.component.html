@@ -1,12 +1,9 @@
-<app-graph
-  [showWeatherGov]="showWeatherGov"
-  [showWeatherUnlocked]="showWeatherUnlocked"
-></app-graph>
+<app-graph></app-graph>
 <label>
-  <input type="checkbox" [(ngModel)]="showWeatherGov" />
+  <input type="checkbox" [nasModel]="store('showWeatherGov')" />
   Weather.gov
 </label>
 <label>
-  <input type="checkbox" [(ngModel)]="showWeatherUnlocked" />
+  <input type="checkbox" [nasModel]="store('showWeatherUnlocked')" />
   Weather Unlocked
 </label>

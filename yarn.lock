@@ -871,6 +871,16 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
+"@ngrx/store-devtools@^8.3.0":
+  version "8.3.0"
+  resolved "https://registry.yarnpkg.com/@ngrx/store-devtools/-/store-devtools-8.3.0.tgz#c9e9f5bd9fe7e32c605d3a85888d4da91a582b02"
+  integrity sha512-7jsmN8wz6PMKrbqHnUulMvf8OSYUZbXXOwkcXRaGqIjlnEG9RCHQL0cXuF8zB6uX5xencdEXsRVQe3MdZXWQng==
+
+"@ngrx/store@^8.3.0":
+  version "8.3.0"
+  resolved "https://registry.yarnpkg.com/@ngrx/store/-/store-8.3.0.tgz#f2eaf428ec9e8379801cc37e3f6bffe88c2af472"
+  integrity sha512-QtM5T6/wTYqAlqeW60ptqqrsBwYF7jvQHsh0yE3AnwZIQvSbLFM2t5S2kN+753v4rHiXVRrA5pLaLzjGhAKcSg==
+
 "@ngtools/webpack@8.3.4":
   version "8.3.4"
   resolved "https://registry.yarnpkg.com/@ngtools/webpack/-/webpack-8.3.4.tgz#c4cf9a077eecec76cb1a9004fb7f0feade3d43db"
@@ -5207,6 +5217,13 @@ neo-async@^2.5.0, neo-async@^2.6.0, neo-async@^2.6.1:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.1.tgz#ac27ada66167fa8849a6addd837f6b189ad2081c"
   integrity sha512-iyam8fBuCUpWeKPGpaNMetEocMt364qkCsfL9JuhjXX6dRnguRVOfk2GZaDpPjcOKiiXCPINZC1GczQ7iTq3Zw==
 
+ng-app-state@^11.1.2:
+  version "11.1.2"
+  resolved "https://registry.yarnpkg.com/ng-app-state/-/ng-app-state-11.1.2.tgz#8d429a4c1a03b2f6491b174003e715fda7248876"
+  integrity sha512-nK1Qv5xLFZDmVh66T3wZ6oCXGUg8ioV/hKSQspUNYleDXFUebenfThwm43EbFFwV5y3LeR2K4ssXKP3sY3NwxA==
+  dependencies:
+    tslib "^1.9.0"
+
 ng2-charts@^2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/ng2-charts/-/ng2-charts-2.3.0.tgz#e4dd1f7fe12dc2635d5e8c4f101a8d4c4f433754"
@@ -6529,6 +6546,13 @@ rxjs@^6.4.0:
   version "6.5.3"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.5.3.tgz#510e26317f4db91a7eb1de77d9dd9ba0a4899a3a"
   integrity sha512-wuYsAYYFdWTAnAaPoKGNhfpWwKZbJW+HgAJ+mImp+Epl7BG8oNWBCTyRM8gba9k4lk8BgWdoYm21Mo/RYhhbgA==
+  dependencies:
+    tslib "^1.9.0"
+
+s-js-utils@^5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/s-js-utils/-/s-js-utils-5.2.0.tgz#2c4c19108818f84cc9f934ec1799da89e641265e"
+  integrity sha512-0Js/q+tbf/ewp26rkJmkAQ7nUXI3qKqfRbh5gTaroJA8L4OVY1gjZ2lzfITWSsmxEcS/xM52juTc0NXgpjOCaQ==
   dependencies:
     tslib "^1.9.0"
 

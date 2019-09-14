@@ -9,6 +9,7 @@ import { flatten, get, times } from "micro-dash";
 import { map } from "rxjs/operators";
 import { Conditions, Forecast } from "../sources/abstract-source";
 import { DirectiveSuperclass } from "s-ng-utils";
+import { WeatherStore } from "../state/weather-store";
 
 @Component({
   selector: "app-graph",
@@ -21,12 +22,10 @@ export class GraphComponent extends DirectiveSuperclass {
   chartOptions = getChartOptions();
   dataSets$: Observable<Array<ChartDataSets>>;
 
-  @Input() showWeatherGov = true;
-  @Input() showWeatherUnlocked = false;
-
   constructor(
     datePipe: DatePipe,
     injector: Injector,
+    store: WeatherStore,
     weatherGov: WeatherGov,
     weatherUnlocked: WeatherUnlocked,
   ) {
@@ -38,13 +37,13 @@ export class GraphComponent extends DirectiveSuperclass {
 
     const weatherGovDataSets$ = combineLatest(
       weatherGov.forecast$,
-      this.getInput$("showWeatherGov"),
+      store("showWeatherGov").$,
     ).pipe(
       map(([forecast, show]) => getDataSets(timestamps, show ? forecast : {})),
     );
     const weatherUnlockedDataSets$ = combineLatest(
       weatherUnlocked.forecast$,
-      this.getInput$("showWeatherUnlocked"),
+      store("showWeatherUnlocked").$,
     ).pipe(
       map(([forecast, show]) => getDataSets(timestamps, show ? forecast : {})),
     );
