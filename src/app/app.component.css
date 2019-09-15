@@ -1,5 +1,13 @@
-app-graph {
-  margin: auto;
-  width: 90vw;
+:host {
+  display: grid;
   height: 90vh;
+  grid-template:
+    "g g g g g g g" 1fr
+    / auto 1fr 1fr 1fr 1fr 1fr 1fr;
+  margin: 10px;
+  grid-gap: 10px;
+}
+
+app-graph {
+  grid-area: g;
 }

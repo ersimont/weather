@@ -1,15 +1,18 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, Injector } from "@angular/core";
-import { AbstractSource, Conditions, Forecast } from "./abstract-source";
+import { AbstractSource } from "./abstract-source";
 import { GpsCoords } from "../gps-coords.service";
+import { SourceId } from "../state/source";
+import { Forecast } from "../state/forecast";
+import { Condition, Conditions } from "../state/condition";
 
 @Injectable({ providedIn: "root" })
 export class WeatherGov extends AbstractSource {
   constructor(private httpClient: HttpClient, injector: Injector) {
-    super(injector);
+    super(SourceId.WEATHER_GOV, injector);
   }
 
-  async fetch(gpsCoords: [number, number]): Promise<Forecast> {
+  async fetch(gpsCoords: [number, number]) {
     // try {
     const pointRes = await this.fetchPoint(gpsCoords);
     const zoneRes = await this.fetchZone(pointRes.properties);
@@ -39,30 +42,30 @@ export class WeatherGov extends AbstractSource {
 
 function extractForecast(zone: any) {
   const forecast: Forecast = {};
-  addFromZone(forecast, zone, "temperature");
-  addFromZone(forecast, zone, "apparentTemperature");
-  addFromZone(forecast, zone, "dewPoint", "dewpoint");
+  addFromZone(forecast, zone, Condition.TEMP, "temperature");
+  addFromZone(forecast, zone, Condition.FEEL, "apparentTemperature");
+  addFromZone(forecast, zone, Condition.DEW, "dewpoint");
   addFromZone(
     forecast,
     zone,
-    "chanceOfPrecipitation",
+    Condition.PRECIP_CHANCE,
     "probabilityOfPrecipitation",
   );
   addFromZone(
     forecast,
     zone,
-    "amountOfPrecipitation",
+    Condition.PRECIP_AMOUNT,
     "quantitativePrecipitation",
   );
-  addFromZone(forecast, zone, "windSpeed");
+  addFromZone(forecast, zone, Condition.WIND, "windSpeed");
   return forecast;
 }
 
 function addFromZone(
   forecast: Forecast,
   zone: any,
-  forecastKey: keyof Conditions,
-  zoneKey: string = forecastKey,
+  condition: Condition,
+  zoneKey: string,
 ) {
   for (const v of zone[zoneKey].values) {
     const timestamp = new Date(v.validTime.split("/")[0]).getTime();
@@ -70,6 +73,6 @@ function addFromZone(
     if (!conditions) {
       conditions = forecast[timestamp] = {};
     }
-    conditions[forecastKey] = v.value;
+    conditions[condition] = v.value;
   }
 }

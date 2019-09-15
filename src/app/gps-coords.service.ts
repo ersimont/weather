@@ -10,7 +10,7 @@ export class GpsCoordsService {
   // $ = of<GpsCoords>([39.7456, -97.0892]);
 }
 
-function getCurrentGpsCoords() {
+export function getCurrentGpsCoords() {
   return new Promise<GpsCoords>((resolve, reject) => {
     if (!("geolocation" in navigator)) {
       reject("Current location not available");

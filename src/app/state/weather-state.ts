@@ -1,4 +1,11 @@
+import { Source, SourceId } from "./source";
+import { GpsCoords } from "../gps-coords.service";
+
 export class WeatherState {
-  showWeatherGov = true;
-  showWeatherUnlocked = false;
+  gpsCoords?: GpsCoords;
+
+  sources: Record<SourceId, Source> = {
+    weatherGov: new Source("Weather.gov", true),
+    weatherUnlocked: new Source("Weather Unlocked", false),
+  };
 }

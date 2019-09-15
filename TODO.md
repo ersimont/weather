@@ -2,6 +2,9 @@
 - zoom & pan the graph
 - select lines (both category & source)
 - choose units
+- auto refresh
+- GA
+- error toasts from fetching
 
 # Sources
 

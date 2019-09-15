@@ -1,7 +1,14 @@
 import { Component } from "@angular/core";
 import { WeatherState } from "./state/weather-state";
-import { StoreObject } from "ng-app-state";
+import { spreadObjectStore$, StoreObject } from "ng-app-state";
 import { WeatherStore } from "./state/weather-store";
+import { values } from "micro-dash";
+import { Condition, conditionDisplays } from "./state/condition";
+import { Observable } from "rxjs";
+import { Source } from "./state/source";
+import { WeatherGov } from "./sources/weather-gov";
+import { WeatherUnlocked } from "./sources/weather-unlocked";
+import { RefreshService } from "./refresh.service";
 
 @Component({
   selector: "app-root",
@@ -10,8 +17,18 @@ import { WeatherStore } from "./state/weather-store";
 })
 export class AppComponent {
   store: StoreObject<WeatherState>;
+  conditions = values(Condition);
+  conditionDisplays = values(conditionDisplays);
+  sourceStores$: Observable<Array<StoreObject<Source>>>;
 
-  constructor(store: WeatherStore) {
+  constructor(
+    refreshService: RefreshService,
+    store: WeatherStore,
+    _weatherGov: WeatherGov,
+    _weatherUnlocked: WeatherUnlocked,
+  ) {
     this.store = store.withCaching();
+    this.sourceStores$ = spreadObjectStore$(this.store("sources"));
+    refreshService.refresh();
   }
 }
