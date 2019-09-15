@@ -8,18 +8,20 @@ const key = "weather";
 @Injectable({ providedIn: "root" })
 export class WeatherStore extends AppStore<WeatherState> {
   constructor(ngrxStore: Store<any>) {
-    super(ngrxStore, key, rehydrate());
+    super(ngrxStore, key, getInitialValue());
     this.$.subscribe((state) => {
       localStorage.setItem(key, JSON.stringify(state));
     });
   }
 }
 
-function rehydrate(): WeatherState {
-  const initialValue = localStorage.getItem(key);
-  if (initialValue) {
-    return JSON.parse(initialValue);
-  } else {
-    return new WeatherState();
+function getInitialValue(): WeatherState {
+  const fresh = new WeatherState();
+  const savedStr = localStorage.getItem(key);
+  if (!savedStr) {
+    return fresh;
   }
+
+  const saved = JSON.parse(savedStr);
+  return saved.version === fresh.version ? saved : fresh;
 }

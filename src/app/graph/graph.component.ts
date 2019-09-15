@@ -41,7 +41,6 @@ function getChartOptions(): ChartOptions {
     maintainAspectRatio: false,
     animation: { duration: 0 },
     legend: { display: false },
-    elements: { line: { fill: false } },
     spanGaps: true,
     scales: {
       yAxes: [

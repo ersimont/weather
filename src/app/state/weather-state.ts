@@ -2,6 +2,7 @@ import { Source, SourceId } from "./source";
 import { GpsCoords } from "../gps-coords.service";
 
 export class WeatherState {
+  version = 2;
   gpsCoords?: GpsCoords;
 
   sources: Record<SourceId, Source> = {

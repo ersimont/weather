@@ -1,17 +1,18 @@
 <app-graph></app-graph>
 
 <div><!-- placeholder in grid --></div>
-<label *ngFor="let conditionDisplay of conditionDisplays">
+<label *ngFor="let conditionDisplay of conditionDisplays" class="condition">
   {{ conditionDisplay.label }}
 </label>
 
 <ng-container *ngFor="let sourceStore of sourceStores$ | async">
-  <mat-slide-toggle [nasModel]="sourceStore('show')">
+  <mat-slide-toggle class="source" [nasModel]="sourceStore('show')">
     {{ sourceStore("label").$ | async }}
   </mat-slide-toggle>
-  <mat-slide-toggle
-    *ngFor="let condition of conditions"
-    [nasModel]="sourceStore('showMetric')(condition)"
-    [disabled]="!(sourceStore('show').$ | async)"
-  ></mat-slide-toggle>
+  <div *ngFor="let condition of conditions" [class]="condition">
+    <mat-slide-toggle
+      [nasModel]="sourceStore('showMetric')(condition)"
+      [disabled]="!(sourceStore('show').$ | async)"
+    ></mat-slide-toggle>
+  </div>
 </ng-container>

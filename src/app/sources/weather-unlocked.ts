@@ -42,8 +42,8 @@ function addConditions(forecast: Forecast, timeframe: any) {
     [Condition.FEEL]: timeframe.feelslike_c,
     [Condition.FEEL]: timeframe.dewpoint_c,
     [Condition.WIND]: timeframe.windspeed_kts,
-    [Condition.PRECIP_CHANCE]: parsePercentage(timeframe.prob_precip_pct),
-    [Condition.PRECIP_AMOUNT]: timeframe.precip_mm,
+    [Condition.CHANCE]: parsePercentage(timeframe.prob_precip_pct),
+    [Condition.AMOUNT]: timeframe.precip_mm,
   };
 }
 

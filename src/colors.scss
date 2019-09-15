@@ -1,0 +1,20 @@
+@import "../node_modules/@angular/material/theming";
+
+$weather-palettes: (
+  temp: mat-palette($mat-red),
+  feel: mat-palette($mat-pink, 100, 50, 200),
+  dew: mat-palette($mat-gray),
+  wind: mat-palette($mat-yellow),
+  chance: mat-palette($mat-teal),
+  amount: mat-palette($mat-blue, A400, A100, A700),
+);
+
+@mixin define-custom-property($name, $value) {
+  #{'--' + $name}: $value;
+}
+
+body {
+  @each $condition, $palette in $weather-palettes {
+    @include define-custom-property($condition, mat-color($palette));
+  }
+}
