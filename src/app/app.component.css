@@ -6,7 +6,7 @@
 
   grid-template:
     "g g g g g g g" minmax(0, 1fr)
-    / auto 1fr 1fr 1fr 1fr 1fr 1fr;
+    / minmax(140px, 2fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
   grid-gap: 10px;
   justify-items: center;
 }

@@ -41,7 +41,6 @@ function getChartOptions(): ChartOptions {
     maintainAspectRatio: false,
     animation: { duration: 0 },
     legend: { display: false },
-    spanGaps: true,
     scales: {
       yAxes: [
         { position: "left", id: "dynamic", ticks: { beginAtZero: true } },
@@ -52,6 +51,7 @@ function getChartOptions(): ChartOptions {
         },
       ],
     },
+    spanGaps: true,
   };
 }
 

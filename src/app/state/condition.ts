@@ -39,5 +39,6 @@ function addDataSet(
     borderColor: color,
     backgroundColor: color + fillAlpha,
     pointBackgroundColor: color,
+    pointHitRadius: 25,
   };
 }
