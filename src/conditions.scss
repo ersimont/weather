@@ -1,6 +1,6 @@
 @import "../node_modules/@angular/material/theming";
 
-$weather-palettes: (
+$condition-palettes: (
   temp: mat-palette($mat-red),
   feel: mat-palette($mat-pink, 100, 50, 200),
   dew: mat-palette($mat-gray),
@@ -14,7 +14,7 @@ $weather-palettes: (
 }
 
 body {
-  @each $condition, $palette in $weather-palettes {
+  @each $condition, $palette in $condition-palettes {
     @include define-custom-property($condition, mat-color($palette));
   }
 }

@@ -8,17 +8,21 @@ import { WeatherStore } from "../state/weather-store";
 import { isDefined } from "s-js-utils";
 
 export abstract class AbstractSource extends InjectableSuperclass {
-  constructor(key: SourceId, injector: Injector) {
-    super();
-    const store = injector.get(WeatherStore);
+  private store!: WeatherStore;
 
+  constructor(private key: SourceId, injector: Injector) {
+    super();
+    this.store = injector.get(WeatherStore);
+  }
+
+  initialize() {
     this.subscribeTo(
-      store("gpsCoords").$.pipe(
+      this.store("gpsCoords").$.pipe(
         filter(isDefined),
         switchMap(this.fetch.bind(this)),
       ),
       (forecast) => {
-        store("sources")(key)("forecast").set(forecast);
+        this.store("sources")(this.key)("forecast").set(forecast);
       },
     );
   }

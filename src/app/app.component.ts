@@ -22,13 +22,19 @@ export class AppComponent {
   sourceStores$: Observable<Array<StoreObject<Source>>>;
 
   constructor(
-    refreshService: RefreshService,
+    private refreshService: RefreshService,
+    private weatherGov: WeatherGov,
+    private weatherUnlocked: WeatherUnlocked,
     store: WeatherStore,
-    _weatherGov: WeatherGov,
-    _weatherUnlocked: WeatherUnlocked,
   ) {
     this.store = store.withCaching();
     this.sourceStores$ = spreadObjectStore$(this.store("sources"));
-    refreshService.refresh();
+    this.initializeSources();
+  }
+
+  private async initializeSources() {
+    await this.refreshService.refresh();
+    this.weatherGov.initialize();
+    this.weatherUnlocked.initialize();
   }
 }
