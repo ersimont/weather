@@ -36,8 +36,8 @@ function addConditions(forecast: Forecast, timeframe: any) {
   forecast[parseTimestamp(timeframe)] = {
     [Condition.TEMP]: timeframe.temp_c,
     [Condition.FEEL]: timeframe.feelslike_c,
-    [Condition.FEEL]: timeframe.dewpoint_c,
-    [Condition.WIND]: timeframe.windspeed_kts,
+    [Condition.DEW]: timeframe.dewpoint_c,
+    [Condition.WIND]: timeframe.windspd_kts,
     [Condition.CHANCE]: parsePercentage(timeframe.prob_precip_pct),
     [Condition.AMOUNT]: timeframe.precip_mm,
   };
