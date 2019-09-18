@@ -1,4 +1,4 @@
-import { Component, Injector } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Injector } from "@angular/core";
 import { Observable } from "rxjs";
 import { ChartDataSets, ChartOptions } from "chart.js";
 import { DatePipe } from "@angular/common";
@@ -6,13 +6,14 @@ import { flatten, get, map as _map, times } from "micro-dash";
 import { map } from "rxjs/operators";
 import { DirectiveSuperclass } from "s-ng-utils";
 import { WeatherStore } from "../state/weather-store";
-import { conditionDisplays } from "../state/condition";
+import { Condition, conditionDisplays } from "../state/condition";
 import { Source } from "../state/source";
 
 @Component({
   selector: "app-graph",
   templateUrl: "./graph.component.html",
   styleUrls: ["./graph.component.css"],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DatePipe],
 })
 export class GraphComponent extends DirectiveSuperclass {
@@ -27,9 +28,13 @@ export class GraphComponent extends DirectiveSuperclass {
     const timestamps = times(24, (i) => thisHour + i * 3600000);
     this.labels = timestamps.map((t) => datePipe.transform(t, "h a")!);
 
-    this.dataSets$ = store("sources").$.pipe(
-      map((sources) =>
-        flatten(_map(sources, (source) => getDataSets(timestamps, source))),
+    this.dataSets$ = store.$.pipe(
+      map((state) =>
+        flatten(
+          _map(state.sources, (source) =>
+            getDataSets(timestamps, state.showConditions, source),
+          ),
+        ),
       ),
     );
   }
@@ -55,10 +60,14 @@ function getChartOptions(): ChartOptions {
   };
 }
 
-function getDataSets(timestamps: number[], source: Source): ChartDataSets[] {
+function getDataSets(
+  timestamps: number[],
+  showConditions: Record<Condition, boolean>,
+  source: Source,
+): ChartDataSets[] {
   return _map(conditionDisplays, (dataSet, condition) => {
     let data: Array<number | undefined>;
-    if (source.show && source.showMetric[condition]) {
+    if (source.show && showConditions[condition]) {
       data = timestamps.map((t) => get(source.forecast[t], condition));
     } else {
       data = [];

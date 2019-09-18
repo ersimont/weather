@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { WeatherGov } from "./sources/weather-gov";
 import { WeatherUnlocked } from "./sources/weather-unlocked";
 import { RefreshService } from "./refresh.service";
@@ -7,6 +7,7 @@ import { RefreshService } from "./refresh.service";
   selector: "app-root",
   templateUrl: "./app.component.html",
   styleUrls: ["./app.component.css"],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
   constructor(
