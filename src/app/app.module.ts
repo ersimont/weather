@@ -12,9 +12,10 @@ import { NasModelModule, ngAppStateReducer } from "ng-app-state";
 import { StoreDevtoolsModule } from "@ngrx/store-devtools";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MatSlideToggleModule } from "@angular/material";
+import { OptionsComponent } from './options/options.component';
 
 @NgModule({
-  declarations: [AppComponent, GraphComponent],
+  declarations: [AppComponent, GraphComponent, OptionsComponent],
   imports: [
     BrowserAnimationsModule,
     BrowserModule,

@@ -4,24 +4,7 @@
   height: 95vh;
   margin: 10px auto;
 
-  grid-template:
-    "g g g g g g g" minmax(0, 1fr)
-    / minmax(140px, 2fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
   grid-gap: 10px;
-  justify-items: center;
-}
-
-app-graph {
-  grid-area: g;
-  justify-self: stretch;
-}
-
-.condition {
-  justify-self: stretch;
-
-  text-align: center;
-}
-
-.source {
-  justify-self: left;
+  justify-items: stretch;
 }
