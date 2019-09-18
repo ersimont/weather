@@ -5,8 +5,8 @@ import { Forecast } from "../state/forecast";
 import { SourceId } from "../state/source";
 import { Condition } from "../state/condition";
 
-const APP_ID = "b08df994";
-const APP_KEY = "1fecb6d4e7a5696a9adbfc19c7baef8c";
+const endpoint =
+  "https://us-central1-proxic.cloudfunctions.net/weather-unlocked/api/forecast";
 
 @Injectable({ providedIn: "root" })
 export class WeatherUnlocked extends AbstractSource {
@@ -27,11 +27,7 @@ export class WeatherUnlocked extends AbstractSource {
 
   private fetchRes(gpsCoords: [number, number]) {
     return this.httpClient
-      .get<any>(
-        `http://api.weatherunlocked.com/api/forecast/${gpsCoords.join(
-          ",",
-        )}?app_id=${APP_ID}&app_key=${APP_KEY}`,
-      )
+      .get<any>(`${endpoint}/${gpsCoords.join(",")}`)
       .toPromise();
   }
 }
