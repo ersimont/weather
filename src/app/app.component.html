@@ -1,2 +1,15 @@
-<app-graph></app-graph>
-<app-options></app-options>
+<mat-toolbar color="primary">
+  <button mat-icon-button (click)="snav.toggle()">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <h1>Weather</h1>
+</mat-toolbar>
+
+<mat-sidenav-container>
+  <mat-sidenav #snav>
+    <app-options></app-options>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <app-graph></app-graph>
+  </mat-sidenav-content>
+</mat-sidenav-container>

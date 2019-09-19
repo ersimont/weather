@@ -11,8 +11,15 @@ import { StoreModule } from "@ngrx/store";
 import { NasModelModule, ngAppStateReducer } from "ng-app-state";
 import { StoreDevtoolsModule } from "@ngrx/store-devtools";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { MatSlideToggleModule } from "@angular/material";
-import { OptionsComponent } from './options/options.component';
+import {
+  MatButtonModule,
+  MatIconModule,
+  MatListModule,
+  MatSidenavModule,
+  MatSlideToggleModule,
+  MatToolbarModule,
+} from "@angular/material";
+import { OptionsComponent } from "./options/options.component";
 
 @NgModule({
   declarations: [AppComponent, GraphComponent, OptionsComponent],
@@ -22,7 +29,12 @@ import { OptionsComponent } from './options/options.component';
     ChartsModule,
     FormsModule,
     HttpClientModule,
+    MatButtonModule,
+    MatIconModule,
+    MatListModule,
+    MatSidenavModule,
     MatSlideToggleModule,
+    MatToolbarModule,
     NasModelModule,
     ServiceWorkerModule.register("ngsw-worker.js", {
       enabled: environment.production,

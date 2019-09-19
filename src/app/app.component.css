@@ -1,10 +1,18 @@
+:host, app-graph {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
 :host {
   display: grid;
-  width: 95vw;
-  height: 95vh;
-  margin: 10px auto;
-
-  grid-template-rows: minmax(0, 1fr);
-  grid-gap: 10px;
+  grid-template-rows: auto minmax(0, 1fr);
   justify-items: stretch;
+  align-items: stretch;
+}
+
+app-graph {
+  margin: 16px;
 }
