@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { values } from "micro-dash";
-import { Observable } from "rxjs";
 import { spreadObjectStore$, StoreObject } from "ng-app-state";
-import { Source } from "../state/source";
+import { Observable } from "rxjs";
 import { Condition, conditionDisplays } from "../state/condition";
-import { WeatherStore } from "../state/weather-store";
+import { Source } from "../state/source";
 import { WeatherState } from "../state/weather-state";
+import { WeatherStore } from "../state/weather-store";
 
 @Component({
   selector: "app-options",
@@ -16,7 +16,7 @@ import { WeatherState } from "../state/weather-state";
 export class OptionsComponent {
   store: StoreObject<WeatherState>;
   conditions = values(Condition);
-  conditionDisplays = conditionDisplays;
+  conditionDisplays: any = conditionDisplays;
   sourceStores$: Observable<Array<StoreObject<Source>>>;
 
   constructor(store: WeatherStore) {
