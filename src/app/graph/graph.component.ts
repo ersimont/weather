@@ -8,6 +8,8 @@ import { WeatherStore } from "../state/weather-store";
 import { Condition, conditionDisplays } from "../state/condition";
 import { Source } from "../state/source";
 
+import "chartjs-plugin-zoom";
+
 @Component({
   selector: "app-graph",
   templateUrl: "./graph.component.html",
@@ -60,6 +62,12 @@ function getChartOptions(): ChartOptions {
       ],
     },
     spanGaps: true,
+    plugins: {
+      zoom: {
+        pan: { enabled: true, mode: "x" },
+        zoom: { enabled: true, mode: "x" },
+      },
+    },
   };
 }
 
