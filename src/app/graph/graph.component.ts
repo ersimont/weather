@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component, Injector } from "@angular/core";
 import { Observable } from "rxjs";
-import { ChartDataSets, ChartOptions } from "chart.js";
-import { DatePipe } from "@angular/common";
-import { flatten, get, map as _map, times } from "micro-dash";
+import { ChartDataSets, ChartOptions, ChartPoint } from "chart.js";
+import { flatten, keys, map as _map } from "micro-dash";
 import { map } from "rxjs/operators";
 import { DirectiveSuperclass } from "s-ng-utils";
 import { WeatherStore } from "../state/weather-store";
@@ -14,25 +13,19 @@ import { Source } from "../state/source";
   templateUrl: "./graph.component.html",
   styleUrls: ["./graph.component.css"],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [DatePipe],
 })
 export class GraphComponent extends DirectiveSuperclass {
-  labels: Array<string>;
   chartOptions = getChartOptions();
   dataSets$: Observable<Array<ChartDataSets>>;
 
-  constructor(datePipe: DatePipe, injector: Injector, store: WeatherStore) {
+  constructor(injector: Injector, store: WeatherStore) {
     super(injector);
-
-    const thisHour = new Date().setMinutes(0, 0, 0);
-    const timestamps = times(24, (i) => thisHour + i * 3600000);
-    this.labels = timestamps.map((t) => datePipe.transform(t, "h a")!);
 
     this.dataSets$ = store.$.pipe(
       map((state) =>
         flatten(
           _map(state.sources, (source) =>
-            getDataSets(timestamps, state.showConditions, source),
+            getDataSets(state.showConditions, source),
           ),
         ),
       ),
@@ -41,12 +34,22 @@ export class GraphComponent extends DirectiveSuperclass {
 }
 
 function getChartOptions(): ChartOptions {
+  const thisHour = new Date();
+  thisHour.setMinutes(0, 0, 0);
+  const nextDay = new Date(thisHour.getTime());
+  nextDay.setDate(thisHour.getDate() + 1);
   return {
     responsive: true,
     maintainAspectRatio: false,
     animation: { duration: 0 },
     legend: { display: false },
     scales: {
+      xAxes: [
+        {
+          type: "time",
+          time: { min: thisHour.toISOString(), max: nextDay.toISOString() },
+        },
+      ],
       yAxes: [
         { position: "left", id: "dynamic", ticks: { beginAtZero: true } },
         {
@@ -61,16 +64,18 @@ function getChartOptions(): ChartOptions {
 }
 
 function getDataSets(
-  timestamps: number[],
   showConditions: Record<Condition, boolean>,
   source: Source,
 ): ChartDataSets[] {
   return _map(conditionDisplays, (dataSet, condition) => {
-    let data: Array<number | undefined>;
+    const data: ChartPoint[] = [];
     if (source.show && showConditions[condition]) {
-      data = timestamps.map((t) => get(source.forecast[t], condition));
-    } else {
-      data = [];
+      for (const time of keys(source.forecast).sort()) {
+        const value = source.forecast[time as any][condition];
+        if (value !== undefined) {
+          data.push({ t: +time, y: value });
+        }
+      }
     }
     return { ...dataSet, data };
   });
