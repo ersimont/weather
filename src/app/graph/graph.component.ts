@@ -8,13 +8,14 @@ import {
   ChartTooltipItem,
 } from "chart.js";
 import "chartjs-plugin-zoom";
-import { bindKey, find, flatten, keys, map as _map, matches } from "micro-dash";
+import { bindKey, find, forEach, keys, matches } from "micro-dash";
 import { ThemeService } from "ng2-charts";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { DirectiveSuperclass } from "s-ng-utils";
 import { Condition, conditionInfo } from "../state/condition";
 import { Source } from "../state/source";
+import { AmountUnit, convertAmount } from "../state/units";
 import { WeatherState } from "../state/weather-state";
 import { WeatherStore } from "../state/weather-store";
 import { SetRangeAction } from "./set-range-action";
@@ -39,9 +40,13 @@ export class GraphComponent extends DirectiveSuperclass {
     super(injector);
 
     this.dataSets$ = store.$.pipe(
-      map((state) =>
-        flatten(_map(state.sources, (source) => getDataSets(state, source))),
-      ),
+      map((state) => {
+        const dataSets: ChartDataSets[] = [];
+        forEach(state.sources, (source) => {
+          addDataSets(source, dataSets, state);
+        });
+        return dataSets;
+      }),
     );
 
     this.subscribeTo(store.action$.pipe(SetRangeAction.filter), this.setRange);
@@ -82,12 +87,14 @@ export class GraphComponent extends DirectiveSuperclass {
           },
         ],
         yAxes: [
-          { position: "left", id: "dynamic", ticks: { beginAtZero: true } },
+          { id: "dynamic", position: "left", ticks: { beginAtZero: true } },
+          { id: "percentage", position: "right", ticks: { min: 0, max: 100 } },
           {
-            position: "right",
-            id: "percentage",
-            ticks: { min: 0, max: 100 },
+            id: "inches",
+            display: false,
+            ticks: { min: 0, max: convertAmount(30, AmountUnit.IN) },
           },
+          { id: "millimeters", display: false, ticks: { min: 0, max: 30 } },
         ],
       },
       plugins: {
@@ -111,45 +118,55 @@ function getXAxisRange(days: number) {
   return { min, max };
 }
 
-function getDataSets(state: WeatherState, source: Source): ChartDataSets[] {
-  return _map(conditionDisplays, (dataSet, condition) => {
-    const data: ChartPoint[] = [];
-    if (source.show && state.showConditions[condition]) {
-      for (const time of keys(source.forecast).sort()) {
-        const value = source.forecast[time as any][condition];
-        if (value !== undefined) {
-          data.push({
-            t: +time,
-            y: conditionInfo[condition].convert(value, state.units),
-          });
-        }
-      }
-    }
-    return { ...dataSet, data };
-  });
+function addDataSets(
+  source: Source,
+  dataSets: ChartDataSets[],
+  state: WeatherState,
+) {
+  addDataSet(source, dataSets, state, Condition.TEMP, "dynamic");
+  addDataSet(source, dataSets, state, Condition.FEEL, "dynamic");
+  addDataSet(source, dataSets, state, Condition.DEW, "dynamic");
+  addDataSet(source, dataSets, state, Condition.WIND, "dynamic");
+  addDataSet(source, dataSets, state, Condition.CHANCE, "percentage", "20");
+  addDataSet(
+    source,
+    dataSets,
+    state,
+    Condition.AMOUNT,
+    state.units.amount === AmountUnit.IN ? "inches" : "millimeters",
+    "60",
+  );
 }
 
-const conditionDisplays = {} as Record<Condition, ChartDataSets>;
-addDataSet(Condition.TEMP, "dynamic");
-addDataSet(Condition.FEEL, "dynamic");
-addDataSet(Condition.DEW, "dynamic");
-addDataSet(Condition.WIND, "dynamic");
-addDataSet(Condition.CHANCE, "percentage", "20");
-addDataSet(Condition.AMOUNT, "percentage", "60");
-
 function addDataSet(
+  source: Source,
+  dataSets: ChartDataSets[],
+  state: WeatherState,
   condition: Condition,
-  yAxisID: "dynamic" | "percentage",
+  yAxisID: string,
   fillAlpha = "00",
 ) {
   const info = conditionInfo[condition];
   const color = info.color;
-  conditionDisplays[condition] = {
+  const data: ChartPoint[] = [];
+  if (source.show && state.showConditions[condition]) {
+    for (const time of keys(source.forecast).sort()) {
+      const value = source.forecast[time as any][condition];
+      if (value !== undefined) {
+        data.push({
+          t: +time,
+          y: conditionInfo[condition].convert(value, state.units),
+        });
+      }
+    }
+  }
+  dataSets.push({
     label: info.label,
+    data,
     yAxisID,
     borderColor: color,
     backgroundColor: color + fillAlpha,
     pointBackgroundColor: color,
     pointHitRadius: 25,
-  };
+  });
 }

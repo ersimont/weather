@@ -1,5 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, Injector } from "@angular/core";
+import { duration } from "moment";
 import { AbstractSource } from "./abstract-source";
 import { GpsCoords } from "../gps-coords.service";
 import { SourceId } from "../state/source";
@@ -58,11 +59,14 @@ function addFromZone(
   zoneKey: string,
 ) {
   for (const v of zone[zoneKey].values) {
-    const timestamp = new Date(v.validTime.split("/")[0]).getTime();
-    let conditions: Conditions = forecast[timestamp];
+    const [timeString, durationString] = v.validTime.split("/");
+    const time = new Date(timeString).getTime();
+    const d = duration(durationString).asHours();
+
+    let conditions: Conditions = forecast[time];
     if (!conditions) {
-      conditions = forecast[timestamp] = {};
+      conditions = forecast[time] = {};
     }
-    conditions[condition] = v.value;
+    conditions[condition] = v.value / d;
   }
 }

@@ -32,6 +32,7 @@
     "chartjs-plugin-zoom": "^0.7.4",
     "hammerjs": "^2.0.8",
     "micro-dash": "^6.4.0",
+    "moment": "^2.24.0",
     "ng-app-state": "^11.1.2",
     "ng2-charts": "^2.3.0",
     "rxjs": "~6.4.0",

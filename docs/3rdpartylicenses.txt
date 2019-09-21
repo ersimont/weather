@@ -87,13 +87,11 @@ THE SOFTWARE.
 
 @angular/material/button
 
-@angular/material/core
+@angular/material/button-toggle
 
-@angular/material/divider
+@angular/material/expansion
 
 @angular/material/icon
-
-@angular/material/list
 
 @angular/material/sidenav
 

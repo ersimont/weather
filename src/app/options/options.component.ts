@@ -23,7 +23,7 @@ export class OptionsComponent {
     { type: "speed", options: values(SpeedUnit) },
   ];
   conditions = values(Condition);
-  conditionInfo = conditionInfo;
+  conditionInfo: any = conditionInfo;
 
   constructor(store: WeatherStore) {
     this.store = store.withCaching();
