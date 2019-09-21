@@ -3,6 +3,18 @@
     <mat-icon>menu</mat-icon>
   </button>
   <h1>Weather</h1>
+
+  <span class="toolbar-spacer"></span>
+
+  <button mat-icon-button (click)="setRange(1)">
+    <mat-icon svgIcon="day"></mat-icon>
+  </button>
+  <button mat-icon-button (click)="setRange(3)">
+    <mat-icon svgIcon="three-days"></mat-icon>
+  </button>
+  <button mat-icon-button (click)="setRange(7)">
+    <mat-icon svgIcon="week"></mat-icon>
+  </button>
 </mat-toolbar>
 
 <mat-sidenav-container>

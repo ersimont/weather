@@ -1,14 +1,15 @@
 import { ChangeDetectionStrategy, Component, Injector } from "@angular/core";
-import { Observable } from "rxjs";
 import { ChartDataSets, ChartOptions, ChartPoint } from "chart.js";
+import "chartjs-plugin-zoom";
 import { flatten, keys, map as _map } from "micro-dash";
+import { ThemeService } from "ng2-charts";
+import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { DirectiveSuperclass } from "s-ng-utils";
-import { WeatherStore } from "../state/weather-store";
 import { Condition, conditionDisplays } from "../state/condition";
 import { Source } from "../state/source";
-
-import "chartjs-plugin-zoom";
+import { WeatherStore } from "../state/weather-store";
+import { SetRangeAction } from "./set-range-action";
 
 @Component({
   selector: "app-graph",
@@ -20,7 +21,11 @@ export class GraphComponent extends DirectiveSuperclass {
   chartOptions = getChartOptions();
   dataSets$: Observable<Array<ChartDataSets>>;
 
-  constructor(injector: Injector, store: WeatherStore) {
+  constructor(
+    private themeService: ThemeService,
+    injector: Injector,
+    store: WeatherStore,
+  ) {
     super(injector);
 
     this.dataSets$ = store.$.pipe(
@@ -32,26 +37,25 @@ export class GraphComponent extends DirectiveSuperclass {
         ),
       ),
     );
+
+    this.subscribeTo(store.action$.pipe(SetRangeAction.filter), this.setRange);
+  }
+
+  private setRange({ days }: SetRangeAction) {
+    this.themeService.setColorschemesOptions({
+      scales: { xAxes: [{ time: getXAxisTime(days) }] },
+    });
   }
 }
 
 function getChartOptions(): ChartOptions {
-  const thisHour = new Date();
-  thisHour.setMinutes(0, 0, 0);
-  const nextDay = new Date(thisHour.getTime());
-  nextDay.setDate(thisHour.getDate() + 1);
   return {
     responsive: true,
     maintainAspectRatio: false,
     animation: { duration: 0 },
     legend: { display: false },
     scales: {
-      xAxes: [
-        {
-          type: "time",
-          time: { min: thisHour.toISOString(), max: nextDay.toISOString() },
-        },
-      ],
+      xAxes: [{ type: "time", time: getXAxisTime(1) }],
       yAxes: [
         { position: "left", id: "dynamic", ticks: { beginAtZero: true } },
         {
@@ -61,7 +65,6 @@ function getChartOptions(): ChartOptions {
         },
       ],
     },
-    spanGaps: true,
     plugins: {
       zoom: {
         pan: { enabled: true, mode: "x" },
@@ -69,6 +72,17 @@ function getChartOptions(): ChartOptions {
       },
     },
   };
+}
+
+function getXAxisTime(days: number) {
+  const d = new Date();
+  d.setMinutes(0, 0, 0);
+  const min = d.toISOString();
+
+  d.setDate(d.getDate() + days);
+  const max = d.toISOString();
+
+  return { min, max };
 }
 
 function getDataSets(
