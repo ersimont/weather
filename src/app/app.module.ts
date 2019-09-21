@@ -3,6 +3,7 @@ import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import {
   MatButtonModule,
+  MatButtonToggleModule,
   MatExpansionModule,
   MatIconModule,
   MatSidenavModule,
@@ -30,6 +31,7 @@ import { OptionsComponent } from "./options/options.component";
     FormsModule,
     HttpClientModule,
     MatButtonModule,
+    MatButtonToggleModule,
     MatExpansionModule,
     MatIconModule,
     MatSidenavModule,

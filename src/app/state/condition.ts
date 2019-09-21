@@ -1,5 +1,6 @@
-import { ChartDataSets } from "chart.js";
+import { identity } from "micro-dash";
 import { mapToObject } from "../to-replace/map-to-object";
+import { convertAmount, convertSpeed, convertTemp, Units } from "./units";
 
 export enum Condition {
   TEMP = "temp",
@@ -12,33 +13,48 @@ export enum Condition {
 
 export type Conditions = Partial<Record<Condition, number>>;
 
-const styles = getComputedStyle(document.body);
+const bodyStyles = getComputedStyle(document.body);
 const colors = mapToObject(Condition, (condition: Condition) => [
   condition,
-  styles.getPropertyValue(`--${condition}`),
+  bodyStyles.getPropertyValue(`--${condition}`),
 ]) as Record<Condition, string>;
 
-export const conditionDisplays = {} as Record<Condition, ChartDataSets>;
-addDataSet(Condition.TEMP, "Temp", "dynamic");
-addDataSet(Condition.FEEL, "Feel", "dynamic");
-addDataSet(Condition.DEW, "Dew Point", "dynamic");
-addDataSet(Condition.WIND, "Wind", "dynamic");
-addDataSet(Condition.CHANCE, "Precip Chance", "percentage", "20");
-addDataSet(Condition.AMOUNT, "Precip Amount", "percentage", "60");
-
-function addDataSet(
-  condition: Condition,
-  label: string,
-  yAxisID: "dynamic" | "percentage",
-  fillAlpha = "00",
-) {
-  const color = colors[condition];
-  conditionDisplays[condition] = {
-    label,
-    yAxisID,
-    borderColor: color,
-    backgroundColor: color + fillAlpha,
-    pointBackgroundColor: color,
-    pointHitRadius: 25,
-  };
-}
+export const conditionInfo = {
+  [Condition.TEMP]: {
+    label: "Temp",
+    color: colors[Condition.TEMP],
+    convert: (value: number, units: Units) => convertTemp(value, units.temp),
+    getSuffix: (units: Units) => " " + units.temp,
+  },
+  [Condition.FEEL]: {
+    label: "Feel",
+    color: colors[Condition.FEEL],
+    convert: (value: number, units: Units) => convertTemp(value, units.temp),
+    getSuffix: (units: Units) => " " + units.temp,
+  },
+  [Condition.DEW]: {
+    label: "Dew Point",
+    color: colors[Condition.DEW],
+    convert: (value: number, units: Units) => convertTemp(value, units.temp),
+    getSuffix: (units: Units) => " " + units.temp,
+  },
+  [Condition.WIND]: {
+    label: "Wind",
+    color: colors[Condition.WIND],
+    convert: (value: number, units: Units) => convertSpeed(value, units.speed),
+    getSuffix: (units: Units) => " " + units.speed,
+  },
+  [Condition.CHANCE]: {
+    label: "Precip Chance",
+    color: colors[Condition.CHANCE],
+    convert: identity,
+    getSuffix: () => "%",
+  },
+  [Condition.AMOUNT]: {
+    label: "Precip Amount",
+    color: colors[Condition.AMOUNT],
+    convert: (value: number, units: Units) =>
+      convertAmount(value, units.amount),
+    getSuffix: (units: Units) => " " + units.amount,
+  },
+};
