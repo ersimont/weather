@@ -1,7 +1,14 @@
+import { DecimalPipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Injector } from "@angular/core";
-import { ChartDataSets, ChartOptions, ChartPoint } from "chart.js";
+import {
+  ChartData,
+  ChartDataSets,
+  ChartOptions,
+  ChartPoint,
+  ChartTooltipItem,
+} from "chart.js";
 import "chartjs-plugin-zoom";
-import { flatten, keys, map as _map } from "micro-dash";
+import { bindKey, flatten, keys, map as _map } from "micro-dash";
 import { ThemeService } from "ng2-charts";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
@@ -15,13 +22,15 @@ import { SetRangeAction } from "./set-range-action";
   selector: "app-graph",
   templateUrl: "./graph.component.html",
   styleUrls: ["./graph.component.css"],
+  providers: [DecimalPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GraphComponent extends DirectiveSuperclass {
-  chartOptions = getChartOptions();
+  chartOptions = this.getChartOptions();
   dataSets$: Observable<Array<ChartDataSets>>;
 
   constructor(
+    private demicalPipe: DecimalPipe,
     private themeService: ThemeService,
     injector: Injector,
     store: WeatherStore,
@@ -41,40 +50,57 @@ export class GraphComponent extends DirectiveSuperclass {
     this.subscribeTo(store.action$.pipe(SetRangeAction.filter), this.setRange);
   }
 
+  getTooltipLabel(tooltipItem: ChartTooltipItem, data: ChartData) {
+    const label = data.datasets![tooltipItem.datasetIndex!].label!;
+    const value = this.demicalPipe.transform(tooltipItem.value, ".1-1");
+    return `${label}: ${value}`;
+  }
+
   private setRange({ days }: SetRangeAction) {
     this.themeService.setColorschemesOptions({
-      scales: { xAxes: [{ time: getXAxisTime(days) }] },
+      scales: { xAxes: [{ time: getXAxisRange(days) }] },
     });
+  }
+
+  private getChartOptions(): ChartOptions {
+    return {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 0 },
+      legend: { display: false },
+      tooltips: { callbacks: { label: bindKey(this, "getTooltipLabel") } },
+      scales: {
+        xAxes: [
+          {
+            type: "time",
+            time: {
+              ...getXAxisRange(1),
+              displayFormats: { day: "ddd" },
+              tooltipFormat: "dddd h a",
+            },
+            ticks: { major: { enabled: true } },
+          },
+        ],
+        yAxes: [
+          { position: "left", id: "dynamic", ticks: { beginAtZero: true } },
+          {
+            position: "right",
+            id: "percentage",
+            ticks: { min: 0, max: 100 },
+          },
+        ],
+      },
+      plugins: {
+        zoom: {
+          pan: { enabled: true, mode: "x" },
+          zoom: { enabled: true, mode: "x" },
+        },
+      },
+    };
   }
 }
 
-function getChartOptions(): ChartOptions {
-  return {
-    responsive: true,
-    maintainAspectRatio: false,
-    animation: { duration: 0 },
-    legend: { display: false },
-    scales: {
-      xAxes: [{ type: "time", time: getXAxisTime(1) }],
-      yAxes: [
-        { position: "left", id: "dynamic", ticks: { beginAtZero: true } },
-        {
-          position: "right",
-          id: "percentage",
-          ticks: { min: 0, max: 100 },
-        },
-      ],
-    },
-    plugins: {
-      zoom: {
-        pan: { enabled: true, mode: "x" },
-        zoom: { enabled: true, mode: "x" },
-      },
-    },
-  };
-}
-
-function getXAxisTime(days: number) {
+function getXAxisRange(days: number) {
   const d = new Date();
   d.setMinutes(0, 0, 0);
   const min = d.toISOString();
