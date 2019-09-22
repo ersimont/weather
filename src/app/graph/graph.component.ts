@@ -92,9 +92,9 @@ export class GraphComponent extends DirectiveSuperclass {
           {
             id: "inches",
             display: false,
-            ticks: { min: 0, max: convertAmount(30, AmountUnit.IN) },
+            ticks: { min: 0, max: convertAmount(10, AmountUnit.IN) },
           },
-          { id: "millimeters", display: false, ticks: { min: 0, max: 30 } },
+          { id: "millimeters", display: false, ticks: { min: 0, max: 10 } },
         ],
       },
       plugins: {
