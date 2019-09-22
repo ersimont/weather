@@ -1,11 +1,9 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { WeatherGov } from "./sources/weather-gov";
-import { WeatherUnlocked } from "./sources/weather-unlocked";
-import { RefreshService } from "./refresh.service";
 import { MatIconRegistry } from "@angular/material";
 import { DomSanitizer } from "@angular/platform-browser";
-import { WeatherStore } from "./state/weather-store";
 import { SetRangeAction } from "./graph/set-range-action";
+import { RefreshService } from "./refresh.service";
+import { WeatherStore } from "./state/weather-store";
 
 const icons = `
   <svg><defs>
@@ -47,23 +45,15 @@ const icons = `
 })
 export class AppComponent {
   constructor(
-    private refreshService: RefreshService,
     private store: WeatherStore,
-    private weatherGov: WeatherGov,
-    private weatherUnlocked: WeatherUnlocked,
     domSanitizer: DomSanitizer,
     matIconRegistry: MatIconRegistry,
+    refreshService: RefreshService,
   ) {
-    this.initializeSources();
+    refreshService.start();
     matIconRegistry.addSvgIconSetLiteral(
       domSanitizer.bypassSecurityTrustHtml(icons),
     );
-  }
-
-  private async initializeSources() {
-    await this.refreshService.refresh();
-    this.weatherGov.initialize();
-    this.weatherUnlocked.initialize();
   }
 
   setRange(days: number) {
