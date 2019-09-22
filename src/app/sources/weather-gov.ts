@@ -1,11 +1,11 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, Injector } from "@angular/core";
 import { duration } from "moment";
-import { AbstractSource } from "./abstract-source";
 import { GpsCoords } from "../gps-coords.service";
-import { SourceId } from "../state/source";
-import { Forecast } from "../state/forecast";
 import { Condition, Conditions } from "../state/condition";
+import { Forecast } from "../state/forecast";
+import { SourceId } from "../state/source";
+import { AbstractSource } from "./abstract-source";
 
 @Injectable({ providedIn: "root" })
 export class WeatherGov extends AbstractSource {
@@ -61,12 +61,16 @@ function addFromZone(
   for (const v of zone[zoneKey].values) {
     const [timeString, durationString] = v.validTime.split("/");
     const time = new Date(timeString).getTime();
-    const d = duration(durationString).asHours();
+
+    let value = v.value;
+    if (condition === Condition.AMOUNT) {
+      value /= duration(durationString).asHours();
+    }
 
     let conditions: Conditions = forecast[time];
     if (!conditions) {
       conditions = forecast[time] = {};
     }
-    conditions[condition] = v.value / d;
+    conditions[condition] = value;
   }
 }
