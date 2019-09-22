@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { values } from "micro-dash";
-import { spreadObjectStore$, StoreObject } from "ng-app-state";
-import { Observable } from "rxjs";
+import { StoreObject } from "ng-app-state";
 import { Condition, conditionInfo } from "../state/condition";
-import { Source } from "../state/source";
+import { SourceId } from "../state/source";
 import { AmountUnit, SpeedUnit, TempUnit } from "../state/units";
 import { WeatherState } from "../state/weather-state";
 import { WeatherStore } from "../state/weather-store";
@@ -16,7 +15,7 @@ import { WeatherStore } from "../state/weather-store";
 })
 export class OptionsComponent {
   store: StoreObject<WeatherState>;
-  sourceStores$: Observable<Array<StoreObject<Source>>>;
+  sourceIds = values(SourceId);
   unitOptions = [
     { type: "temp", options: values(TempUnit) },
     { type: "amount", options: values(AmountUnit) },
@@ -27,6 +26,5 @@ export class OptionsComponent {
 
   constructor(store: WeatherStore) {
     this.store = store.withCaching();
-    this.sourceStores$ = spreadObjectStore$(this.store("sources"));
   }
 }

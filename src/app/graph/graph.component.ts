@@ -14,7 +14,7 @@ import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { DirectiveSuperclass } from "s-ng-utils";
 import { Condition, conditionInfo } from "../state/condition";
-import { Source } from "../state/source";
+import { SourceId } from "../state/source";
 import { AmountUnit, convertAmount } from "../state/units";
 import { WeatherState } from "../state/weather-state";
 import { WeatherStore } from "../state/weather-store";
@@ -42,8 +42,8 @@ export class GraphComponent extends DirectiveSuperclass {
     this.dataSets$ = store.$.pipe(
       map((state) => {
         const dataSets: ChartDataSets[] = [];
-        forEach(state.sources, (source) => {
-          addDataSets(source, dataSets, state);
+        forEach(state.sources, (_, sourceId) => {
+          addDataSets(sourceId, dataSets, state);
         });
         return dataSets;
       }),
@@ -119,17 +119,17 @@ function getXAxisRange(days: number) {
 }
 
 function addDataSets(
-  source: Source,
+  sourceId: SourceId,
   dataSets: ChartDataSets[],
   state: WeatherState,
 ) {
-  addDataSet(source, dataSets, state, Condition.TEMP, "dynamic");
-  addDataSet(source, dataSets, state, Condition.FEEL, "dynamic");
-  addDataSet(source, dataSets, state, Condition.DEW, "dynamic");
-  addDataSet(source, dataSets, state, Condition.WIND, "dynamic");
-  addDataSet(source, dataSets, state, Condition.CHANCE, "percentage", "20");
+  addDataSet(sourceId, dataSets, state, Condition.TEMP, "dynamic");
+  addDataSet(sourceId, dataSets, state, Condition.FEEL, "dynamic");
+  addDataSet(sourceId, dataSets, state, Condition.DEW, "dynamic");
+  addDataSet(sourceId, dataSets, state, Condition.WIND, "dynamic");
+  addDataSet(sourceId, dataSets, state, Condition.CHANCE, "percentage", "20");
   addDataSet(
-    source,
+    sourceId,
     dataSets,
     state,
     Condition.AMOUNT,
@@ -139,13 +139,16 @@ function addDataSets(
 }
 
 function addDataSet(
-  source: Source,
+  sourceId: SourceId,
   dataSets: ChartDataSets[],
   state: WeatherState,
   condition: Condition,
   yAxisID: string,
   fillAlpha = "00",
 ) {
+  const source = state.sources[sourceId];
+  const pointStyle = sourceId === SourceId.WEATHER_GOV ? "circle" : "triangle";
+
   const info = conditionInfo[condition];
   const color = info.color;
   const data: ChartPoint[] = [];
@@ -167,6 +170,8 @@ function addDataSet(
     borderColor: color,
     backgroundColor: color + fillAlpha,
     pointBackgroundColor: color,
+    pointStyle,
+    radius: pointStyle === "triangle" ? 6 : 4,
     pointHitRadius: 25,
   });
 }

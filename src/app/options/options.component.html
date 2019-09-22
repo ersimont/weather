@@ -1,9 +1,9 @@
 <mat-accordion>
   <mat-expansion-panel>
     <mat-expansion-panel-header>Sources</mat-expansion-panel-header>
-    <div *ngFor="let sourceStore of sourceStores$ | async">
-      <mat-slide-toggle [nasModel]="sourceStore('show')">
-        {{ sourceStore("label").$ | async }}
+    <div *ngFor="let sourceId of sourceIds" [class]="sourceId">
+      <mat-slide-toggle [nasModel]="store('sources')(sourceId)('show')">
+        {{ store("sources")(sourceId)("label").$ | async }}
       </mat-slide-toggle>
     </div>
   </mat-expansion-panel>
