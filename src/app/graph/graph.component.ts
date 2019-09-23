@@ -8,14 +8,14 @@ import {
   ChartTooltipItem,
 } from "chart.js";
 import "chartjs-plugin-zoom";
-import { bindKey, find, forEach, keys, matches } from "micro-dash";
+import { bindKey, findKey, forEach, keys, matches } from "micro-dash";
 import { ThemeService } from "ng2-charts";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { DirectiveSuperclass } from "s-ng-utils";
 import { Condition, conditionInfo } from "../state/condition";
 import { SourceId } from "../state/source";
-import { AmountUnit, convertAmount } from "../state/units";
+import { AmountUnit, unitInfo } from "../state/units";
 import { WeatherState } from "../state/weather-state";
 import { WeatherStore } from "../state/weather-store";
 import { SetRangeAction } from "./set-range-action";
@@ -54,11 +54,12 @@ export class GraphComponent extends DirectiveSuperclass {
 
   getTooltipLabel(tooltipItem: ChartTooltipItem, data: ChartData) {
     const label = data.datasets![tooltipItem.datasetIndex!].label!;
-    const value = this.demicalPipe.transform(tooltipItem.value, ".1-1");
-    const suffix = find(conditionInfo, matches({ label }))!.getSuffix(
+    const condition = findKey(conditionInfo, matches({ label }))!;
+    const unitInf = conditionInfo[condition].getUnitInfo(
       this.store.state().units,
     );
-    return `${label}: ${value}${suffix}`;
+    const display = unitInf.getDisplay(+tooltipItem.value!, this.demicalPipe);
+    return `${label}: ${display}`;
   }
 
   private setRange({ days }: SetRangeAction) {
@@ -92,7 +93,7 @@ export class GraphComponent extends DirectiveSuperclass {
           {
             id: "inches",
             display: false,
-            ticks: { min: 0, max: convertAmount(10, AmountUnit.IN) },
+            ticks: { min: 0, max: unitInfo[AmountUnit.IN].convert(10) },
           },
           { id: "millimeters", display: false, ticks: { min: 0, max: 10 } },
         ],
@@ -149,22 +150,21 @@ function addDataSet(
   const source = state.sources[sourceId];
   const pointStyle = sourceId === SourceId.WEATHER_GOV ? "circle" : "triangle";
 
-  const info = conditionInfo[condition];
-  const color = info.color;
+  const conditionInf = conditionInfo[condition];
+  const unitInf = conditionInf.getUnitInfo(state.units);
+
+  const color = conditionInf.color;
   const data: ChartPoint[] = [];
   if (source.show && state.showConditions[condition]) {
     for (const time of keys(source.forecast).sort()) {
       const value = source.forecast[time as any][condition];
       if (value !== undefined) {
-        data.push({
-          t: +time,
-          y: conditionInfo[condition].convert(value, state.units),
-        });
+        data.push({ t: +time, y: unitInf.convert(value) });
       }
     }
   }
   dataSets.push({
-    label: info.label,
+    label: conditionInf.label,
     data,
     yAxisID,
     borderColor: color,

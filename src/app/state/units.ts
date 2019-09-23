@@ -1,3 +1,6 @@
+import { DecimalPipe } from "@angular/common";
+import { identity } from "micro-dash";
+
 export enum TempUnit {
   F = "°F",
   C = "°C",
@@ -14,37 +17,59 @@ export enum SpeedUnit {
   KPH = "km/h",
 }
 
+export enum PercentageUnit {
+  PCT = "%",
+}
+
 export class Units {
   temp = TempUnit.F;
   amount = AmountUnit.IN;
   speed = SpeedUnit.MPH;
 }
 
-export function convertTemp(celcius: number, unit: TempUnit) {
-  switch (unit) {
-    case TempUnit.F:
-      return celcius * 1.8 + 32;
-    case TempUnit.C:
-      return celcius;
-  }
-}
+export const unitInfo = {
+  [TempUnit.F]: {
+    convert: (value: number) => value * 1.8 + 32,
+    getDisplay: (value: number, decimalPipe: DecimalPipe) =>
+      `${round(value, 0, decimalPipe)} ${TempUnit.F}`,
+  },
+  [TempUnit.C]: {
+    convert: identity,
+    getDisplay: (value: number, decimalPipe: DecimalPipe) =>
+      `${round(value, 0, decimalPipe)} ${TempUnit.C}`,
+  },
+  [AmountUnit.IN]: {
+    convert: (value: number) => value / 25.4,
+    getDisplay: (value: number, decimalPipe: DecimalPipe) =>
+      `${round(value, 2, decimalPipe)} ${AmountUnit.IN}`,
+  },
+  [AmountUnit.MM]: {
+    convert: identity,
+    getDisplay: (value: number, decimalPipe: DecimalPipe) =>
+      `${round(value, 0, decimalPipe)} ${AmountUnit.MM}`,
+  },
+  [SpeedUnit.MPH]: {
+    convert: (value: number) => value * 1.151,
+    getDisplay: (value: number, decimalPipe: DecimalPipe) =>
+      `${round(value, 0, decimalPipe)} ${SpeedUnit.MPH}`,
+  },
+  [SpeedUnit.KTS]: {
+    convert: identity,
+    getDisplay: (value: number, decimalPipe: DecimalPipe) =>
+      `${round(value, 0, decimalPipe)} ${SpeedUnit.KTS}`,
+  },
+  [SpeedUnit.KPH]: {
+    convert: (value: number) => value * 1.852,
+    getDisplay: (value: number, decimalPipe: DecimalPipe) =>
+      `${round(value, 0, decimalPipe)} ${SpeedUnit.KPH}`,
+  },
+  [PercentageUnit.PCT]: {
+    convert: identity,
+    getDisplay: (value: number, decimalPipe: DecimalPipe) =>
+      `${round(value, 0, decimalPipe)}%`,
+  },
+};
 
-export function convertAmount(millimeters: number, unit: AmountUnit) {
-  switch (unit) {
-    case AmountUnit.IN:
-      return millimeters / 25.4;
-    case AmountUnit.MM:
-      return millimeters;
-  }
-}
-
-export function convertSpeed(knots: number, unit: SpeedUnit) {
-  switch (unit) {
-    case SpeedUnit.MPH:
-      return knots * 1.151;
-    case SpeedUnit.KTS:
-      return knots;
-    case SpeedUnit.KPH:
-      return knots * 1.852;
-  }
+function round(value: number, precision: number, decimalPipe: DecimalPipe) {
+  return decimalPipe.transform(value, `1.${precision}-${precision}`);
 }

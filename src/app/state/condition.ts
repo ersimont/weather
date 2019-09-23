@@ -1,6 +1,5 @@
-import { identity } from "micro-dash";
 import { mapToObject } from "../to-replace/map-to-object";
-import { convertAmount, convertSpeed, convertTemp, Units } from "./units";
+import { PercentageUnit, unitInfo, Units } from "./units";
 
 export enum Condition {
   TEMP = "temp",
@@ -23,38 +22,31 @@ export const conditionInfo = {
   [Condition.TEMP]: {
     label: "Temp",
     color: colors[Condition.TEMP],
-    convert: (value: number, units: Units) => convertTemp(value, units.temp),
-    getSuffix: (units: Units) => " " + units.temp,
+    getUnitInfo: (units: Units) => unitInfo[units.temp],
   },
   [Condition.FEEL]: {
     label: "Feel",
     color: colors[Condition.FEEL],
-    convert: (value: number, units: Units) => convertTemp(value, units.temp),
-    getSuffix: (units: Units) => " " + units.temp,
+    getUnitInfo: (units: Units) => unitInfo[units.temp],
   },
   [Condition.DEW]: {
     label: "Dew Point",
     color: colors[Condition.DEW],
-    convert: (value: number, units: Units) => convertTemp(value, units.temp),
-    getSuffix: (units: Units) => " " + units.temp,
+    getUnitInfo: (units: Units) => unitInfo[units.temp],
   },
   [Condition.WIND]: {
     label: "Wind",
     color: colors[Condition.WIND],
-    convert: (value: number, units: Units) => convertSpeed(value, units.speed),
-    getSuffix: (units: Units) => " " + units.speed,
+    getUnitInfo: (units: Units) => unitInfo[units.speed],
   },
   [Condition.CHANCE]: {
     label: "Precip Chance",
     color: colors[Condition.CHANCE],
-    convert: identity,
-    getSuffix: () => "%",
+    getUnitInfo: () => unitInfo[PercentageUnit.PCT],
   },
   [Condition.AMOUNT]: {
     label: "Precip Amount",
     color: colors[Condition.AMOUNT],
-    convert: (value: number, units: Units) =>
-      convertAmount(value, units.amount),
-    getSuffix: (units: Units) => " " + units.amount,
+    getUnitInfo: (units: Units) => unitInfo[units.amount],
   },
 };
