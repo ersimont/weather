@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { fromEvent, interval, merge, of, Subject } from "rxjs";
+import { fromEvent, merge, Subject, timer } from "rxjs";
 import { filter, switchMapTo, throttleTime } from "rxjs/operators";
 import { InjectableSuperclass } from "s-ng-utils";
 import { LocationService } from "./location.service";
@@ -22,12 +22,7 @@ export class RefreshService extends InjectableSuperclass {
 
   async start() {
     const period = 30 * 60 * 1000;
-
-    const auto$ = merge(
-      of(null),
-      interval(period),
-      fromEvent(window, "focus"),
-    ).pipe(
+    const auto$ = merge(timer(0, period), fromEvent(window, "focus")).pipe(
       filter(() => document.hasFocus()),
       throttleTime(period),
     );

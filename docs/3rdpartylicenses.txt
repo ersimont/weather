@@ -91,7 +91,11 @@ THE SOFTWARE.
 
 @angular/material/expansion
 
+@angular/material/form-field
+
 @angular/material/icon
+
+@angular/material/radio
 
 @angular/material/sidenav
 
