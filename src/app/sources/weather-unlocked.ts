@@ -1,3 +1,4 @@
+import { GpsCoords } from "../location.service";
 import { AbstractSource } from "./abstract-source";
 import { HttpClient } from "@angular/common/http";
 import { Injectable, Injector } from "@angular/core";
@@ -6,7 +7,7 @@ import { SourceId } from "../state/source";
 import { Condition } from "../state/condition";
 
 const endpoint =
-  "https://us-central1-proxic.cloudfunctions.net/weather-unlocked/api/forecast";
+  "https://us-central1-proxic.cloudfunctions.net/api/weather-unlocked/api/forecast";
 
 @Injectable({ providedIn: "root" })
 export class WeatherUnlocked extends AbstractSource {
@@ -14,7 +15,7 @@ export class WeatherUnlocked extends AbstractSource {
     super(SourceId.WEATHER_UNLOCKED, injector);
   }
 
-  async fetch(gpsCoords: [number, number]): Promise<Forecast> {
+  async fetch(gpsCoords: GpsCoords): Promise<Forecast> {
     const res = await this.fetchRes(gpsCoords);
     const forecast: Forecast = {};
     for (const day of res.Days) {

@@ -1,30 +1,28 @@
-import { GpsCoords } from "../gps-coords.service";
-import { filter, switchMap } from "rxjs/operators";
 import { Injector } from "@angular/core";
+import { InjectableSuperclass } from "s-ng-utils";
+import { GpsCoords, LocationService } from "../location.service";
 import { Forecast } from "../state/forecast";
 import { SourceId } from "../state/source";
-import { InjectableSuperclass } from "s-ng-utils";
 import { WeatherStore } from "../state/weather-store";
-import { isDefined } from "s-js-utils";
 
 export abstract class AbstractSource extends InjectableSuperclass {
-  private store!: WeatherStore;
+  private locationService: LocationService;
+  private store: WeatherStore;
 
   constructor(private key: SourceId, injector: Injector) {
     super();
+    this.locationService = injector.get(LocationService);
     this.store = injector.get(WeatherStore);
   }
 
-  initialize() {
-    this.subscribeTo(
-      this.store("gpsCoords").$.pipe(
-        filter(isDefined),
-        switchMap(this.fetch.bind(this)),
-      ),
-      (forecast) => {
-        this.store("sources")(this.key)("forecast").set(forecast);
-      },
-    );
+  async refresh() {
+    const gpsCoords = this.locationService.getGpsCoords();
+    if (!gpsCoords) {
+      throw new Error("no coordinates");
+    }
+
+    const forecast = await this.fetch(gpsCoords);
+    this.store("sources")(this.key)("forecast").set(forecast);
   }
 
   protected abstract async fetch(gpsCoords: GpsCoords): Promise<Forecast>;

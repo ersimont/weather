@@ -1,12 +1,15 @@
-import { GpsCoords } from "../gps-coords.service";
 import { mapToObject } from "../to-replace/map-to-object";
 import { Condition } from "./condition";
+import { Location } from "./location";
 import { Source, SourceId } from "./source";
 import { Units } from "./units";
 
 export class WeatherState {
-  version = 4;
-  gpsCoords?: GpsCoords;
+  version = 5;
+
+  useCurrentLocation = true;
+  currentLocation = new Location();
+  customLocation = new Location();
 
   sources: Record<SourceId, Source> = {
     weatherGov: new Source("Weather.gov", true),

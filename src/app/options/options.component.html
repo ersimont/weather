@@ -1,5 +1,29 @@
 <mat-accordion>
   <mat-expansion-panel>
+    <mat-expansion-panel-header>Location</mat-expansion-panel-header>
+    <mat-radio-group [nasModel]="store('useCurrentLocation')">
+      <div class="radio-container">
+        <mat-radio-button class="current-radio" [value]="true">
+          Current
+        </mat-radio-button>
+      </div>
+      <form class="radio-container" (submit)="searchIfChanged()">
+        <mat-radio-button [value]="false"></mat-radio-button>
+        <mat-form-field>
+          <input
+            matInput
+            name="custom"
+            placeholder="Custom"
+            [(ngModel)]="custom"
+            (click)="selectCustom()"
+            (blur)="searchIfChanged()"
+          />
+        </mat-form-field>
+      </form>
+    </mat-radio-group>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel>
     <mat-expansion-panel-header>Sources</mat-expansion-panel-header>
     <div *ngFor="let sourceId of sourceIds" [class]="sourceId">
       <mat-slide-toggle [nasModel]="store('sources')(sourceId)('show')">

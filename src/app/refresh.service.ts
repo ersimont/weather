@@ -1,17 +1,18 @@
 import { Injectable } from "@angular/core";
-import { fromEvent, interval, merge } from "rxjs";
-import { filter, startWith, throttleTime } from "rxjs/operators";
+import { fromEvent, interval, merge, of, Subject } from "rxjs";
+import { filter, switchMap, throttleTime } from "rxjs/operators";
 import { InjectableSuperclass } from "s-ng-utils";
-import { getCurrentGpsCoords } from "./gps-coords.service";
+import { LocationService } from "./location.service";
 import { WeatherGov } from "./sources/weather-gov";
 import { WeatherUnlocked } from "./sources/weather-unlocked";
 import { WeatherStore } from "./state/weather-store";
 
 @Injectable({ providedIn: "root" })
 export class RefreshService extends InjectableSuperclass {
-  private initialized = false;
+  private manualRefresh$ = new Subject();
 
   constructor(
+    private locationService: LocationService,
     private store: WeatherStore,
     private weatherGov: WeatherGov,
     private weatherUnlocked: WeatherUnlocked,
@@ -22,21 +23,27 @@ export class RefreshService extends InjectableSuperclass {
   async start() {
     const period = 30 * 60 * 1000;
     const refresh$ = merge(
-      interval(period).pipe(
-        startWith(),
-        filter(() => document.hasFocus()),
+      this.manualRefresh$,
+      this.store("useCurrentLocation").$,
+    ).pipe(
+      switchMap(() =>
+        merge(of(null), interval(period), fromEvent(window, "focus")).pipe(
+          filter(() => document.hasFocus()),
+          throttleTime(period),
+        ),
       ),
-      fromEvent(window, "focus"),
-    ).pipe(throttleTime(period));
-    this.subscribeTo(refresh$, this.refresh);
+    );
+    this.subscribeTo(refresh$, this.fetchAll);
   }
 
-  private async refresh() {
-    this.store("gpsCoords").set(await getCurrentGpsCoords());
-    if (!this.initialized) {
-      this.weatherGov.initialize();
-      this.weatherUnlocked.initialize();
-      this.initialized = true;
-    }
+  refresh() {
+    this.manualRefresh$.next();
+  }
+
+  private async fetchAll() {
+    await this.locationService.refresh();
+
+    this.weatherGov.refresh();
+    this.weatherUnlocked.refresh();
   }
 }

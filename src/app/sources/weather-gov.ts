@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, Injector } from "@angular/core";
 import { duration } from "moment";
-import { GpsCoords } from "../gps-coords.service";
+import { GpsCoords } from "../location.service";
 import { Condition, Conditions } from "../state/condition";
 import { Forecast } from "../state/forecast";
 import { SourceId } from "../state/source";
