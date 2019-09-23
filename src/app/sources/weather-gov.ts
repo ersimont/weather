@@ -1,6 +1,8 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, Injector } from "@angular/core";
+import { get } from "micro-dash";
 import { duration } from "moment";
+import { PresentableError } from "../error-service";
 import { GpsCoords } from "../location.service";
 import { Condition, Conditions } from "../state/condition";
 import { Forecast } from "../state/forecast";
@@ -14,20 +16,20 @@ export class WeatherGov extends AbstractSource {
   }
 
   async fetch(gpsCoords: [number, number]) {
-    // try {
-    const pointRes = await this.fetchPoint(gpsCoords);
-    const zoneRes = await this.fetchZone(pointRes.properties);
-    return extractForecast(zoneRes.properties);
-    // } catch (ex) {
-    //   if (
-    //     get(ex, ["error", "type"]) ===
-    //     "https://api.weather.gov/problems/InvalidPoint"
-    //   ) {
-    //     return { city: "Not available at this location" };
-    //   } else {
-    //     throw ex;
-    //   }
-    // }
+    try {
+      const pointRes = await this.fetchPoint(gpsCoords);
+      const zoneRes = await this.fetchZone(pointRes.properties);
+      return extractForecast(zoneRes.properties);
+    } catch (ex) {
+      if (
+        get(ex, ["error", "type"]) ===
+        "https://api.weather.gov/problems/InvalidPoint"
+      ) {
+        throw new PresentableError("Weather.gov is not available here");
+      } else {
+        throw ex;
+      }
+    }
   }
 
   private fetchPoint(gpsCoords: GpsCoords) {

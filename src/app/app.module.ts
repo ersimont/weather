@@ -1,9 +1,10 @@
 import { HttpClientModule } from "@angular/common/http";
-import { NgModule } from "@angular/core";
+import { ErrorHandler, NgModule } from "@angular/core";
 import {
   MatButtonModule,
   MatIconModule,
   MatSidenavModule,
+  MatSnackBarModule,
   MatToolbarModule,
 } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
@@ -15,6 +16,7 @@ import { ngAppStateReducer } from "ng-app-state";
 import { ChartsModule } from "ng2-charts";
 import { environment } from "../environments/environment";
 import { AppComponent } from "./app.component";
+import { ErrorService } from "./error-service";
 import { GraphComponent } from "./graph/graph.component";
 import { OptionsModule } from "./options/options.module";
 
@@ -28,6 +30,7 @@ import { OptionsModule } from "./options/options.module";
     MatButtonModule,
     MatIconModule,
     MatSidenavModule,
+    MatSnackBarModule,
     MatToolbarModule,
     OptionsModule,
     ServiceWorkerModule.register("ngsw-worker.js", {
@@ -36,6 +39,7 @@ import { OptionsModule } from "./options/options.module";
     StoreModule.forRoot({}, { metaReducers: [ngAppStateReducer] }),
     environment.production ? [] : StoreDevtoolsModule.instrument(),
   ],
+  providers: [{ provide: ErrorHandler, useClass: ErrorService }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
