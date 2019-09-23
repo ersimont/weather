@@ -1,0 +1,9 @@
+.radio-container {
+  height: 48px;
+  display: flex;
+  align-items: center;
+}
+
+.current-radio {
+  width: 100%
+}

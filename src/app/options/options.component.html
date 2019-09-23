@@ -1,60 +1,21 @@
 <mat-accordion>
   <mat-expansion-panel>
     <mat-expansion-panel-header>Location</mat-expansion-panel-header>
-    <mat-radio-group [nasModel]="store('useCurrentLocation')">
-      <div class="radio-container">
-        <mat-radio-button class="current-radio" [value]="true">
-          Current
-        </mat-radio-button>
-      </div>
-      <form class="radio-container" (submit)="searchIfChanged()">
-        <mat-radio-button [value]="false"></mat-radio-button>
-        <mat-form-field>
-          <input
-            matInput
-            name="custom"
-            placeholder="Custom"
-            [(ngModel)]="custom"
-            (click)="selectCustom()"
-            (blur)="searchIfChanged()"
-          />
-        </mat-form-field>
-      </form>
-    </mat-radio-group>
+    <app-location-options></app-location-options>
   </mat-expansion-panel>
 
   <mat-expansion-panel>
     <mat-expansion-panel-header>Sources</mat-expansion-panel-header>
-    <div *ngFor="let sourceId of sourceIds" [class]="sourceId">
-      <mat-slide-toggle [nasModel]="store('sources')(sourceId)('show')">
-        {{ store("sources")(sourceId)("label").$ | async }}
-      </mat-slide-toggle>
-    </div>
+    <app-source-options></app-source-options>
   </mat-expansion-panel>
 
   <mat-expansion-panel>
     <mat-expansion-panel-header>Units</mat-expansion-panel-header>
-    <div class="button-toggle-list">
-      <mat-button-toggle-group
-        *ngFor="let unitOption of unitOptions"
-        [nasModel]="store('units')(unitOption.type)"
-      >
-        <mat-button-toggle
-          *ngFor="let option of unitOption.options"
-          [value]="option"
-        >
-          {{ option | uppercase }}
-        </mat-button-toggle>
-      </mat-button-toggle-group>
-    </div>
+    <app-unit-options></app-unit-options>
   </mat-expansion-panel>
 
   <mat-expansion-panel [expanded]="true">
     <mat-expansion-panel-header>Conditions</mat-expansion-panel-header>
-    <div *ngFor="let condition of conditions" [ngClass]="condition">
-      <mat-slide-toggle [nasModel]="store('showConditions')(condition)">
-        {{ conditionInfo[condition].label }}
-      </mat-slide-toggle>
-    </div>
+    <app-condition-options></app-condition-options>
   </mat-expansion-panel>
 </mat-accordion>

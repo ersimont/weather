@@ -1,0 +1,5 @@
+<div *ngFor="let sourceId of sourceIds" [class]="sourceId">
+  <mat-slide-toggle [nasModel]="store('sources')(sourceId)('show')">
+    {{ store("sources")(sourceId)("label").$ | async }}
+  </mat-slide-toggle>
+</div>

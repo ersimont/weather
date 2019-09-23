@@ -1,0 +1,13 @@
+<div class="button-toggle-list">
+  <mat-button-toggle-group
+    *ngFor="let unitOption of unitOptions"
+    [nasModel]="store('units')(unitOption.type)"
+  >
+    <mat-button-toggle
+      *ngFor="let option of unitOption.options"
+      [value]="option"
+    >
+      {{ option | uppercase }}
+    </mat-button-toggle>
+  </mat-button-toggle-group>
+</div>

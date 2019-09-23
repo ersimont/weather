@@ -1,0 +1,5 @@
+<div *ngFor="let condition of conditions" [ngClass]="condition">
+  <mat-slide-toggle [nasModel]="store('showConditions')(condition)">
+    {{ conditionInfo[condition].label }}
+  </mat-slide-toggle>
+</div>

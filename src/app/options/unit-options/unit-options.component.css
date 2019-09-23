@@ -1,0 +1,10 @@
+.button-toggle-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-items: stretch;
+  grid-gap: 16px;
+}
+
+mat-button-toggle {
+  flex: 1 1 0;
+}

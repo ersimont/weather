@@ -5,7 +5,12 @@
   "projects": {
     "weather": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:component": {
+          "changeDetection": "OnPush",
+          "spec": false
+        }
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -24,10 +29,7 @@
               "src/assets",
               "src/manifest.webmanifest"
             ],
-            "styles": [
-              "src/custom-theme.scss",
-              "src/styles.css"
-            ],
+            "styles": ["src/custom-theme.scss", "src/styles.css"],
             "scripts": []
           },
           "configurations": {
@@ -93,9 +95,7 @@
               "src/assets",
               "src/manifest.webmanifest"
             ],
-            "styles": [
-              "src/styles.css"
-            ],
+            "styles": ["src/styles.css"],
             "scripts": []
           }
         },
@@ -107,9 +107,7 @@
               "tsconfig.spec.json",
               "e2e/tsconfig.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "e2e": {
