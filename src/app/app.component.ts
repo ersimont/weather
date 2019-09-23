@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { MatIconRegistry } from "@angular/material";
 import { DomSanitizer } from "@angular/platform-browser";
 import { SetRangeAction } from "./graph/set-range-action";
-import { RefreshService } from "./refresh.service";
+import { WeatherGov } from "./sources/weather-gov";
+import { WeatherUnlocked } from "./sources/weather-unlocked";
 import { WeatherStore } from "./state/weather-store";
 
 const icons = `
@@ -48,9 +49,11 @@ export class AppComponent {
     private store: WeatherStore,
     domSanitizer: DomSanitizer,
     matIconRegistry: MatIconRegistry,
-    refreshService: RefreshService,
+    weatherGov: WeatherGov,
+    weatherUnlocked: WeatherUnlocked,
   ) {
-    refreshService.start();
+    weatherGov.initialize();
+    weatherUnlocked.initialize();
     matIconRegistry.addSvgIconSetLiteral(
       domSanitizer.bypassSecurityTrustHtml(icons),
     );
