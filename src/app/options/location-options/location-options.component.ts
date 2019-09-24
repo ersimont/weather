@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { LocationService } from "app/location.service";
+import { RefreshService } from "app/refresh.service";
+import { WeatherState } from "app/state/weather-state";
+import { WeatherStore } from "app/state/weather-store";
+import { debounce } from "micro-dash";
 import { StoreObject } from "ng-app-state";
-import { LocationService } from "../../location.service";
-import { RefreshService } from "../../refresh.service";
-import { WeatherState } from "../../state/weather-state";
-import { WeatherStore } from "../../state/weather-store";
 
 @Component({
   selector: "app-location-options",
@@ -13,7 +14,8 @@ import { WeatherStore } from "../../state/weather-store";
 })
 export class LocationOptionsComponent {
   store: StoreObject<WeatherState>;
-  custom: string;
+  useCurrentLocation: boolean;
+  customSearch: string;
 
   constructor(
     private locationService: LocationService,
@@ -21,25 +23,28 @@ export class LocationOptionsComponent {
     store: WeatherStore,
   ) {
     this.store = store.withCaching();
-    this.custom = store.state().customLocation.search;
+    this.useCurrentLocation = store.state().useCurrentLocation;
+    this.customSearch = store.state().customLocation.search;
   }
 
-  async searchIfChanged() {
-    const searchStore = this.store("customLocation")("search");
-    if (this.custom === searchStore.state()) {
+  submit = debounce(async () => {
+    if (this.useCurrentLocation) {
+      this.store("useCurrentLocation").set(true);
       return;
     }
 
-    await this.locationService.setCustom(this.custom);
+    const searchStore = this.store("customLocation")("search");
+    if (this.customSearch === searchStore.state()) {
+      this.store("useCurrentLocation").set(false);
+      return;
+    }
+
+    await this.locationService.setCustom(this.customSearch);
 
     if (this.store.state().useCurrentLocation) {
-      this.selectCustom();
+      this.store("useCurrentLocation").set(false);
     } else {
       this.refreshService.refresh();
     }
-  }
-
-  selectCustom() {
-    this.store("useCurrentLocation").set(false);
-  }
+  }, 100); // there is a delay between input (blur) and radio (change)
 }

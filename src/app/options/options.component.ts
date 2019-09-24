@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { WeatherState } from "app/state/weather-state";
+import { WeatherStore } from "app/state/weather-store";
 import { StoreObject } from "ng-app-state";
-import { WeatherState } from "../state/weather-state";
-import { WeatherStore } from "../state/weather-store";
 
 @Component({
   selector: "app-options",

@@ -24,7 +24,10 @@
     "strict": true,
 
     // temp
-    "skipLibCheck": true
+    "skipLibCheck": true,
+
+    // app specific
+    "paths": { "app/*": ["./src/app/*"] }
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,

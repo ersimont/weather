@@ -1,20 +1,23 @@
 import { Injector } from "@angular/core";
+import { ErrorService } from "app/error-service";
+import { GpsCoords, LocationService } from "app/location.service";
+import { RefreshService } from "app/refresh.service";
+import { Forecast } from "app/state/forecast";
+import { Source, SourceId } from "app/state/source";
+import { WeatherStore } from "app/state/weather-store";
 import { StoreObject } from "ng-app-state";
 import { filter, switchMapTo } from "rxjs/operators";
 import { InjectableSuperclass } from "s-ng-utils";
-import { GpsCoords, LocationService } from "../location.service";
-import { RefreshService } from "../refresh.service";
-import { Forecast } from "../state/forecast";
-import { Source, SourceId } from "../state/source";
-import { WeatherStore } from "../state/weather-store";
 
 export abstract class AbstractSource extends InjectableSuperclass {
+  private errorService: ErrorService;
   private locationService: LocationService;
   private refreshService: RefreshService;
   private sourceStore: StoreObject<Source>;
 
   constructor(private key: SourceId, injector: Injector) {
     super();
+    this.errorService = injector.get(ErrorService);
     this.locationService = injector.get(LocationService);
     this.refreshService = injector.get(RefreshService);
 
@@ -34,11 +37,14 @@ export abstract class AbstractSource extends InjectableSuperclass {
 
   private async refresh() {
     const gpsCoords = this.locationService.getGpsCoords();
-    if (!gpsCoords) {
-      throw new Error("no coordinates");
+    let forecast;
+    if (gpsCoords) {
+      forecast = await this.fetch(gpsCoords);
+    } else {
+      this.errorService.show("Location not available");
+      forecast = {};
     }
 
-    const forecast = await this.fetch(gpsCoords);
     this.sourceStore("forecast").set(forecast);
   }
 

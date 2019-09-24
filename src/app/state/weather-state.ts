@@ -1,8 +1,8 @@
-import { mapToObject } from "../to-replace/map-to-object";
-import { Condition } from "./condition";
-import { Location } from "./location";
-import { Source, SourceId } from "./source";
-import { Units } from "./units";
+import { Condition } from "app/state/condition";
+import { Location } from "app/state/location";
+import { Source, SourceId } from "app/state/source";
+import { Units } from "app/state/units";
+import { mapToObject } from "app/to-replace/map-to-object";
 
 export class WeatherState {
   version = 5;

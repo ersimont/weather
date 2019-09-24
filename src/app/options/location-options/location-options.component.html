@@ -1,20 +1,27 @@
-<mat-radio-group [nasModel]="store('useCurrentLocation')">
-  <div class="radio-container">
-    <mat-radio-button class="current-radio" [value]="true">
-      Current
-    </mat-radio-button>
-  </div>
-  <form class="radio-container" (submit)="searchIfChanged()">
-    <mat-radio-button [value]="false"></mat-radio-button>
-    <mat-form-field>
-      <input
-        matInput
-        name="custom"
-        placeholder="Custom"
-        [(ngModel)]="custom"
-        (click)="selectCustom()"
-        (blur)="searchIfChanged()"
-      />
-    </mat-form-field>
-  </form>
-</mat-radio-group>
+<form (submit)="submit()">
+  <mat-radio-group
+    name="group"
+    [(ngModel)]="useCurrentLocation"
+    (change)="submit()"
+  >
+    <div class="radio-container">
+      <mat-radio-button class="current-radio" [value]="true">
+        Current
+      </mat-radio-button>
+    </div>
+    <div class="radio-container">
+      <mat-radio-button [value]="false"></mat-radio-button>
+      <mat-form-field>
+        <input
+          matInput
+          name="custom"
+          placeholder="Custom"
+          [(ngModel)]="customSearch"
+          (click)="useCurrentLocation = false"
+          (input)="useCurrentLocation = false"
+          (blur)="submit()"
+        />
+      </mat-form-field>
+    </div>
+  </mat-radio-group>
+</form>

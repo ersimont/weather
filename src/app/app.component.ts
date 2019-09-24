@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { MatIconRegistry } from "@angular/material";
 import { DomSanitizer } from "@angular/platform-browser";
-import { SetRangeAction } from "./graph/set-range-action";
-import { WeatherGov } from "./sources/weather-gov";
-import { WeatherUnlocked } from "./sources/weather-unlocked";
-import { WeatherStore } from "./state/weather-store";
+import { SetRangeAction } from "app/graph/set-range-action";
+import { WeatherGov } from "app/sources/weather-gov";
+import { WeatherUnlocked } from "app/sources/weather-unlocked";
+import { WeatherStore } from "app/state/weather-store";
 
 const icons = `
   <svg><defs>

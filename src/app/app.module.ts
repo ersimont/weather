@@ -12,13 +12,13 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { ServiceWorkerModule } from "@angular/service-worker";
 import { StoreModule } from "@ngrx/store";
 import { StoreDevtoolsModule } from "@ngrx/store-devtools";
+import { AppComponent } from "app/app.component";
+import { ErrorService } from "app/error-service";
+import { GraphComponent } from "app/graph/graph.component";
+import { OptionsModule } from "app/options/options.module";
 import { ngAppStateReducer } from "ng-app-state";
 import { ChartsModule } from "ng2-charts";
 import { environment } from "../environments/environment";
-import { AppComponent } from "./app.component";
-import { ErrorService } from "./error-service";
-import { GraphComponent } from "./graph/graph.component";
-import { OptionsModule } from "./options/options.module";
 
 @NgModule({
   declarations: [AppComponent, GraphComponent],
@@ -39,7 +39,10 @@ import { OptionsModule } from "./options/options.module";
     StoreModule.forRoot({}, { metaReducers: [ngAppStateReducer] }),
     environment.production ? [] : StoreDevtoolsModule.instrument(),
   ],
-  providers: [{ provide: ErrorHandler, useClass: ErrorService }],
+  providers: [
+    ErrorService,
+    { provide: ErrorHandler, useExisting: ErrorService },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

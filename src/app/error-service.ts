@@ -15,7 +15,11 @@ export class ErrorService implements ErrorHandler {
       console.error(error);
       message = "There was an unexpected error";
     }
-    this.matSnackBar.open(message, "OK", { duration: 6000 });
+    this.show(message);
+  }
+
+  show(message: string) {
+    this.matSnackBar.open(message, "OK", { duration: 5000 });
   }
 }
 
