@@ -1,10 +1,10 @@
-import { GpsCoords } from "../location.service";
-import { AbstractSource } from "./abstract-source";
 import { HttpClient } from "@angular/common/http";
 import { Injectable, Injector } from "@angular/core";
-import { Forecast } from "../state/forecast";
-import { SourceId } from "../state/source";
-import { Condition } from "../state/condition";
+import { AbstractSource } from "app/sources/abstract-source";
+import { Condition } from "app/state/condition";
+import { Forecast } from "app/state/forecast";
+import { GpsCoords } from "app/state/location";
+import { SourceId } from "app/state/source";
 
 const endpoint =
   "https://us-central1-proxic.cloudfunctions.net/api/weather-unlocked/api/forecast";

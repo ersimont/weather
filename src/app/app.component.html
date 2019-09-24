@@ -15,6 +15,11 @@
   <button mat-icon-button (click)="setRange(7)">
     <mat-icon svgIcon="week"></mat-icon>
   </button>
+
+  <mat-progress-bar
+    *ngIf="loadingInterceptor.inFlight$ | async"
+    mode="indeterminate"
+  ></mat-progress-bar>
 </mat-toolbar>
 
 <mat-sidenav-container>

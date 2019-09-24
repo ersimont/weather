@@ -1,9 +1,8 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { GpsCoords, Location } from "app/state/location";
+import { WeatherStore } from "app/state/weather-store";
 import { map, pluck } from "rxjs/operators";
-import { WeatherStore } from "./state/weather-store";
-
-export type GpsCoords = [number, number];
 
 const baseUrl =
   "https://us-central1-proxic.cloudfunctions.net/api/location-iq/v1";
@@ -74,13 +73,12 @@ export class LocationService {
 }
 
 function parseResponse() {
-  return map((res: any) => {
-    const gpsCoords: GpsCoords = [res.lat, res.lon];
-    return {
-      gpsCoords,
-      city: `${res.address.city}, ${res.address.state_code.toUpperCase()}`,
-    };
-  });
+  return map(
+    (res: any): Partial<Location> => ({
+      gpsCoords: [res.lat, res.lon],
+      city: res.display_name,
+    }),
+  );
 }
 
 function getCurrentCoords() {

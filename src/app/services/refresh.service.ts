@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
+import { LocationService } from "app/services/location.service";
+import { WeatherStore } from "app/state/weather-store";
 import { fromEvent, merge, Observable, Subject, timer } from "rxjs";
 import { filter, switchMap, switchMapTo, throttleTime } from "rxjs/operators";
 import { InjectableSuperclass } from "s-ng-utils";
-import { LocationService } from "./location.service";
-import { WeatherStore } from "./state/weather-store";
 
 @Injectable({ providedIn: "root" })
 export class RefreshService extends InjectableSuperclass {

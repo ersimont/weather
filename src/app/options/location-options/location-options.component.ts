@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { LocationService } from "app/location.service";
-import { RefreshService } from "app/refresh.service";
+import { LocationService } from "app/services/location.service";
+import { RefreshService } from "app/services/refresh.service";
 import { WeatherState } from "app/state/weather-state";
 import { WeatherStore } from "app/state/weather-store";
 import { debounce } from "micro-dash";

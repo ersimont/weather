@@ -1,8 +1,9 @@
 import { Injector } from "@angular/core";
-import { ErrorService } from "app/error-service";
-import { GpsCoords, LocationService } from "app/location.service";
-import { RefreshService } from "app/refresh.service";
+import { ErrorService } from "app/services/error.service";
+import { LocationService } from "app/services/location.service";
+import { RefreshService } from "app/services/refresh.service";
 import { Forecast } from "app/state/forecast";
+import { GpsCoords } from "app/state/location";
 import { Source, SourceId } from "app/state/source";
 import { WeatherStore } from "app/state/weather-store";
 import { StoreObject } from "ng-app-state";

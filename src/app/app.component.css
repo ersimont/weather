@@ -13,6 +13,17 @@
   align-items: stretch;
 }
 
+mat-toolbar {
+  position: relative;
+}
+
+mat-progress-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
 .toolbar-spacer {
   flex: 1 1 auto;
 }

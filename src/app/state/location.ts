@@ -1,4 +1,4 @@
-import { GpsCoords } from "../location.service";
+export type GpsCoords = [number, number];
 
 export class Location {
   search = "";
