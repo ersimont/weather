@@ -17,7 +17,7 @@ import { AppComponent } from "app/app.component";
 import { ErrorService } from "app/services/error.service";
 import { GraphComponent } from "app/graph/graph.component";
 import { OptionsModule } from "app/options/options.module";
-import { LoadingInterceptor } from "app/services/loading-interceptor.service";
+import { LoadingInterceptor } from "app/to-replace/loading-interceptor.service";
 import { ngAppStateReducer } from "ng-app-state";
 import { ChartsModule } from "ng2-charts";
 import { environment } from "../environments/environment";

@@ -2,10 +2,13 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { MatIconRegistry } from "@angular/material";
 import { DomSanitizer } from "@angular/platform-browser";
 import { SetRangeAction } from "app/graph/set-range-action";
-import { LoadingInterceptor } from "app/services/loading-interceptor.service";
+import { LocationService } from "app/services/location.service";
+import { LoadingInterceptor } from "app/to-replace/loading-interceptor.service";
 import { WeatherGov } from "app/sources/weather-gov";
 import { WeatherUnlocked } from "app/sources/weather-unlocked";
 import { WeatherStore } from "app/state/weather-store";
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
 
 const icons = `
   <svg><defs>
@@ -46,14 +49,21 @@ const icons = `
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
+  title$: Observable<string>;
+
   constructor(
     public loadingInterceptor: LoadingInterceptor,
     private store: WeatherStore,
     domSanitizer: DomSanitizer,
+    locationService: LocationService,
     matIconRegistry: MatIconRegistry,
     weatherGov: WeatherGov,
     weatherUnlocked: WeatherUnlocked,
   ) {
+    this.title$ = locationService.$.pipe(
+      map((location) => location.city || "Weather Unlocked"),
+    );
+
     weatherGov.initialize();
     weatherUnlocked.initialize();
     matIconRegistry.addSvgIconSetLiteral(

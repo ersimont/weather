@@ -37,7 +37,7 @@ export abstract class AbstractSource extends InjectableSuperclass {
   }
 
   private async refresh() {
-    const gpsCoords = this.locationService.getGpsCoords();
+    const gpsCoords = this.locationService.getLocation().gpsCoords;
     let forecast;
     if (gpsCoords) {
       forecast = await this.fetch(gpsCoords);

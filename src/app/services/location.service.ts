@@ -2,7 +2,8 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { GpsCoords, Location } from "app/state/location";
 import { WeatherStore } from "app/state/weather-store";
-import { map, pluck } from "rxjs/operators";
+import { identity } from "micro-dash";
+import { map, pluck, switchMap } from "rxjs/operators";
 
 const baseUrl =
   "https://us-central1-proxic.cloudfunctions.net/api/location-iq/v1";
@@ -15,13 +16,20 @@ const commonParams = {
 
 @Injectable({ providedIn: "root" })
 export class LocationService {
+  $ = this.store("useCurrentLocation").$.pipe(
+    switchMap(
+      (useCurrent) =>
+        this.store(useCurrent ? "currentLocation" : "customLocation").$,
+    ),
+  );
+
   constructor(private httpClient: HttpClient, private store: WeatherStore) {}
 
-  getGpsCoords() {
+  getLocation() {
     const state = this.store.state();
     return state.useCurrentLocation
-      ? state.currentLocation.gpsCoords
-      : state.customLocation.gpsCoords;
+      ? state.currentLocation
+      : state.customLocation;
   }
 
   async refresh() {
@@ -76,13 +84,33 @@ function parseResponse() {
   return map(
     (res: any): Partial<Location> => ({
       gpsCoords: [res.lat, res.lon],
-      city: res.display_name,
+      city: parseCity(res.address),
     }),
   );
 }
 
+function parseCity(address: any) {
+  const city =
+    address.city ||
+    address.city_district ||
+    address.town ||
+    address.village ||
+    address.suburb ||
+    address.hamlet ||
+    address.neighbourhood ||
+    address.road;
+  let state = address.state_code || address.country_code;
+  if (state) {
+    state = state.toUpperCase();
+  } else {
+    state = address.state || address.country;
+  }
+  return [city, state].filter(identity).join(", ");
+}
+
 function getCurrentCoords() {
   return new Promise<GpsCoords>((resolve, reject) => {
+    // resolve([39.7456, -97.0892]);
     if (!("geolocation" in navigator)) {
       reject("Current location not available");
       return;
