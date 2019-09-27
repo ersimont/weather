@@ -14,9 +14,10 @@ import { ServiceWorkerModule } from "@angular/service-worker";
 import { StoreModule } from "@ngrx/store";
 import { StoreDevtoolsModule } from "@ngrx/store-devtools";
 import { AppComponent } from "app/app.component";
-import { ErrorService } from "app/services/error.service";
 import { GraphComponent } from "app/graph/graph.component";
 import { OptionsModule } from "app/options/options.module";
+import { ErrorService } from "app/services/error.service";
+import { EventTrackingModule } from "app/to-replace/event-tracking/event-tracking.module";
 import { LoadingInterceptor } from "app/to-replace/loading-interceptor.service";
 import { ngAppStateReducer } from "ng-app-state";
 import { ChartsModule } from "ng2-charts";
@@ -28,6 +29,7 @@ import { environment } from "../environments/environment";
     BrowserAnimationsModule,
     BrowserModule,
     ChartsModule,
+    EventTrackingModule.forRoot("UA-148865234-1"),
     HttpClientModule,
     MatButtonModule,
     MatIconModule,

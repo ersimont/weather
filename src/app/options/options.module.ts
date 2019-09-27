@@ -9,12 +9,13 @@ import {
   MatRadioModule,
   MatSlideToggleModule,
 } from "@angular/material";
+import { EventTrackingModule } from "app/to-replace/event-tracking/event-tracking.module";
 import { NasModelModule } from "ng-app-state";
 import { OptionsComponent } from "./options.component";
 import { LocationOptionsComponent } from "./location-options/location-options.component";
 import { SourceOptionsComponent } from "./source-options/source-options.component";
 import { UnitOptionsComponent } from "./unit-options/unit-options.component";
-import { ConditionOptionsComponent } from './condition-options/condition-options.component';
+import { ConditionOptionsComponent } from "./condition-options/condition-options.component";
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { ConditionOptionsComponent } from './condition-options/condition-options
   ],
   imports: [
     CommonModule,
+    EventTrackingModule,
     FormsModule,
     MatButtonToggleModule,
     MatExpansionModule,

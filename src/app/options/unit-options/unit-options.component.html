@@ -6,6 +6,7 @@
     <mat-button-toggle
       *ngFor="let option of unitOption.options"
       [value]="option"
+      (change)="trackEvent('change_' + option, 'change_unit')"
     >
       {{ option | uppercase }}
     </mat-button-toggle>

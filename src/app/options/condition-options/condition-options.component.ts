@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { trackEvent } from "app/to-replace/event-tracking/s-track.directive";
 import { values } from "micro-dash";
 import { StoreObject } from "ng-app-state";
 import { Condition, conditionInfo } from "../../state/condition";
@@ -15,6 +16,7 @@ export class ConditionOptionsComponent {
   store: StoreObject<WeatherState>;
   conditions = values(Condition);
   conditionInfo: any = conditionInfo;
+  trackEvent = trackEvent;
 
   constructor(store: WeatherStore) {
     this.store = store.withCaching();

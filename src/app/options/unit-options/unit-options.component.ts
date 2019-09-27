@@ -1,9 +1,10 @@
-import { Component, ChangeDetectionStrategy } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { AmountUnit, SpeedUnit, TempUnit } from "app/state/units";
+import { WeatherState } from "app/state/weather-state";
+import { WeatherStore } from "app/state/weather-store";
+import { trackEvent } from "app/to-replace/event-tracking/s-track.directive";
 import { values } from "micro-dash";
 import { StoreObject } from "ng-app-state";
-import { AmountUnit, SpeedUnit, TempUnit } from "../../state/units";
-import { WeatherState } from "../../state/weather-state";
-import { WeatherStore } from "../../state/weather-store";
 
 @Component({
   selector: "app-unit-options",
@@ -18,6 +19,7 @@ export class UnitOptionsComponent {
     { type: "amount", options: values(AmountUnit) },
     { type: "speed", options: values(SpeedUnit) },
   ];
+  trackEvent = trackEvent;
 
   constructor(store: WeatherStore) {
     this.store = store.withCaching();

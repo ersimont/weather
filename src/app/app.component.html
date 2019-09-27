@@ -6,13 +6,31 @@
 
   <span class="toolbar-spacer"></span>
 
-  <button mat-icon-button (click)="setRange(1)">
+  <button
+    mat-icon-button
+    (click)="setRange(1)"
+    sTrack="click"
+    eventName="click_day"
+    eventCategory="set_range"
+  >
     <mat-icon svgIcon="day"></mat-icon>
   </button>
-  <button mat-icon-button (click)="setRange(3)">
+  <button
+    mat-icon-button
+    (click)="setRange(3)"
+    sTrack="click"
+    eventName="click_three_days"
+    eventCategory="set_range"
+  >
     <mat-icon svgIcon="three-days"></mat-icon>
   </button>
-  <button mat-icon-button (click)="setRange(7)">
+  <button
+    mat-icon-button
+    (click)="setRange(7)"
+    sTrack="click"
+    eventName="click_week"
+    eventCategory="set_range"
+  >
     <mat-icon svgIcon="week"></mat-icon>
   </button>
 

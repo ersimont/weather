@@ -10,7 +10,8 @@
           "changeDetection": "OnPush",
           "spec": false
         },
-        "@schematics/angular:service": { "spec": false }
+        "@schematics/angular:service": { "spec": false },
+        "@schematics/angular:directive": { "spec": false }
       },
       "root": "",
       "sourceRoot": "src",

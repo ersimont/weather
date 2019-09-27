@@ -1,5 +1,6 @@
 import { DecimalPipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Injector } from "@angular/core";
+import { trackEvent } from "app/to-replace/event-tracking/s-track.directive";
 import {
   ChartData,
   ChartDataSets,
@@ -100,8 +101,20 @@ export class GraphComponent extends DirectiveSuperclass {
       },
       plugins: {
         zoom: {
-          pan: { enabled: true, mode: "x" },
-          zoom: { enabled: true, mode: "x" },
+          pan: {
+            enabled: true,
+            mode: "x",
+            onPanComplete() {
+              trackEvent("change_pan", "zoom_and_pan");
+            },
+          },
+          zoom: {
+            enabled: true,
+            mode: "x",
+            onZoomComplete() {
+              trackEvent("change_zoom", "zoom_and_pan");
+            },
+          },
         },
       },
     };

@@ -3,10 +3,10 @@ import { MatIconRegistry } from "@angular/material";
 import { DomSanitizer } from "@angular/platform-browser";
 import { SetRangeAction } from "app/graph/set-range-action";
 import { LocationService } from "app/services/location.service";
-import { LoadingInterceptor } from "app/to-replace/loading-interceptor.service";
 import { WeatherGov } from "app/sources/weather-gov";
 import { WeatherUnlocked } from "app/sources/weather-unlocked";
 import { WeatherStore } from "app/state/weather-store";
+import { LoadingInterceptor } from "app/to-replace/loading-interceptor.service";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 

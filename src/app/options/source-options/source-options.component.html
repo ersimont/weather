@@ -1,5 +1,8 @@
 <div *ngFor="let sourceId of sourceIds" [class]="sourceId">
-  <mat-slide-toggle [nasModel]="store('sources')(sourceId)('show')">
+  <mat-slide-toggle
+    [nasModel]="store('sources')(sourceId)('show')"
+    (change)="trackEvent('change_' + sourceId, 'change_source')"
+  >
     {{ store("sources")(sourceId)("label").$ | async }}
   </mat-slide-toggle>
 </div>
