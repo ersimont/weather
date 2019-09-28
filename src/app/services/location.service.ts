@@ -1,29 +1,49 @@
-import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { GpsCoords, Location } from "app/state/location";
+import { LocationIqService } from "app/services/location-iq.service";
+import { GpsCoords } from "app/state/location";
 import { WeatherStore } from "app/state/weather-store";
-import { identity } from "micro-dash";
-import { map, pluck, switchMap } from "rxjs/operators";
-
-const baseUrl =
-  "https://us-central1-proxic.cloudfunctions.net/api/location-iq/v1";
-const commonParams = {
-  format: "json",
-  addressdetails: "1",
-  normalizecity: "1",
-  statecode: "1",
-};
+import { bindKey } from "micro-dash";
+import { merge, Observable, of } from "rxjs";
+import { fromPromise } from "rxjs/internal-compatibility";
+import { filter, map, skip, switchMap } from "rxjs/operators";
+import { InjectableSuperclass } from "s-ng-utils";
 
 @Injectable({ providedIn: "root" })
-export class LocationService {
+export class LocationService extends InjectableSuperclass {
   $ = this.store("useCurrentLocation").$.pipe(
     switchMap(
       (useCurrent) =>
         this.store(useCurrent ? "currentLocation" : "customLocation").$,
     ),
   );
+  refreshableChange$: Observable<unknown> = merge(
+    this.store("useCurrentLocation").$.pipe(
+      skip(1),
+      filter(
+        (useCurrent) =>
+          useCurrent || !!this.store.state().customLocation.gpsCoords,
+      ),
+    ),
+    this.store("customLocation")("gpsCoords").$.pipe(
+      skip(1),
+      filter((coords) => !!coords && !this.store.state().useCurrentLocation),
+    ),
+  );
 
-  constructor(private httpClient: HttpClient, private store: WeatherStore) {}
+  constructor(
+    private locationIqService: LocationIqService,
+    private store: WeatherStore,
+  ) {
+    super();
+    this.observeSearches();
+  }
+
+  setCustomSearch(search: string) {
+    this.store.batch((batch) => {
+      batch("useCurrentLocation").set(false);
+      batch("customLocation").set({ search });
+    });
+  }
 
   getLocation() {
     const state = this.store.state();
@@ -32,80 +52,39 @@ export class LocationService {
       : state.customLocation;
   }
 
-  async refresh() {
-    const state = this.store.state();
-    if (!state.useCurrentLocation) {
-      return;
-    }
+  refreshInPipe<T>() {
+    return switchMap<T, Observable<T>>((value: T) => {
+      const state = this.store.state();
+      if (!state.useCurrentLocation) {
+        return of(value);
+      }
 
-    const gpsCoords = await getCurrentCoords();
-    const res = await this.reverse(gpsCoords);
-    this.store("currentLocation").assign({ gpsCoords, city: res.city });
+      return fromPromise(getCurrentCoords()).pipe(
+        switchMap(async (gpsCoords) => {
+          const res = await this.locationIqService.reverse(gpsCoords);
+          return [gpsCoords, res] as const;
+        }),
+        map(([gpsCoords, res]) => {
+          this.store("currentLocation").assign({ gpsCoords, city: res.city });
+          return value;
+        }),
+      );
+    });
   }
 
-  async setCustom(search: string) {
-    const locationStore = this.store("customLocation");
-    locationStore.set({ search });
-    if (!search) {
-      return;
-    }
-
-    const res = await this.forward(search);
-    locationStore.assign(res);
+  private observeSearches() {
+    const customLocationStore = this.store("customLocation");
+    this.subscribeTo(
+      customLocationStore("search").$.pipe(
+        filter(() => {
+          const location = customLocationStore.state();
+          return location.search.length > 0 && !location.gpsCoords;
+        }),
+        switchMap((search) => this.locationIqService.forward(search)),
+      ),
+      bindKey(customLocationStore, "assign"),
+    );
   }
-
-  private forward(search: string) {
-    return this.httpClient
-      .get<any>(`${baseUrl}/search.php`, {
-        params: { ...commonParams, q: search, limit: "1" },
-      })
-      .pipe(
-        pluck("0"),
-        parseResponse(),
-      )
-      .toPromise();
-  }
-
-  private reverse(gpsCoords: GpsCoords) {
-    return this.httpClient
-      .get(`${baseUrl}/reverse.php`, {
-        params: {
-          ...commonParams,
-          lat: gpsCoords[0].toString(),
-          lon: gpsCoords[1].toString(),
-        },
-      })
-      .pipe(parseResponse())
-      .toPromise();
-  }
-}
-
-function parseResponse() {
-  return map(
-    (res: any): Partial<Location> => ({
-      gpsCoords: [res.lat, res.lon],
-      city: parseCity(res.address),
-    }),
-  );
-}
-
-function parseCity(address: any) {
-  const city =
-    address.city ||
-    address.city_district ||
-    address.town ||
-    address.village ||
-    address.suburb ||
-    address.hamlet ||
-    address.neighbourhood ||
-    address.road;
-  let state = address.state_code || address.country_code;
-  if (state) {
-    state = state.toUpperCase();
-  } else {
-    state = address.state || address.country;
-  }
-  return [city, state].filter(identity).join(", ");
 }
 
 function getCurrentCoords() {

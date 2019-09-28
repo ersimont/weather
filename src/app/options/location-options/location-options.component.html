@@ -1,37 +1,22 @@
-<form (submit)="submit()">
-  <mat-radio-group
-    name="group"
-    [(ngModel)]="useCurrentLocation"
-    (change)="submit()"
-  >
-    <div class="radio-container">
-      <mat-radio-button
-        class="current-radio"
-        [value]="true"
-        (change)="trackSelect('current')"
-      >
-        Current
-      </mat-radio-button>
-    </div>
-    <div class="radio-container">
-      <mat-radio-button
-        [value]="false"
-        (change)="trackSelect('custom')"
-      ></mat-radio-button>
-      <mat-form-field>
-        <input
-          matInput
-          name="custom"
-          placeholder="Custom"
-          [(ngModel)]="customSearch"
-          (click)="selectCustomLocation()"
-          (input)="selectCustomLocation()"
-          (blur)="submit()"
-          sTrack="change"
-          eventName="change_custom_location"
-          eventCategory="change_location"
-        />
-      </mat-form-field>
-    </div>
-  </mat-radio-group>
-</form>
+<mat-radio-group
+  [nasModel]="store('useCurrentLocation')"
+  (change)="trackCurrentSelection()"
+>
+  <div class="radio-container">
+    <mat-radio-button class="current-radio" [value]="true">
+      Current
+    </mat-radio-button>
+  </div>
+  <div class="radio-container">
+    <mat-radio-button [value]="false"></mat-radio-button>
+    <mat-form-field>
+      <input
+        matInput
+        name="custom"
+        placeholder="Custom"
+        [value]="store('customLocation')('search').$ | async"
+        (change)="locationService.setCustomSearch($event.target.value)"
+      />
+    </mat-form-field>
+  </div>
+</mat-radio-group>
