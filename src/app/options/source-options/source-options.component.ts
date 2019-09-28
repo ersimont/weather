@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { SourceId } from "app/state/source";
 import { WeatherState } from "app/state/weather-state";
 import { WeatherStore } from "app/state/weather-store";
-import { trackEvent } from "app/to-replace/event-tracking/s-track.directive";
+import { EventTrackingService } from "app/to-replace/event-tracking/event-tracking.service";
 import { values } from "micro-dash";
 import { StoreObject } from "ng-app-state";
 
@@ -15,9 +15,15 @@ import { StoreObject } from "ng-app-state";
 export class SourceOptionsComponent {
   store: StoreObject<WeatherState>;
   sourceIds = values(SourceId);
-  trackEvent = trackEvent;
 
-  constructor(store: WeatherStore) {
+  constructor(
+    private eventTrackingService: EventTrackingService,
+    store: WeatherStore,
+  ) {
     this.store = store.withCaching();
+  }
+
+  trackChange(sourceId: SourceId) {
+    this.eventTrackingService.track(`change_${sourceId}`, "change_source");
   }
 }

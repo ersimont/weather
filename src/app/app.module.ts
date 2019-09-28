@@ -29,7 +29,9 @@ import { environment } from "../environments/environment";
     BrowserAnimationsModule,
     BrowserModule,
     ChartsModule,
-    EventTrackingModule.forRoot("UA-148865234-1"),
+    EventTrackingModule.forRoot(
+      environment.production ? "UA-148865234-1" : "UA-148865234-2",
+    ),
     HttpClientModule,
     MatButtonModule,
     MatIconModule,

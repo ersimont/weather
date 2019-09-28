@@ -8,7 +8,7 @@
       <mat-radio-button
         class="current-radio"
         [value]="true"
-        (change)="trackEvent('select_current_location', 'change_location')"
+        (change)="trackSelect('current')"
       >
         Current
       </mat-radio-button>
@@ -16,7 +16,7 @@
     <div class="radio-container">
       <mat-radio-button
         [value]="false"
-        (change)="trackCustomLocationSelect()"
+        (change)="trackSelect('custom')"
       ></mat-radio-button>
       <mat-form-field>
         <input

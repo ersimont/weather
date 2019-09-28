@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { trackEvent } from "app/to-replace/event-tracking/s-track.directive";
-import { values } from "micro-dash";
+import { Condition, conditionInfo } from "app/state/condition";
+import { WeatherState } from "app/state/weather-state";
+import { WeatherStore } from "app/state/weather-store";
+import { EventTrackingService } from "app/to-replace/event-tracking/event-tracking.service";
+import { bindKey, values } from "micro-dash";
 import { StoreObject } from "ng-app-state";
-import { Condition, conditionInfo } from "../../state/condition";
-import { WeatherState } from "../../state/weather-state";
-import { WeatherStore } from "../../state/weather-store";
 
 @Component({
   selector: "app-condition-options",
@@ -16,9 +16,10 @@ export class ConditionOptionsComponent {
   store: StoreObject<WeatherState>;
   conditions = values(Condition);
   conditionInfo: any = conditionInfo;
-  trackEvent = trackEvent;
+  trackEvent: EventTrackingService["track"];
 
-  constructor(store: WeatherStore) {
+  constructor(eventTrackingService: EventTrackingService, store: WeatherStore) {
+    this.trackEvent = bindKey(eventTrackingService, "track");
     this.store = store.withCaching();
   }
 }

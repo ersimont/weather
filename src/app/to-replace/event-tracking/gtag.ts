@@ -1,9 +1,7 @@
-import { environment } from "../../../environments/environment";
-
-export function initializeGtag(gaProperty: string) {
+export function initializeGtag(gaProperty?: string) {
   const win = window as any;
 
-  if (environment.production) {
+  if (gaProperty) {
     const script = document.createElement("script");
     script.src = `https://www.googletagmanager.com/gtag/js?id=${gaProperty}`;
     script.async = true;

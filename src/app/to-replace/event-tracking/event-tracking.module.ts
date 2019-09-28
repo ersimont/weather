@@ -1,11 +1,13 @@
 import { ModuleWithProviders, NgModule } from "@angular/core";
-import { initializeGtag } from "app/to-replace/event-tracking/gtag";
+import { EventTrackingConfig } from "app/to-replace/event-tracking/event-tracking-config";
 import { STrackDirective } from "app/to-replace/event-tracking/s-track.directive";
 
 @NgModule({ declarations: [STrackDirective], exports: [STrackDirective] })
 export class EventTrackingModule {
-  static forRoot(gaProperty: string): ModuleWithProviders {
-    initializeGtag(gaProperty);
-    return { ngModule: EventTrackingModule };
+  static forRoot(gaProperty?: string): ModuleWithProviders {
+    return {
+      ngModule: EventTrackingModule,
+      providers: [{ provide: EventTrackingConfig, useValue: { gaProperty } }],
+    };
   }
 }

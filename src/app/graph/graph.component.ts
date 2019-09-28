@@ -1,6 +1,6 @@
 import { DecimalPipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Injector } from "@angular/core";
-import { trackEvent } from "app/to-replace/event-tracking/s-track.directive";
+import { EventTrackingService } from "app/to-replace/event-tracking/event-tracking.service";
 import {
   ChartData,
   ChartDataSets,
@@ -34,6 +34,7 @@ export class GraphComponent extends DirectiveSuperclass {
 
   constructor(
     private demicalPipe: DecimalPipe,
+    private eventTrackingService: EventTrackingService,
     private store: WeatherStore,
     private themeService: ThemeService,
     injector: Injector,
@@ -104,15 +105,15 @@ export class GraphComponent extends DirectiveSuperclass {
           pan: {
             enabled: true,
             mode: "x",
-            onPanComplete() {
-              trackEvent("change_pan", "zoom_and_pan");
+            onPanComplete: () => {
+              this.eventTrackingService.track("change_pan", "zoom_and_pan");
             },
           },
           zoom: {
             enabled: true,
             mode: "x",
-            onZoomComplete() {
-              trackEvent("change_zoom", "zoom_and_pan");
+            onZoomComplete: () => {
+              this.eventTrackingService.track("change_zoom", "zoom_and_pan");
             },
           },
         },

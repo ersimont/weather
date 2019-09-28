@@ -1,6 +1,8 @@
 import { DecimalPipe } from "@angular/common";
 import { identity } from "micro-dash";
 
+export type UnitType = "temp" | "amount" | "speed" | "percentage";
+
 export enum TempUnit {
   F = "°F",
   C = "°C",

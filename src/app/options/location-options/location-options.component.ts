@@ -3,7 +3,7 @@ import { LocationService } from "app/services/location.service";
 import { RefreshService } from "app/services/refresh.service";
 import { WeatherState } from "app/state/weather-state";
 import { WeatherStore } from "app/state/weather-store";
-import { trackEvent } from "app/to-replace/event-tracking/s-track.directive";
+import { EventTrackingService } from "app/to-replace/event-tracking/event-tracking.service";
 import { debounce } from "micro-dash";
 import { StoreObject } from "ng-app-state";
 
@@ -17,9 +17,9 @@ export class LocationOptionsComponent {
   store: StoreObject<WeatherState>;
   useCurrentLocation: boolean;
   customSearch: string;
-  trackEvent = trackEvent;
 
   constructor(
+    private eventTrackingService: EventTrackingService,
     private locationService: LocationService,
     private refreshService: RefreshService,
     store: WeatherStore,
@@ -35,11 +35,14 @@ export class LocationOptionsComponent {
     }
 
     this.useCurrentLocation = false;
-    trackEvent("select_custom_location", "change_location");
+    this.trackSelect("custom");
   }
 
-  trackCustomLocationSelect() {
-    trackEvent("select_custom_location", "change_location");
+  trackSelect(currentOrCustom: "current" | "custom") {
+    this.eventTrackingService.track(
+      `select_${currentOrCustom}_location`,
+      "change_location",
+    );
   }
 
   submit = debounce(async () => {
