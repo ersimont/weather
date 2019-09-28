@@ -1,5 +1,10 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { MatIconRegistry } from "@angular/material";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Injector,
+  ViewChild,
+} from "@angular/core";
+import { MatIconRegistry, MatSidenav } from "@angular/material";
 import { DomSanitizer } from "@angular/platform-browser";
 import { SetRangeAction } from "app/graph/set-range-action";
 import { LocationService } from "app/services/location.service";
@@ -7,8 +12,10 @@ import { WeatherGov } from "app/sources/weather-gov";
 import { WeatherUnlocked } from "app/sources/weather-unlocked";
 import { WeatherStore } from "app/state/weather-store";
 import { LoadingInterceptor } from "app/to-replace/loading-interceptor.service";
+import { ofType } from "app/to-replace/of-type";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
+import { DirectiveSuperclass } from "s-ng-utils";
 
 const icons = `
   <svg><defs>
@@ -48,18 +55,22 @@ const icons = `
   styleUrls: ["./app.component.css"],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent {
+export class AppComponent extends DirectiveSuperclass {
   title$: Observable<string>;
+  @ViewChild("snav", { read: MatSidenav, static: false })
+  private sideNav!: MatSidenav;
 
   constructor(
     public loadingInterceptor: LoadingInterceptor,
     private store: WeatherStore,
     domSanitizer: DomSanitizer,
+    injector: Injector,
     locationService: LocationService,
     matIconRegistry: MatIconRegistry,
     weatherGov: WeatherGov,
     weatherUnlocked: WeatherUnlocked,
   ) {
+    super(injector);
     this.title$ = locationService.$.pipe(
       map((location) => location.city || "Weather Unlocked"),
     );
@@ -68,6 +79,13 @@ export class AppComponent {
     weatherUnlocked.initialize();
     matIconRegistry.addSvgIconSetLiteral(
       domSanitizer.bypassSecurityTrustHtml(icons),
+    );
+
+    this.subscribeTo(
+      this.store.action$.pipe(ofType("ask_for_location")),
+      () => {
+        this.sideNav.open();
+      },
     );
   }
 

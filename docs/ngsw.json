@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1569689335721,
+  "timestamp": 1569697822902,
   "index": "/weather/index.html",
   "assetGroups": [
     {
@@ -10,8 +10,8 @@
       "urls": [
         "/weather/favicon.ico",
         "/weather/index.html",
-        "/weather/main-es2015.8d55b8efaf6bea64034d.js",
-        "/weather/main-es5.8d55b8efaf6bea64034d.js",
+        "/weather/main-es2015.23de4213561286d95566.js",
+        "/weather/main-es5.23de4213561286d95566.js",
         "/weather/manifest.webmanifest",
         "/weather/polyfills-es2015.d34dde3c5ae8a7a974fb.js",
         "/weather/polyfills-es5.fc70692a8e0e8f441d59.js",
@@ -53,9 +53,9 @@
     "/weather/assets/icons/icon-96x96.png": "d897a564f4f2e6635701403952a4cdc52ede9bfd",
     "/weather/assets/icons/icon.svg": "12d0b603d25d8eb660482a1a81deed72fc6a3c87",
     "/weather/favicon.ico": "f5ceb58c067a06254eb3b7cbde64e758b23d9b9d",
-    "/weather/index.html": "200437e4c487d49b4e08e664df8d3182bda63de5",
-    "/weather/main-es2015.8d55b8efaf6bea64034d.js": "5eef23d6dc6764cc9209b7480744780794a39e6e",
-    "/weather/main-es5.8d55b8efaf6bea64034d.js": "ab47cd6695ee0c633a56bd00f3a2a6f624379c0c",
+    "/weather/index.html": "ec01939fbe68e6ee3a801d5c32791799f1291100",
+    "/weather/main-es2015.23de4213561286d95566.js": "5e12b5679df46c8539942d86de8ff5965918c400",
+    "/weather/main-es5.23de4213561286d95566.js": "24de80e1774637d05397c39671136bdc4e630435",
     "/weather/manifest.webmanifest": "07c3fa818522ad4707b0d835bd15054f83a385de",
     "/weather/polyfills-es2015.d34dde3c5ae8a7a974fb.js": "422e16b8bc38dfcc1092cd3222cdb4cf67a3070f",
     "/weather/polyfills-es5.fc70692a8e0e8f441d59.js": "563a66dcf34fd0e498881752bf1b1680b88e9b09",

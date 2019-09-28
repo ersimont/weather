@@ -5,7 +5,7 @@ import { WeatherStore } from "app/state/weather-store";
 import { bindKey } from "micro-dash";
 import { merge, Observable, of } from "rxjs";
 import { fromPromise } from "rxjs/internal-compatibility";
-import { filter, map, skip, switchMap } from "rxjs/operators";
+import { catchError, filter, map, skip, switchMap } from "rxjs/operators";
 import { InjectableSuperclass } from "s-ng-utils";
 
 @Injectable({ providedIn: "root" })
@@ -59,7 +59,7 @@ export class LocationService extends InjectableSuperclass {
         return of(value);
       }
 
-      return fromPromise(getCurrentCoords()).pipe(
+      return fromPromise(this.getCurrentCoords()).pipe(
         switchMap(async (gpsCoords) => {
           const res = await this.locationIqService.reverse(gpsCoords);
           return [gpsCoords, res] as const;
@@ -67,6 +67,11 @@ export class LocationService extends InjectableSuperclass {
         map(([gpsCoords, res]) => {
           this.store("currentLocation").assign({ gpsCoords, city: res.city });
           return value;
+        }),
+        catchError((err) => {
+          console.error(err);
+          this.store("currentLocation")("city").delete();
+          return of(value);
         }),
       );
     });
@@ -85,24 +90,23 @@ export class LocationService extends InjectableSuperclass {
       bindKey(customLocationStore, "assign"),
     );
   }
-}
 
-function getCurrentCoords() {
-  return new Promise<GpsCoords>((resolve, reject) => {
-    // resolve([39.7456, -97.0892]);
-    if (!("geolocation" in navigator)) {
-      reject("Current location not available");
-      return;
-    }
+  private getCurrentCoords() {
+    return new Promise<GpsCoords>((resolve, reject) => {
+      // resolve([39.7456, -97.0892]);
+      if (!("geolocation" in navigator)) {
+        reject("Current location not available");
+        return;
+      }
 
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        resolve([position.coords.latitude, position.coords.longitude]);
-      },
-      (error) => {
-        console.error(error.message);
-        reject("Error retrieving current location");
-      },
-    );
-  });
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          resolve([position.coords.latitude, position.coords.longitude]);
+        },
+        () => {
+          reject("Error retrieving current location");
+        },
+      );
+    });
+  }
 }

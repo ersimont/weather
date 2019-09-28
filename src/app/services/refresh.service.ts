@@ -1,5 +1,7 @@
 import { Injectable } from "@angular/core";
+import { ErrorService } from "app/services/error.service";
 import { LocationService } from "app/services/location.service";
+import { WeatherStore } from "app/state/weather-store";
 import { EventTrackingService } from "app/to-replace/event-tracking/event-tracking.service";
 import { fromEvent, interval, merge, Observable, of } from "rxjs";
 import { filter, mapTo, switchMap, tap, throttleTime } from "rxjs/operators";
@@ -12,8 +14,10 @@ export class RefreshService {
   refresh$: Observable<unknown>;
 
   constructor(
+    private errorService: ErrorService,
     private eventTrackingService: EventTrackingService,
     private locationService: LocationService,
+    private store: WeatherStore,
   ) {
     this.refresh$ = this.buildRefresh$();
   }
@@ -35,6 +39,15 @@ export class RefreshService {
       ),
       tap(this.logRefresh.bind(this)),
       this.locationService.refreshInPipe(),
+      filter(() => {
+        if (this.locationService.getLocation().gpsCoords) {
+          return true;
+        }
+
+        this.errorService.show("Location not found");
+        this.store.dispatch({ type: "ask_for_location" });
+        return false;
+      }),
       cache(),
     );
   }
