@@ -10,11 +10,39 @@ describe("AppComponent", () => {
     ctx = new WeatherGraphContext();
   });
 
-  it("has a title", fakeAsync(() => {
-    ctx.init();
+  describe("when location access is denied", () => {
+    let getCurrentLocation: jasmine.Spy;
 
-    expect("h1").toHaveText("Weather Graph");
+    beforeEach(() => {
+      getCurrentLocation = ctx.browserService.getCurrentLocation;
+      getCurrentLocation.and.callFake(() => Promise.reject("User says no!"));
+    });
 
-    ctx.cleanup();
-  }));
+    it("does not show an error until Custom is selected");
+
+    describe("when no current location has been determined before", () => {
+      it("shows an error, switches to Custom, and opens location settings", fakeAsync(() => {
+        // when the app opens
+        ctx.initialState.useCurrentLocation = true;
+        ctx.init();
+        ctx.expectErrorShown("Location not found");
+        expect(ctx.sidenav.currentRadio()).toBeVisible();
+
+        // when switching to Current
+        ctx.selectRadio(ctx.sidenav.customRadio());
+        ctx.expectNoErrorShown();
+        ctx.selectRadio(ctx.sidenav.currentRadio());
+        ctx.expectErrorShown("Location not found");
+
+        ctx.cleanup();
+      }));
+    });
+
+    describe("when a current location has been determined before", () => {
+      // is this really what we want?
+      it(
+        "shows an error, but continues to use the previous location, but doesn't show the city name",
+      );
+    });
+  });
 });

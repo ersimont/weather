@@ -9,7 +9,10 @@ import {
   MatToolbarModule,
 } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import {
+  BrowserAnimationsModule,
+  NoopAnimationsModule,
+} from "@angular/platform-browser/animations";
 import { ServiceWorkerModule } from "@angular/service-worker";
 import { StoreModule } from "@ngrx/store";
 import { StoreDevtoolsModule } from "@ngrx/store-devtools";
@@ -21,12 +24,13 @@ import { EventTrackingModule } from "app/to-replace/event-tracking/event-trackin
 import { LoadingInterceptor } from "app/to-replace/loading-interceptor.service";
 import { ngAppStateReducer } from "ng-app-state";
 import { ChartsModule } from "ng2-charts";
+import { wrapFunction } from "s-js-utils";
 import { environment } from "../environments/environment";
 
 @NgModule({
   declarations: [AppComponent, GraphComponent],
   imports: [
-    BrowserAnimationsModule,
+    environment.test ? NoopAnimationsModule : BrowserAnimationsModule,
     BrowserModule,
     ChartsModule,
     EventTrackingModule.forRoot(
