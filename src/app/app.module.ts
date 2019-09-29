@@ -57,5 +57,6 @@ import { environment } from "../environments/environment";
     },
   ],
   bootstrap: [AppComponent],
+  exports: [AppComponent],
 })
 export class AppModule {}

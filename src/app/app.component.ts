@@ -72,7 +72,7 @@ export class AppComponent extends DirectiveSuperclass {
   ) {
     super(injector);
     this.title$ = locationService.$.pipe(
-      map((location) => location.city || "Weather Unlocked"),
+      map((location) => location.city || "Weather Graph"),
     );
 
     weatherGov.initialize();

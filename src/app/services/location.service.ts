@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
+import { BrowserService } from "app/services/browser.service";
 import { LocationIqService } from "app/services/location-iq.service";
-import { GpsCoords } from "app/state/location";
 import { WeatherStore } from "app/state/weather-store";
 import { bindKey } from "micro-dash";
 import { merge, Observable, of } from "rxjs";
@@ -31,6 +31,7 @@ export class LocationService extends InjectableSuperclass {
   );
 
   constructor(
+    private browserService: BrowserService,
     private locationIqService: LocationIqService,
     private store: WeatherStore,
   ) {
@@ -59,7 +60,7 @@ export class LocationService extends InjectableSuperclass {
         return of(value);
       }
 
-      return fromPromise(this.getCurrentCoords()).pipe(
+      return fromPromise(this.browserService.getCurrentLocation()).pipe(
         switchMap(async (gpsCoords) => {
           const res = await this.locationIqService.reverse(gpsCoords);
           return [gpsCoords, res] as const;
@@ -89,24 +90,5 @@ export class LocationService extends InjectableSuperclass {
       ),
       bindKey(customLocationStore, "assign"),
     );
-  }
-
-  private getCurrentCoords() {
-    return new Promise<GpsCoords>((resolve, reject) => {
-      // resolve([39.7456, -97.0892]);
-      if (!("geolocation" in navigator)) {
-        reject("Current location not available");
-        return;
-      }
-
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          resolve([position.coords.latitude, position.coords.longitude]);
-        },
-        () => {
-          reject("Error retrieving current location");
-        },
-      );
-    });
   }
 }
