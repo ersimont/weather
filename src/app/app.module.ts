@@ -24,7 +24,6 @@ import { EventTrackingModule } from "app/to-replace/event-tracking/event-trackin
 import { LoadingInterceptor } from "app/to-replace/loading-interceptor.service";
 import { ngAppStateReducer } from "ng-app-state";
 import { ChartsModule } from "ng2-charts";
-import { wrapFunction } from "s-js-utils";
 import { environment } from "../environments/environment";
 
 @NgModule({

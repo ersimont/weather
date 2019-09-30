@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { BrowserService } from "app/services/browser.service";
 import { LocationIqService } from "app/services/location-iq.service";
+import { Location } from "app/state/location";
 import { WeatherStore } from "app/state/weather-store";
 import { bindKey } from "micro-dash";
 import { merge, Observable, of } from "rxjs";
@@ -61,17 +62,25 @@ export class LocationService extends InjectableSuperclass {
       }
 
       return fromPromise(this.browserService.getCurrentLocation()).pipe(
-        switchMap(async (gpsCoords) => {
-          const res = await this.locationIqService.reverse(gpsCoords);
-          return [gpsCoords, res] as const;
-        }),
-        map(([gpsCoords, res]) => {
-          this.store("currentLocation").assign({ gpsCoords, city: res.city });
-          return value;
-        }),
+        switchMap((gpsCoords) =>
+          fromPromise(this.locationIqService.reverse(gpsCoords)).pipe(
+            map((res) => {
+              this.store("currentLocation").assign({
+                gpsCoords,
+                city: res.city,
+              });
+              return value;
+            }),
+            catchError((err) => {
+              console.error(err);
+              this.store("currentLocation")("city").delete();
+              return of(value);
+            }),
+          ),
+        ),
         catchError((err) => {
           console.error(err);
-          this.store("currentLocation")("city").delete();
+          this.store("currentLocation").set(new Location());
           return of(value);
         }),
       );
