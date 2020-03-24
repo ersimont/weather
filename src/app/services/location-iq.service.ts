@@ -22,10 +22,7 @@ export class LocationIqService {
       .get<any>(`${baseUrl}/search.php`, {
         params: { ...commonParams, q: search, limit: "1" },
       })
-      .pipe(
-        pluck("0"),
-        parseResponse(),
-      )
+      .pipe(pluck("0"), parseResponse())
       .toPromise();
   }
 

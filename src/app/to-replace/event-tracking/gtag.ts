@@ -8,11 +8,11 @@ export function initializeGtag(gaProperty?: string) {
     document.head.appendChild(script);
 
     win.dataLayer = [];
-    win.gtag = function() {
+    win.gtag = function () {
       win.dataLayer.push(arguments);
     };
   } else {
-    win.gtag = function() {
+    win.gtag = function () {
       console.log("[gtag]", ...arguments);
     };
   }
