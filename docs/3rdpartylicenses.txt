@@ -30,7 +30,7 @@ MIT
 MIT
 The MIT License
 
-Copyright (c) 2019 Google LLC.
+Copyright (c) 2020 Google LLC.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -64,7 +64,7 @@ MIT
 MIT
 The MIT License
 
-Copyright (c) 2019 Google LLC.
+Copyright (c) 2020 Google LLC.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -85,28 +85,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-@angular/material/button
-
-@angular/material/button-toggle
-
-@angular/material/expansion
-
-@angular/material/form-field
-
-@angular/material/icon
-
-@angular/material/progress-bar
-
-@angular/material/radio
-
-@angular/material/sidenav
-
-@angular/material/slide-toggle
-
-@angular/material/snack-bar
-
-@angular/material/toolbar
-
 @angular/platform-browser
 MIT
 
@@ -114,6 +92,9 @@ MIT
 MIT
 
 @ngrx/store
+MIT
+
+@ngrx/store-devtools
 MIT
 
 chart.js
@@ -143,7 +124,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 core-js
 MIT
-Copyright (c) 2014-2019 Denis Pushkarev
+Copyright (c) 2014-2020 Denis Pushkarev
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -602,7 +583,7 @@ zone.js
 MIT
 The MIT License
 
-Copyright (c) 2016-2018 Google, Inc.
+Copyright (c) 2010-2020 Google LLC. http://angular.io/license
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
