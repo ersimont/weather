@@ -4,7 +4,8 @@ import {
   Injector,
   ViewChild,
 } from "@angular/core";
-import { MatIconRegistry, MatSidenav } from "@angular/material";
+import { MatIconRegistry } from "@angular/material/icon";
+import { MatSidenav } from "@angular/material/sidenav";
 import { DomSanitizer } from "@angular/platform-browser";
 import { SetRangeAction } from "app/graph/set-range-action";
 import { LocationService } from "app/services/location.service";

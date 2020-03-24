@@ -4,7 +4,7 @@ import {
   Injector,
   ViewChild,
 } from "@angular/core";
-import { MatExpansionPanel } from "@angular/material";
+import { MatExpansionPanel } from "@angular/material/expansion";
 import { WeatherState } from "app/state/weather-state";
 import { WeatherStore } from "app/state/weather-store";
 import { ofType } from "app/to-replace/of-type";

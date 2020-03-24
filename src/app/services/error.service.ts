@@ -1,5 +1,5 @@
 import { Injectable, ErrorHandler } from "@angular/core";
-import { MatSnackBar } from "@angular/material";
+import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Injectable()
 export class ErrorService implements ErrorHandler {

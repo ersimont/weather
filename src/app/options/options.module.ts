@@ -1,13 +1,11 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
-import {
-  MatButtonToggleModule,
-  MatExpansionModule,
-  MatFormFieldModule,
-  MatInputModule,
-  MatRadioModule,
-  MatSlideToggleModule,
-} from "@angular/material";
+import { MatButtonToggleModule } from "@angular/material/button-toggle";
+import { MatExpansionModule } from "@angular/material/expansion";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatRadioModule } from "@angular/material/radio";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { EventTrackingModule } from "app/to-replace/event-tracking/event-tracking.module";
 import { NasModelModule } from "ng-app-state";
 import { ConditionOptionsComponent } from "./condition-options/condition-options.component";
