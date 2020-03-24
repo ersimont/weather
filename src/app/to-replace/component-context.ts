@@ -7,7 +7,7 @@ export abstract class ComponentContext {
 
   static setup() {
     afterEach(() => {
-      TestBed.get(HttpTestingController).verify();
+      TestBed.inject(HttpTestingController).verify();
     });
   }
 
