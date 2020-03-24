@@ -57,7 +57,7 @@ const icons = `
 })
 export class AppComponent extends DirectiveSuperclass {
   title$: Observable<string>;
-  @ViewChild("snav", { read: MatSidenav, static: false })
+  @ViewChild("snav", { read: MatSidenav })
   private sideNav!: MatSidenav;
 
   constructor(

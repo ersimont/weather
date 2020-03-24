@@ -8,10 +8,14 @@
       "schematics": {
         "@schematics/angular:component": {
           "changeDetection": "OnPush",
-          "spec": false
+          "skipTests": true
         },
-        "@schematics/angular:service": { "spec": false },
-        "@schematics/angular:directive": { "spec": false }
+        "@schematics/angular:service": {
+          "skipTests": true
+        },
+        "@schematics/angular:directive": {
+          "skipTests": true
+        }
       },
       "root": "",
       "sourceRoot": "src",
@@ -25,7 +29,7 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
-            "aot": false,
+            "aot": true,
             "assets": [
               "src/favicon.ico",
               "src/assets",
@@ -47,7 +51,6 @@
               "sourceMap": false,
               "extractCss": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
@@ -70,14 +73,20 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "options": { "browserTarget": "weather:build" },
+          "options": {
+            "browserTarget": "weather:build"
+          },
           "configurations": {
-            "production": { "browserTarget": "weather:build:production" }
+            "production": {
+              "browserTarget": "weather:build:production"
+            }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": { "browserTarget": "weather:build" }
+          "options": {
+            "browserTarget": "weather:build"
+          }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
@@ -119,11 +128,16 @@
             "devServerTarget": "weather:serve"
           },
           "configurations": {
-            "production": { "devServerTarget": "weather:serve:production" }
+            "production": {
+              "devServerTarget": "weather:serve:production"
+            }
           }
         }
       }
     }
   },
-  "defaultProject": "weather"
+  "defaultProject": "weather",
+  "cli": {
+    "analytics": "a1a9bbd1-c91d-474f-8b85-55f897c617d3"
+  }
 }

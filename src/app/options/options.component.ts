@@ -20,7 +20,7 @@ import { DirectiveSuperclass } from "s-ng-utils";
 export class OptionsComponent extends DirectiveSuperclass {
   store: StoreObject<WeatherState>;
 
-  @ViewChild("locationPanel", { read: MatExpansionPanel, static: false })
+  @ViewChild("locationPanel", { read: MatExpansionPanel })
   private locationPanel!: MatExpansionPanel;
 
   constructor(injector: Injector, store: WeatherStore) {
