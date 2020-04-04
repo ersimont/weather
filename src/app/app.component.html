@@ -33,7 +33,7 @@
   </button>
 
   <mat-progress-bar
-    *ngIf="loadingInterceptor.inFlight$ | async"
+    *ngIf="httpStatusService.hasInFlightRequest$ | async"
     mode="indeterminate"
   ></mat-progress-bar>
 </mat-toolbar>

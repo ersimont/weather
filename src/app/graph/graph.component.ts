@@ -82,11 +82,10 @@ export class GraphComponent extends DirectiveSuperclass {
           {
             type: "time",
             time: {
-              ...getXAxisRange(1),
               displayFormats: { day: "ddd" },
               tooltipFormat: "dddd h:mm a",
             },
-            ticks: { major: { enabled: true } },
+            ticks: { ...getXAxisRange(1), major: { enabled: true } },
           },
         ],
         yAxes: [

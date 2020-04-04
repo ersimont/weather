@@ -1,4 +1,4 @@
-import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
+import { HttpClientModule } from "@angular/common/http";
 import { ErrorHandler, NgModule } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
@@ -19,7 +19,7 @@ import { GraphComponent } from "app/graph/graph.component";
 import { OptionsModule } from "app/options/options.module";
 import { ErrorService } from "app/services/error.service";
 import { EventTrackingModule } from "app/to-replace/event-tracking/event-tracking.module";
-import { LoadingInterceptor } from "app/to-replace/loading-interceptor.service";
+import { provideHttpStatus } from "app/to-replace/http-status.service";
 import { ngAppStateReducer } from "ng-app-state";
 import { ChartsModule } from "ng2-charts";
 import { environment } from "../environments/environment";
@@ -49,13 +49,8 @@ import { environment } from "../environments/environment";
   ],
   providers: [
     ErrorService,
-    LoadingInterceptor,
     { provide: ErrorHandler, useExisting: ErrorService },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useExisting: LoadingInterceptor,
-      multi: true,
-    },
+    provideHttpStatus(),
   ],
   bootstrap: [AppComponent],
   exports: [AppComponent],

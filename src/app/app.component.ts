@@ -12,7 +12,7 @@ import { LocationService } from "app/services/location.service";
 import { WeatherGov } from "app/sources/weather-gov";
 import { WeatherUnlocked } from "app/sources/weather-unlocked";
 import { WeatherStore } from "app/state/weather-store";
-import { LoadingInterceptor } from "app/to-replace/loading-interceptor.service";
+import { HttpStatusService } from "app/to-replace/http-status.service";
 import { ofType } from "app/to-replace/of-type";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
@@ -62,7 +62,7 @@ export class AppComponent extends DirectiveSuperclass {
   private sideNav!: MatSidenav;
 
   constructor(
-    public loadingInterceptor: LoadingInterceptor,
+    public httpStatusService: HttpStatusService,
     private store: WeatherStore,
     domSanitizer: DomSanitizer,
     injector: Injector,
