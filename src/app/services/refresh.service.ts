@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
-import { ErrorService } from "app/services/error.service";
 import { LocationService } from "app/services/location.service";
 import { WeatherStore } from "app/state/weather-store";
+import { ErrorService } from "app/to-replace/error.service";
 import { EventTrackingService } from "app/to-replace/event-tracking/event-tracking.service";
 import { fromEvent, interval, merge, Observable, of } from "rxjs";
 import { filter, mapTo, switchMap, tap, throttleTime } from "rxjs/operators";

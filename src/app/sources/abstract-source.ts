@@ -1,11 +1,11 @@
 import { Injector } from "@angular/core";
-import { ErrorService } from "app/services/error.service";
 import { LocationService } from "app/services/location.service";
 import { RefreshService } from "app/services/refresh.service";
 import { Forecast } from "app/state/forecast";
 import { GpsCoords } from "app/state/location";
 import { Source, SourceId } from "app/state/source";
 import { WeatherStore } from "app/state/weather-store";
+import { ErrorService } from "app/to-replace/error.service";
 import { StoreObject } from "ng-app-state";
 import { filter, switchMapTo } from "rxjs/operators";
 import { InjectableSuperclass } from "s-ng-utils";

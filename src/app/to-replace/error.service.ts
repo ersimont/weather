@@ -1,7 +1,11 @@
-import { Injectable, ErrorHandler } from "@angular/core";
+import { Injectable, ErrorHandler, Provider } from "@angular/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
 
-@Injectable()
+export function provideErrorHandler(): Provider {
+  return { provide: ErrorHandler, useExisting: ErrorService };
+}
+
+@Injectable({ providedIn: "root" })
 export class ErrorService implements ErrorHandler {
   constructor(private matSnackBar: MatSnackBar) {}
 

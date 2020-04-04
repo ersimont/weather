@@ -1,5 +1,5 @@
 import { HttpClientModule } from "@angular/common/http";
-import { ErrorHandler, NgModule } from "@angular/core";
+import { NgModule } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
@@ -17,7 +17,7 @@ import { StoreDevtoolsModule } from "@ngrx/store-devtools";
 import { AppComponent } from "app/app.component";
 import { GraphComponent } from "app/graph/graph.component";
 import { OptionsModule } from "app/options/options.module";
-import { ErrorService } from "app/services/error.service";
+import { provideErrorHandler } from "app/to-replace/error.service";
 import { EventTrackingModule } from "app/to-replace/event-tracking/event-tracking.module";
 import { provideHttpStatus } from "app/to-replace/http-status.service";
 import { ngAppStateReducer } from "ng-app-state";
@@ -47,11 +47,7 @@ import { environment } from "../environments/environment";
     environment.production ? [] : StoreDevtoolsModule.instrument(),
     MatProgressBarModule,
   ],
-  providers: [
-    ErrorService,
-    { provide: ErrorHandler, useExisting: ErrorService },
-    provideHttpStatus(),
-  ],
+  providers: [provideErrorHandler(), provideHttpStatus()],
   bootstrap: [AppComponent],
   exports: [AppComponent],
 })
