@@ -35,12 +35,12 @@ export class WeatherUnlocked extends AbstractSource {
 
 function addConditions(forecast: Forecast, timeframe: any) {
   forecast[parseTimestamp(timeframe)] = {
-    [Condition.TEMP]: timeframe.temp_c,
-    [Condition.FEEL]: timeframe.feelslike_c,
-    [Condition.DEW]: timeframe.dewpoint_c,
-    [Condition.WIND]: timeframe.windspd_kts,
-    [Condition.CHANCE]: parsePercentage(timeframe.prob_precip_pct),
     [Condition.AMOUNT]: timeframe.precip_mm / 3,
+    [Condition.CLOUD]: parseInt(timeframe.cloudtotal_pct, 10),
+    [Condition.DEW]: timeframe.dewpoint_c,
+    [Condition.FEEL]: timeframe.feelslike_c,
+    [Condition.TEMP]: timeframe.temp_c,
+    [Condition.WIND]: timeframe.windspd_kts,
   };
 }
 
@@ -48,12 +48,4 @@ function parseTimestamp(timeframe: any) {
   const [day, month, year] = timeframe.utcdate.split("/");
   const hour = timeframe.utctime / 100;
   return Date.UTC(year, month - 1, day, hour);
-}
-
-function parsePercentage(asString: string) {
-  if (asString === "<1") {
-    return 0;
-  } else {
-    return parseInt(asString, 10);
-  }
 }

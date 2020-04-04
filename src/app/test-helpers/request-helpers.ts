@@ -15,9 +15,7 @@ export function expectWeatherGovPoints(gpsCoordinates: GpsCoords) {
 }
 
 function expectOne(url: string) {
-  const controller: HttpTestingController = TestBed.inject(
-    HttpTestingController,
-  );
+  const controller = TestBed.inject(HttpTestingController);
   return controller.expectOne((req) => {
     return req.url === url;
   });

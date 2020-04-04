@@ -25,7 +25,9 @@ export class WeatherGov extends AbstractSource {
         get(ex, ["error", "type"]) ===
         "https://api.weather.gov/problems/InvalidPoint"
       ) {
-        throw new PresentableError("Weather.gov is not available here");
+        throw new PresentableError(
+          "Weather.gov is not available here. Try another source (in the settings).",
+        );
       } else {
         throw ex;
       }
@@ -45,11 +47,11 @@ export class WeatherGov extends AbstractSource {
 
 function extractForecast(zone: any) {
   const forecast: Forecast = {};
-  addFromZone(forecast, zone, Condition.TEMP, "temperature");
-  addFromZone(forecast, zone, Condition.FEEL, "apparentTemperature");
-  addFromZone(forecast, zone, Condition.DEW, "dewpoint");
-  addFromZone(forecast, zone, Condition.CHANCE, "probabilityOfPrecipitation");
   addFromZone(forecast, zone, Condition.AMOUNT, "quantitativePrecipitation");
+  addFromZone(forecast, zone, Condition.CLOUD, "skyCover");
+  addFromZone(forecast, zone, Condition.DEW, "dewpoint");
+  addFromZone(forecast, zone, Condition.FEEL, "apparentTemperature");
+  addFromZone(forecast, zone, Condition.TEMP, "temperature");
   addFromZone(forecast, zone, Condition.WIND, "windSpeed");
   return forecast;
 }

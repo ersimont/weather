@@ -2,10 +2,10 @@ import { Condition } from "app/state/condition";
 import { Location } from "app/state/location";
 import { Source, SourceId } from "app/state/source";
 import { Units } from "app/state/units";
-import { mapToObject } from "app/to-replace/map-to-object";
+import { mapToObject } from "s-js-utils";
 
 export class WeatherState {
-  version = 5;
+  version = 6;
 
   useCurrentLocation = true;
   currentLocation = new Location();

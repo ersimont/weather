@@ -1,12 +1,12 @@
 @import "~@angular/material/theming";
 
 $condition-palettes: (
-  temp: mat-palette($mat-red),
-  feel: mat-palette($mat-pink, 100, 50, 200),
-  dew: mat-palette($mat-gray),
-  wind: mat-palette($mat-yellow),
-  chance: mat-palette($mat-cyan),
   amount: mat-palette($mat-blue, A400, A100, A700),
+  cloud: mat-palette($mat-gray),
+  dew: mat-palette($mat-cyan),
+  feel: mat-palette($mat-pink, 100, 50, 200),
+  temp: mat-palette($mat-red),
+  wind: mat-palette($mat-yellow),
 );
 
 @mixin define-custom-property($name, $value) {
