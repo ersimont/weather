@@ -27,8 +27,4 @@ export class ErrorService implements ErrorHandler {
   }
 }
 
-export class PresentableError extends Error {
-  constructor(message: string) {
-    super(message);
-  }
-}
+export class PresentableError extends Error {}

@@ -137,6 +137,11 @@ function addDataSets(
   dataSets: ChartDataSets[],
   state: WeatherState,
 ) {
+  // the first ones added will be displayed on top of later ones
+  addDataSet(sourceId, dataSets, state, Condition.TEMP, "dynamic");
+  addDataSet(sourceId, dataSets, state, Condition.FEEL, "dynamic");
+  addDataSet(sourceId, dataSets, state, Condition.DEW, "dynamic");
+  addDataSet(sourceId, dataSets, state, Condition.WIND, "dynamic");
   addDataSet(
     sourceId,
     dataSets,
@@ -145,11 +150,7 @@ function addDataSets(
     state.units.amount === AmountUnit.IN ? "inches" : "millimeters",
     "60",
   );
-  addDataSet(sourceId, dataSets, state, Condition.CLOUD, "percentage");
-  addDataSet(sourceId, dataSets, state, Condition.DEW, "dynamic");
-  addDataSet(sourceId, dataSets, state, Condition.FEEL, "dynamic");
-  addDataSet(sourceId, dataSets, state, Condition.TEMP, "dynamic");
-  addDataSet(sourceId, dataSets, state, Condition.WIND, "dynamic");
+  addDataSet(sourceId, dataSets, state, Condition.CLOUD, "percentage", "20");
 }
 
 function addDataSet(
