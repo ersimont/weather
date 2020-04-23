@@ -23,6 +23,24 @@ export class RefreshService {
   }
 
   private buildRefresh$() {
+    // TODO: stop passing the source all around through functions that don't care
+    return this.buildSource$().pipe(
+      tap(this.logRefresh.bind(this)),
+      this.locationService.getRefreshOperatorFunction(),
+      filter(() => {
+        if (this.locationService.getLocation().gpsCoords) {
+          return true;
+        }
+
+        this.errorService.show("Location not found");
+        this.store.dispatch({ type: "ask_for_location" });
+        return false;
+      }),
+      cache(),
+    );
+  }
+
+  private buildSource$() {
     const init$ = of("init_refresh");
     const location$ = this.locationService.refreshableChange$.pipe(
       mapTo("location_change_refresh"),
@@ -37,18 +55,6 @@ export class RefreshService {
           throttleTime(refreshPeriod),
         ),
       ),
-      tap(this.logRefresh.bind(this)),
-      this.locationService.refreshInPipe(),
-      filter(() => {
-        if (this.locationService.getLocation().gpsCoords) {
-          return true;
-        }
-
-        this.errorService.show("Location not found");
-        this.store.dispatch({ type: "ask_for_location" });
-        return false;
-      }),
-      cache(),
     );
   }
 

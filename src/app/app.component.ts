@@ -58,8 +58,7 @@ const icons = `
 })
 export class AppComponent extends DirectiveSuperclass {
   title$: Observable<string>;
-  @ViewChild("snav", { read: MatSidenav })
-  private sideNav!: MatSidenav;
+  @ViewChild("snav", { read: MatSidenav }) private sideNav!: MatSidenav;
 
   constructor(
     public httpStatusService: HttpStatusService,
@@ -82,15 +81,19 @@ export class AppComponent extends DirectiveSuperclass {
       domSanitizer.bypassSecurityTrustHtml(icons),
     );
 
+    this.openSideNavWhenAsked();
+  }
+
+  setRange(days: number) {
+    this.store.dispatch(new SetRangeAction(days));
+  }
+
+  private openSideNavWhenAsked() {
     this.subscribeTo(
       this.store.action$.pipe(ofType("ask_for_location")),
       () => {
         this.sideNav.open();
       },
     );
-  }
-
-  setRange(days: number) {
-    this.store.dispatch(new SetRangeAction(days));
   }
 }

@@ -1,11 +1,12 @@
 import { Injectable } from "@angular/core";
-import { GpsCoords } from "../state/location";
+import { GpsCoords } from "app/state/location";
 
 @Injectable({ providedIn: "root" })
 export class BrowserService {
-  getCurrentLocation() {
+  getCurrentLocation(): Promise<GpsCoords> {
+    // return Promise.resolve([39.7456, -97.0892]); // Portage
+    // return Promise.resolve([45.4972159, -73.6103642]); // Montreal
     return new Promise<GpsCoords>((resolve, reject) => {
-      // resolve([39.7456, -97.0892]);
       if (!("geolocation" in navigator)) {
         reject("Current location not available");
         return;

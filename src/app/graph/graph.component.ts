@@ -41,15 +41,7 @@ export class GraphComponent extends DirectiveSuperclass {
   ) {
     super(injector);
 
-    this.dataSets$ = store.$.pipe(
-      map((state) => {
-        const dataSets: ChartDataSets[] = [];
-        forEach(state.sources, (_, sourceId) => {
-          addDataSets(sourceId, dataSets, state);
-        });
-        return dataSets;
-      }),
-    );
+    this.dataSets$ = this.buildDataSets$();
 
     this.subscribeTo(store.action$.pipe(SetRangeAction.filter), this.setRange);
   }
@@ -64,12 +56,25 @@ export class GraphComponent extends DirectiveSuperclass {
     return `${label}: ${display}`;
   }
 
+  private buildDataSets$() {
+    return this.store.$.pipe(
+      map((state) => {
+        const dataSets: ChartDataSets[] = [];
+        forEach(state.sources, (_, sourceId) => {
+          addDataSets(sourceId, dataSets, state);
+        });
+        return dataSets;
+      }),
+    );
+  }
+
   private setRange({ days }: SetRangeAction) {
     this.themeService.setColorschemesOptions({
       scales: { xAxes: [{ time: getXAxisRange(days) }] },
     });
   }
 
+  // eslint-disable-next-line max-lines-per-function
   private getChartOptions(): ChartOptions {
     return {
       responsive: true,
@@ -161,25 +166,12 @@ function addDataSet(
   yAxisID: string,
   fillAlpha = "00",
 ) {
-  const source = state.sources[sourceId];
-  const pointStyle = sourceId === SourceId.WEATHER_GOV ? "circle" : "triangle";
-
   const conditionInf = conditionInfo[condition];
-  const unitInf = conditionInf.getUnitInfo(state.units);
-
   const color = conditionInf.color;
-  const data: ChartPoint[] = [];
-  if (source.show && state.showConditions[condition]) {
-    for (const time of keys(source.forecast).sort()) {
-      const value = source.forecast[time as any][condition];
-      if (value !== undefined) {
-        data.push({ t: +time, y: unitInf.convert(value) });
-      }
-    }
-  }
+  const pointStyle = sourceId === SourceId.WEATHER_GOV ? "circle" : "triangle";
   dataSets.push({
     label: conditionInf.label,
-    data,
+    data: getData(sourceId, condition, state),
     yAxisID,
     borderColor: color,
     backgroundColor: color + fillAlpha,
@@ -188,4 +180,23 @@ function addDataSet(
     radius: pointStyle === "triangle" ? 6 : 4,
     pointHitRadius: 25,
   });
+}
+
+function getData(
+  sourceId: SourceId,
+  condition: Condition,
+  state: WeatherState,
+) {
+  const data: ChartPoint[] = [];
+  const source = state.sources[sourceId];
+  const unitInf = conditionInfo[condition].getUnitInfo(state.units);
+  if (source.show && state.showConditions[condition]) {
+    for (const time of keys(source.forecast).sort()) {
+      const value = source.forecast[time as any][condition];
+      if (value !== undefined) {
+        data.push({ t: +time, y: unitInf.convert(value) });
+      }
+    }
+  }
+  return data;
 }

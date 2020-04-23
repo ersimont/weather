@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { BrowserService } from "app/services/browser.service";
 import { LocationIqService } from "app/services/location-iq.service";
-import { Location } from "app/state/location";
+import { GpsCoords, Location } from "app/state/location";
 import { WeatherStore } from "app/state/weather-store";
 import { bindKey } from "micro-dash";
 import { merge, Observable, of } from "rxjs";
@@ -54,7 +54,7 @@ export class LocationService extends InjectableSuperclass {
       : state.customLocation;
   }
 
-  refreshInPipe<T>() {
+  getRefreshOperatorFunction<T>() {
     return switchMap<T, Observable<T>>((value: T) => {
       const state = this.store.state();
       if (!state.useCurrentLocation) {
@@ -62,22 +62,7 @@ export class LocationService extends InjectableSuperclass {
       }
 
       return fromPromise(this.browserService.getCurrentLocation()).pipe(
-        switchMap((gpsCoords) =>
-          fromPromise(this.locationIqService.reverse(gpsCoords)).pipe(
-            map((res) => {
-              this.store("currentLocation").assign({
-                gpsCoords,
-                city: res.city,
-              });
-              return value;
-            }),
-            catchError((err) => {
-              console.error(err);
-              this.store("currentLocation")("city").delete();
-              return of(value);
-            }),
-          ),
-        ),
+        this.getReverseGpsOperatorFunction(value),
         catchError((err) => {
           console.error(err);
           this.store("currentLocation").set(new Location());
@@ -85,6 +70,25 @@ export class LocationService extends InjectableSuperclass {
         }),
       );
     });
+  }
+
+  private getReverseGpsOperatorFunction<T>(value: T) {
+    return switchMap((gpsCoords: GpsCoords) =>
+      fromPromise(this.locationIqService.reverse(gpsCoords)).pipe(
+        map((res) => {
+          this.store("currentLocation").assign({
+            gpsCoords,
+            city: res.city,
+          });
+          return value;
+        }),
+        catchError((err) => {
+          console.error(err);
+          this.store("currentLocation")("city").delete();
+          return of(value);
+        }),
+      ),
+    );
   }
 
   private observeSearches() {

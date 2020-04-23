@@ -2,6 +2,7 @@ import { DecimalPipe } from "@angular/common";
 import { identity } from "micro-dash";
 
 export type UnitType = "temp" | "amount" | "speed" | "percentage";
+export type UnitEnum = TempUnit | AmountUnit | SpeedUnit | PercentageUnit;
 
 export enum TempUnit {
   F = "°F",
@@ -29,7 +30,12 @@ export class Units {
   speed = SpeedUnit.MPH;
 }
 
-export const unitInfo = {
+export interface UnitInfo {
+  convert(value: number): number;
+  getDisplay(value: number, decimalPipe: DecimalPipe): string;
+}
+
+export const unitInfo: Record<UnitEnum, UnitInfo> = {
   [TempUnit.F]: {
     convert: (value: number) => value * 1.8 + 32,
     getDisplay: (value: number, decimalPipe: DecimalPipe) =>

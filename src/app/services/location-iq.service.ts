@@ -1,7 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { GpsCoords, Location } from "app/state/location";
-import { identity } from "micro-dash";
 import { map, pluck } from "rxjs/operators";
 
 const baseUrl =
@@ -50,26 +49,22 @@ function parseResponse() {
 }
 
 function parseCity(address: any) {
-  const city =
-    address.city ||
-    address.city_district ||
-    address.town ||
-    address.village ||
-    address.suburb ||
-    address.hamlet ||
-    address.neighbourhood ||
-    address.road;
+  const city = [
+    address.city,
+    address.city_district,
+    address.town,
+    address.village,
+    address.suburb,
+    address.hamlet,
+    address.neighbourhood,
+    address.road,
+  ].find(Boolean);
 
-  let state;
-  if (address.state_code) {
-    state = address.state_code.toUpperCase();
-  } else if (address.state) {
-    state = address.state;
-  } else if (address.country_code) {
-    state = address.country_code.toUpperCase();
-  } else {
-    state = address.country;
-  }
+  const state = [
+    address.state_code?.toUpperCase(),
+    address.state,
+    address.country_code?.toUpperCase(),
+  ].find(Boolean);
 
-  return [city, state].filter(identity).join(", ");
+  return [city, state].filter(Boolean).join(", ");
 }

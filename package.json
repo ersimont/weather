@@ -6,7 +6,7 @@
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
-    "lint": "ng lint",
+    "lint": "ng lint && eslint . --ext .js,.jsx,.ts,.tsx",
     "e2e": "ng e2e",
     "web-worker-start": "http-server -p 8080 -c-1 dist/weather",
     "prettier-all": "prettier --write \"**/*.{html,js,json,md,scss,ts,yml}\"",
@@ -60,7 +60,7 @@
     "karma-jasmine-html-reporter": "^1.4.0",
     "prettier": "^2.0.2",
     "protractor": "~5.4.0",
-    "s-ng-dev-utils": "^1.0.0",
+    "s-ng-dev-utils": "^1.1.1",
     "ts-node": "~7.0.0",
     "tslint": "~5.15.0",
     "typescript": "~3.7.5"
