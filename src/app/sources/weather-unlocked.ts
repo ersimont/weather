@@ -5,6 +5,7 @@ import { Condition } from "app/state/condition";
 import { Forecast } from "app/state/forecast";
 import { GpsCoords } from "app/state/location";
 import { SourceId } from "app/state/source";
+import { map } from "rxjs/operators";
 
 const endpoint =
   "https://us-central1-proxic.cloudfunctions.net/api/weather-unlocked/api/forecast";
@@ -30,21 +31,24 @@ export class WeatherUnlocked extends AbstractSource {
     super(SourceId.WEATHER_UNLOCKED, injector);
   }
 
-  async fetch(gpsCoords: GpsCoords): Promise<Forecast> {
-    const res = await this.fetchRes(gpsCoords);
-    const forecast: Forecast = {};
-    for (const day of res.Days) {
-      for (const timeframe of day.Timeframes) {
-        addConditions(forecast, timeframe);
-      }
-    }
-    return forecast;
+  fetch(gpsCoords: GpsCoords) {
+    return this.fetchRes(gpsCoords).pipe(
+      map((res) => {
+        const forecast: Forecast = {};
+        for (const day of res.Days) {
+          for (const timeframe of day.Timeframes) {
+            addConditions(forecast, timeframe);
+          }
+        }
+        return forecast;
+      }),
+    );
   }
 
   private fetchRes(gpsCoords: [number, number]) {
-    return this.httpClient
-      .get<ForecastResponse>(`${endpoint}/${gpsCoords.join(",")}`)
-      .toPromise();
+    return this.httpClient.get<ForecastResponse>(
+      `${endpoint}/${gpsCoords.join(",")}`,
+    );
   }
 }
 

@@ -67,8 +67,6 @@ export class WeatherGraphContext extends ComponentContext {
       ],
     });
     this.tick();
-    this.spectator.detectComponentChanges(); // TODO: remove w/ new tick()?
-    this.tick();
   }
 
   expectErrorShown(message: string) {

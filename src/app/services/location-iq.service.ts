@@ -41,8 +41,7 @@ export class LocationIqService {
       .get<any>(`${baseUrl}/search.php`, {
         params: { ...commonParams, q: search, limit: "1" },
       })
-      .pipe(pluck("0"), parseResponse())
-      .toPromise();
+      .pipe(pluck("0"), parseResponse());
   }
 
   reverse(gpsCoords: GpsCoords) {
@@ -54,8 +53,7 @@ export class LocationIqService {
           lon: gpsCoords[1].toString(),
         },
       })
-      .pipe(parseResponse())
-      .toPromise();
+      .pipe(parseResponse());
   }
 }
 

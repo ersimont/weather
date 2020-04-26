@@ -61,6 +61,10 @@ export class STestRequest<T> {
     this.req.flush(body, { status, statusText });
     this.ctx.tick();
   }
+
+  isCancelled() {
+    return this.req.cancelled;
+  }
 }
 
 function paramsMatch(req: HttpRequest<any>, params: Record<string, string>) {

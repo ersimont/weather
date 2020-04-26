@@ -7,6 +7,8 @@ import { GpsCoords } from "app/state/location";
 import { SourceId } from "app/state/source";
 import { get } from "micro-dash";
 import { duration } from "moment";
+import { throwError } from "rxjs";
+import { catchError, map, switchMap } from "rxjs/operators";
 
 export interface PointResponse {
   properties: { forecastGridData: string };
@@ -33,35 +35,32 @@ export class WeatherGov extends AbstractSource {
     super(SourceId.WEATHER_GOV, injector);
   }
 
-  async fetch(gpsCoords: [number, number]) {
-    try {
-      const pointResponse = await this.fetchPoint(gpsCoords);
-      const zoneResponse = await this.fetchZone(pointResponse);
-      return extractForecast(zoneResponse);
-    } catch (ex) {
-      if (
-        get(ex, ["error", "type"]) ===
-        "https://api.weather.gov/problems/InvalidPoint"
-      ) {
-        return Promise.reject(notAvailableHere);
-      } else {
-        throw ex;
-      }
-    }
+  fetch(gpsCoords: [number, number]) {
+    return this.fetchPoint(gpsCoords).pipe(
+      switchMap((pointResponse) => this.fetchZone(pointResponse)),
+      map(extractForecast),
+      catchError((err) => {
+        // TODO: test this keep refreshing
+        if (
+          get(err, ["error", "type"]) ===
+          "https://api.weather.gov/problems/InvalidPoint"
+        ) {
+          return throwError(notAvailableHere);
+        } else {
+          return throwError(err);
+        }
+      }),
+    );
   }
 
   private fetchPoint(gpsCoords: GpsCoords) {
-    return this.httpClient
-      .get<PointResponse>(
-        `https://api.weather.gov/points/${gpsCoords.join(",")}`,
-      )
-      .toPromise();
+    return this.httpClient.get<PointResponse>(
+      `https://api.weather.gov/points/${gpsCoords.join(",")}`,
+    );
   }
 
   private fetchZone(point: PointResponse) {
-    return this.httpClient
-      .get<GridResponse>(point.properties.forecastGridData)
-      .toPromise();
+    return this.httpClient.get<GridResponse>(point.properties.forecastGridData);
   }
 }
 

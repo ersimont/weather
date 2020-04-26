@@ -1,8 +1,11 @@
-<div *ngFor="let condition of conditions" [ngClass]="condition">
-  <mat-slide-toggle
-    [nasModel]="store('showConditions')(condition)"
-    (change)="trackEvent('change_' + condition, 'change_condition')"
-  >
-    {{ conditionInfo[condition].label }}
-  </mat-slide-toggle>
-</div>
+<mat-expansion-panel [expanded]="true">
+  <mat-expansion-panel-header>Conditions</mat-expansion-panel-header>
+  <div *ngFor="let condition of conditions" [ngClass]="condition">
+    <mat-slide-toggle
+      [nasModel]="store('showConditions')(condition)"
+      (change)="trackEvent('change_' + condition, 'change_condition')"
+    >
+      {{ conditionInfo[condition].label }}
+    </mat-slide-toggle>
+  </div>
+</mat-expansion-panel>

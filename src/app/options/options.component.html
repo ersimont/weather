@@ -1,15 +1,6 @@
 <mat-accordion>
   <app-location-options></app-location-options>
   <app-source-options></app-source-options>
-
-  <!-- TODO: move other panels inside their components -->
-  <mat-expansion-panel>
-    <mat-expansion-panel-header>Units</mat-expansion-panel-header>
-    <app-unit-options></app-unit-options>
-  </mat-expansion-panel>
-
-  <mat-expansion-panel [expanded]="true">
-    <mat-expansion-panel-header>Conditions</mat-expansion-panel-header>
-    <app-condition-options></app-condition-options>
-  </mat-expansion-panel>
+  <app-unit-options></app-unit-options>
+  <app-condition-options></app-condition-options>
 </mat-accordion>

@@ -24,9 +24,7 @@ export class RefreshService {
   }
 
   private buildRefresh$() {
-    // TODO: stop passing the source all around through functions that don't care
     return this.buildSource$().pipe(
-      tap(this.logRefresh.bind(this)),
       this.locationService.getRefreshOperatorFunction(),
       filter(() => {
         if (this.locationService.getLocation().gpsCoords) {
@@ -56,10 +54,9 @@ export class RefreshService {
           throttleTime(refreshMillis),
         ),
       ),
+      tap((source) => {
+        this.eventTrackingService.track(source, "refresh");
+      }),
     );
-  }
-
-  private logRefresh(source: string) {
-    this.eventTrackingService.track(source, "refresh");
   }
 }

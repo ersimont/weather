@@ -8,8 +8,8 @@ import { WeatherStore } from "app/state/weather-store";
 import { ErrorService } from "app/to-replace/error.service";
 import { retryAfter } from "app/to-replace/retry-after";
 import { StoreObject } from "ng-app-state";
-import { combineLatest } from "rxjs";
-import { filter, skip, switchMap, switchMapTo } from "rxjs/operators";
+import { combineLatest, Observable, of } from "rxjs";
+import { skip, switchMap, switchMapTo, tap } from "rxjs/operators";
 import { InjectableSuperclass } from "s-ng-utils";
 
 export const notAvailableHere = Symbol();
@@ -35,9 +35,7 @@ export abstract class AbstractSource extends InjectableSuperclass {
     this.subscribeTo(
       this.refreshService.refresh$.pipe(
         switchMapTo(this.sourceStore("show").$),
-        filter(Boolean),
-        switchMap(() => this.refresh()),
-        // TODO: test switching while in flight, then resolving w/ error
+        switchMap((show) => this.refresh(show)),
         retryAfter((error) => {
           this.handleError(error, fallback);
           return combineLatest([
@@ -49,18 +47,28 @@ export abstract class AbstractSource extends InjectableSuperclass {
     );
   }
 
-  protected abstract async fetch(gpsCoords: GpsCoords): Promise<Forecast>;
+  protected abstract fetch(gpsCoords: GpsCoords): Observable<Forecast>;
 
-  private async refresh() {
-    const gpsCoords = this.locationService.getLocation().gpsCoords;
-    let forecast: Forecast;
-    if (gpsCoords) {
-      forecast = await this.fetch(gpsCoords);
-    } else {
-      this.errorService.show("Location not available");
-      forecast = {};
+  private refresh(show: boolean) {
+    if (!show) {
+      return of(0);
     }
 
+    const gpsCoords = this.locationService.getLocation().gpsCoords;
+    if (!gpsCoords) {
+      this.errorService.show("Location not available");
+      this.setForecast({});
+      return of(0);
+    }
+
+    return this.fetch(gpsCoords).pipe(
+      tap((forecast) => {
+        this.setForecast(forecast);
+      }),
+    );
+  }
+
+  private setForecast(forecast: Forecast) {
     this.store.batch((batch) => {
       batch("allowSourceFallback").set(false);
       this.sourceStore("forecast").inBatch(batch).set(forecast);

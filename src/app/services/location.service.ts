@@ -6,7 +6,7 @@ import { WeatherStore } from "app/state/weather-store";
 import { bindKey } from "micro-dash";
 import { merge, Observable, of } from "rxjs";
 import { fromPromise } from "rxjs/internal-compatibility";
-import { catchError, filter, map, skip, switchMap } from "rxjs/operators";
+import { catchError, filter, skip, switchMap, tap } from "rxjs/operators";
 import { InjectableSuperclass } from "s-ng-utils";
 
 @Injectable({ providedIn: "root" })
@@ -54,38 +54,37 @@ export class LocationService extends InjectableSuperclass {
       : state.customLocation;
   }
 
-  getRefreshOperatorFunction<T>() {
-    return switchMap<T, Observable<T>>((value: T) => {
+  getRefreshOperatorFunction() {
+    return switchMap(() => {
       const state = this.store.state();
       if (!state.useCurrentLocation) {
-        return of(value);
+        return of(0);
       }
 
       return fromPromise(this.browserService.getCurrentLocation()).pipe(
-        this.getReverseGpsOperatorFunction(value),
+        this.getReverseGpsOperatorFunction(),
         catchError((err) => {
+          // TODO: test this keep refreshing
           console.error(err);
           this.store("currentLocation").set(new Location());
-          return of(value);
+          return of(0);
         }),
       );
     });
   }
 
-  private getReverseGpsOperatorFunction<T>(value: T) {
+  private getReverseGpsOperatorFunction() {
     return switchMap((gpsCoords: GpsCoords) =>
-      fromPromise(this.locationIqService.reverse(gpsCoords)).pipe(
-        map((res) => {
-          this.store("currentLocation").assign({
-            gpsCoords,
-            city: res.city,
-          });
-          return value;
+      // TODO: test cancelling reverse lookup
+      this.locationIqService.reverse(gpsCoords).pipe(
+        tap((res) => {
+          this.store("currentLocation").assign({ gpsCoords, city: res.city });
         }),
         catchError((err) => {
+          // TODO: test this keep refreshing
           console.error(err);
           this.store("currentLocation")("city").delete();
-          return of(value);
+          return of(0);
         }),
       ),
     );
@@ -99,6 +98,7 @@ export class LocationService extends InjectableSuperclass {
           const location = customLocationStore.state();
           return location.search.length > 0 && !location.gpsCoords;
         }),
+        // TODO: test cancelling
         switchMap((search) => this.locationIqService.forward(search)),
       ),
       bindKey(customLocationStore, "assign"),
