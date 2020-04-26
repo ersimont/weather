@@ -1784,11 +1784,20 @@ export class WeatherGovHarness {
     },
   };
 
+  public notAvailableFixture = {
+    type: "https://api.weather.gov/problems/InvalidPoint",
+  };
+
   constructor(private ctx: WeatherGraphContext) {}
 
   flushFixture() {
     this.expectPoints().flush(this.pointsFixture);
     this.expectGrid().flush(this.gridFixture);
+  }
+
+  flushNotAvailable() {
+    this.expectPoints().flush(this.pointsFixture);
+    this.expectGrid().flushError(404, { body: this.notAvailableFixture });
   }
 
   expectPoints(gpsCoordinates = this.ctx.currentLocation) {
@@ -1801,5 +1810,11 @@ export class WeatherGovHarness {
 
   expectGrid(url = this.pointsFixture.properties.forecastGridData) {
     return new STestRequest<GridResponse>("GET", url, this.ctx);
+  }
+
+  expectNotAvailableError() {
+    this.ctx.expectErrorShown(
+      "Weather.gov is not available here. Try another source (in the settings).",
+    );
   }
 }

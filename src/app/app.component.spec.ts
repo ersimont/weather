@@ -35,10 +35,6 @@ describe("AppComponent", () => {
       ctx.cleanup();
     }));
 
-    it("falls back from Weather.gov to Weather Unlocked", () => {
-      fail("write this test");
-    });
-
     describe("when no current location has been determined before", () => {
       it("shows an error, switches to Custom, and opens location settings", fakeAsync(() => {
         // when the app opens

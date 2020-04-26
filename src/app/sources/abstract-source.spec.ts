@@ -4,25 +4,36 @@ import { SourceOptionsComponentHarness } from "app/options/source-options/source
 import { LocationIqServiceHarness } from "app/services/location-iq.service.harness";
 import { RefreshServiceHarness } from "app/services/refresh.service.harness";
 import { WeatherGovHarness } from "app/sources/weather-gov.harness";
+import { WeatherUnlockedHarness } from "app/sources/weather-unlocked.harness";
 import { WeatherGraphContext } from "app/test-helpers/weather-graph-context";
 
 describe("AbstractSource", () => {
   WeatherGraphContext.setup();
 
   let ctx: WeatherGraphContext;
+  let iq: LocationIqServiceHarness;
+  let gov: WeatherGovHarness;
+  let unlocked: WeatherUnlockedHarness;
+  let refresh: RefreshServiceHarness;
+  let sources: SourceOptionsComponentHarness;
+  let http: HttpTestingController;
 
   beforeEach(() => {
     ctx = new WeatherGraphContext();
   });
 
-  it("refreshes (only) when showing", fakeAsync(() => {
+  function init() {
     ctx.init();
-    const iq = new LocationIqServiceHarness(ctx);
-    const gov = new WeatherGovHarness(ctx);
-    const refresh = new RefreshServiceHarness(ctx);
-    const sources = new SourceOptionsComponentHarness(ctx);
-    const http = ctx.inject(HttpTestingController);
+    iq = new LocationIqServiceHarness(ctx);
+    gov = new WeatherGovHarness(ctx);
+    unlocked = new WeatherUnlockedHarness(ctx);
+    refresh = new RefreshServiceHarness(ctx);
+    sources = new SourceOptionsComponentHarness(ctx);
+    http = ctx.inject(HttpTestingController);
+  }
 
+  it("refreshes (only) when showing", fakeAsync(() => {
+    init();
     iq.flushReverse();
     gov.flushFixture();
 
@@ -45,21 +56,59 @@ describe("AbstractSource", () => {
     ctx.cleanup();
   }));
 
-  it("retries on next refresh after error", () => {
-    fail("write this test");
-  });
+  it("retries on next refresh after error", fakeAsync(() => {
+    init();
+    iq.expectReverse().flushError(500);
+
+    refresh.trigger();
+    iq.flushReverse();
+    gov.expectPoints().flushError(500);
+
+    refresh.trigger();
+    iq.flushReverse();
+    gov.expectPoints().flush(gov.pointsFixture);
+    gov.expectGrid().flushError(500);
+
+    refresh.trigger();
+    iq.expectReverse();
+
+    ctx.cleanup();
+  }));
 
   describe("fallback", () => {
-    it("happens invisibly on first app load", () => {
-      fail("write this test");
-    });
+    it("happens invisibly on first app load", fakeAsync(() => {
+      init();
 
-    it("does not happen on subsequent app loads", () => {
-      fail("write this test");
-    });
+      iq.flushReverse();
+      gov.flushNotAvailable();
+      unlocked.flushFixture();
+      ctx.expectNoErrorShown();
 
-    it("does not happen on refresh", () => {
-      fail("write this test");
-    });
+      ctx.cleanup();
+    }));
+
+    it("does not happen on refresh", fakeAsync(() => {
+      init();
+      iq.flushReverse();
+      gov.flushFixture();
+
+      refresh.trigger();
+      iq.flushReverse();
+      gov.flushNotAvailable();
+      gov.expectNotAvailableError();
+
+      ctx.cleanup();
+    }));
+
+    it("does not happen on subsequent app loads", fakeAsync(() => {
+      ctx.initialState.allowSourceFallback = false;
+      init();
+
+      iq.flushReverse();
+      gov.flushNotAvailable();
+      gov.expectNotAvailableError();
+
+      ctx.cleanup();
+    }));
   });
 });

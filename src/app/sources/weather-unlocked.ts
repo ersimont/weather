@@ -9,6 +9,21 @@ import { SourceId } from "app/state/source";
 const endpoint =
   "https://us-central1-proxic.cloudfunctions.net/api/weather-unlocked/api/forecast";
 
+export interface ForecastResponse {
+  Days: Array<{ Timeframes: Timeframe[] }>;
+}
+
+export interface Timeframe {
+  utcdate: string;
+  utctime: number;
+  precip_mm: number;
+  cloudtotal_pct: number;
+  dewpoint_c: number;
+  feelslike_c: number;
+  temp_c: number;
+  windspd_kts: number;
+}
+
 @Injectable({ providedIn: "root" })
 export class WeatherUnlocked extends AbstractSource {
   constructor(private httpClient: HttpClient, injector: Injector) {
@@ -28,15 +43,15 @@ export class WeatherUnlocked extends AbstractSource {
 
   private fetchRes(gpsCoords: [number, number]) {
     return this.httpClient
-      .get<any>(`${endpoint}/${gpsCoords.join(",")}`)
+      .get<ForecastResponse>(`${endpoint}/${gpsCoords.join(",")}`)
       .toPromise();
   }
 }
 
-function addConditions(forecast: Forecast, timeframe: any) {
+function addConditions(forecast: Forecast, timeframe: Timeframe) {
   forecast[parseTimestamp(timeframe)] = {
     [Condition.AMOUNT]: timeframe.precip_mm / 3,
-    [Condition.CLOUD]: parseInt(timeframe.cloudtotal_pct, 10),
+    [Condition.CLOUD]: timeframe.cloudtotal_pct,
     [Condition.DEW]: timeframe.dewpoint_c,
     [Condition.FEEL]: timeframe.feelslike_c,
     [Condition.TEMP]: timeframe.temp_c,
@@ -44,8 +59,8 @@ function addConditions(forecast: Forecast, timeframe: any) {
   };
 }
 
-function parseTimestamp(timeframe: any) {
+function parseTimestamp(timeframe: Timeframe) {
   const [day, month, year] = timeframe.utcdate.split("/");
   const hour = timeframe.utctime / 100;
-  return Date.UTC(year, month - 1, day, hour);
+  return Date.UTC(+year, +month - 1, +day, hour);
 }
