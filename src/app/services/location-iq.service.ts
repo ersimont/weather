@@ -12,6 +12,26 @@ const commonParams = {
   statecode: "1",
 };
 
+export interface ReverseResponse {
+  lat: string;
+  lon: string;
+  address: Address;
+}
+
+interface Address {
+  city?: string;
+  city_district?: string;
+  town?: string;
+  village?: string;
+  suburb?: string;
+  hamlet?: string;
+  neighbourhood?: string;
+  road?: string;
+  state_code?: string;
+  state?: string;
+  country_code?: string;
+}
+
 @Injectable({ providedIn: "root" })
 export class LocationIqService {
   constructor(private httpClient: HttpClient) {}
@@ -27,7 +47,7 @@ export class LocationIqService {
 
   reverse(gpsCoords: GpsCoords) {
     return this.httpClient
-      .get(`${baseUrl}/reverse.php`, {
+      .get<ReverseResponse>(`${baseUrl}/reverse.php`, {
         params: {
           ...commonParams,
           lat: gpsCoords[0].toString(),
@@ -41,14 +61,14 @@ export class LocationIqService {
 
 function parseResponse() {
   return map(
-    (res: any): Partial<Location> => ({
-      gpsCoords: [res.lat, res.lon],
+    (res: ReverseResponse): Partial<Location> => ({
+      gpsCoords: [+res.lat, +res.lon],
       city: parseCity(res.address),
     }),
   );
 }
 
-function parseCity(address: any) {
+function parseCity(address: Address) {
   const city = [
     address.city,
     address.city_district,

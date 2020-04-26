@@ -5,9 +5,10 @@ import { ErrorService } from "app/to-replace/error.service";
 import { EventTrackingService } from "app/to-replace/event-tracking/event-tracking.service";
 import { fromEvent, interval, merge, Observable, of } from "rxjs";
 import { filter, mapTo, switchMap, tap, throttleTime } from "rxjs/operators";
+import { convertTime } from "s-js-utils";
 import { cache } from "s-rxjs-utils";
 
-export const refreshPeriod = 30 * 60 * 1000;
+export const refreshMillis = convertTime(30, "min", "ms");
 
 @Injectable({ providedIn: "root" })
 export class RefreshService {
@@ -45,14 +46,14 @@ export class RefreshService {
     const location$ = this.locationService.refreshableChange$.pipe(
       mapTo("location_change_refresh"),
     );
-    const interval$ = interval(refreshPeriod).pipe(mapTo("interval_refresh"));
+    const interval$ = interval(refreshMillis).pipe(mapTo("interval_refresh"));
     const focus$ = fromEvent(window, "focus").pipe(mapTo("focus_refresh"));
 
     return merge(init$, location$).pipe(
       switchMap((source) =>
         merge(of(source), interval$, focus$).pipe(
           filter(() => document.hasFocus()),
-          throttleTime(refreshPeriod),
+          throttleTime(refreshMillis),
         ),
       ),
     );

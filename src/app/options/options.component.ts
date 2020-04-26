@@ -1,15 +1,7 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Injector,
-  ViewChild,
-} from "@angular/core";
-import { MatExpansionPanel } from "@angular/material/expansion";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { WeatherState } from "app/state/weather-state";
 import { WeatherStore } from "app/state/weather-store";
-import { ofType } from "app/to-replace/of-type";
 import { StoreObject } from "ng-app-state";
-import { DirectiveSuperclass } from "s-ng-utils";
 
 @Component({
   selector: "app-options",
@@ -17,18 +9,10 @@ import { DirectiveSuperclass } from "s-ng-utils";
   styleUrls: ["./options.component.css"],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OptionsComponent extends DirectiveSuperclass {
+export class OptionsComponent {
   store: StoreObject<WeatherState>;
 
-  @ViewChild("locationPanel", { read: MatExpansionPanel })
-  private locationPanel!: MatExpansionPanel;
-
-  constructor(injector: Injector, store: WeatherStore) {
-    super(injector);
+  constructor(store: WeatherStore) {
     this.store = store.withCaching();
-
-    this.subscribeTo(store.action$.pipe(ofType("ask_for_location")), () => {
-      this.locationPanel.open();
-    });
   }
 }

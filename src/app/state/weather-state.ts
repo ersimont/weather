@@ -7,6 +7,7 @@ import { mapToObject } from "s-js-utils";
 export class WeatherState {
   version = 6;
 
+  allowSourceFallback = true;
   useCurrentLocation = true;
   currentLocation = new Location();
   customLocation = new Location();
@@ -18,8 +19,8 @@ export class WeatherState {
 
   units = new Units();
 
-  showConditions: Record<Condition, boolean> = mapToObject(
-    Condition,
-    (condition: Condition) => [condition, true],
-  ) as any;
+  showConditions = mapToObject(Condition, (condition: Condition) => [
+    condition,
+    true,
+  ]) as Record<Condition, boolean>;
 }

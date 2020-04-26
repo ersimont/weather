@@ -15,7 +15,7 @@ export class WeatherStore extends AppStore<WeatherState> {
   }
 }
 
-function getInitialValue(): WeatherState {
+function getInitialValue() {
   const fresh = new WeatherState();
   const savedStr = localStorage.getItem(key);
   if (!savedStr) {

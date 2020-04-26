@@ -1,5 +1,5 @@
 <mat-toolbar color="primary">
-  <button mat-icon-button (click)="snav.toggle()">
+  <button mat-icon-button (click)="sidenav.toggle()">
     <mat-icon>menu</mat-icon>
   </button>
   <h1>{{ title$ | async }}</h1>
@@ -39,7 +39,7 @@
 </mat-toolbar>
 
 <mat-sidenav-container>
-  <mat-sidenav #snav>
+  <mat-sidenav #sidenav>
     <app-options></app-options>
   </mat-sidenav>
   <mat-sidenav-content>

@@ -1,5 +1,7 @@
 import { fakeAsync } from "@angular/core/testing";
-import { expectWeatherGovPoints } from "app/test-helpers/request-helpers";
+import { AppComponentHarness } from "app/app.component.harness";
+import { LocationOptionsComponentHarness } from "app/options/location-options/location-options.component.harness";
+import { WeatherGovHarness } from "app/sources/weather-gov.harness";
 import { WeatherGraphContext } from "app/test-helpers/weather-graph-context";
 
 describe("AppComponent", () => {
@@ -19,32 +21,40 @@ describe("AppComponent", () => {
       getCurrentLocation.and.callFake(() => Promise.reject("User says no!"));
     });
 
-    it("does not show an error until Custom is selected", fakeAsync(() => {
+    it("does not show an error until Current is selected", fakeAsync(() => {
       ctx.initialState.useCurrentLocation = false;
       ctx.initialState.customLocation.gpsCoords = [0, 0];
       ctx.init();
-      expectWeatherGovPoints([0, 0]);
+      const location = new LocationOptionsComponentHarness(ctx);
+      new WeatherGovHarness(ctx).expectPoints([0, 0]);
 
       ctx.expectNoErrorShown();
-      expect(ctx.sidenav.el()).toBeHidden();
-      ctx.selectRadio(ctx.sidenav.currentRadio());
+      location.select("Current");
       ctx.expectErrorShown("Location not found");
 
       ctx.cleanup();
     }));
+
+    it("falls back from Weather.gov to Weather Unlocked", () => {
+      fail("write this test");
+    });
 
     describe("when no current location has been determined before", () => {
       it("shows an error, switches to Custom, and opens location settings", fakeAsync(() => {
         // when the app opens
         ctx.initialState.useCurrentLocation = true;
         ctx.init();
+        const app = new AppComponentHarness(ctx);
+        const location = new LocationOptionsComponentHarness(ctx);
+
         ctx.expectErrorShown("Location not found");
-        expect(ctx.sidenav.currentRadio()).toBeVisible();
+        expect(app.isSidenavExpanded()).toBe(true);
+        expect(location.isExpanded()).toBe(true);
 
         // when switching to Current
-        ctx.selectRadio(ctx.sidenav.customRadio());
+        location.select("Custom");
         ctx.expectNoErrorShown();
-        ctx.selectRadio(ctx.sidenav.currentRadio());
+        location.select("Current");
         ctx.expectErrorShown("Location not found");
 
         ctx.cleanup();
@@ -57,13 +67,19 @@ describe("AppComponent", () => {
         ctx.initialState.useCurrentLocation = true;
         ctx.initialState.customLocation.gpsCoords = [0, 0];
         ctx.init();
+        const app = new AppComponentHarness(ctx);
+        const location = new LocationOptionsComponentHarness(ctx);
+        const gov = new WeatherGovHarness(ctx);
+
         ctx.expectErrorShown("Location not found");
-        expect(ctx.sidenav.currentRadio()).toBeVisible();
+        expect(app.isSidenavExpanded()).toBe(true);
+        expect(location.isExpanded()).toBe(true);
 
         // when switching to Current
-        ctx.selectRadio(ctx.sidenav.customRadio());
+        location.select("Custom");
+        gov.expectPoints([0, 0]);
         ctx.expectNoErrorShown();
-        ctx.selectRadio(ctx.sidenav.currentRadio());
+        location.select("Current");
         ctx.expectErrorShown("Location not found");
 
         ctx.cleanup();

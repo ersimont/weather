@@ -1,13 +1,31 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, Injector } from "@angular/core";
-import { AbstractSource } from "app/sources/abstract-source";
+import { AbstractSource, notAvailableHere } from "app/sources/abstract-source";
 import { Condition, Conditions } from "app/state/condition";
 import { Forecast } from "app/state/forecast";
 import { GpsCoords } from "app/state/location";
 import { SourceId } from "app/state/source";
-import { PresentableError } from "app/to-replace/error.service";
 import { get } from "micro-dash";
 import { duration } from "moment";
+
+export interface PointResponse {
+  properties: { forecastGridData: string };
+}
+
+export interface GridResponse {
+  properties: {
+    quantitativePrecipitation: GridConditionInfo;
+    skyCover: GridConditionInfo;
+    dewpoint: GridConditionInfo;
+    apparentTemperature: GridConditionInfo;
+    temperature: GridConditionInfo;
+    windSpeed: GridConditionInfo;
+  };
+}
+
+interface GridConditionInfo {
+  values: Array<{ validTime: string; value: number }>;
+}
 
 @Injectable({ providedIn: "root" })
 export class WeatherGov extends AbstractSource {
@@ -17,17 +35,15 @@ export class WeatherGov extends AbstractSource {
 
   async fetch(gpsCoords: [number, number]) {
     try {
-      const pointRes = await this.fetchPoint(gpsCoords);
-      const zoneRes = await this.fetchZone(pointRes.properties);
-      return extractForecast(zoneRes.properties);
+      const pointResponse = await this.fetchPoint(gpsCoords);
+      const zoneResponse = await this.fetchZone(pointResponse);
+      return extractForecast(zoneResponse);
     } catch (ex) {
       if (
         get(ex, ["error", "type"]) ===
         "https://api.weather.gov/problems/InvalidPoint"
       ) {
-        throw new PresentableError(
-          "Weather.gov is not available here. Try another source (in the settings).",
-        );
+        return Promise.reject(notAvailableHere);
       } else {
         throw ex;
       }
@@ -36,16 +52,20 @@ export class WeatherGov extends AbstractSource {
 
   private fetchPoint(gpsCoords: GpsCoords) {
     return this.httpClient
-      .get<any>(`https://api.weather.gov/points/${gpsCoords.join(",")}`)
+      .get<PointResponse>(
+        `https://api.weather.gov/points/${gpsCoords.join(",")}`,
+      )
       .toPromise();
   }
 
-  private fetchZone(point: any) {
-    return this.httpClient.get<any>(point.forecastGridData).toPromise();
+  private fetchZone(point: PointResponse) {
+    return this.httpClient
+      .get<GridResponse>(point.properties.forecastGridData)
+      .toPromise();
   }
 }
 
-function extractForecast(zone: any) {
+function extractForecast(zone: GridResponse) {
   const forecast: Forecast = {};
   addFromZone(forecast, zone, Condition.AMOUNT, "quantitativePrecipitation");
   addFromZone(forecast, zone, Condition.CLOUD, "skyCover");
@@ -58,11 +78,11 @@ function extractForecast(zone: any) {
 
 function addFromZone(
   forecast: Forecast,
-  zone: any,
+  zone: GridResponse,
   condition: Condition,
-  zoneKey: string,
+  zoneKey: keyof GridResponse["properties"],
 ) {
-  for (const v of zone[zoneKey].values) {
+  for (const v of zone.properties[zoneKey].values) {
     const [timeString, durationString] = v.validTime.split("/");
     const time = new Date(timeString).getTime();
 

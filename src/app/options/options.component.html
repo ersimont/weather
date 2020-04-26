@@ -1,14 +1,8 @@
 <mat-accordion>
-  <mat-expansion-panel #locationPanel>
-    <mat-expansion-panel-header>Location</mat-expansion-panel-header>
-    <app-location-options></app-location-options>
-  </mat-expansion-panel>
+  <app-location-options></app-location-options>
+  <app-source-options></app-source-options>
 
-  <mat-expansion-panel>
-    <mat-expansion-panel-header>Sources</mat-expansion-panel-header>
-    <app-source-options></app-source-options>
-  </mat-expansion-panel>
-
+  <!-- TODO: move other panels inside their components -->
   <mat-expansion-panel>
     <mat-expansion-panel-header>Units</mat-expansion-panel-header>
     <app-unit-options></app-unit-options>

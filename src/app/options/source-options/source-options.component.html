@@ -1,8 +1,11 @@
-<div *ngFor="let sourceId of sourceIds" [class]="sourceId">
-  <mat-slide-toggle
-    [nasModel]="store('sources')(sourceId)('show')"
-    (change)="trackChange(sourceId)"
-  >
-    {{ store("sources")(sourceId)("label").$ | async }}
-  </mat-slide-toggle>
-</div>
+<mat-expansion-panel>
+  <mat-expansion-panel-header>Sources</mat-expansion-panel-header>
+  <div *ngFor="let sourceId of sourceIds" [class]="sourceId">
+    <mat-slide-toggle
+      [nasModel]="store('sources')(sourceId)('show')"
+      (change)="trackChange(sourceId)"
+    >
+      {{ store("sources")(sourceId)("label").$ | async }}
+    </mat-slide-toggle>
+  </div>
+</mat-expansion-panel>

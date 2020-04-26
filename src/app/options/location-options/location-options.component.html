@@ -1,22 +1,25 @@
-<mat-radio-group
-  [nasModel]="store('useCurrentLocation')"
-  (change)="trackCurrentSelection()"
->
-  <div class="radio-container">
-    <mat-radio-button class="current-radio" [value]="true">
-      Current
-    </mat-radio-button>
-  </div>
-  <div class="radio-container">
-    <mat-radio-button [value]="false"></mat-radio-button>
-    <mat-form-field>
-      <input
-        matInput
-        name="custom"
-        placeholder="Custom"
-        [value]="store('customLocation')('search').$ | async"
-        (change)="locationService.setCustomSearch($event.target.value)"
-      />
-    </mat-form-field>
-  </div>
-</mat-radio-group>
+<mat-expansion-panel #panel>
+  <mat-expansion-panel-header>Location</mat-expansion-panel-header>
+  <mat-radio-group
+    [nasModel]="store('useCurrentLocation')"
+    (change)="trackCurrentSelection()"
+  >
+    <div class="radio-container">
+      <mat-radio-button class="current-radio" [value]="true">
+        Current
+      </mat-radio-button>
+    </div>
+    <div class="radio-container">
+      <mat-radio-button [value]="false"></mat-radio-button>
+      <mat-form-field>
+        <input
+          matInput
+          name="custom"
+          placeholder="Custom"
+          [value]="store('customLocation')('search').$ | async"
+          (change)="locationService.setCustomSearch($event.target.value)"
+        />
+      </mat-form-field>
+    </div>
+  </mat-radio-group>
+</mat-expansion-panel>

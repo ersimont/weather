@@ -8,47 +8,17 @@ import { MatIconRegistry } from "@angular/material/icon";
 import { MatSidenav } from "@angular/material/sidenav";
 import { DomSanitizer } from "@angular/platform-browser";
 import { SetRangeAction } from "app/graph/set-range-action";
+import { icons } from "app/icons";
 import { LocationService } from "app/services/location.service";
 import { WeatherGov } from "app/sources/weather-gov";
 import { WeatherUnlocked } from "app/sources/weather-unlocked";
+import { SourceId } from "app/state/source";
 import { WeatherStore } from "app/state/weather-store";
 import { HttpStatusService } from "app/to-replace/http-status.service";
 import { ofType } from "app/to-replace/of-type";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { DirectiveSuperclass } from "s-ng-utils";
-
-const icons = `
-  <svg><defs>
-    <svg id="day">
-      <path
-        d="M 2 12 q 5 -20 10 0 t 10 0"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="3"
-        stroke-linecap="round"
-      />
-    </svg>
-    <svg id="three-days">
-      <path
-        d="M 1.5 12 q 1.75 -20 3.5 0 t 3.5 0 t 3.5 0 t 3.5 0 t 3.5 0 t 3.5 0"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-      />
-    </svg>
-    <svg id="week">
-      <path
-        d="M 1.5 12 q .75 -20 1.5 0 t 1.5 0 t 1.5 0 t 1.5 0 t 1.5 0 t 1.5 0 t 1.5 0 t 1.5 0 t 1.5 0 t 1.5 0 t 1.5 0 t 1.5 0 t 1.5 0 t 1.5 0"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="1"
-        stroke-linecap="round"
-      />
-    </svg>
-  </defs></svg>
-`;
 
 @Component({
   selector: "app-root",
@@ -58,7 +28,7 @@ const icons = `
 })
 export class AppComponent extends DirectiveSuperclass {
   title$: Observable<string>;
-  @ViewChild("snav", { read: MatSidenav }) private sideNav!: MatSidenav;
+  @ViewChild("sidenav", { read: MatSidenav }) private sidenav!: MatSidenav;
 
   constructor(
     public httpStatusService: HttpStatusService,
@@ -75,7 +45,7 @@ export class AppComponent extends DirectiveSuperclass {
       map((location) => location.city || "Weather Graph"),
     );
 
-    weatherGov.initialize();
+    weatherGov.initialize(SourceId.WEATHER_UNLOCKED);
     weatherUnlocked.initialize();
     matIconRegistry.addSvgIconSetLiteral(
       domSanitizer.bypassSecurityTrustHtml(icons),
@@ -92,7 +62,7 @@ export class AppComponent extends DirectiveSuperclass {
     this.subscribeTo(
       this.store.action$.pipe(ofType("ask_for_location")),
       () => {
-        this.sideNav.open();
+        this.sidenav.open();
       },
     );
   }
