@@ -4,7 +4,7 @@ import { AbstractComponentHarness } from "app/to-replace/test-context/abstract-c
 
 export class LocationOptionsComponentHarness extends AbstractComponentHarness {
   constructor(private ctx: WeatherGraphContext) {
-    super(ctx.spectator.hostElement, "app-location-options");
+    super();
   }
 
   setCustomLocation(search: string) {
@@ -43,5 +43,11 @@ export class LocationOptionsComponentHarness extends AbstractComponentHarness {
 
   getCustomInput() {
     return this.get<HTMLInputElement>("mat-form-field input");
+  }
+
+  protected getHost() {
+    return this.get("app-location-options", {
+      parent: this.ctx.spectator.hostElement,
+    });
   }
 }

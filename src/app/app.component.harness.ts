@@ -3,7 +3,7 @@ import { AbstractComponentHarness } from "app/to-replace/test-context/abstract-c
 
 export class AppComponentHarness extends AbstractComponentHarness {
   constructor(private ctx: WeatherGraphContext) {
-    super(ctx.spectator.hostElement, "app-root");
+    super();
   }
 
   ensureSidenavExpanded() {
@@ -22,5 +22,9 @@ export class AppComponentHarness extends AbstractComponentHarness {
 
   getSidenav() {
     return this.get<HTMLElement>("mat-sidenav");
+  }
+
+  protected getHost() {
+    return this.get("app-root", { parent: this.ctx.spectator.hostElement });
   }
 }

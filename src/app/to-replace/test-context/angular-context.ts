@@ -1,5 +1,5 @@
 import { HttpTestingController } from "@angular/common/http/testing";
-import { AbstractType, InjectionToken, Type } from "@angular/core";
+import { AbstractType, InjectionToken, NgZone, Type } from "@angular/core";
 import { discardPeriodicTasks, TestBed } from "@angular/core/testing";
 import { SpectatorHost } from "@ngneat/spectator";
 import { DomContext } from "app/to-replace/test-context/dom-context";
@@ -7,7 +7,7 @@ import { DomContext } from "app/to-replace/test-context/dom-context";
 export abstract class AngularContext extends DomContext {
   abstract spectator: SpectatorHost<unknown>;
 
-  static setup() {
+  static setUp() {
     afterEach(() => {
       TestBed.inject(HttpTestingController).verify();
     });
@@ -23,9 +23,11 @@ export abstract class AngularContext extends DomContext {
   }
 
   tick(millis?: number) {
-    for (let i = 2; --i >= 0; ) {
-      this.spectator.tick(millis);
-      millis = 0;
+    this.spectator.tick(millis);
+    let extra = 0;
+    for (const zone = this.inject(NgZone); !zone.isStable; ) {
+      console.log("extra", ++extra);
+      this.spectator.tick(0);
     }
   }
 

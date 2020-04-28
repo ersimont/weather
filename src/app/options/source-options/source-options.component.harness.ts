@@ -4,7 +4,7 @@ import { AbstractComponentHarness } from "app/to-replace/test-context/abstract-c
 
 export class SourceOptionsComponentHarness extends AbstractComponentHarness {
   constructor(private ctx: WeatherGraphContext) {
-    super(ctx.spectator.hostElement, "app-source-options");
+    super();
   }
 
   toggle(label: string) {
@@ -29,5 +29,11 @@ export class SourceOptionsComponentHarness extends AbstractComponentHarness {
 
   getToggleLabel(text: string) {
     return this.get<HTMLElement>("label", { text });
+  }
+
+  protected getHost() {
+    return this.get("app-source-options", {
+      parent: this.ctx.spectator.hostElement,
+    });
   }
 }

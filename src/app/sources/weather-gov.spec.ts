@@ -5,7 +5,7 @@ import { WeatherGovHarness } from "app/sources/weather-gov.harness";
 import { WeatherGraphContext } from "app/test-helpers/weather-graph-context";
 
 describe("WeatherGov", () => {
-  WeatherGraphContext.setup();
+  WeatherGraphContext.setUp();
 
   let ctx: WeatherGraphContext;
   let iq: LocationIqServiceHarness;

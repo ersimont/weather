@@ -9,8 +9,13 @@ import {
   SpectatorHostFactory,
 } from "@ngneat/spectator";
 import { AppComponent } from "app/app.component";
+import { AppComponentHarness } from "app/app.component.harness";
 import { AppModule } from "app/app.module";
+import { LocationOptionsComponentHarness } from "app/options/location-options/location-options.component.harness";
 import { BrowserService } from "app/services/browser.service";
+import { LocationIqServiceHarness } from "app/services/location-iq.service.harness";
+import { RefreshServiceHarness } from "app/services/refresh.service.harness";
+import { WeatherGovHarness } from "app/sources/weather-gov.harness";
 import { GpsCoords } from "app/state/location";
 import { WeatherState } from "app/state/weather-state";
 import { EventTrackingService } from "app/to-replace/event-tracking/event-tracking.service";
@@ -33,15 +38,25 @@ export class WeatherGraphContext extends AngularContext {
   spectator!: SpectatorHost<AppComponent>;
   screenSize = { width: 400, height: 600 };
 
-  currentLocation: GpsCoords = [144, -122];
   initialState = new WeatherState();
+  currentLocation: GpsCoords = [144, -122];
 
-  browserService = createSpyObject(BrowserService);
-  eventTrackingService = createSpyObject(EventTrackingService);
-  matSnackBar = createSpyObject(MatSnackBar);
+  mock = {
+    browser: createSpyObject(BrowserService),
+    eventTracking: createSpyObject(EventTrackingService),
+    snackBar: createSpyObject(MatSnackBar),
+  };
 
-  static setup() {
-    AngularContext.setup();
+  help = {
+    app: new AppComponentHarness(this),
+    gov: new WeatherGovHarness(this),
+    iq: new LocationIqServiceHarness(this),
+    location: new LocationOptionsComponentHarness(this),
+    refresh: new RefreshServiceHarness(this),
+  };
+
+  static setUp() {
+    AngularContext.setUp();
     WeatherGraphContext.createHost = createHostFactory({
       component: AppComponent,
       declareComponent: false,
@@ -51,10 +66,10 @@ export class WeatherGraphContext extends AngularContext {
 
   constructor() {
     super();
-    this.browserService.getCurrentLocation.and.callFake(
+    this.mock.browser.getCurrentLocation.and.callFake(
       async () => this.currentLocation,
     );
-    this.browserService.hasFocus.and.returnValue(true);
+    this.mock.browser.hasFocus.and.returnValue(true);
   }
 
   init() {
@@ -62,21 +77,21 @@ export class WeatherGraphContext extends AngularContext {
     this.spectator = WeatherGraphContext.createHost(hostTemplate, {
       hostProps: this.screenSize,
       providers: [
-        { provide: BrowserService, useValue: this.browserService },
-        { provide: EventTrackingService, useValue: this.eventTrackingService },
-        { provide: MatSnackBar, useValue: this.matSnackBar },
+        { provide: BrowserService, useValue: this.mock.browser },
+        { provide: EventTrackingService, useValue: this.mock.eventTracking },
+        { provide: MatSnackBar, useValue: this.mock.snackBar },
       ],
     });
     this.tick();
   }
 
   expectErrorShown(message: string) {
-    expectSingleCallAndReset(this.matSnackBar.open, message, "OK", {
+    expectSingleCallAndReset(this.mock.snackBar.open, message, "OK", {
       duration: 5000,
     });
   }
 
   expectNoErrorShown() {
-    expect(this.matSnackBar.open).not.toHaveBeenCalled();
+    expect(this.mock.snackBar.open).not.toHaveBeenCalled();
   }
 }
