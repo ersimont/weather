@@ -33,7 +33,7 @@ describe("WeatherGov", () => {
     sources.toggle("Weather.gov");
     gov.flushFixture();
 
-    ctx.cleanup();
+    ctx.cleanUp();
   }));
 
   it("can cancel the second request", fakeAsync(() => {
@@ -47,6 +47,6 @@ describe("WeatherGov", () => {
     sources.toggle("Weather.gov");
     gov.flushFixture();
 
-    ctx.cleanup();
+    ctx.cleanUp();
   }));
 });

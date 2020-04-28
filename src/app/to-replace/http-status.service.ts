@@ -29,6 +29,7 @@ export class HttpStatusService implements HttpInterceptor {
     );
   }
 
+  // TODO: test cancelled requests (because it appears to be broken)
   intercept(req: HttpRequest<any>, next: HttpHandler) {
     this.count$.next(this.count$.getValue() + 1);
     const finish = () => {

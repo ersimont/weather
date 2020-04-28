@@ -53,26 +53,26 @@ describe("AbstractSource", () => {
     iq.flushReverse();
     gov.flushFixture();
 
-    ctx.cleanup();
+    ctx.cleanUp();
   }));
 
   it("retries on next refresh after error", fakeAsync(() => {
     init();
-    iq.expectReverse().flushError(500);
+    iq.expectReverse().flushError();
 
     refresh.trigger();
     iq.flushReverse();
-    gov.expectPoints().flushError(500);
+    gov.expectPoints().flushError();
 
     refresh.trigger();
     iq.flushReverse();
     gov.expectPoints().flush(gov.pointsFixture);
-    gov.expectGrid().flushError(500);
+    gov.expectGrid().flushError();
 
     refresh.trigger();
     iq.expectReverse();
 
-    ctx.cleanup();
+    ctx.cleanUp();
   }));
 
   describe("fallback", () => {
@@ -84,7 +84,7 @@ describe("AbstractSource", () => {
       unlocked.flushFixture();
       ctx.expectNoErrorShown();
 
-      ctx.cleanup();
+      ctx.cleanUp();
     }));
 
     it("does not happen on refresh", fakeAsync(() => {
@@ -97,7 +97,7 @@ describe("AbstractSource", () => {
       gov.flushNotAvailable();
       gov.expectNotAvailableError();
 
-      ctx.cleanup();
+      ctx.cleanUp();
     }));
 
     it("does not happen on subsequent app loads", fakeAsync(() => {
@@ -108,7 +108,7 @@ describe("AbstractSource", () => {
       gov.flushNotAvailable();
       gov.expectNotAvailableError();
 
-      ctx.cleanup();
+      ctx.cleanUp();
     }));
   });
 });

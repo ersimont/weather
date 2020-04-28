@@ -22,4 +22,8 @@ export class BrowserService {
       );
     });
   }
+
+  hasFocus() {
+    return document.hasFocus();
+  }
 }

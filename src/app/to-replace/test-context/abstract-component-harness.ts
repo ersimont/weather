@@ -16,6 +16,9 @@ export abstract class AbstractComponentHarness {
     if (text) {
       all = all.filter((el) => el.textContent!.includes(text));
     }
+    expect(all.length)
+      .withContext(".get() must match exactly 1 element")
+      .toBe(1);
     return all[0];
   }
 }

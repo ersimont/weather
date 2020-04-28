@@ -2,8 +2,9 @@ import { HttpTestingController } from "@angular/common/http/testing";
 import { AbstractType, InjectionToken, Type } from "@angular/core";
 import { discardPeriodicTasks, TestBed } from "@angular/core/testing";
 import { SpectatorHost } from "@ngneat/spectator";
+import { DomContext } from "app/to-replace/test-context/dom-context";
 
-export abstract class AngularContext {
+export abstract class AngularContext extends DomContext {
   abstract spectator: SpectatorHost<unknown>;
 
   static setup() {
@@ -12,8 +13,9 @@ export abstract class AngularContext {
     });
   }
 
-  cleanup() {
+  cleanUp() {
     discardPeriodicTasks();
+    this.tick(1); // the CDK does this for its FocusManager
   }
 
   inject<T>(token: Type<T> | InjectionToken<T> | AbstractType<T>) {
@@ -25,5 +27,10 @@ export abstract class AngularContext {
       this.spectator.tick(millis);
       millis = 0;
     }
+  }
+
+  dispatch(event: Event, element: Element) {
+    super.dispatch(event, element);
+    this.tick();
   }
 }

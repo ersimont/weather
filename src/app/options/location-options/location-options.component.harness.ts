@@ -7,6 +7,13 @@ export class LocationOptionsComponentHarness extends AbstractComponentHarness {
     super(ctx.spectator.hostElement, "app-location-options");
   }
 
+  setCustomLocation(search: string) {
+    this.ensureExpanded();
+    const customInput = this.getCustomInput();
+    this.ctx.setText(search, customInput);
+    this.ctx.dispatchChange(customInput);
+  }
+
   select(label: string) {
     this.ensureExpanded();
     this.ctx.click(this.getRadioLabel(label));
@@ -32,5 +39,9 @@ export class LocationOptionsComponentHarness extends AbstractComponentHarness {
     return this.get<HTMLElement>("mat-radio-button label", {
       parent: container,
     });
+  }
+
+  getCustomInput() {
+    return this.get<HTMLInputElement>("mat-form-field input");
   }
 }

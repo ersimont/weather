@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { BrowserService } from "app/services/browser.service";
 import { LocationService } from "app/services/location.service";
 import { WeatherStore } from "app/state/weather-store";
 import { ErrorService } from "app/to-replace/error.service";
@@ -15,6 +16,7 @@ export class RefreshService {
   refresh$: Observable<unknown>;
 
   constructor(
+    private browserService: BrowserService,
     private errorService: ErrorService,
     private eventTrackingService: EventTrackingService,
     private locationService: LocationService,
@@ -25,7 +27,7 @@ export class RefreshService {
 
   private buildRefresh$() {
     return this.buildSource$().pipe(
-      this.locationService.getRefreshOperatorFunction(),
+      switchMap(() => this.locationService.refresh()),
       filter(() => {
         if (this.locationService.getLocation().gpsCoords) {
           return true;
@@ -50,7 +52,7 @@ export class RefreshService {
     return merge(init$, location$).pipe(
       switchMap((source) =>
         merge(of(source), interval$, focus$).pipe(
-          filter(() => document.hasFocus()),
+          filter(() => this.browserService.hasFocus()),
           throttleTime(refreshMillis),
         ),
       ),

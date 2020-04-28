@@ -35,6 +35,6 @@ describe("WeatherUnlocked", () => {
     sources.toggle("Weather Unlocked");
     unlocked.flushFixture();
 
-    ctx.cleanup();
+    ctx.cleanUp();
   }));
 });

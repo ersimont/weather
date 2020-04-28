@@ -13,8 +13,8 @@ import { AppModule } from "app/app.module";
 import { BrowserService } from "app/services/browser.service";
 import { GpsCoords } from "app/state/location";
 import { WeatherState } from "app/state/weather-state";
-import { ComponentContext } from "app/to-replace/test-context/component-context";
 import { EventTrackingService } from "app/to-replace/event-tracking/event-tracking.service";
+import { AngularContext } from "app/to-replace/test-context/angular-context";
 import { expectSingleCallAndReset } from "s-ng-dev-utils";
 
 const hostTemplate = `
@@ -27,7 +27,7 @@ const hostTemplate = `
   </div>
 `;
 
-export class WeatherGraphContext extends ComponentContext {
+export class WeatherGraphContext extends AngularContext {
   private static createHost: SpectatorHostFactory<AppComponent, HostComponent>;
 
   spectator!: SpectatorHost<AppComponent>;
@@ -41,7 +41,7 @@ export class WeatherGraphContext extends ComponentContext {
   matSnackBar = createSpyObject(MatSnackBar);
 
   static setup() {
-    ComponentContext.setup();
+    AngularContext.setup();
     WeatherGraphContext.createHost = createHostFactory({
       component: AppComponent,
       declareComponent: false,
@@ -54,6 +54,7 @@ export class WeatherGraphContext extends ComponentContext {
     this.browserService.getCurrentLocation.and.callFake(
       async () => this.currentLocation,
     );
+    this.browserService.hasFocus.and.returnValue(true);
   }
 
   init() {

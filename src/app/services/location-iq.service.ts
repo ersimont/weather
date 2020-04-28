@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { GpsCoords, Location } from "app/state/location";
-import { map, pluck } from "rxjs/operators";
+import { map } from "rxjs/operators";
 
 const baseUrl =
   "https://us-central1-proxic.cloudfunctions.net/api/location-iq/v1";
@@ -12,7 +12,9 @@ const commonParams = {
   statecode: "1",
 };
 
-export interface ReverseResponse {
+export type ForwardResponse = LocationResponse[];
+
+export interface LocationResponse {
   lat: string;
   lon: string;
   address: Address;
@@ -38,32 +40,30 @@ export class LocationIqService {
 
   forward(search: string) {
     return this.httpClient
-      .get<any>(`${baseUrl}/search.php`, {
+      .get<ForwardResponse>(`${baseUrl}/search.php`, {
         params: { ...commonParams, q: search, limit: "1" },
       })
-      .pipe(pluck("0"), parseResponse());
+      .pipe(map((response) => parseLocation(response[0])));
   }
 
   reverse(gpsCoords: GpsCoords) {
     return this.httpClient
-      .get<ReverseResponse>(`${baseUrl}/reverse.php`, {
+      .get<LocationResponse>(`${baseUrl}/reverse.php`, {
         params: {
           ...commonParams,
           lat: gpsCoords[0].toString(),
           lon: gpsCoords[1].toString(),
         },
       })
-      .pipe(parseResponse());
+      .pipe(map(parseLocation));
   }
 }
 
-function parseResponse() {
-  return map(
-    (res: ReverseResponse): Partial<Location> => ({
-      gpsCoords: [+res.lat, +res.lon],
-      city: parseCity(res.address),
-    }),
-  );
+function parseLocation(response: LocationResponse): Partial<Location> {
+  return {
+    gpsCoords: [+response.lat, +response.lon],
+    city: parseCity(response.address),
+  };
 }
 
 function parseCity(address: Address) {

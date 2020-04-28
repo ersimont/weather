@@ -54,10 +54,7 @@ export class STestRequest<T> {
     this.ctx.tick();
   }
 
-  flushError(
-    status: number,
-    { statusText = "", body = null as BodyType } = {},
-  ) {
+  flushError(status = 500, { statusText = "", body = null as BodyType } = {}) {
     this.req.flush(body, { status, statusText });
     this.ctx.tick();
   }
