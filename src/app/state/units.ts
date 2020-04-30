@@ -54,7 +54,7 @@ export const unitInfo: Record<UnitEnum, UnitInfo> = {
   [AmountUnit.MM]: {
     convert: identity,
     getDisplay: (value: number, decimalPipe: DecimalPipe) =>
-      `${round(value, 0, decimalPipe)} ${AmountUnit.MM}`,
+      `${round(value, 1, decimalPipe)} ${AmountUnit.MM}`,
   },
   [SpeedUnit.MPH]: {
     convert: (value: number) => value * 1.151,
