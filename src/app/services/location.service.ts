@@ -72,7 +72,6 @@ export class LocationService extends InjectableSuperclass {
   private refreshCurrentLocation() {
     return fromPromise(this.browserService.getCurrentLocation()).pipe(
       switchMap((gpsCoords: GpsCoords) =>
-        // TODO: test cancelling reverse lookup
         this.locationIqService.reverse(gpsCoords).pipe(
           tap((res) => {
             this.store("currentLocation").assign({ gpsCoords, city: res.city });

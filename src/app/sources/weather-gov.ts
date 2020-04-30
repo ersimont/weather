@@ -40,7 +40,6 @@ export class WeatherGov extends AbstractSource {
       switchMap((pointResponse) => this.fetchZone(pointResponse)),
       map(extractForecast),
       catchError((err) => {
-        // TODO: test this keep refreshing
         if (
           get(err, ["error", "type"]) ===
           "https://api.weather.gov/problems/InvalidPoint"

@@ -1,51 +1,56 @@
 import { fakeAsync } from "@angular/core/testing";
-import { SourceOptionsComponentHarness } from "app/options/source-options/source-options.component.harness";
-import { LocationIqServiceHarness } from "app/services/location-iq.service.harness";
-import { WeatherGovHarness } from "app/sources/weather-gov.harness";
 import { WeatherGraphContext } from "app/test-helpers/weather-graph-context";
 
 describe("WeatherGov", () => {
   WeatherGraphContext.setUp();
 
   let ctx: WeatherGraphContext;
-  let iq: LocationIqServiceHarness;
-  let gov: WeatherGovHarness;
-  let sources: SourceOptionsComponentHarness;
 
   beforeEach(() => {
     ctx = new WeatherGraphContext();
   });
 
-  function init() {
-    ctx.init();
-    iq = new LocationIqServiceHarness(ctx);
-    gov = new WeatherGovHarness(ctx);
-    sources = new SourceOptionsComponentHarness(ctx);
-  }
-
   it("can cancel the first request", fakeAsync(() => {
-    init();
+    ctx.init();
 
-    iq.flushReverse();
-    sources.toggle("Weather.gov");
-    expect(gov.expectPoints().isCancelled()).toBe(true);
+    ctx.help.iq.flushReverse();
+    ctx.help.sources.toggle("Weather.gov");
+    expect(ctx.help.gov.expectPoints().isCancelled()).toBe(true);
 
-    sources.toggle("Weather.gov");
-    gov.flushFixture();
+    ctx.help.sources.toggle("Weather.gov");
+    ctx.help.gov.flushFixture();
 
     ctx.cleanUp();
   }));
 
   it("can cancel the second request", fakeAsync(() => {
-    init();
+    ctx.init();
 
-    iq.flushReverse();
-    gov.expectPoints().flush(gov.pointsFixture);
-    sources.toggle("Weather.gov");
-    expect(gov.expectGrid().isCancelled()).toBe(true);
+    ctx.help.iq.flushReverse();
+    ctx.help.gov.expectPoints().flush(ctx.help.gov.pointsFixture);
+    ctx.help.sources.toggle("Weather.gov");
+    expect(ctx.help.gov.expectGrid().isCancelled()).toBe(true);
 
-    sources.toggle("Weather.gov");
-    gov.flushFixture();
+    ctx.help.sources.toggle("Weather.gov");
+    ctx.help.gov.flushFixture();
+
+    ctx.cleanUp();
+  }));
+
+  it("does not prevent refreshes after error", fakeAsync(() => {
+    ctx.init();
+
+    ctx.help.iq.flushReverse();
+    ctx.help.gov.expectPoints().flushError();
+
+    ctx.help.refresh.trigger();
+    ctx.help.iq.flushReverse();
+    ctx.help.gov.expectPoints().flush(ctx.help.gov.pointsFixture);
+    ctx.help.gov.expectGrid().flushError();
+
+    ctx.help.refresh.trigger();
+    ctx.help.iq.flushReverse();
+    ctx.help.gov.flushFixture();
 
     ctx.cleanUp();
   }));
