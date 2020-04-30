@@ -1790,8 +1790,8 @@ export class WeatherGovHarness {
 
   constructor(private ctx: WeatherGraphContext) {}
 
-  flushFixture() {
-    this.expectPoints().flush(this.pointsFixture);
+  flushFixture(gpsCoordinates = this.ctx.currentLocation) {
+    this.expectPoints(gpsCoordinates).flush(this.pointsFixture);
     this.expectGrid().flush(this.gridFixture);
   }
 

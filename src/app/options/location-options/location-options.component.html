@@ -1,8 +1,8 @@
 <mat-expansion-panel #panel>
   <mat-expansion-panel-header>Location</mat-expansion-panel-header>
   <mat-radio-group
-    [nasModel]="store('useCurrentLocation')"
-    (change)="trackCurrentSelection()"
+    [ngModel]="store('useCurrentLocation').$ | async"
+    (ngModelChange)="setUseCurrentLocation($event)"
   >
     <div class="radio-container">
       <mat-radio-button class="current-radio" [value]="true">

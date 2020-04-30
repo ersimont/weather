@@ -1,5 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
+import { FormsModule } from "@angular/forms";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -25,6 +26,7 @@ import { UnitOptionsComponent } from "./unit-options/unit-options.component";
   imports: [
     CommonModule,
     EventTrackingModule,
+    FormsModule,
     MatButtonToggleModule,
     MatExpansionModule,
     MatFormFieldModule,

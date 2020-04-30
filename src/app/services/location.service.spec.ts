@@ -1,5 +1,6 @@
 import { HttpTestingController } from "@angular/common/http/testing";
 import { fakeAsync } from "@angular/core/testing";
+import { GraphComponentHarness } from "app/graph/graph.component.harness";
 import { LocationOptionsComponentHarness } from "app/options/location-options/location-options.component.harness";
 import { LocationIqServiceHarness } from "app/services/location-iq.service.harness";
 import { RefreshServiceHarness } from "app/services/refresh.service.harness";
@@ -11,12 +12,13 @@ describe("LocationService", () => {
 
   let ctx: WeatherGraphContext;
   let gov: WeatherGovHarness;
+  let graph: GraphComponentHarness;
   let iq: LocationIqServiceHarness;
   let location: LocationOptionsComponentHarness;
   let refresh: RefreshServiceHarness;
   beforeEach(() => {
     ctx = new WeatherGraphContext();
-    ({ gov, iq, location, refresh } = ctx.harnesses);
+    ({ gov, graph, iq, location, refresh } = ctx.harnesses);
   });
 
   it("allows a reverse lookup to be cancelled", fakeAsync(() => {
@@ -26,6 +28,36 @@ describe("LocationService", () => {
     expect(iq.expectReverse().isCancelled()).toBe(true);
     iq.expectForward("Montreal");
 
+    ctx.cleanUp();
+  }));
+
+  it("clears the forecasts when changing whether to use current", fakeAsync(() => {
+    ctx.initialState.useCurrentLocation = false;
+    ctx.initialState.customLocation.search = "blah";
+    ctx.initialState.customLocation.gpsCoords = [0, 0];
+    ctx.init();
+    gov.flushFixture([0, 0]);
+    expect(graph.showsData()).toBe(true);
+
+    location.select("Current");
+    expect(graph.showsData()).toBe(false);
+
+    iq.expectReverse();
+    ctx.cleanUp();
+  }));
+
+  it("clears the forecasts when searching for a new location", fakeAsync(() => {
+    ctx.initialState.useCurrentLocation = false;
+    ctx.initialState.customLocation.search = "Montreal";
+    ctx.initialState.customLocation.gpsCoords = [0, 0];
+    ctx.init();
+    gov.flushFixture([0, 0]);
+    expect(graph.showsData()).toBe(true);
+
+    location.setCustomLocation("Phoenix");
+    expect(graph.showsData()).toBe(false);
+
+    iq.expectForward("Phoenix");
     ctx.cleanUp();
   }));
 

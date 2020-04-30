@@ -1,4 +1,5 @@
 import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { DebugElement } from "@angular/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import {
   createHostFactory,
@@ -10,6 +11,7 @@ import {
 import { AppComponent } from "app/app.component";
 import { AppComponentHarness } from "app/app.component.harness";
 import { AppModule } from "app/app.module";
+import { GraphComponentHarness } from "app/graph/graph.component.harness";
 import { LocationOptionsComponentHarness } from "app/options/location-options/location-options.component.harness";
 import { SourceOptionsComponentHarness } from "app/options/source-options/source-options.component.harness";
 import { BrowserService } from "app/services/browser.service";
@@ -49,6 +51,7 @@ export class WeatherGraphContext extends AngularContext {
   harnesses = {
     app: new AppComponentHarness(this),
     gov: new WeatherGovHarness(this),
+    graph: new GraphComponentHarness(this),
     iq: new LocationIqServiceHarness(this),
     location: new LocationOptionsComponentHarness(this),
     refresh: new RefreshServiceHarness(this),
@@ -57,6 +60,7 @@ export class WeatherGraphContext extends AngularContext {
   };
 
   rootElement!: Element;
+  debugElement!: DebugElement;
 
   protected spectator!: SpectatorHost<AppComponent>;
 
@@ -88,6 +92,7 @@ export class WeatherGraphContext extends AngularContext {
       ],
     });
     this.rootElement = this.spectator.hostElement;
+    this.debugElement = this.spectator.debugElement;
     this.tick();
   }
 

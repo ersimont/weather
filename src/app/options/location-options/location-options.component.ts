@@ -43,7 +43,8 @@ export class LocationOptionsComponent extends DirectiveSuperclass {
     });
   }
 
-  trackCurrentSelection() {
+  setUseCurrentLocation(value: boolean) {
+    this.locationService.setUseCurrentLocation(value);
     this.eventTrackingService.track(
       "change_current_selection",
       "change_location",
