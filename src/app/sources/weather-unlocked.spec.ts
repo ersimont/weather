@@ -9,24 +9,18 @@ describe("WeatherUnlocked", () => {
 
   let ctx: WeatherGraphContext;
   let iq: LocationIqServiceHarness;
-  let unlocked: WeatherUnlockedHarness;
   let sources: SourceOptionsComponentHarness;
-
+  let unlocked: WeatherUnlockedHarness;
   beforeEach(() => {
     ctx = new WeatherGraphContext();
+    ({ iq, sources, unlocked } = ctx.harnesses);
+
     ctx.initialState.sources.weatherGov.show = false;
     ctx.initialState.sources.weatherUnlocked.show = true;
   });
 
-  function init() {
-    ctx.init();
-    iq = new LocationIqServiceHarness(ctx);
-    unlocked = new WeatherUnlockedHarness(ctx);
-    sources = new SourceOptionsComponentHarness(ctx);
-  }
-
   it("can cancel its request", fakeAsync(() => {
-    init();
+    ctx.init();
 
     iq.flushReverse();
     sources.toggle("Weather Unlocked");

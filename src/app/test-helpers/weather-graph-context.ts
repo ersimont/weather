@@ -16,6 +16,7 @@ import { BrowserService } from "app/services/browser.service";
 import { LocationIqServiceHarness } from "app/services/location-iq.service.harness";
 import { RefreshServiceHarness } from "app/services/refresh.service.harness";
 import { WeatherGovHarness } from "app/sources/weather-gov.harness";
+import { WeatherUnlockedHarness } from "app/sources/weather-unlocked.harness";
 import { GpsCoords } from "app/state/location";
 import { WeatherState } from "app/state/weather-state";
 import { EventTrackingService } from "app/to-replace/event-tracking/event-tracking.service";
@@ -39,19 +40,20 @@ export class WeatherGraphContext extends AngularContext {
   screenSize = { width: 400, height: 600 };
   currentLocation: GpsCoords = [144, -122];
 
-  mock = {
+  mocks = {
     browser: createSpyObject(BrowserService),
     eventTracking: createSpyObject(EventTrackingService),
     snackBar: createSpyObject(MatSnackBar),
   };
 
-  help = {
+  harnesses = {
     app: new AppComponentHarness(this),
     gov: new WeatherGovHarness(this),
     iq: new LocationIqServiceHarness(this),
     location: new LocationOptionsComponentHarness(this),
     refresh: new RefreshServiceHarness(this),
     sources: new SourceOptionsComponentHarness(this),
+    unlocked: new WeatherUnlockedHarness(this),
   };
 
   rootElement!: Element;
@@ -69,10 +71,10 @@ export class WeatherGraphContext extends AngularContext {
 
   constructor() {
     super();
-    this.mock.browser.getCurrentLocation.and.callFake(
+    this.mocks.browser.getCurrentLocation.and.callFake(
       async () => this.currentLocation,
     );
-    this.mock.browser.hasFocus.and.returnValue(true);
+    this.mocks.browser.hasFocus.and.returnValue(true);
   }
 
   init() {
@@ -80,9 +82,9 @@ export class WeatherGraphContext extends AngularContext {
     this.spectator = WeatherGraphContext.createHost(hostTemplate, {
       hostProps: this.screenSize,
       providers: [
-        { provide: BrowserService, useValue: this.mock.browser },
-        { provide: EventTrackingService, useValue: this.mock.eventTracking },
-        { provide: MatSnackBar, useValue: this.mock.snackBar },
+        { provide: BrowserService, useValue: this.mocks.browser },
+        { provide: EventTrackingService, useValue: this.mocks.eventTracking },
+        { provide: MatSnackBar, useValue: this.mocks.snackBar },
       ],
     });
     this.rootElement = this.spectator.hostElement;
@@ -95,12 +97,12 @@ export class WeatherGraphContext extends AngularContext {
   }
 
   expectErrorShown(message: string) {
-    expectSingleCallAndReset(this.mock.snackBar.open, message, "OK", {
+    expectSingleCallAndReset(this.mocks.snackBar.open, message, "OK", {
       duration: 5000,
     });
   }
 
   expectNoErrorShown() {
-    expect(this.mock.snackBar.open).not.toHaveBeenCalled();
+    expect(this.mocks.snackBar.open).not.toHaveBeenCalled();
   }
 }

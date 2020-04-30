@@ -1,17 +1,26 @@
 import { fakeAsync } from "@angular/core/testing";
+import { AppComponentHarness } from "app/app.component.harness";
+import { LocationOptionsComponentHarness } from "app/options/location-options/location-options.component.harness";
+import { LocationIqServiceHarness } from "app/services/location-iq.service.harness";
+import { WeatherGovHarness } from "app/sources/weather-gov.harness";
 import { WeatherGraphContext } from "app/test-helpers/weather-graph-context";
 
 describe("AppComponent", () => {
   WeatherGraphContext.setUp();
 
   let ctx: WeatherGraphContext;
+  let app: AppComponentHarness;
+  let gov: WeatherGovHarness;
+  let iq: LocationIqServiceHarness;
+  let location: LocationOptionsComponentHarness;
   beforeEach(() => {
     ctx = new WeatherGraphContext();
+    ({ app, gov, iq, location } = ctx.harnesses);
   });
 
   describe("when location access is denied", () => {
     beforeEach(() => {
-      ctx.mock.browser.getCurrentLocation.and.callFake(() =>
+      ctx.mocks.browser.getCurrentLocation.and.callFake(() =>
         Promise.reject("User says no!"),
       );
     });
@@ -23,10 +32,10 @@ describe("AppComponent", () => {
         gpsCoords: [0, 0],
       };
       ctx.init();
-      ctx.help.gov.expectPoints([0, 0]);
+      gov.expectPoints([0, 0]);
 
       ctx.expectNoErrorShown();
-      ctx.help.location.select("Current");
+      location.select("Current");
       ctx.expectErrorShown("Location not found");
 
       ctx.cleanUp();
@@ -39,14 +48,14 @@ describe("AppComponent", () => {
         ctx.init();
 
         ctx.expectErrorShown("Location not found");
-        expect(ctx.help.app.isSidenavExpanded()).toBe(true);
-        expect(ctx.help.location.isExpanded()).toBe(true);
+        expect(app.isSidenavExpanded()).toBe(true);
+        expect(location.isExpanded()).toBe(true);
 
         // when switching to Current
-        ctx.help.location.setCustomLocation("Someplace else");
-        ctx.help.iq.expectForward("Someplace else");
+        location.setCustomLocation("Someplace else");
+        iq.expectForward("Someplace else");
         ctx.expectNoErrorShown();
-        ctx.help.location.select("Current");
+        location.select("Current");
         ctx.expectErrorShown("Location not found");
 
         ctx.cleanUp();
@@ -62,14 +71,14 @@ describe("AppComponent", () => {
         ctx.init();
 
         ctx.expectErrorShown("Location not found");
-        expect(ctx.help.app.isSidenavExpanded()).toBe(true);
-        expect(ctx.help.location.isExpanded()).toBe(true);
+        expect(app.isSidenavExpanded()).toBe(true);
+        expect(location.isExpanded()).toBe(true);
 
         // when switching to Current
-        ctx.help.location.select("Custom");
-        ctx.help.gov.expectPoints([0, 0]);
+        location.select("Custom");
+        gov.expectPoints([0, 0]);
         ctx.expectNoErrorShown();
-        ctx.help.location.select("Current");
+        location.select("Current");
         ctx.expectErrorShown("Location not found");
 
         ctx.cleanUp();

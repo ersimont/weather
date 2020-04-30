@@ -9,13 +9,13 @@ describe("WeatherGov", () => {
   WeatherGraphContext.setUp();
 
   let ctx: WeatherGraphContext;
-  let iq: LocationIqServiceHarness;
   let gov: WeatherGovHarness;
+  let iq: LocationIqServiceHarness;
   let refresh: RefreshServiceHarness;
   let sources: SourceOptionsComponentHarness;
   beforeEach(() => {
     ctx = new WeatherGraphContext();
-    ({ iq, gov, refresh, sources } = ctx.help);
+    ({ gov, iq, refresh, sources } = ctx.harnesses);
   });
 
   it("can cancel the first request", fakeAsync(() => {
