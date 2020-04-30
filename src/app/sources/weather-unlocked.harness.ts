@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+
 import { ForecastResponse } from "app/sources/weather-unlocked";
 import { STestRequest } from "app/test-helpers/s-test-request";
 import { WeatherGraphContext } from "app/test-helpers/weather-graph-context";

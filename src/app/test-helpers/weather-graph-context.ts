@@ -35,10 +35,8 @@ const hostTemplate = `
 export class WeatherGraphContext extends AngularContext {
   private static createHost: SpectatorHostFactory<AppComponent, HostComponent>;
 
-  spectator!: SpectatorHost<AppComponent>;
-  screenSize = { width: 400, height: 600 };
-
   initialState = new WeatherState();
+  screenSize = { width: 400, height: 600 };
   currentLocation: GpsCoords = [144, -122];
 
   mock = {
@@ -54,6 +52,10 @@ export class WeatherGraphContext extends AngularContext {
     location: new LocationOptionsComponentHarness(this),
     refresh: new RefreshServiceHarness(this),
   };
+
+  rootElement!: Element;
+
+  protected spectator!: SpectatorHost<AppComponent>;
 
   static setUp() {
     AngularContext.setUp();
@@ -82,7 +84,13 @@ export class WeatherGraphContext extends AngularContext {
         { provide: MatSnackBar, useValue: this.mock.snackBar },
       ],
     });
+    this.rootElement = this.spectator.hostElement;
     this.tick();
+  }
+
+  cleanUp() {
+    super.cleanUp();
+    this.tick(1); // the CDK does this for its FocusManager
   }
 
   expectErrorShown(message: string) {

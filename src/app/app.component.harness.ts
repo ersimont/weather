@@ -25,6 +25,6 @@ export class AppComponentHarness extends AbstractComponentHarness {
   }
 
   protected getHost() {
-    return this.get("app-root", { parent: this.ctx.spectator.hostElement });
+    return this.get("app-root", { parent: this.ctx.rootElement });
   }
 }

@@ -33,7 +33,7 @@ export class SourceOptionsComponentHarness extends AbstractComponentHarness {
 
   protected getHost() {
     return this.get("app-source-options", {
-      parent: this.ctx.spectator.hostElement,
+      parent: this.ctx.rootElement,
     });
   }
 }

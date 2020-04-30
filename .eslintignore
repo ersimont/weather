@@ -3,3 +3,6 @@
 /dist/
 /docs/
 /node_modules/
+
+karma.conf.js
+*.spec.ts
