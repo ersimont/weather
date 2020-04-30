@@ -5,7 +5,7 @@ import {
   HttpRequest,
 } from "@angular/common/http";
 import { Injectable, Provider } from "@angular/core";
-import { noop } from "micro-dash";
+import { noop, once } from "micro-dash";
 import { BehaviorSubject, Observable } from "rxjs";
 import { distinctUntilChanged, map, tap } from "rxjs/operators";
 
@@ -29,12 +29,16 @@ export class HttpStatusService implements HttpInterceptor {
     );
   }
 
-  // TODO: test cancelled requests (because it appears to be broken)
   intercept(req: HttpRequest<any>, next: HttpHandler) {
     this.count$.next(this.count$.getValue() + 1);
-    const finish = () => {
+    const finish = once(() => {
       this.count$.next(this.count$.getValue() - 1);
-    };
+      clearInterval(timeoutId);
+    });
+    // would love not to have the timeout workaround :(. Using an interval to
+    // avoid "pending timeout" errors in tests.
+    // https://github.com/angular/angular/issues/22324
+    const timeoutId = setInterval(finish, 10000);
     return next.handle(req).pipe(tap(noop, finish, finish));
   }
 }

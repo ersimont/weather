@@ -1,6 +1,5 @@
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import {
   createHostFactory,
   createSpyObject,
@@ -64,7 +63,7 @@ export class WeatherGraphContext extends AngularContext {
     WeatherGraphContext.createHost = createHostFactory({
       component: AppComponent,
       declareComponent: false,
-      imports: [AppModule, HttpClientTestingModule, NoopAnimationsModule],
+      imports: [AppModule, HttpClientTestingModule],
     });
   }
 
