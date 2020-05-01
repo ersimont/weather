@@ -31,4 +31,14 @@ describe("WeatherUnlocked", () => {
 
     ctx.cleanUp();
   }));
+
+  it("rounds gps coordinates to 3 decimal places", fakeAsync(() => {
+    ctx.currentLocation = [12.3456, 65.4321];
+    ctx.init();
+
+    iq.flushReverse();
+    unlocked.expectForecast([12.346, 65.432]);
+
+    ctx.cleanUp();
+  }));
 });

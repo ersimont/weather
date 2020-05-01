@@ -5,6 +5,7 @@ import { Condition } from "app/state/condition";
 import { Forecast } from "app/state/forecast";
 import { GpsCoords } from "app/state/location";
 import { SourceId } from "app/state/source";
+import { round } from "micro-dash";
 import { map } from "rxjs/operators";
 
 const endpoint =
@@ -47,7 +48,7 @@ export class WeatherUnlocked extends AbstractSource {
 
   private fetchRes(gpsCoords: [number, number]) {
     return this.httpClient.get<ForecastResponse>(
-      `${endpoint}/${gpsCoords.join(",")}`,
+      `${endpoint}/${gpsCoords.map((coord) => round(coord, 3)).join(",")}`,
     );
   }
 }
