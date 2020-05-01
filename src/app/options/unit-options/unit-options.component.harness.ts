@@ -2,14 +2,14 @@ import { AppComponentHarness } from "app/app.component.harness";
 import { WeatherGraphContext } from "app/test-helpers/weather-graph-context";
 import { AbstractComponentHarness } from "app/to-replace/test-context/abstract-component-harness";
 
-export class SourceOptionsComponentHarness extends AbstractComponentHarness {
+export class UnitOptionsComponentHarness extends AbstractComponentHarness {
   constructor(private ctx: WeatherGraphContext) {
     super();
   }
 
-  toggle(label: string) {
+  select(unitLabel: string) {
     this.ensureExpanded();
-    this.ctx.click(this.getToggleLabel(label));
+    this.ctx.click(this.getButton(unitLabel));
   }
 
   ensureExpanded() {
@@ -27,11 +27,11 @@ export class SourceOptionsComponentHarness extends AbstractComponentHarness {
     return this.get<HTMLElement>("mat-expansion-panel-header");
   }
 
-  getToggleLabel(text: string) {
-    return this.get<HTMLElement>("label", { text });
+  getButton(text: string) {
+    return this.get<HTMLButtonElement>("button", { text });
   }
 
   protected getHost() {
-    return this.get("app-source-options", { parent: this.ctx.rootElement });
+    return this.get("app-unit-options", { parent: this.ctx.rootElement });
   }
 }

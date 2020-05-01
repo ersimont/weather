@@ -48,6 +48,7 @@ describe("HttpStatusService", () => {
     expectSingleCallAndReset(inFlight, false);
   });
 
+  // TODO: fails intermittently
   it("handles errors", () => {
     http.get("url1").subscribe();
     expectSingleCallAndReset(inFlight, true);

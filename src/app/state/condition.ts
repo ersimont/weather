@@ -1,5 +1,5 @@
 import { mapToObject } from "s-js-utils";
-import { PercentageUnit, unitInfo, Units } from "./units";
+import { PercentageUnit, UnitInfo, unitInfo, Units } from "./units";
 
 export enum Condition {
   TEMP = "temp",
@@ -18,7 +18,13 @@ const colors = mapToObject(Condition, (condition: Condition) => [
   bodyStyles.getPropertyValue(`--${condition}`),
 ]) as Record<Condition, string>;
 
-export const conditionInfo = {
+export interface ConditionInfo {
+  label: string;
+  color: string;
+  getUnitInfo(units: Units): UnitInfo;
+}
+
+export const conditionInfo: Record<Condition, ConditionInfo> = {
   [Condition.AMOUNT]: {
     label: "Precip Amount",
     color: colors[Condition.AMOUNT],

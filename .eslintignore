@@ -6,3 +6,4 @@
 
 karma.conf.js
 *.spec.ts
+*.fixtures.ts

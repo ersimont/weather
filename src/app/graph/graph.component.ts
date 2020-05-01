@@ -9,7 +9,7 @@ import {
   ChartTooltipItem,
 } from "chart.js";
 import "chartjs-plugin-zoom";
-import { bindKey, findKey, forEach, keys, matches } from "micro-dash";
+import { forEach, keys } from "micro-dash";
 import { ThemeService } from "ng2-charts";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
@@ -46,16 +46,6 @@ export class GraphComponent extends DirectiveSuperclass {
     this.subscribeTo(store.action$.pipe(SetRangeAction.filter), this.setRange);
   }
 
-  getTooltipLabel(tooltipItem: ChartTooltipItem, data: ChartData) {
-    const label = data.datasets![tooltipItem.datasetIndex!].label!;
-    const condition = findKey(conditionInfo, matches({ label }))!;
-    const unitInf = conditionInfo[condition].getUnitInfo(
-      this.store.state().units,
-    );
-    const display = unitInf.getDisplay(+tooltipItem.value!, this.demicalPipe);
-    return `${label}: ${display}`;
-  }
-
   private buildDataSets$() {
     return this.store.$.pipe(
       map((state) => {
@@ -81,7 +71,13 @@ export class GraphComponent extends DirectiveSuperclass {
       maintainAspectRatio: false,
       animation: { duration: 0 },
       legend: { display: false },
-      tooltips: { callbacks: { label: bindKey(this, "getTooltipLabel") } },
+      tooltips: {
+        footerFontStyle: "italic",
+        callbacks: {
+          label: this.getTooltipLabel.bind(this),
+          footer: this.getTooltipFooter.bind(this),
+        },
+      },
       scales: {
         xAxes: [
           {
@@ -123,6 +119,18 @@ export class GraphComponent extends DirectiveSuperclass {
         },
       },
     };
+  }
+
+  private getTooltipLabel(item: ChartTooltipItem, data: ChartData) {
+    const conditionInf = conditionInfo[decodeLabelValues(item, data).condition];
+    const unitInf = conditionInf.getUnitInfo(this.store.state().units);
+    const display = unitInf.getDisplay(+item.value!, this.demicalPipe);
+    return `${conditionInf.label}: ${display}`;
+  }
+
+  private getTooltipFooter(items: ChartTooltipItem[], data: ChartData) {
+    const sourceId = decodeLabelValues(items[0], data).sourceId;
+    return `Source: ${this.store.state().sources[sourceId].label}`;
   }
 }
 
@@ -170,7 +178,7 @@ function addDataSet(
   const color = conditionInf.color;
   const pointStyle = sourceId === SourceId.WEATHER_GOV ? "circle" : "triangle";
   dataSets.push({
-    label: conditionInf.label,
+    label: encodeLabelValues(sourceId, condition),
     data: getData(sourceId, condition, state),
     yAxisID,
     borderColor: color,
@@ -199,4 +207,20 @@ function getData(
     }
   }
   return data;
+}
+
+interface LabelIds {
+  sourceId: SourceId;
+  condition: Condition;
+}
+
+function encodeLabelValues(sourceId: SourceId, condition: Condition) {
+  return JSON.stringify({ sourceId, condition });
+}
+
+function decodeLabelValues(
+  item: Chart.ChartTooltipItem,
+  data: Chart.ChartData,
+): LabelIds {
+  return JSON.parse(data.datasets![item.datasetIndex!].label!);
 }

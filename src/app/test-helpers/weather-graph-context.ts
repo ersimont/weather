@@ -14,6 +14,7 @@ import { AppModule } from "app/app.module";
 import { GraphComponentHarness } from "app/graph/graph.component.harness";
 import { LocationOptionsComponentHarness } from "app/options/location-options/location-options.component.harness";
 import { SourceOptionsComponentHarness } from "app/options/source-options/source-options.component.harness";
+import { UnitOptionsComponentHarness } from "app/options/unit-options/unit-options.component.harness";
 import { BrowserService } from "app/services/browser.service";
 import { LocationIqServiceHarness } from "app/services/location-iq.service.harness";
 import { RefreshServiceHarness } from "app/services/refresh.service.harness";
@@ -56,6 +57,7 @@ export class WeatherGraphContext extends AngularContext {
     location: new LocationOptionsComponentHarness(this),
     refresh: new RefreshServiceHarness(this),
     sources: new SourceOptionsComponentHarness(this),
+    units: new UnitOptionsComponentHarness(this),
     unlocked: new WeatherUnlockedHarness(this),
   };
 
