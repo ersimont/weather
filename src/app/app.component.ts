@@ -15,7 +15,6 @@ import { WeatherUnlocked } from "app/sources/weather-unlocked";
 import { SourceId } from "app/state/source";
 import { WeatherStore } from "app/state/weather-store";
 import { HttpStatusService } from "app/to-replace/http-status.service";
-import { ofType } from "app/to-replace/of-type";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { DirectiveSuperclass } from "s-ng-utils";
@@ -31,12 +30,12 @@ export class AppComponent extends DirectiveSuperclass {
   @ViewChild("sidenav", { read: MatSidenav }) private sidenav!: MatSidenav;
 
   constructor(
-    public httpStatusService: HttpStatusService,
-    private store: WeatherStore,
     domSanitizer: DomSanitizer,
+    public httpStatusService: HttpStatusService,
     injector: Injector,
-    locationService: LocationService,
+    private locationService: LocationService,
     matIconRegistry: MatIconRegistry,
+    private store: WeatherStore,
     weatherGov: WeatherGov,
     weatherUnlocked: WeatherUnlocked,
   ) {
@@ -59,11 +58,8 @@ export class AppComponent extends DirectiveSuperclass {
   }
 
   private openSideNavWhenAsked() {
-    this.subscribeTo(
-      this.store.action$.pipe(ofType("ask_for_location")),
-      () => {
-        this.sidenav.open();
-      },
-    );
+    this.subscribeTo(this.locationService.askForLocation$, () => {
+      this.sidenav.open();
+    });
   }
 }

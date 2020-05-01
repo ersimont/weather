@@ -9,7 +9,6 @@ import { LocationService } from "app/services/location.service";
 import { WeatherState } from "app/state/weather-state";
 import { WeatherStore } from "app/state/weather-store";
 import { EventTrackingService } from "app/to-replace/event-tracking/event-tracking.service";
-import { ofType } from "app/to-replace/of-type";
 import { StoreObject } from "ng-app-state";
 import { DirectiveSuperclass } from "s-ng-utils";
 
@@ -38,7 +37,7 @@ export class LocationOptionsComponent extends DirectiveSuperclass {
     this.useCurrentLocation = store.state().useCurrentLocation;
     this.customSearch = store.state().customLocation.search;
 
-    this.subscribeTo(store.action$.pipe(ofType("ask_for_location")), () => {
+    this.subscribeTo(this.locationService.askForLocation$, () => {
       this.panel.open();
     });
   }

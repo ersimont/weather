@@ -6,7 +6,7 @@ import { WeatherState } from "app/state/weather-state";
 import { WeatherStore } from "app/state/weather-store";
 import { mapValues } from "micro-dash";
 import { StoreObject } from "ng-app-state";
-import { combineLatest, Observable, of } from "rxjs";
+import { combineLatest, Observable, of, Subject } from "rxjs";
 import { fromPromise } from "rxjs/internal-compatibility";
 import {
   catchError,
@@ -34,6 +34,7 @@ export class LocationService extends InjectableSuperclass {
     distinctUntilChanged(),
     skip(1),
   );
+  askForLocation$ = new Subject<void>();
 
   constructor(
     private browserService: BrowserService,
