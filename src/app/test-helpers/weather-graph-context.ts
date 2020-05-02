@@ -12,12 +12,13 @@ import { AppComponent } from "app/app.component";
 import { AppComponentHarness } from "app/app.component.harness";
 import { AppModule } from "app/app.module";
 import { GraphComponentHarness } from "app/graph/graph.component.harness";
+import { PersistenceServiceHarness } from "app/misc-services/persistence.service.harness";
 import { LocationOptionsComponentHarness } from "app/options/location-options/location-options.component.harness";
 import { SourceOptionsComponentHarness } from "app/options/source-options/source-options.component.harness";
 import { UnitOptionsComponentHarness } from "app/options/unit-options/unit-options.component.harness";
-import { BrowserService } from "app/services/browser.service";
-import { LocationIqServiceHarness } from "app/services/location-iq.service.harness";
-import { RefreshServiceHarness } from "app/services/refresh.service.harness";
+import { BrowserService } from "app/misc-services/browser.service";
+import { LocationIqServiceHarness } from "app/misc-services/location-iq.service.harness";
+import { RefreshServiceHarness } from "app/misc-services/refresh.service.harness";
 import { ClimacellHarness } from "app/sources/climacell/climacell.harness";
 import { WeatherGovHarness } from "app/sources/weather-gov/weather-gov.harness";
 import { WeatherUnlockedHarness } from "app/sources/weather-unlocked/weather-unlocked.harness";
@@ -58,6 +59,7 @@ export class WeatherGraphContext extends AngularContext {
     graph: new GraphComponentHarness(this),
     iq: new LocationIqServiceHarness(this),
     location: new LocationOptionsComponentHarness(this),
+    persistence: new PersistenceServiceHarness(),
     refresh: new RefreshServiceHarness(this),
     sources: new SourceOptionsComponentHarness(this),
     state: new WeatherStateHarness(this),

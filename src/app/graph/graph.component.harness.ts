@@ -6,7 +6,11 @@ import { WeatherGraphContext } from "app/test-helpers/weather-graph-context";
 import { ChartPoint, ChartTooltipItem } from "chart.js";
 import { take } from "rxjs/operators";
 
-const sourceOrder = [SourceId.WEATHER_GOV, SourceId.WEATHER_UNLOCKED];
+const sourceOrder = [
+  SourceId.CLIMACELL,
+  SourceId.WEATHER_GOV,
+  SourceId.WEATHER_UNLOCKED,
+];
 const conditionOrder = [
   Condition.TEMP,
   Condition.FEEL,

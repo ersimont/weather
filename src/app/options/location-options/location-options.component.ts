@@ -5,7 +5,7 @@ import {
   ViewChild,
 } from "@angular/core";
 import { MatExpansionPanel } from "@angular/material/expansion";
-import { LocationService } from "app/services/location.service";
+import { LocationService } from "app/misc-services/location.service";
 import { WeatherState } from "app/state/weather-state";
 import { WeatherStore } from "app/state/weather-store";
 import { EventTrackingService } from "app/to-replace/event-tracking/event-tracking.service";

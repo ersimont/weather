@@ -9,12 +9,6 @@
         "@schematics/angular:component": {
           "changeDetection": "OnPush",
           "skipTests": true
-        },
-        "@schematics/angular:service": {
-          "skipTests": true
-        },
-        "@schematics/angular:directive": {
-          "skipTests": true
         }
       },
       "root": "",

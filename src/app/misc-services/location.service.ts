@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
-import { BrowserService } from "app/services/browser.service";
-import { LocationIqService } from "app/services/location-iq.service";
+import { BrowserService } from "app/misc-services/browser.service";
+import { LocationIqService } from "app/misc-services/location-iq.service";
 import { GpsCoords, Location } from "app/state/location";
 import { WeatherState } from "app/state/weather-state";
 import { WeatherStore } from "app/state/weather-store";

@@ -1,7 +1,7 @@
 import { fakeAsync } from "@angular/core/testing";
 import { GraphComponentHarness } from "app/graph/graph.component.harness";
 import { UnitOptionsComponentHarness } from "app/options/unit-options/unit-options.component.harness";
-import { LocationIqServiceHarness } from "app/services/location-iq.service.harness";
+import { LocationIqServiceHarness } from "app/misc-services/location-iq.service.harness";
 import { WeatherGovHarness } from "app/sources/weather-gov/weather-gov.harness";
 import { WeatherUnlockedHarness } from "app/sources/weather-unlocked/weather-unlocked.harness";
 import { Condition } from "app/state/condition";
@@ -48,7 +48,7 @@ describe("GraphComponent", () => {
     }));
 
     it("displays the source in its footer", fakeAsync(() => {
-      state.setShowing(SourceId.WEATHER_UNLOCKED);
+      state.setShowing(SourceId.WEATHER_GOV, SourceId.WEATHER_UNLOCKED);
       ctx.init();
       // TODO: make `flushDefault` helper
       iq.flushReverse();

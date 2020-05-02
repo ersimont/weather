@@ -5,14 +5,13 @@ import { Units } from "app/state/units";
 import { mapToObject } from "s-js-utils";
 
 export class WeatherState {
-  version = 6;
+  _version = 7;
 
   allowSourceFallback = true;
   useCurrentLocation = true;
   currentLocation = new Location();
   customLocation = new Location();
 
-  // TODO: update existing states in localstorage to include climacell
   sources: Record<SourceId, Source> = {
     climacell: new Source("Climacell", false),
     weatherGov: new Source("Weather.gov", true),

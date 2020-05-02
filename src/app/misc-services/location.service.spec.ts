@@ -2,8 +2,8 @@ import { HttpTestingController } from "@angular/common/http/testing";
 import { fakeAsync } from "@angular/core/testing";
 import { GraphComponentHarness } from "app/graph/graph.component.harness";
 import { LocationOptionsComponentHarness } from "app/options/location-options/location-options.component.harness";
-import { LocationIqServiceHarness } from "app/services/location-iq.service.harness";
-import { RefreshServiceHarness } from "app/services/refresh.service.harness";
+import { LocationIqServiceHarness } from "app/misc-services/location-iq.service.harness";
+import { RefreshServiceHarness } from "app/misc-services/refresh.service.harness";
 import { WeatherGovHarness } from "app/sources/weather-gov/weather-gov.harness";
 import { WeatherGraphContext } from "app/test-helpers/weather-graph-context";
 

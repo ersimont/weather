@@ -1,6 +1,6 @@
 import { fakeAsync } from "@angular/core/testing";
 import { SourceOptionsComponentHarness } from "app/options/source-options/source-options.component.harness";
-import { LocationIqServiceHarness } from "app/services/location-iq.service.harness";
+import { LocationIqServiceHarness } from "app/misc-services/location-iq.service.harness";
 import { WeatherUnlockedHarness } from "app/sources/weather-unlocked/weather-unlocked.harness";
 import { SourceId } from "app/state/source";
 import { WeatherGraphContext } from "app/test-helpers/weather-graph-context";
