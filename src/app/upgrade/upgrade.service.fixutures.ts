@@ -20,6 +20,8 @@ export const v7Default = {
   },
 };
 
+export const defaultState = v7Default;
+
 export const v6Default = {
   version: 6,
   allowSourceFallback: true,

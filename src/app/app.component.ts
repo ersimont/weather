@@ -16,6 +16,7 @@ import { WeatherUnlocked } from "app/sources/weather-unlocked/weather-unlocked";
 import { SourceId } from "app/state/source";
 import { WeatherStore } from "app/state/weather-store";
 import { HttpStatusService } from "app/to-replace/http-status.service";
+import { WhatsNewService } from "app/upgrade/whats-new.service";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { DirectiveSuperclass } from "s-ng-utils";
@@ -40,6 +41,7 @@ export class AppComponent extends DirectiveSuperclass {
     private store: WeatherStore,
     weatherGov: WeatherGov,
     weatherUnlocked: WeatherUnlocked,
+    whatsNewService: WhatsNewService,
   ) {
     super(injector);
     this.title$ = locationService.$.pipe(
@@ -53,6 +55,7 @@ export class AppComponent extends DirectiveSuperclass {
       domSanitizer.bypassSecurityTrustHtml(icons),
     );
 
+    whatsNewService.showNewFeatures();
     this.openSideNavWhenAsked();
   }
 

@@ -2,8 +2,8 @@ import { wrapFunction } from "s-js-utils";
 
 export function logTimeouts() {
   window.setTimeout = wrapFunction(window.setTimeout, {
-    before() {
-      console.log("setTimeout(", arguments, ")");
+    before(...args: any[]) {
+      console.log("setTimeout(", ...args, ")");
     },
   }) as any;
 }

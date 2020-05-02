@@ -34,7 +34,16 @@ export class UpgradeSuperclass<T extends Upgradable> {
     while (lastVersion !== targetVersion) {
       this.upgradeOneStep(upgradable, targetVersion);
       const newVersion = upgradable._version;
-      assert(newVersion > lastVersion && newVersion <= targetVersion);
+      if (lastVersion) {
+        assert(
+          newVersion > lastVersion,
+          `${lastVersion} to ${newVersion} is not an upgrade...`,
+        );
+      }
+      assert(
+        newVersion <= targetVersion,
+        `${newVersion} is past the target version of ${targetVersion}`,
+      );
       lastVersion = newVersion;
     }
   }
