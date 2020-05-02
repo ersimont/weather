@@ -1,4 +1,4 @@
-import { ForecastResponse } from "app/sources/weather-unlocked";
+import { ForecastResponse } from "app/sources/weather-unlocked/weather-unlocked";
 
 export const weatherUnlockedResponse: ForecastResponse = {
   Days: [

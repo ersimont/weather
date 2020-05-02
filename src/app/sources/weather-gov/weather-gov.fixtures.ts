@@ -1,4 +1,7 @@
-import { GridResponse, PointResponse } from "app/sources/weather-gov";
+import {
+  GridResponse,
+  PointResponse,
+} from "app/sources/weather-gov/weather-gov";
 
 export const pointResponse: PointResponse = {
   properties: {

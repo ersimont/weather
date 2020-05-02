@@ -3,9 +3,9 @@ import { fakeAsync } from "@angular/core/testing";
 import { SourceOptionsComponentHarness } from "app/options/source-options/source-options.component.harness";
 import { LocationIqServiceHarness } from "app/services/location-iq.service.harness";
 import { RefreshServiceHarness } from "app/services/refresh.service.harness";
-import { pointResponse } from "app/sources/weather-gov.fixtures";
-import { WeatherGovHarness } from "app/sources/weather-gov.harness";
-import { WeatherUnlockedHarness } from "app/sources/weather-unlocked.harness";
+import { pointResponse } from "app/sources/weather-gov/weather-gov.fixtures";
+import { WeatherGovHarness } from "app/sources/weather-gov/weather-gov.harness";
+import { WeatherUnlockedHarness } from "app/sources/weather-unlocked/weather-unlocked.harness";
 import { WeatherGraphContext } from "app/test-helpers/weather-graph-context";
 
 describe("AbstractSource", () => {

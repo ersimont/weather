@@ -18,8 +18,8 @@ import { UnitOptionsComponentHarness } from "app/options/unit-options/unit-optio
 import { BrowserService } from "app/services/browser.service";
 import { LocationIqServiceHarness } from "app/services/location-iq.service.harness";
 import { RefreshServiceHarness } from "app/services/refresh.service.harness";
-import { WeatherGovHarness } from "app/sources/weather-gov.harness";
-import { WeatherUnlockedHarness } from "app/sources/weather-unlocked.harness";
+import { WeatherGovHarness } from "app/sources/weather-gov/weather-gov.harness";
+import { WeatherUnlockedHarness } from "app/sources/weather-unlocked/weather-unlocked.harness";
 import { GpsCoords } from "app/state/location";
 import { WeatherState } from "app/state/weather-state";
 import { EventTrackingService } from "app/to-replace/event-tracking/event-tracking.service";

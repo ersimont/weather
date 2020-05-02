@@ -1,9 +1,12 @@
-import { GridResponse, PointResponse } from "app/sources/weather-gov";
+import {
+  GridResponse,
+  PointResponse,
+} from "app/sources/weather-gov/weather-gov";
 import {
   gridResponse,
   notAvailableResponse,
   pointResponse,
-} from "app/sources/weather-gov.fixtures";
+} from "app/sources/weather-gov/weather-gov.fixtures";
 import { STestRequest } from "app/test-helpers/s-test-request";
 import { WeatherGraphContext } from "app/test-helpers/weather-graph-context";
 
