@@ -7,6 +7,7 @@ import { WeatherUnlockedHarness } from "app/sources/weather-unlocked/weather-unl
 import { Condition } from "app/state/condition";
 import { SourceId } from "app/state/source";
 import { TempUnit } from "app/state/units";
+import { WeatherStateHarness } from "app/state/weather-state.harness";
 import { WeatherGraphContext } from "app/test-helpers/weather-graph-context";
 
 describe("GraphComponent", () => {
@@ -16,18 +17,18 @@ describe("GraphComponent", () => {
   let gov: WeatherGovHarness;
   let graph: GraphComponentHarness;
   let iq: LocationIqServiceHarness;
+  let state: WeatherStateHarness;
   let units: UnitOptionsComponentHarness;
   let unlocked: WeatherUnlockedHarness;
   beforeEach(() => {
     ctx = new WeatherGraphContext();
-    ({ graph, gov, iq, units, unlocked } = ctx.harnesses);
+    ({ graph, gov, iq, state, units, unlocked } = ctx.harnesses);
   });
 
   describe("tooltip", () => {
     it("displays the condition and value in its label", fakeAsync(() => {
       const timeframe = unlocked.buildTimeframe({ temp_c: 21.6 });
-      ctx.initialState.sources.weatherUnlocked.show = true;
-      ctx.initialState.sources.weatherGov.show = false;
+      state.setShowing(SourceId.WEATHER_UNLOCKED);
       ctx.initialState.units.temp = TempUnit.C;
       ctx.init();
       iq.flushReverse();
@@ -47,8 +48,7 @@ describe("GraphComponent", () => {
     }));
 
     it("displays the source in its footer", fakeAsync(() => {
-      ctx.initialState.sources.weatherUnlocked.show = true;
-      ctx.initialState.sources.weatherGov.show = true;
+      state.setShowing(SourceId.WEATHER_UNLOCKED);
       ctx.init();
       iq.flushReverse();
       gov.flushFixture();

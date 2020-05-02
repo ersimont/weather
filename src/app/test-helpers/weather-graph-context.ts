@@ -22,6 +22,7 @@ import { WeatherGovHarness } from "app/sources/weather-gov/weather-gov.harness";
 import { WeatherUnlockedHarness } from "app/sources/weather-unlocked/weather-unlocked.harness";
 import { GpsCoords } from "app/state/location";
 import { WeatherState } from "app/state/weather-state";
+import { WeatherStateHarness } from "app/state/weather-state.harness";
 import { EventTrackingService } from "app/to-replace/event-tracking/event-tracking.service";
 import { AngularContext } from "app/to-replace/test-context/angular-context";
 import { expectSingleCallAndReset } from "s-ng-dev-utils";
@@ -57,6 +58,7 @@ export class WeatherGraphContext extends AngularContext {
     location: new LocationOptionsComponentHarness(this),
     refresh: new RefreshServiceHarness(this),
     sources: new SourceOptionsComponentHarness(this),
+    state: new WeatherStateHarness(this),
     units: new UnitOptionsComponentHarness(this),
     unlocked: new WeatherUnlockedHarness(this),
   };

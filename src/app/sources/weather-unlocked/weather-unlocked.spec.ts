@@ -2,6 +2,7 @@ import { fakeAsync } from "@angular/core/testing";
 import { SourceOptionsComponentHarness } from "app/options/source-options/source-options.component.harness";
 import { LocationIqServiceHarness } from "app/services/location-iq.service.harness";
 import { WeatherUnlockedHarness } from "app/sources/weather-unlocked/weather-unlocked.harness";
+import { SourceId } from "app/state/source";
 import { WeatherGraphContext } from "app/test-helpers/weather-graph-context";
 
 describe("WeatherUnlocked", () => {
@@ -15,8 +16,7 @@ describe("WeatherUnlocked", () => {
     ctx = new WeatherGraphContext();
     ({ iq, sources, unlocked } = ctx.harnesses);
 
-    ctx.initialState.sources.weatherGov.show = false;
-    ctx.initialState.sources.weatherUnlocked.show = true;
+    ctx.harnesses.state.setShowing(SourceId.WEATHER_UNLOCKED);
   });
 
   it("can cancel its request", fakeAsync(() => {
