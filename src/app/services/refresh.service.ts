@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { BrowserService } from "app/services/browser.service";
 import { LocationService } from "app/services/location.service";
-import { ErrorService } from "app/to-replace/error.service";
+import { SnackBarErrorService } from "app/to-replace/snack-bar-error.service";
 import { EventTrackingService } from "app/to-replace/event-tracking/event-tracking.service";
 import { fromEvent, interval, merge, Observable, of } from "rxjs";
 import { filter, mapTo, switchMap, tap, throttleTime } from "rxjs/operators";
@@ -16,7 +16,7 @@ export class RefreshService {
 
   constructor(
     private browserService: BrowserService,
-    private errorService: ErrorService,
+    private errorService: SnackBarErrorService,
     private eventTrackingService: EventTrackingService,
     private locationService: LocationService,
   ) {

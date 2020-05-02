@@ -2,11 +2,11 @@ import { Injectable, ErrorHandler, Provider } from "@angular/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
 
 export function provideErrorHandler(): Provider {
-  return { provide: ErrorHandler, useExisting: ErrorService };
+  return { provide: ErrorHandler, useExisting: SnackBarErrorService };
 }
 
 @Injectable({ providedIn: "root" })
-export class ErrorService implements ErrorHandler {
+export class SnackBarErrorService implements ErrorHandler {
   constructor(private matSnackBar: MatSnackBar) {}
 
   handleError(error: any) {

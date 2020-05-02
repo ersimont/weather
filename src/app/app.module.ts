@@ -17,7 +17,7 @@ import { StoreDevtoolsModule } from "@ngrx/store-devtools";
 import { AppComponent } from "app/app.component";
 import { GraphComponent } from "app/graph/graph.component";
 import { OptionsModule } from "app/options/options.module";
-import { provideErrorHandler } from "app/to-replace/error.service";
+import { provideErrorHandler } from "app/to-replace/snack-bar-error.service";
 import { EventTrackingModule } from "app/to-replace/event-tracking/event-tracking.module";
 import { provideHttpStatus } from "app/to-replace/http-status.service";
 import { ngAppStateReducer } from "ng-app-state";

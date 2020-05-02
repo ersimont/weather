@@ -5,7 +5,7 @@ import { Forecast } from "app/state/forecast";
 import { GpsCoords } from "app/state/location";
 import { Source, SourceId } from "app/state/source";
 import { WeatherStore } from "app/state/weather-store";
-import { ErrorService } from "app/to-replace/error.service";
+import { SnackBarErrorService } from "app/to-replace/snack-bar-error.service";
 import { retryAfter } from "app/to-replace/retry-after";
 import { StoreObject } from "ng-app-state";
 import { combineLatest, Observable, of } from "rxjs";
@@ -15,7 +15,7 @@ import { InjectableSuperclass } from "s-ng-utils";
 export const notAvailableHere = Symbol();
 
 export abstract class AbstractSource extends InjectableSuperclass {
-  private errorService: ErrorService;
+  private errorService: SnackBarErrorService;
   private locationService: LocationService;
   private refreshService: RefreshService;
   private store: WeatherStore;
@@ -23,7 +23,7 @@ export abstract class AbstractSource extends InjectableSuperclass {
 
   constructor(private key: SourceId, injector: Injector) {
     super();
-    this.errorService = injector.get(ErrorService);
+    this.errorService = injector.get(SnackBarErrorService);
     this.locationService = injector.get(LocationService);
     this.refreshService = injector.get(RefreshService);
     this.store = injector.get(WeatherStore);

@@ -20,7 +20,7 @@ describe("AppComponent", () => {
 
   describe("when location access is denied", () => {
     beforeEach(() => {
-      ctx.mocks.browser.getCurrentLocation.and.callFake(() =>
+      ctx.mocks.browser.getCurrentLocation.and.returnValue(
         Promise.reject("User says no!"),
       );
     });
