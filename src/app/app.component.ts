@@ -10,6 +10,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { SetRangeAction } from "app/graph/set-range-action";
 import { icons } from "app/icons";
 import { LocationService } from "app/services/location.service";
+import { Climacell } from "app/sources/climacell/climacell";
 import { WeatherGov } from "app/sources/weather-gov/weather-gov";
 import { WeatherUnlocked } from "app/sources/weather-unlocked/weather-unlocked";
 import { SourceId } from "app/state/source";
@@ -30,6 +31,7 @@ export class AppComponent extends DirectiveSuperclass {
   @ViewChild("sidenav", { read: MatSidenav }) private sidenav!: MatSidenav;
 
   constructor(
+    climacell: Climacell,
     domSanitizer: DomSanitizer,
     public httpStatusService: HttpStatusService,
     injector: Injector,
@@ -44,6 +46,7 @@ export class AppComponent extends DirectiveSuperclass {
       map((location) => location.city || "Weather Graph"),
     );
 
+    climacell.initialize();
     weatherGov.initialize(SourceId.WEATHER_UNLOCKED);
     weatherUnlocked.initialize();
     matIconRegistry.addSvgIconSetLiteral(

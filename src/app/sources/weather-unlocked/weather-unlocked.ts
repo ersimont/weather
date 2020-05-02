@@ -46,7 +46,7 @@ export class WeatherUnlocked extends AbstractSource {
     );
   }
 
-  private fetchRes(gpsCoords: [number, number]) {
+  private fetchRes(gpsCoords: GpsCoords) {
     return this.httpClient.get<ForecastResponse>(
       `${endpoint}/${gpsCoords.map((coord) => round(coord, 3)).join(",")}`,
     );

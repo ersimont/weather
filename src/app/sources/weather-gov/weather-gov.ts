@@ -63,14 +63,19 @@ export class WeatherGov extends AbstractSource {
   }
 }
 
-function extractForecast(zone: GridResponse) {
+function extractForecast(gridResponse: GridResponse) {
   const forecast: Forecast = {};
-  addFromZone(forecast, zone, Condition.AMOUNT, "quantitativePrecipitation");
-  addFromZone(forecast, zone, Condition.CLOUD, "skyCover");
-  addFromZone(forecast, zone, Condition.DEW, "dewpoint");
-  addFromZone(forecast, zone, Condition.FEEL, "apparentTemperature");
-  addFromZone(forecast, zone, Condition.TEMP, "temperature");
-  addFromZone(forecast, zone, Condition.WIND, "windSpeed");
+  addFromZone(
+    forecast,
+    gridResponse,
+    Condition.AMOUNT,
+    "quantitativePrecipitation",
+  );
+  addFromZone(forecast, gridResponse, Condition.CLOUD, "skyCover");
+  addFromZone(forecast, gridResponse, Condition.DEW, "dewpoint");
+  addFromZone(forecast, gridResponse, Condition.FEEL, "apparentTemperature");
+  addFromZone(forecast, gridResponse, Condition.TEMP, "temperature");
+  addFromZone(forecast, gridResponse, Condition.WIND, "windSpeed");
   return forecast;
 }
 
