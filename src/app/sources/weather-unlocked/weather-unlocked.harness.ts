@@ -26,6 +26,7 @@ export class WeatherUnlockedHarness {
     }),
   );
 
+  // TODO: change to use default instead of fixtures
   flushFixture() {
     this.expectForecast().flush(weatherUnlockedResponse);
   }

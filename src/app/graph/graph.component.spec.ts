@@ -50,6 +50,7 @@ describe("GraphComponent", () => {
     it("displays the source in its footer", fakeAsync(() => {
       state.setShowing(SourceId.WEATHER_UNLOCKED);
       ctx.init();
+      // TODO: make `flushDefault` helper
       iq.flushReverse();
       gov.flushFixture();
       unlocked.flushFixture();

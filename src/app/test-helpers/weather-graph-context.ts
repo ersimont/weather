@@ -18,6 +18,7 @@ import { UnitOptionsComponentHarness } from "app/options/unit-options/unit-optio
 import { BrowserService } from "app/services/browser.service";
 import { LocationIqServiceHarness } from "app/services/location-iq.service.harness";
 import { RefreshServiceHarness } from "app/services/refresh.service.harness";
+import { ClimacellHarness } from "app/sources/climacell/climacell.harness";
 import { WeatherGovHarness } from "app/sources/weather-gov/weather-gov.harness";
 import { WeatherUnlockedHarness } from "app/sources/weather-unlocked/weather-unlocked.harness";
 import { GpsCoords } from "app/state/location";
@@ -52,6 +53,7 @@ export class WeatherGraphContext extends AngularContext {
 
   harnesses = {
     app: new AppComponentHarness(this),
+    climacell: new ClimacellHarness(this),
     gov: new WeatherGovHarness(this),
     graph: new GraphComponentHarness(this),
     iq: new LocationIqServiceHarness(this),

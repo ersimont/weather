@@ -11,6 +11,8 @@ import { map } from "rxjs/operators";
 const endpoint =
   "https://us-central1-proxic.cloudfunctions.net/api/climacell/v3/weather/forecast/hourly";
 
+export type HourlyResponse = Timeframe[];
+
 export interface Timeframe {
   observation_time: { value: string };
   precipitation: { value: number };
@@ -32,7 +34,7 @@ export class Climacell extends AbstractSource {
   }
 
   private fetchRes(gpsCoords: GpsCoords) {
-    return this.httpClient.get<Array<Timeframe>>(endpoint, {
+    return this.httpClient.get<HourlyResponse>(endpoint, {
       params: {
         lat: gpsCoords[0].toString(),
         lon: gpsCoords[1].toString(),
