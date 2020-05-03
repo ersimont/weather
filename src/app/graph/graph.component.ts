@@ -7,6 +7,7 @@ import {
   ChartOptions,
   ChartPoint,
   ChartTooltipItem,
+  PointStyle,
 } from "chart.js";
 import "chartjs-plugin-zoom";
 import { forEach, keys } from "micro-dash";
@@ -20,6 +21,18 @@ import { AmountUnit, unitInfo } from "../state/units";
 import { WeatherState } from "../state/weather-state";
 import { WeatherStore } from "../state/weather-store";
 import { SetRangeAction } from "./set-range-action";
+
+const pointStyles: { [id in SourceId]: PointStyle } = {
+  [SourceId.CLIMACELL]: "rect",
+  [SourceId.WEATHER_GOV]: "circle",
+  [SourceId.WEATHER_UNLOCKED]: "triangle",
+};
+
+const radii: { [id in SourceId]: number } = {
+  [SourceId.CLIMACELL]: 5,
+  [SourceId.WEATHER_GOV]: 4,
+  [SourceId.WEATHER_UNLOCKED]: 6,
+};
 
 @Component({
   selector: "app-graph",
@@ -180,7 +193,7 @@ function addDataSet(
 ) {
   const conditionInf = conditionInfo[condition];
   const color = conditionInf.color;
-  const pointStyle = sourceId === SourceId.WEATHER_GOV ? "circle" : "triangle";
+  const pointStyle = pointStyles[sourceId];
   dataSets.push({
     label: encodeLabelValues(sourceId, condition),
     data: getData(sourceId, condition, state),
@@ -189,7 +202,7 @@ function addDataSet(
     backgroundColor: color + fillAlpha,
     pointBackgroundColor: color,
     pointStyle,
-    radius: pointStyle === "triangle" ? 6 : 4,
+    radius: radii[sourceId],
     pointHitRadius: 25,
   });
 }

@@ -39,6 +39,10 @@ $weather-theme: mat-light-theme(
   }
 }
 
+.climacell .mat-slide-toggle-thumb {
+  border-radius: 0;
+}
+
 .weatherUnlocked .mat-slide-toggle-thumb {
   border-radius: 0;
   clip-path: polygon(0% 90%, 50% 0%, 100% 90%);

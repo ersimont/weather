@@ -1,27 +1,26 @@
 import { Injectable } from "@angular/core";
-import { AppStore } from "ng-app-state";
 import { Store } from "@ngrx/store";
+import { Persistence } from "app/to-replace/persistence/persistence";
+import { UpgradeService } from "app/upgrade/upgrade.service";
+import { bindKey } from "micro-dash";
+import { AppStore } from "ng-app-state";
 import { WeatherState } from "./weather-state";
-
-const key = "weather";
 
 @Injectable({ providedIn: "root" })
 export class WeatherStore extends AppStore<WeatherState> {
-  constructor(ngrxStore: Store<any>) {
-    super(ngrxStore, key, getInitialValue());
-    this.$.subscribe((state) => {
-      localStorage.setItem(key, JSON.stringify(state));
-    });
-  }
-}
+  constructor(ngrxStore: Store<any>, upgradeService: UpgradeService) {
+    const persistence = new Persistence<WeatherState>("weather");
+    super(
+      ngrxStore,
+      "weather",
+      persistence.get({
+        defaultValue: new WeatherState(),
+        upgrader: upgradeService,
+      }),
+    );
 
-function getInitialValue() {
-  const fresh = new WeatherState();
-  const savedStr = localStorage.getItem(key);
-  if (!savedStr) {
-    return fresh;
+    // TODO: test that this is persisting
+    // TODO: mix injectablesuperclass into this for subscribeTo
+    this.$.subscribe(bindKey(persistence, "put"));
   }
-
-  const saved = JSON.parse(savedStr);
-  return saved.version === fresh.version ? saved : fresh;
 }

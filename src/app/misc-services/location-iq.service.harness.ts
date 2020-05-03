@@ -1,7 +1,7 @@
 import {
   ForwardResponse,
   LocationResponse,
-} from "app/services/location-iq.service";
+} from "app/misc-services/location-iq.service";
 import { STestRequest } from "app/test-helpers/s-test-request";
 import { WeatherGraphContext } from "app/test-helpers/weather-graph-context";
 

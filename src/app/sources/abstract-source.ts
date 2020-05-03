@@ -1,6 +1,6 @@
 import { Injector } from "@angular/core";
-import { LocationService } from "app/services/location.service";
-import { RefreshService } from "app/services/refresh.service";
+import { LocationService } from "app/misc-services/location.service";
+import { RefreshService } from "app/misc-services/refresh.service";
 import { Forecast } from "app/state/forecast";
 import { GpsCoords } from "app/state/location";
 import { Source, SourceId } from "app/state/source";

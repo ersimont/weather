@@ -9,6 +9,7 @@ describe("unitInfo", () => {
     decimalPipe = TestBed.inject(DecimalPipe);
   });
 
+  // TODO: integrationize
   it("rounds MM precipitation to 1 decimal place", () => {
     expect(unitInfo[AmountUnit.MM].getDisplay(0.06, decimalPipe)).toBe(
       "0.1 mm",
