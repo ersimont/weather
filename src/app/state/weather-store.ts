@@ -19,7 +19,6 @@ export class WeatherStore extends AppStore<WeatherState> {
       }),
     );
 
-    // TODO: test that this is persisting
     // TODO: mix injectablesuperclass into this for subscribeTo
     this.$.subscribe(bindKey(persistence, "put"));
   }

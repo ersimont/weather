@@ -10,11 +10,11 @@ describe("UpgradeService", () => {
 
   let ctx: WeatherGraphContext;
   let iq: LocationIqServiceHarness;
-  let persistence: WeatherStoreHarness;
+  let store: WeatherStoreHarness;
   let whatsNew: WhatsNewComponentHarness;
   beforeEach(() => {
     ctx = new WeatherGraphContext();
-    ({ iq, persistence, whatsNew } = ctx.harnesses);
+    ({ iq, store, whatsNew } = ctx.harnesses);
   });
 
   it("is working with the correct current version", () => {
@@ -30,7 +30,7 @@ describe("UpgradeService", () => {
     ctx.initialState = v6Default as any;
     ctx.init({ flushDefaultRequests: false });
 
-    expect(persistence.getPersistedState()).toEqual(defaultState);
+    expect(store.getPersistedState()).toEqual(defaultState);
     expect(whatsNew.getFeatures()).toEqual([
       "You can get your forecast from Climacell. Check it out in the Sources section of the settings.",
     ]);
