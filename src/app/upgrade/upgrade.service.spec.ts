@@ -28,7 +28,7 @@ describe("UpgradeService", () => {
 
   it("upgrades from v6, showing what's new", fakeAsync(() => {
     ctx.initialState = v6Default as any;
-    ctx.init();
+    ctx.init({ flushDefaultRequests: false });
 
     expect(persistence.getPersistedState()).toEqual(defaultState);
     expect(whatsNew.getFeatures()).toEqual([

@@ -31,7 +31,7 @@ describe("AppComponent", () => {
         search: "previous search",
         gpsCoords: [0, 0],
       };
-      ctx.init();
+      ctx.init({ flushDefaultRequests: false });
       gov.expectPoints([0, 0]);
 
       ctx.expectNoErrorShown();
@@ -45,7 +45,7 @@ describe("AppComponent", () => {
       it("shows an error and opens location settings", fakeAsync(() => {
         // when the app opens
         ctx.initialState.useCurrentLocation = true;
-        ctx.init();
+        ctx.init({ flushDefaultRequests: false });
 
         ctx.expectErrorShown("Location not found");
         expect(app.isSidenavExpanded()).toBe(true);
@@ -68,7 +68,7 @@ describe("AppComponent", () => {
         ctx.initialState.useCurrentLocation = true;
         ctx.initialState.customLocation.search = "an old search";
         ctx.initialState.customLocation.gpsCoords = [0, 0];
-        ctx.init();
+        ctx.init({ flushDefaultRequests: false });
 
         ctx.expectErrorShown("Location not found");
         expect(app.isSidenavExpanded()).toBe(true);

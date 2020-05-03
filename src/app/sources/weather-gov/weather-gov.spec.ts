@@ -20,7 +20,7 @@ describe("WeatherGov", () => {
   });
 
   it("can cancel the first request", fakeAsync(() => {
-    ctx.init();
+    ctx.init({ flushDefaultRequests: false });
 
     iq.flushReverse();
     sources.toggle("Weather.gov");
@@ -33,7 +33,7 @@ describe("WeatherGov", () => {
   }));
 
   it("can cancel the second request", fakeAsync(() => {
-    ctx.init();
+    ctx.init({ flushDefaultRequests: false });
 
     iq.flushReverse();
     gov.expectPoints().flush(pointResponse);
@@ -47,7 +47,7 @@ describe("WeatherGov", () => {
   }));
 
   it("does not prevent refreshes after error", fakeAsync(() => {
-    ctx.init();
+    ctx.init({ flushDefaultRequests: false });
 
     iq.flushReverse();
     gov.expectPoints().flushError();

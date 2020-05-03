@@ -24,6 +24,7 @@ describe("LocationService", () => {
   it("allows a reverse lookup to be cancelled", fakeAsync(() => {
     ctx.init();
 
+    refresh.trigger();
     location.setCustomLocation("Montreal");
     expect(iq.expectReverse().isCancelled()).toBe(true);
     iq.expectForward("Montreal");
@@ -35,7 +36,7 @@ describe("LocationService", () => {
     ctx.initialState.useCurrentLocation = false;
     ctx.initialState.customLocation.search = "blah";
     ctx.initialState.customLocation.gpsCoords = [0, 0];
-    ctx.init();
+    ctx.init({ flushDefaultRequests: false });
     gov.flushFixture([0, 0]);
     expect(graph.showsData()).toBe(true);
 
@@ -50,7 +51,7 @@ describe("LocationService", () => {
     ctx.initialState.useCurrentLocation = false;
     ctx.initialState.customLocation.search = "Montreal";
     ctx.initialState.customLocation.gpsCoords = [0, 0];
-    ctx.init();
+    ctx.init({ flushDefaultRequests: false });
     gov.flushFixture([0, 0]);
     expect(graph.showsData()).toBe(true);
 
@@ -65,7 +66,7 @@ describe("LocationService", () => {
     it("works after an error fetching current location", fakeAsync(() => {
       const locationStub = ctx.mocks.browser.getCurrentLocation;
       locationStub.and.returnValue(Promise.reject("not allowed"));
-      ctx.init();
+      ctx.init({ flushDefaultRequests: false });
       ctx.inject(HttpTestingController).verify();
 
       locationStub.and.returnValue(Promise.resolve(ctx.currentLocation));
@@ -77,7 +78,7 @@ describe("LocationService", () => {
     }));
 
     it("works after an error in the reverse lookup", fakeAsync(() => {
-      ctx.init();
+      ctx.init({ flushDefaultRequests: false });
       iq.expectReverse().flushError();
 
       refresh.trigger();

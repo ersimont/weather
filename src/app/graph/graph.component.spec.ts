@@ -30,7 +30,7 @@ describe("GraphComponent", () => {
       const timeframe = unlocked.buildTimeframe({ temp_c: 21.6 });
       state.setShowing(SourceId.WEATHER_UNLOCKED);
       ctx.initialState.units.temp = TempUnit.C;
-      ctx.init();
+      ctx.init({ flushDefaultRequests: false });
       iq.flushReverse();
       unlocked
         .expectForecast()
@@ -49,8 +49,7 @@ describe("GraphComponent", () => {
 
     it("displays the source in its footer", fakeAsync(() => {
       state.setShowing(SourceId.WEATHER_GOV, SourceId.WEATHER_UNLOCKED);
-      ctx.init();
-      // TODO: make `flushDefault` helper
+      ctx.init({ flushDefaultRequests: false });
       iq.flushReverse();
       gov.flushFixture();
       unlocked.flushFixture();

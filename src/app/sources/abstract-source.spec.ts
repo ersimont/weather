@@ -1,8 +1,8 @@
 import { HttpTestingController } from "@angular/common/http/testing";
 import { fakeAsync } from "@angular/core/testing";
-import { SourceOptionsComponentHarness } from "app/options/source-options/source-options.component.harness";
 import { LocationIqServiceHarness } from "app/misc-services/location-iq.service.harness";
 import { RefreshServiceHarness } from "app/misc-services/refresh.service.harness";
+import { SourceOptionsComponentHarness } from "app/options/source-options/source-options.component.harness";
 import { pointResponse } from "app/sources/weather-gov/weather-gov.fixtures";
 import { WeatherGovHarness } from "app/sources/weather-gov/weather-gov.harness";
 import { WeatherUnlockedHarness } from "app/sources/weather-unlocked/weather-unlocked.harness";
@@ -17,26 +17,13 @@ describe("AbstractSource", () => {
   let unlocked: WeatherUnlockedHarness;
   let refresh: RefreshServiceHarness;
   let sources: SourceOptionsComponentHarness;
-  let http: HttpTestingController;
-
   beforeEach(() => {
     ctx = new WeatherGraphContext();
+    ({ iq, gov, unlocked, refresh, sources } = ctx.harnesses);
   });
 
-  function init() {
-    ctx.init();
-    iq = new LocationIqServiceHarness(ctx);
-    gov = new WeatherGovHarness(ctx);
-    unlocked = new WeatherUnlockedHarness(ctx);
-    refresh = new RefreshServiceHarness(ctx);
-    sources = new SourceOptionsComponentHarness(ctx);
-    http = ctx.inject(HttpTestingController);
-  }
-
   it("refreshes (only) when showing", fakeAsync(() => {
-    init();
-    iq.flushReverse();
-    gov.flushFixture();
+    ctx.init();
 
     refresh.trigger();
     iq.flushReverse();
@@ -45,7 +32,7 @@ describe("AbstractSource", () => {
     sources.toggle("Weather.gov");
     refresh.trigger();
     iq.flushReverse();
-    http.verify();
+    ctx.inject(HttpTestingController).verify();
 
     sources.toggle("Weather.gov");
     gov.flushFixture();
@@ -58,7 +45,7 @@ describe("AbstractSource", () => {
   }));
 
   it("retries on next refresh after error", fakeAsync(() => {
-    init();
+    ctx.init({ flushDefaultRequests: false });
     iq.expectReverse().flushError();
 
     refresh.trigger();
@@ -78,7 +65,7 @@ describe("AbstractSource", () => {
 
   describe("fallback", () => {
     it("happens invisibly on first app load", fakeAsync(() => {
-      init();
+      ctx.init({ flushDefaultRequests: false });
 
       iq.flushReverse();
       gov.flushNotAvailable();
@@ -89,9 +76,7 @@ describe("AbstractSource", () => {
     }));
 
     it("does not happen on refresh", fakeAsync(() => {
-      init();
-      iq.flushReverse();
-      gov.flushFixture();
+      ctx.init();
 
       refresh.trigger();
       iq.flushReverse();
@@ -103,7 +88,7 @@ describe("AbstractSource", () => {
 
     it("does not happen on subsequent app loads", fakeAsync(() => {
       ctx.initialState.allowSourceFallback = false;
-      init();
+      ctx.init({ flushDefaultRequests: false });
 
       iq.flushReverse();
       gov.flushNotAvailable();

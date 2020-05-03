@@ -20,7 +20,7 @@ describe("Climacell", () => {
   });
 
   it("can cancel its request", fakeAsync(() => {
-    ctx.init();
+    ctx.init({ flushDefaultRequests: false });
 
     iq.flushReverse();
     sources.toggle("Climacell");

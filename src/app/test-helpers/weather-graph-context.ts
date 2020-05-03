@@ -92,7 +92,7 @@ export class WeatherGraphContext extends AngularContext {
     this.mocks.browser.hasFocus.and.returnValue(true);
   }
 
-  init() {
+  init({ flushDefaultRequests = true } = {}) {
     localStorage.setItem("weather", JSON.stringify(this.initialState));
     this.spectator = WeatherGraphContext.createHost(hostTemplate, {
       hostProps: this.screenSize,
@@ -105,6 +105,10 @@ export class WeatherGraphContext extends AngularContext {
     this.rootElement = this.spectator.hostElement;
     this.debugElement = this.spectator.debugElement;
     this.tick();
+    if (flushDefaultRequests) {
+      this.harnesses.iq.flushReverse();
+      this.harnesses.gov.flushFixture();
+    }
   }
 
   cleanUp() {
