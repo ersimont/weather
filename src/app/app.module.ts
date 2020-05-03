@@ -29,12 +29,15 @@ import { environment } from "../environments/environment";
 @NgModule({
   declarations: [AppComponent, GraphComponent, WhatsNewComponent],
   imports: [
-    environment.test ? NoopAnimationsModule : BrowserAnimationsModule,
+    environment.name === "test"
+      ? NoopAnimationsModule
+      : BrowserAnimationsModule,
     BrowserModule,
     ChartsModule,
-    EventTrackingModule.forRoot(
-      environment.production ? "UA-148865234-1" : "UA-148865234-2",
-    ),
+    EventTrackingModule.forRoot({
+      gaProperty: environment.gaProperty,
+      log: environment.name === "development",
+    }),
     HttpClientModule,
     MatButtonModule,
     MatDialogModule,
@@ -45,10 +48,10 @@ import { environment } from "../environments/environment";
     MatToolbarModule,
     OptionsModule,
     ServiceWorkerModule.register("ngsw-worker.js", {
-      enabled: environment.production,
+      enabled: environment.name === "production",
     }),
     StoreModule.forRoot({}, { metaReducers: [ngAppStateReducer] }),
-    environment.production ? [] : StoreDevtoolsModule.instrument(),
+    environment.name === "production" ? [] : StoreDevtoolsModule.instrument(),
   ],
   providers: [provideErrorHandler(), provideHttpStatus()],
   bootstrap: [AppComponent],

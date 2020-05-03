@@ -1,3 +1,4 @@
 export class EventTrackingConfig {
-  constructor(public gaProperty?: string) {}
+  gaProperty?: string;
+  log?: boolean;
 }

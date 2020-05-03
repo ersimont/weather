@@ -1,5 +1,6 @@
 import { Injectable, ErrorHandler, Provider } from "@angular/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { EventTrackingService } from "app/to-replace/event-tracking/event-tracking.service";
 
 export function provideErrorHandler(): Provider {
   return { provide: ErrorHandler, useExisting: SnackBarErrorService };
@@ -7,16 +8,22 @@ export function provideErrorHandler(): Provider {
 
 @Injectable({ providedIn: "root" })
 export class SnackBarErrorService implements ErrorHandler {
-  constructor(private matSnackBar: MatSnackBar) {}
+  constructor(
+    private eventTrackingService: EventTrackingService,
+    private matSnackBar: MatSnackBar,
+  ) {}
 
   handleError(error: any) {
+    if (error.rejection) {
+      error = error.rejection;
+    }
+
     let message;
     if (error instanceof PresentableError) {
       message = error.message;
-    } else if (error.rejection instanceof PresentableError) {
-      message = error.rejection.message;
     } else {
       console.error(error);
+      this.eventTrackingService.sendError(error.message || error);
       message = "There was an unexpected error";
     }
     this.show(message);

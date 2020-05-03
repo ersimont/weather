@@ -1,14 +1,19 @@
-// tslint:disable:only-arrow-functions
+import { EventTrackingConfig } from "app/to-replace/event-tracking/event-tracking-config";
 
-export function initializeGtag(gaProperty?: string) {
-  if (gaProperty) {
-    initializeFromGoogle(gaProperty);
-  } else {
-    initializeForLogging();
+export function initializeGtag(config: EventTrackingConfig) {
+  const win = window as any;
+  win.dataLayer = [];
+  // tslint:disable-next-line:only-arrow-functions
+  win.gtag = function () {
+    if (config.log) {
+      console.log("[gtag]", ...arguments);
+    }
+    win.dataLayer.push(arguments);
+  };
+
+  if (config.gaProperty) {
+    initializeFromGoogle(config.gaProperty);
   }
-
-  gtag("js", new Date());
-  gtag("config", gaProperty);
 }
 
 function initializeFromGoogle(gaProperty: string) {
@@ -17,15 +22,6 @@ function initializeFromGoogle(gaProperty: string) {
   script.async = true;
   document.head.appendChild(script);
 
-  const win = window as any;
-  win.dataLayer = [];
-  win.gtag = function () {
-    win.dataLayer.push(arguments);
-  };
-}
-
-function initializeForLogging() {
-  window.gtag = function () {
-    console.log("[gtag]", ...arguments);
-  };
+  gtag("js", new Date());
+  gtag("config", gaProperty);
 }

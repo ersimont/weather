@@ -9,7 +9,6 @@ export class STrackDirective extends DirectiveSuperclass {
   @Input("sTrack") event!: string;
   @Input() eventName!: string;
   @Input() eventCategory!: string;
-  @Input() eventParams?: Record<string, any>;
 
   constructor(
     elementRef: ElementRef,
@@ -22,11 +21,7 @@ export class STrackDirective extends DirectiveSuperclass {
         switchMap((event) => fromEvent(elementRef.nativeElement, event)),
       ),
       () => {
-        eventTrackingService.track(
-          this.eventName,
-          this.eventCategory,
-          this.eventParams,
-        );
+        eventTrackingService.track(this.eventName, this.eventCategory);
       },
     );
   }

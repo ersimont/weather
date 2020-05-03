@@ -1,6 +1,6 @@
 export const environment = {
-  production: false,
-  test: true,
+  name: "test",
+  gaProperty: undefined,
 };
 
 /*

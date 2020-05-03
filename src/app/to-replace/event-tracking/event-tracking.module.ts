@@ -5,11 +5,11 @@ import { STrackDirective } from "app/to-replace/event-tracking/s-track.directive
 @NgModule({ declarations: [STrackDirective], exports: [STrackDirective] })
 export class EventTrackingModule {
   static forRoot(
-    gaProperty?: string,
+    config: EventTrackingConfig = {},
   ): ModuleWithProviders<EventTrackingModule> {
     return {
       ngModule: EventTrackingModule,
-      providers: [{ provide: EventTrackingConfig, useValue: { gaProperty } }],
+      providers: [{ provide: EventTrackingConfig, useValue: config }],
     };
   }
 }
