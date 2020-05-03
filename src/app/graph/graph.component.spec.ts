@@ -52,7 +52,7 @@ describe("GraphComponent", () => {
       ctx.init({ flushDefaultRequests: false });
       iq.flushReverse();
       gov.flushFixture();
-      unlocked.flushFixture();
+      unlocked.flushDefault();
 
       expect(graph.getTooltipFooter(SourceId.WEATHER_GOV)).toBe(
         "Source: Weather.gov",

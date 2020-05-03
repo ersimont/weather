@@ -27,7 +27,7 @@ describe("WeatherUnlocked", () => {
     expect(unlocked.expectForecast().isCancelled()).toBe(true);
 
     sources.toggle("Weather Unlocked");
-    unlocked.flushFixture();
+    unlocked.flushDefault();
 
     ctx.cleanUp();
   }));

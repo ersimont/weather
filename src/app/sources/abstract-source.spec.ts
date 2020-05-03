@@ -69,7 +69,7 @@ describe("AbstractSource", () => {
 
       iq.flushReverse();
       gov.flushNotAvailable();
-      unlocked.flushFixture();
+      unlocked.flushDefault();
       ctx.expectNoErrorShown();
 
       ctx.cleanUp();

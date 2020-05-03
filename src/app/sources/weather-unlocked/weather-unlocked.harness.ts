@@ -2,7 +2,6 @@ import {
   ForecastResponse,
   Timeframe,
 } from "app/sources/weather-unlocked/weather-unlocked";
-import { weatherUnlockedResponse } from "app/sources/weather-unlocked/weather-unlocked.fixtures";
 import { STestRequest } from "app/test-helpers/s-test-request";
 import { WeatherGraphContext } from "app/test-helpers/weather-graph-context";
 import { createBuilder } from "s-js-utils";
@@ -26,9 +25,8 @@ export class WeatherUnlockedHarness {
     }),
   );
 
-  // TODO: change to use default instead of fixtures
-  flushFixture() {
-    this.expectForecast().flush(weatherUnlockedResponse);
+  flushDefault() {
+    this.expectForecast().flush(this.buildResponse());
   }
 
   expectForecast(gpsCoords = this.ctx.currentLocation) {
