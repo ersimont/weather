@@ -1,18 +1,43 @@
-import { DecimalPipe } from "@angular/common";
-import { TestBed } from "@angular/core/testing";
-import { AmountUnit, unitInfo } from "app/state/units";
+import { fakeAsync } from "@angular/core/testing";
+import { GraphComponentHarness } from "app/graph/graph.component.harness";
+import { LocationIqServiceHarness } from "app/misc-services/location-iq.service.harness";
+import { ClimacellHarness } from "app/sources/climacell/climacell.harness";
+import { Condition } from "app/state/condition";
+import { SourceId } from "app/state/source";
+import { AmountUnit } from "app/state/units";
+import { WeatherStateHarness } from "app/state/weather-state.harness";
+import { WeatherGraphContext } from "app/test-helpers/weather-graph-context";
 
 describe("unitInfo", () => {
-  let decimalPipe: DecimalPipe;
+  WeatherGraphContext.setUp();
+
+  let ctx: WeatherGraphContext;
+  let climacell: ClimacellHarness;
+  let graph: GraphComponentHarness;
+  let iq: LocationIqServiceHarness;
+  let state: WeatherStateHarness;
   beforeEach(() => {
-    TestBed.configureTestingModule({ providers: [DecimalPipe] });
-    decimalPipe = TestBed.inject(DecimalPipe);
+    ctx = new WeatherGraphContext();
+    ({ climacell, graph, iq, state } = ctx.harnesses);
   });
 
-  // TODO: integrationize
-  it("rounds MM precipitation to 1 decimal place", () => {
-    expect(unitInfo[AmountUnit.MM].getDisplay(0.06, decimalPipe)).toBe(
-      "0.1 mm",
-    );
-  });
+  it("rounds MM precipitation to 1 decimal place", fakeAsync(() => {
+    state.setShowing(SourceId.CLIMACELL);
+    ctx.initialState.units.amount = AmountUnit.MM;
+    ctx.init({ flushDefaultRequests: false });
+    iq.flushReverse();
+    climacell
+      .expectHourly()
+      .flush(
+        climacell.buildHourlyResponse([
+          climacell.buildTimeframe({ precipitation: { value: 0.06 } }),
+        ]),
+      );
+
+    expect(
+      graph.getTooltipLabel(SourceId.CLIMACELL, Condition.AMOUNT, 0),
+    ).toContain("0.1 mm");
+
+    ctx.cleanUp();
+  }));
 });

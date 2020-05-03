@@ -27,11 +27,7 @@ export class GraphComponentHarness {
     return this.getDataSets().some((dataSet) => dataSet.data?.length);
   }
 
-  getTooltipLabel(
-    sourceId: SourceId.WEATHER_UNLOCKED,
-    condition: Condition.TEMP,
-    index: number,
-  ) {
+  getTooltipLabel(sourceId: SourceId, condition: Condition, index: number) {
     const chartOptions = this.getComponent().chartOptions;
     const datasets = this.getDataSets();
 
