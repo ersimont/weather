@@ -15,11 +15,11 @@ import { ThemeService } from "ng2-charts";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { DirectiveSuperclass } from "s-ng-utils";
-import { Condition, conditionInfo } from "../state/condition";
-import { SourceId } from "../state/source";
-import { AmountUnit, unitInfo } from "../state/units";
-import { WeatherState } from "../state/weather-state";
-import { WeatherStore } from "../state/weather-store";
+import { Condition, conditionInfo } from "../../state/condition";
+import { SourceId } from "../../state/source";
+import { AmountUnit, unitInfo } from "../../state/units";
+import { WeatherState } from "../../state/weather-state";
+import { WeatherStore } from "../../state/weather-store";
 import { SetRangeAction } from "./set-range-action";
 
 const pointStyles: { [id in SourceId]: PointStyle } = {

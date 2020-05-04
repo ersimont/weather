@@ -1,4 +1,5 @@
-:host, app-graph {
+:host,
+app-graph {
   position: absolute;
   top: 0;
   left: 0;
@@ -29,6 +30,12 @@ mat-progress-bar {
   left: 0;
   right: 0;
   bottom: 0;
+}
+
+.sidenav-content {
+  display: grid;
+  min-height: 100%;
+  grid-template-rows: 1fr auto;
 }
 
 app-graph {

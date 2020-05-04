@@ -1,5 +1,5 @@
 import { By } from "@angular/platform-browser";
-import { GraphComponent } from "app/graph/graph.component";
+import { GraphComponent } from "app/misc-components/graph/graph.component";
 import { Condition } from "app/state/condition";
 import { SourceId } from "app/state/source";
 import { WeatherGraphContext } from "app/test-helpers/weather-graph-context";

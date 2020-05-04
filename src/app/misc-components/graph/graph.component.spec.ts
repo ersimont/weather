@@ -1,5 +1,5 @@
 import { fakeAsync } from "@angular/core/testing";
-import { GraphComponentHarness } from "app/graph/graph.component.harness";
+import { GraphComponentHarness } from "app/misc-components/graph/graph.component.harness";
 import { UnitOptionsComponentHarness } from "app/options/unit-options/unit-options.component.harness";
 import { LocationIqServiceHarness } from "app/misc-services/location-iq.service.harness";
 import { WeatherGovHarness } from "app/sources/weather-gov/weather-gov.harness";

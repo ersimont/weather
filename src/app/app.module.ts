@@ -3,6 +3,7 @@ import { NgModule } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatDialogModule } from "@angular/material/dialog";
 import { MatIconModule } from "@angular/material/icon";
+import { MatListModule } from "@angular/material/list";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
@@ -16,7 +17,7 @@ import { ServiceWorkerModule } from "@angular/service-worker";
 import { StoreModule } from "@ngrx/store";
 import { StoreDevtoolsModule } from "@ngrx/store-devtools";
 import { AppComponent } from "app/app.component";
-import { GraphComponent } from "app/graph/graph.component";
+import { GraphComponent } from "app/misc-components/graph/graph.component";
 import { OptionsModule } from "app/options/options.module";
 import { EventTrackingModule } from "app/to-replace/event-tracking/event-tracking.module";
 import { provideHttpStatus } from "app/to-replace/http-status.service";
@@ -25,9 +26,15 @@ import { WhatsNewComponent } from "app/upgrade/whats-new.component";
 import { ngAppStateReducer } from "ng-app-state";
 import { ChartsModule } from "ng2-charts";
 import { environment } from "../environments/environment";
+import { PrivacyPolicyComponent } from "./misc-components/privacy-policy/privacy-policy.component";
 
 @NgModule({
-  declarations: [AppComponent, GraphComponent, WhatsNewComponent],
+  declarations: [
+    AppComponent,
+    GraphComponent,
+    WhatsNewComponent,
+    PrivacyPolicyComponent,
+  ],
   imports: [
     environment.name === "test"
       ? NoopAnimationsModule
@@ -42,6 +49,7 @@ import { environment } from "../environments/environment";
     MatButtonModule,
     MatDialogModule,
     MatIconModule,
+    MatListModule,
     MatProgressBarModule,
     MatSidenavModule,
     MatSnackBarModule,

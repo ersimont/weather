@@ -40,7 +40,17 @@
 
 <mat-sidenav-container>
   <mat-sidenav #sidenav>
-    <app-options></app-options>
+    <div class="sidenav-content">
+      <app-options></app-options>
+      <mat-action-list>
+        <button
+          mat-list-item
+          (click)="showPrivacyPolicy()"
+        >
+          Privacy Policy
+        </button>
+      </mat-action-list>
+    </div>
   </mat-sidenav>
   <mat-sidenav-content>
     <app-graph></app-graph>

@@ -4,11 +4,13 @@ import {
   Injector,
   ViewChild,
 } from "@angular/core";
+import { MatDialog } from "@angular/material/dialog";
 import { MatIconRegistry } from "@angular/material/icon";
 import { MatSidenav } from "@angular/material/sidenav";
 import { DomSanitizer } from "@angular/platform-browser";
-import { SetRangeAction } from "app/graph/set-range-action";
+import { SetRangeAction } from "app/misc-components/graph/set-range-action";
 import { icons } from "app/icons";
+import { PrivacyPolicyComponent } from "app/misc-components/privacy-policy/privacy-policy.component";
 import { LocationService } from "app/misc-services/location.service";
 import { Climacell } from "app/sources/climacell/climacell";
 import { WeatherGov } from "app/sources/weather-gov/weather-gov";
@@ -37,6 +39,7 @@ export class AppComponent extends DirectiveSuperclass {
     public httpStatusService: HttpStatusService,
     injector: Injector,
     private locationService: LocationService,
+    private matDialog: MatDialog,
     matIconRegistry: MatIconRegistry,
     private store: WeatherStore,
     weatherGov: WeatherGov,
@@ -61,6 +64,10 @@ export class AppComponent extends DirectiveSuperclass {
 
   setRange(days: number) {
     this.store.dispatch(new SetRangeAction(days));
+  }
+
+  showPrivacyPolicy() {
+    this.matDialog.open(PrivacyPolicyComponent);
   }
 
   private openSideNavWhenAsked() {
