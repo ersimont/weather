@@ -21,6 +21,7 @@ export class LocationOptionsComponentHarness extends AbstractComponentHarness {
 
   ensureExpanded() {
     new AppComponentHarness(this.ctx).ensureSidenavExpanded();
+    // TODO: see if harnesses can be adapted to fakeAsync
     if (!this.isExpanded()) {
       this.ctx.click(this.getHeader());
     }
