@@ -9,25 +9,37 @@ import {
   PresentableError,
   provideErrorHandler,
 } from "app/to-replace/snack-bar-error.service";
+import { AngularContext } from "app/to-replace/test-context/angular-context";
+
+class Context extends AngularContext {
+  static setUp() {
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          EventTrackingModule.forRoot(),
+          MatSnackBarModule,
+          NoopAnimationsModule,
+        ],
+        providers: [provideErrorHandler()],
+      });
+    });
+
+    afterEach(() => {
+      TestBed.inject(OverlayContainer).ngOnDestroy();
+    });
+  }
+}
 
 describe("SnackBarErrorService", () => {
+  Context.setUp();
+
+  let ctx: Context;
   let errorHandler: ErrorHandler;
   let events: EventTrackingServiceHarness;
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        EventTrackingModule.forRoot(),
-        MatSnackBarModule,
-        NoopAnimationsModule,
-      ],
-      providers: [provideErrorHandler()],
-    });
-    errorHandler = TestBed.inject(ErrorHandler);
+    ctx = new Context();
+    errorHandler = ctx.inject(ErrorHandler);
     events = new EventTrackingServiceHarness();
-  });
-
-  afterEach(() => {
-    TestBed.inject(OverlayContainer).ngOnDestroy();
   });
 
   function generateUncaughtPromiseError(error: any) {

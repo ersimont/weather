@@ -1,19 +1,19 @@
 import { HttpTestingController } from "@angular/common/http/testing";
-import { AbstractType, InjectionToken, NgZone, Type } from "@angular/core";
-import { discardPeriodicTasks, TestBed } from "@angular/core/testing";
-import { SpectatorHost } from "@ngneat/spectator";
+import { AbstractType, InjectFlags, InjectionToken, Type } from "@angular/core";
+import {
+  ComponentFixture,
+  discardPeriodicTasks,
+  flushMicrotasks,
+  TestBed,
+  tick,
+} from "@angular/core/testing";
 import { DomContext } from "app/to-replace/test-context/dom-context";
 
 export abstract class AngularContext extends DomContext {
-  protected abstract spectator: SpectatorHost<unknown>;
-
-  static setUp() {
-    afterEach(() => {
-      TestBed.inject(HttpTestingController).verify();
-    });
-  }
+  protected fixture?: ComponentFixture<unknown>;
 
   cleanUp() {
+    this.injectIfProvided(HttpTestingController)?.verify();
     discardPeriodicTasks();
   }
 
@@ -21,13 +21,18 @@ export abstract class AngularContext extends DomContext {
     return TestBed.inject(token);
   }
 
+  injectIfProvided<T>(
+    token: Type<T> | InjectionToken<T> | AbstractType<T>,
+  ): T | undefined {
+    return TestBed.inject(token, undefined, InjectFlags.Optional);
+  }
+
   tick(millis?: number) {
-    this.spectator.tick(millis);
-    let extra = 0;
-    for (const zone = this.inject(NgZone); !zone.isStable; ) {
-      console.log("extra", ++extra);
-      this.spectator.tick(0);
+    if (this.fixture) {
+      flushMicrotasks();
+      this.fixture.detectChanges();
     }
+    tick(millis);
   }
 
   dispatch(event: Event, element: Element) {

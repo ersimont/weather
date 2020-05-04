@@ -7754,9 +7754,9 @@ rxjs@^6.5.3:
     tslib "^1.9.0"
 
 s-js-utils@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/s-js-utils/-/s-js-utils-6.0.0.tgz#ce5a664d9552ff7512a141bd20d7c7528402fc50"
-  integrity sha512-78zpwF5ZWmKPNnVJAntlgfsB0FY8R1FHGSlNXcuv3uP7iZv4MSOG3Gqs/58QJzyjK3ocOUiB3Z1+EnFJk5wQUA==
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/s-js-utils/-/s-js-utils-6.2.1.tgz#fa8b953933d409ff44cb869d74719a6f87188288"
+  integrity sha512-BCLSHdpgq+FXmT1AUZkdnXukKl+sttSMpXdurQCzPPTAgQRTcgNm7Hb0uzfW2/eLC95hsViDZuDzlkwxP1MjlQ==
 
 s-ng-dev-utils@^1.1.1:
   version "1.1.1"

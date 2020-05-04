@@ -28,6 +28,6 @@ export class UnitOptionsComponent {
   }
 
   trackChange(unitType: UnitType) {
-    this.eventTrackingService.track(`change_${unitType}`, "change_source");
+    this.eventTrackingService.track(`change_${unitType}`, "change_unit");
   }
 }

@@ -1,4 +1,4 @@
-import { assert } from "app/to-replace/assert";
+import { assert } from "s-js-utils";
 
 export interface Upgradable {
   _version: number;

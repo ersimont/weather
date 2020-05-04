@@ -1,8 +1,8 @@
-import { assert } from "app/to-replace/assert";
 import {
   Upgradable,
   UpgradeSuperclass,
 } from "app/to-replace/persistence/upgrade-superclass";
+import { assert } from "s-js-utils";
 
 export class Persistence<T extends Upgradable> {
   constructor(private key: string) {}

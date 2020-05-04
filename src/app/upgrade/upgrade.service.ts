@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
-import { WhatsNewService } from "app/upgrade/whats-new.service";
 import { WeatherState } from "app/state/weather-state";
-import { assert } from "app/to-replace/assert";
 import { UpgradeSuperclass } from "app/to-replace/persistence/upgrade-superclass";
 import { SnackBarErrorService } from "app/to-replace/snack-bar-error.service";
+import { WhatsNewService } from "app/upgrade/whats-new.service";
+import { assert } from "s-js-utils";
 
 @Injectable({ providedIn: "root" })
 export class UpgradeService extends UpgradeSuperclass<WeatherState> {
