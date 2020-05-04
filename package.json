@@ -9,8 +9,9 @@
     "lint": "ng lint && eslint . --ext .js,.jsx,.ts,.tsx",
     "e2e": "ng e2e",
     "web-worker-start": "http-server -p 8080 -c-1 dist/weather",
-    "prettier-all": "prettier --write \"**/*.{html,js,json,md,scss,ts,yml}\"",
-    "deploy": "ng build --prod --output-path docs --base-href /weather/ && git add docs"
+    "prettier-all": "prettier --write \"**/*.{css,html,js,json,md,scss,ts,yml}\"",
+    "deploy": "ng build --prod --output-path docs --base-href /weather/ && git add docs",
+    "source-map-explorer": "ng build --prod --sourceMap && source-map-explorer 'dist/weather/main-es2015.*.js'"
   },
   "private": true,
   "dependencies": {
@@ -62,6 +63,7 @@
     "prettier": "^2.0.2",
     "protractor": "~5.4.0",
     "s-ng-dev-utils": "^1.1.1",
+    "source-map-explorer": "^2.4.2",
     "ts-node": "~7.0.0",
     "tslint": "~5.15.0",
     "typescript": "~3.7.5"
