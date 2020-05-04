@@ -7,7 +7,7 @@ export const eventCatalog = {
     "change_cloud",
     "change_wind",
   ],
-  change_location: ["change_current_selection"],
+  change_location: ["change_current_selection", "change_custom_search"],
   change_source: [
     "change_weatherGov",
     "change_weatherUnlocked",

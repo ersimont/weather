@@ -29,7 +29,7 @@ export class UpgradeService extends UpgradeSuperclass<WeatherState> {
   }
 
   protected onError(error: any) {
-    console.log(error); // TODO: log to GA or bigquery or something
+    console.log(error);
     this.errorService.show(
       "Oops! We were unable to upgrade your settings from the previous version.",
     );

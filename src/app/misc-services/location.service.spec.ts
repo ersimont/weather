@@ -6,11 +6,13 @@ import { LocationIqServiceHarness } from "app/misc-services/location-iq.service.
 import { RefreshServiceHarness } from "app/misc-services/refresh.service.harness";
 import { WeatherGovHarness } from "app/sources/weather-gov/weather-gov.harness";
 import { WeatherGraphContext } from "app/test-helpers/weather-graph-context";
+import { EventTrackingServiceHarness } from "app/to-replace/event-tracking/event-tracking.service.harness";
 
 describe("LocationService", () => {
   WeatherGraphContext.setUp();
 
   let ctx: WeatherGraphContext;
+  let events: EventTrackingServiceHarness;
   let gov: WeatherGovHarness;
   let graph: GraphComponentHarness;
   let iq: LocationIqServiceHarness;
@@ -18,7 +20,7 @@ describe("LocationService", () => {
   let refresh: RefreshServiceHarness;
   beforeEach(() => {
     ctx = new WeatherGraphContext();
-    ({ gov, graph, iq, location, refresh } = ctx.harnesses);
+    ({ events, gov, graph, iq, location, refresh } = ctx.harnesses);
   });
 
   it("allows a reverse lookup to be cancelled", fakeAsync(() => {
@@ -59,6 +61,19 @@ describe("LocationService", () => {
     expect(graph.showsData()).toBe(false);
 
     iq.expectForward("Phoenix");
+    ctx.cleanUp();
+  }));
+
+  it("tracks an event when searching for a new location", fakeAsync(() => {
+    ctx.init();
+
+    location.setCustomLocation("Neverland");
+    expect(events.getEvents({ name: "change_custom_search" }).length).toBe(1);
+    expect(events.getEvents({ name: "change_current_selection" }).length).toBe(
+      0,
+    );
+
+    iq.expectForward("Neverland");
     ctx.cleanUp();
   }));
 

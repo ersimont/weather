@@ -4,6 +4,7 @@ import { LocationIqService } from "app/misc-services/location-iq.service";
 import { GpsCoords, Location } from "app/state/location";
 import { WeatherState } from "app/state/weather-state";
 import { WeatherStore } from "app/state/weather-store";
+import { EventTrackingService } from "app/to-replace/event-tracking/event-tracking.service";
 import { mapValues } from "micro-dash";
 import { StoreObject } from "ng-app-state";
 import { combineLatest, Observable, of, Subject } from "rxjs";
@@ -38,7 +39,7 @@ export class LocationService extends InjectableSuperclass {
 
   constructor(
     private browserService: BrowserService,
-    // private eventTrackingService: EventTrackingService,
+    private eventTrackingService: EventTrackingService,
     private locationIqService: LocationIqService,
     private store: WeatherStore,
   ) {
@@ -58,8 +59,7 @@ export class LocationService extends InjectableSuperclass {
       batch("customLocation").set({ search, gpsCoords: undefined });
       clearForecasts(batch);
     });
-    // TODO: add this
-    // this.eventTrackingService.track("set_custom_search", "change_location");
+    this.eventTrackingService.track("change_custom_search", "change_location");
   }
 
   getLocation() {
