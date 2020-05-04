@@ -5,45 +5,50 @@ import { EventTrackingConfig } from "app/to-replace/event-tracking/event-trackin
 
 @Injectable({ providedIn: "root" })
 export class EventTrackingService {
-  constructor(config: EventTrackingConfig) {
-    initQueue(config);
+  constructor(private config: EventTrackingConfig) {
+    this.initQueue();
     if (config.gaProperty) {
-      loadGoogleScript();
+      this.loadGoogleScript();
     }
   }
 
   // TODO: switch to sendEvent, sendPageview, sendSocial, sendTiming
   // https://developers.google.com/analytics/devguides/collection/analyticsjs/command-queue-reference#parameters_3
   track(name: string, category: string) {
-    ga("send", "event", { eventAction: name, eventCategory: category });
+    this.send({ hitType: "event", eventAction: name, eventCategory: category });
   }
 
   sendError(message: string) {
-    ga("send", "exception", { exDescription: message });
+    this.send({ hitType: "exception", exDescription: message });
   }
-}
 
-function initQueue(config: EventTrackingConfig) {
-  (window as any).ga = (...args: any[]) => {
-    if (config.log) {
-      console.log("[analytics]", JSON.stringify(args));
+  private send(fieldsObject: UniversalAnalytics.FieldsObject) {
+    if (this.config.log) {
+      console.log("[analytics]", fieldsObject);
     }
-    ga.q.push(args);
-  };
-  ga.q = [];
-  ga.l = +new Date();
+    ga("send", fieldsObject);
+  }
 
-  ga("set", "anonymizeIp", true);
-  ga("create", config.gaProperty, { storage: "none" });
-}
+  private initQueue() {
+    (window as any).ga = (...args: any[]) => {
+      ga.q.push(args);
+    };
+    ga.q = [];
+    ga.l = +new Date();
 
-function loadGoogleScript() {
-  (window as any).GoogleAnalyticsObject = "ga";
+    ga("create", this.config.gaProperty, { storage: "none" });
+    ga("set", "anonymizeIp", true); // must come after `create`
+    ga("send", "pageview");
+  }
 
-  const gaTag = document.createElement("script");
-  gaTag.async = true;
-  gaTag.src = "//www.google-analytics.com/analytics.js";
+  private loadGoogleScript() {
+    (window as any).GoogleAnalyticsObject = "ga";
 
-  const firstScriptTag = document.querySelector("script");
-  firstScriptTag!.parentNode!.insertBefore(gaTag, firstScriptTag);
+    const gaTag = document.createElement("script");
+    gaTag.async = true;
+    gaTag.src = "//www.google-analytics.com/analytics.js";
+
+    const firstScriptTag = document.querySelector("script");
+    firstScriptTag!.parentNode!.insertBefore(gaTag, firstScriptTag);
+  }
 }
