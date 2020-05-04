@@ -4,19 +4,30 @@ import { LocationOptionsComponentHarness } from "app/options/location-options/lo
 import { LocationIqServiceHarness } from "app/misc-services/location-iq.service.harness";
 import { WeatherGovHarness } from "app/sources/weather-gov/weather-gov.harness";
 import { WeatherGraphContext } from "app/test-helpers/weather-graph-context";
+import { EventTrackingServiceHarness } from "app/to-replace/event-tracking/event-tracking.service.harness";
 
 describe("AppComponent", () => {
   WeatherGraphContext.setUp();
 
   let ctx: WeatherGraphContext;
   let app: AppComponentHarness;
+  let events: EventTrackingServiceHarness;
   let gov: WeatherGovHarness;
   let iq: LocationIqServiceHarness;
   let location: LocationOptionsComponentHarness;
   beforeEach(() => {
     ctx = new WeatherGraphContext();
-    ({ app, gov, iq, location } = ctx.harnesses);
+    ({ app, events, gov, iq, location } = ctx.harnesses);
   });
+
+  it("tracks an event when opening the privacy policy", fakeAsync(() => {
+    ctx.init();
+
+    app.openPrivacyPolicy();
+    expect(events.getEventCount("click_privacy_policy")).toBe(1);
+
+    ctx.cleanUp();
+  }));
 
   describe("when location access is denied", () => {
     beforeEach(() => {

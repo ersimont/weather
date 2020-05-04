@@ -6,6 +6,11 @@ export class AppComponentHarness extends AbstractComponentHarness {
     super();
   }
 
+  openPrivacyPolicy() {
+    this.ensureSidenavExpanded();
+    this.ctx.click(this.getPrivacyPolicyButton());
+  }
+
   ensureSidenavExpanded() {
     if (!this.isSidenavExpanded()) {
       this.ctx.click(this.getMenuButton());
@@ -16,11 +21,15 @@ export class AppComponentHarness extends AbstractComponentHarness {
     return this.getSidenav().classList.contains("mat-drawer-opened");
   }
 
-  getMenuButton() {
+  private getMenuButton() {
     return this.get<HTMLElement>("button", { text: "menu" });
   }
 
-  getSidenav() {
+  private getPrivacyPolicyButton() {
+    return this.get<HTMLButtonElement>("button", { text: "Privacy Policy" });
+  }
+
+  private getSidenav() {
     return this.get<HTMLElement>("mat-sidenav");
   }
 

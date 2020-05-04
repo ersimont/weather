@@ -4,31 +4,13 @@
   </button>
   <h1>{{ title$ | async }}</h1>
 
-  <button
-    mat-icon-button
-    (click)="setRange(1)"
-    sTrack="click"
-    eventName="click_day"
-    eventCategory="set_range"
-  >
+  <button mat-icon-button (click)="setRange(1, 'click_day')">
     <mat-icon svgIcon="day"></mat-icon>
   </button>
-  <button
-    mat-icon-button
-    (click)="setRange(3)"
-    sTrack="click"
-    eventName="click_three_days"
-    eventCategory="set_range"
-  >
+  <button mat-icon-button (click)="setRange(3, 'click_three_days')">
     <mat-icon svgIcon="three-days"></mat-icon>
   </button>
-  <button
-    mat-icon-button
-    (click)="setRange(7)"
-    sTrack="click"
-    eventName="click_week"
-    eventCategory="set_range"
-  >
+  <button mat-icon-button (click)="setRange(7, 'click_week')">
     <mat-icon svgIcon="week"></mat-icon>
   </button>
 
@@ -43,10 +25,7 @@
     <div class="sidenav-content">
       <app-options></app-options>
       <mat-action-list>
-        <button
-          mat-list-item
-          (click)="showPrivacyPolicy()"
-        >
+        <button mat-list-item (click)="showPrivacyPolicy()">
           Privacy Policy
         </button>
       </mat-action-list>

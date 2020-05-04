@@ -17,6 +17,7 @@ import { WeatherGov } from "app/sources/weather-gov/weather-gov";
 import { WeatherUnlocked } from "app/sources/weather-unlocked/weather-unlocked";
 import { SourceId } from "app/state/source";
 import { WeatherStore } from "app/state/weather-store";
+import { EventTrackingService } from "app/to-replace/event-tracking/event-tracking.service";
 import { HttpStatusService } from "app/to-replace/http-status.service";
 import { WhatsNewService } from "app/upgrade/whats-new.service";
 import { Observable } from "rxjs";
@@ -33,9 +34,11 @@ export class AppComponent extends DirectiveSuperclass {
   title$: Observable<string>;
   @ViewChild("sidenav", { read: MatSidenav }) private sidenav!: MatSidenav;
 
+  // TODO: fix linting here
   constructor(
     climacell: Climacell,
     domSanitizer: DomSanitizer,
+    private eventTrackingService: EventTrackingService,
     public httpStatusService: HttpStatusService,
     injector: Injector,
     private locationService: LocationService,
@@ -62,12 +65,14 @@ export class AppComponent extends DirectiveSuperclass {
     this.openSideNavWhenAsked();
   }
 
-  setRange(days: number) {
+  setRange(days: number, action: string) {
     this.store.dispatch(new SetRangeAction(days));
+    this.eventTrackingService.track(action, "set_range");
   }
 
   showPrivacyPolicy() {
     this.matDialog.open(PrivacyPolicyComponent);
+    this.eventTrackingService.track("click_privacy_policy", "navigate");
   }
 
   private openSideNavWhenAsked() {

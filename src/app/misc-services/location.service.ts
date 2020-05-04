@@ -38,6 +38,7 @@ export class LocationService extends InjectableSuperclass {
 
   constructor(
     private browserService: BrowserService,
+    // private eventTrackingService: EventTrackingService,
     private locationIqService: LocationIqService,
     private store: WeatherStore,
   ) {
@@ -57,6 +58,8 @@ export class LocationService extends InjectableSuperclass {
       batch("customLocation").set({ search, gpsCoords: undefined });
       clearForecasts(batch);
     });
+    // TODO: add this
+    // this.eventTrackingService.track("set_custom_search", "change_location");
   }
 
   getLocation() {
