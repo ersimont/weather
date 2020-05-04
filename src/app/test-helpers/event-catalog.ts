@@ -19,7 +19,7 @@ export const eventCatalog = {
     "change_speed",
     "change_percentage",
   ],
-  navigate: ["click_privacy_policy"],
+  navigate: ["click_privacy_policy", "show_whats_new"],
   refresh: [
     "init_refresh",
     "location_change_refresh",

@@ -1,32 +1,40 @@
 import { matches } from "micro-dash";
 
+export interface TrackingEvent {
+  name: string;
+  category: string;
+  interaction: boolean;
+}
+
 export class EventTrackingServiceHarness {
-  getErrorDescriptions() {
+  getEvents(match: Partial<TrackingEvent>) {
+    return getEvents().filter(matches(match));
+  }
+
+  getErrors() {
     return ga.q
       .filter(matches(["send", { hitType: "exception" }]))
       .map((event) => event[1].exDescription);
   }
 
   validateEvents(catalog: Record<string, string[]>) {
-    for (const { eventCategory, eventAction } of getEvents()) {
-      if (!catalog[eventCategory]) {
-        throw new Error(`${eventCategory} is not a valid event category`);
+    for (const { name, category } of getEvents()) {
+      if (!catalog[category]) {
+        throw new Error(`${category} is not a valid event category`);
       }
-      if (!catalog[eventCategory].includes(eventAction)) {
-        throw new Error(
-          `${eventAction} is not a valid event within ${eventCategory}`,
-        );
+      if (!catalog[category].includes(name)) {
+        throw new Error(`${name} is not a valid event within ${category}`);
       }
     }
-  }
-
-  getEventCount(name: string) {
-    return getEvents().filter(matches({ eventAction: name })).length;
   }
 }
 
 function getEvents() {
   return ga.q
     .filter(matches(["send", { hitType: "event" }]))
-    .map((command) => command[1]);
+    .map((command) => ({
+      name: command[1].eventAction,
+      category: command[1].eventCategory,
+      interaction: !command[1].nonInteraction,
+    }));
 }

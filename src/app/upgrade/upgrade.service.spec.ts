@@ -17,7 +17,7 @@ describe("UpgradeService", () => {
     ({ iq, store, whatsNew } = ctx.harnesses);
   });
 
-  it("is working with the correct current version", () => {
+  it("defaults to a fresh, up-to-date state", () => {
     // This is a sanity check that will not catch any change that should necessitate an upgrade. But it will catch some.
     expect(JSON.stringify(ctx.initialState))
       .withContext(

@@ -14,19 +14,24 @@ export class EventTrackingService {
 
   // TODO: switch to sendEvent, sendPageview, sendSocial, sendTiming
   // https://developers.google.com/analytics/devguides/collection/analyticsjs/command-queue-reference#parameters_3
-  track(name: string, category: string) {
-    this.send({ hitType: "event", eventAction: name, eventCategory: category });
+  track(name: string, category: string, interaction = true) {
+    this.send({
+      hitType: "event",
+      eventAction: name,
+      eventCategory: category,
+      nonInteraction: !interaction,
+    });
   }
 
   sendError(message: string) {
     this.send({ hitType: "exception", exDescription: message });
   }
 
-  private send(fieldsObject: UniversalAnalytics.FieldsObject) {
+  private send(fields: UniversalAnalytics.FieldsObject) {
     if (this.config.log) {
-      console.log("[analytics]", fieldsObject);
+      console.log("[analytics]", fields);
     }
-    ga("send", fieldsObject);
+    ga("send", fields);
   }
 
   private initQueue() {

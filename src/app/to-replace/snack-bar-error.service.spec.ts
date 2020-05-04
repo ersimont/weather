@@ -54,7 +54,7 @@ describe("SnackBarErrorService", () => {
   describe("with a PresentableError", () => {
     it("does not track an event", () => {
       errorHandler.handleError(new PresentableError("nope"));
-      expect(events.getErrorDescriptions()).toEqual([]);
+      expect(events.getErrors()).toEqual([]);
     });
   });
 
@@ -63,28 +63,28 @@ describe("SnackBarErrorService", () => {
       errorHandler.handleError(
         generateUncaughtPromiseError(new PresentableError("still no")),
       );
-      expect(events.getErrorDescriptions()).toEqual([]);
+      expect(events.getErrors()).toEqual([]);
     });
   });
 
   describe("with an Error object that is not presentable", () => {
     it("tracks an event", () => {
       errorHandler.handleError(new Error("present"));
-      expect(events.getErrorDescriptions()).toEqual(["present"]);
+      expect(events.getErrors()).toEqual(["present"]);
     });
   });
 
   describe("with an 'unhandled rejection' that is not presentable", () => {
     it("tracks an event", () => {
       errorHandler.handleError(generateUncaughtPromiseError("track me"));
-      expect(events.getErrorDescriptions()).toEqual(["track me"]);
+      expect(events.getErrors()).toEqual(["track me"]);
     });
   });
 
   describe("with a string", () => {
     it("tracks an event", () => {
       errorHandler.handleError("I'm a string");
-      expect(events.getErrorDescriptions()).toEqual(["I'm a string"]);
+      expect(events.getErrors()).toEqual(["I'm a string"]);
     });
   });
 });

@@ -24,7 +24,7 @@ describe("AppComponent", () => {
     ctx.init();
 
     app.openPrivacyPolicy();
-    expect(events.getEventCount("click_privacy_policy")).toBe(1);
+    expect(events.getEvents({ name: "click_privacy_policy" }).length).toBe(1);
 
     ctx.cleanUp();
   }));
