@@ -96,19 +96,14 @@ export class WeatherGraphContext extends AngularContext {
     this.mocks.browser.hasFocus.and.returnValue(true);
   }
 
-  init({ flushDefaultRequests = true } = {}) {
-    localStorage.setItem("weather", JSON.stringify(this.initialState));
+  init({ flushDefaultRequests = true, useInitialState = true } = {}) {
+    if (useInitialState) {
+      localStorage.setItem("weather", JSON.stringify(this.initialState));
+    } else {
+      localStorage.removeItem("weather");
+    }
 
-    this.spectator = WeatherGraphContext.createHost(hostTemplate, {
-      hostProps: this.screenSize,
-      providers: [
-        { provide: BrowserService, useValue: this.mocks.browser },
-        { provide: MatSnackBar, useValue: this.mocks.snackBar },
-      ],
-    });
-    this.fixture = this.spectator.fixture;
-    this.rootElement = this.spectator.hostElement;
-    this.debugElement = this.spectator.debugElement;
+    this.createComponent();
 
     this.tick();
     if (flushDefaultRequests) {
@@ -135,5 +130,18 @@ export class WeatherGraphContext extends AngularContext {
 
   expectNoErrorShown() {
     expect(this.mocks.snackBar.open).not.toHaveBeenCalled();
+  }
+
+  private createComponent() {
+    this.spectator = WeatherGraphContext.createHost(hostTemplate, {
+      hostProps: this.screenSize,
+      providers: [
+        { provide: BrowserService, useValue: this.mocks.browser },
+        { provide: MatSnackBar, useValue: this.mocks.snackBar },
+      ],
+    });
+    this.fixture = this.spectator.fixture;
+    this.rootElement = this.spectator.hostElement;
+    this.debugElement = this.spectator.debugElement;
   }
 }

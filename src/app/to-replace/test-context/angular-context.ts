@@ -9,8 +9,19 @@ import {
 } from "@angular/core/testing";
 import { DomContext } from "app/to-replace/test-context/dom-context";
 
+const initialStyles = new Set(Array.from(document.querySelectorAll("style")));
+
 export abstract class AngularContext extends DomContext {
   protected fixture?: ComponentFixture<unknown>;
+
+  constructor() {
+    super();
+    for (const style of Array.from(document.querySelectorAll("style"))) {
+      if (!initialStyles.has(style)) {
+        style.remove();
+      }
+    }
+  }
 
   cleanUp() {
     this.injectIfProvided(HttpTestingController)?.verify();

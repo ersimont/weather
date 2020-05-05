@@ -21,7 +21,11 @@ export class WhatsNewService {
       this.matDialog.open(WhatsNewComponent, {
         data: { features: this.features },
       });
-      this.eventTrackingService.track("show_whats_new", "navigate", false);
+      this.eventTrackingService.track(
+        "show_whats_new",
+        "initialization",
+        false,
+      );
     }
   }
 }

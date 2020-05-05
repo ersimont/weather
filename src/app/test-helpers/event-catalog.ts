@@ -19,9 +19,10 @@ export const eventCatalog = {
     "change_speed",
     "change_percentage",
   ],
-  navigate: ["click_privacy_policy", "show_whats_new"],
+  initialization: ["initialize_fresh_state", "show_whats_new"],
+  navigate: ["click_privacy_policy"],
   refresh: [
-    "init_refresh",
+    "init_refresh", // TODO: remove
     "location_change_refresh",
     "interval_refresh",
     "focus_refresh",

@@ -59,7 +59,7 @@ import { PrivacyPolicyComponent } from "./misc-components/privacy-policy/privacy
       enabled: environment.name === "production",
     }),
     StoreModule.forRoot({}, { metaReducers: [ngAppStateReducer] }),
-    environment.name === "production" ? [] : StoreDevtoolsModule.instrument(),
+    environment.name === "development" ? StoreDevtoolsModule.instrument() : [],
   ],
   providers: [provideErrorHandler(), provideHttpStatus()],
   bootstrap: [AppComponent],
