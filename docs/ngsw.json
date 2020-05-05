@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1588718781149,
+  "timestamp": 1588720209840,
   "index": "/weather/index.html",
   "assetGroups": [
     {
@@ -26,6 +26,7 @@
       "installMode": "lazy",
       "updateMode": "prefetch",
       "urls": [
+        "/weather/assets/icons/icon-1200x630.png",
         "/weather/assets/icons/icon-128x128.png",
         "/weather/assets/icons/icon-144x144.png",
         "/weather/assets/icons/icon-152x152.png",
@@ -42,6 +43,7 @@
   ],
   "dataGroups": [],
   "hashTable": {
+    "/weather/assets/icons/icon-1200x630.png": "9dfa7f50f3a41c63debbda0991c1817c6f415a4f",
     "/weather/assets/icons/icon-128x128.png": "bc3000ce6a0c85ca4d1ac7818a36278cd011cd25",
     "/weather/assets/icons/icon-144x144.png": "2221d90d912f677f63151a932ad4df17b4d36ebb",
     "/weather/assets/icons/icon-152x152.png": "0e24afd116cc2201f60117df949cdfe8362ceb8a",
@@ -53,7 +55,7 @@
     "/weather/assets/icons/icon-96x96.png": "d897a564f4f2e6635701403952a4cdc52ede9bfd",
     "/weather/assets/icons/icon.svg": "8b59eaccdd96476e31721757d6ee8931f91d87b5",
     "/weather/favicon.ico": "f5ceb58c067a06254eb3b7cbde64e758b23d9b9d",
-    "/weather/index.html": "b4f6087e122795198e1e2d6cb78f41a3fd0fb72d",
+    "/weather/index.html": "cecc060853ceffa10428af62f5ee9da2adadf28a",
     "/weather/main-es2015.6382c3ac51b6a5ff7233.js": "f6c6e26bcbdabaad69f4fc1bee7c41802dcc2de2",
     "/weather/main-es5.6382c3ac51b6a5ff7233.js": "105f06253104b48dd2d600ee9167400cebc9b305",
     "/weather/manifest.webmanifest": "03a1b781d0fa4e9faa4ff08667df420b3c6962d6",
