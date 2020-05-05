@@ -77,7 +77,7 @@ export abstract class AbstractSource extends InjectableSuperclass {
 
   private handleError(error: any, fallback: SourceId | undefined) {
     if (error !== notAvailableHere) {
-      this.errorService.handleError(error);
+      this.errorService.handleError(error, { logUnexpected: false });
     } else if (fallback && this.store.state().allowSourceFallback) {
       this.store.batch((batch) => {
         this.sourceStore("show").inBatch(batch).set(false);

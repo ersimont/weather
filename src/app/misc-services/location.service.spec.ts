@@ -102,5 +102,20 @@ describe("LocationService", () => {
 
       ctx.cleanUp();
     }));
+
+    it("works after an error in a forward lookup", fakeAsync(() => {
+      ctx.initialState.useCurrentLocation = false;
+      ctx.initialState.customLocation.search = "not a place";
+      ctx.init({ flushDefaultRequests: false });
+      iq.expectForward("not a place").flushError();
+
+      refresh.trigger();
+      iq.expectForward("not a place").flush([
+        iq.buildLocationResponse({ lat: "5", lon: "6" }),
+      ]);
+      gov.flushFixture([5, 6]);
+
+      ctx.cleanUp();
+    }));
   });
 });

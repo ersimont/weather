@@ -5,9 +5,10 @@ import { GpsCoords, Location } from "app/state/location";
 import { WeatherState } from "app/state/weather-state";
 import { WeatherStore } from "app/state/weather-store";
 import { EventTrackingService } from "app/to-replace/event-tracking/event-tracking.service";
+import { SnackBarErrorService } from "app/to-replace/snack-bar-error.service";
 import { mapValues } from "micro-dash";
 import { StoreObject } from "ng-app-state";
-import { combineLatest, Observable, of, Subject } from "rxjs";
+import { combineLatest, NEVER, Observable, of, Subject } from "rxjs";
 import { fromPromise } from "rxjs/internal-compatibility";
 import {
   catchError,
@@ -39,6 +40,7 @@ export class LocationService extends InjectableSuperclass {
 
   constructor(
     private browserService: BrowserService,
+    private errorService: SnackBarErrorService,
     private eventTrackingService: EventTrackingService,
     private locationIqService: LocationIqService,
     private store: WeatherStore,
@@ -108,6 +110,12 @@ export class LocationService extends InjectableSuperclass {
 
   private refreshCustomLocation(search: string) {
     return this.locationIqService.forward(search).pipe(
+      // TODO: see if the retryAfter() calls can use this instead
+      catchError((error) => {
+        // TODO: this needs show a relevant message on 404
+        this.errorService.handleError(error, { logUnexpected: false });
+        return NEVER;
+      }),
       tap((partialLocation) => {
         this.store("customLocation").assign(partialLocation);
       }),

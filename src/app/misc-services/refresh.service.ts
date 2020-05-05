@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { BrowserService } from "app/misc-services/browser.service";
 import { LocationService } from "app/misc-services/location.service";
-import { SnackBarErrorService } from "app/to-replace/snack-bar-error.service";
 import { EventTrackingService } from "app/to-replace/event-tracking/event-tracking.service";
+import { SnackBarErrorService } from "app/to-replace/snack-bar-error.service";
 import { fromEvent, interval, merge, Observable, of } from "rxjs";
 import { filter, mapTo, switchMap, tap, throttleTime } from "rxjs/operators";
 import { convertTime } from "s-js-utils";

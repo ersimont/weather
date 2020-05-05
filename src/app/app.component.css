@@ -1,18 +1,7 @@
-:host,
-app-graph {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
-
 :host {
+  height: 100%;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
-  grid-template-columns: minmax(0, 1fr);
-  justify-items: stretch;
-  align-items: stretch;
 }
 
 mat-toolbar {
@@ -33,11 +22,16 @@ mat-progress-bar {
 }
 
 .sidenav-content {
-  display: grid;
   min-height: 100%;
+  display: grid;
   grid-template-rows: 1fr auto;
 }
 
 app-graph {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   margin: 16px;
 }
