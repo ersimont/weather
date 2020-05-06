@@ -1,16 +1,16 @@
-import { Injector } from "@angular/core";
-import { LocationService } from "app/misc-services/location.service";
-import { RefreshService } from "app/misc-services/refresh.service";
-import { Forecast } from "app/state/forecast";
-import { GpsCoords } from "app/state/location";
-import { Source, SourceId } from "app/state/source";
-import { WeatherStore } from "app/state/weather-store";
-import { SnackBarErrorService } from "app/to-replace/snack-bar-error.service";
-import { retryAfter } from "app/to-replace/retry-after";
-import { StoreObject } from "ng-app-state";
-import { combineLatest, Observable, of } from "rxjs";
-import { skip, switchMap, switchMapTo, tap } from "rxjs/operators";
-import { InjectableSuperclass } from "s-ng-utils";
+import { Injector } from '@angular/core';
+import { LocationService } from 'app/misc-services/location.service';
+import { RefreshService } from 'app/misc-services/refresh.service';
+import { Forecast } from 'app/state/forecast';
+import { GpsCoords } from 'app/state/location';
+import { Source, SourceId } from 'app/state/source';
+import { WeatherStore } from 'app/state/weather-store';
+import { SnackBarErrorService } from 'app/to-replace/snack-bar-error.service';
+import { retryAfter } from 'app/to-replace/retry-after';
+import { StoreObject } from 'ng-app-state';
+import { combineLatest, Observable, of } from 'rxjs';
+import { skip, switchMap, switchMapTo, tap } from 'rxjs/operators';
+import { InjectableSuperclass } from 's-ng-utils';
 
 export const notAvailableHere = Symbol();
 
@@ -28,19 +28,19 @@ export abstract class AbstractSource extends InjectableSuperclass {
     this.refreshService = injector.get(RefreshService);
     this.store = injector.get(WeatherStore);
 
-    this.sourceStore = this.store("sources")(this.key);
+    this.sourceStore = this.store('sources')(this.key);
   }
 
   initialize(fallback?: SourceId) {
     this.subscribeTo(
       this.refreshService.refresh$.pipe(
-        switchMapTo(this.sourceStore("show").$),
+        switchMapTo(this.sourceStore('show').$),
         switchMap((show) => this.refresh(show)),
         retryAfter((error) => {
           this.handleError(error, fallback);
           return combineLatest([
             this.refreshService.refresh$,
-            this.sourceStore("show").$,
+            this.sourceStore('show').$,
           ]).pipe(skip(1));
         }),
       ),
@@ -56,7 +56,7 @@ export abstract class AbstractSource extends InjectableSuperclass {
 
     const gpsCoords = this.locationService.getLocation().gpsCoords;
     if (!gpsCoords) {
-      this.errorService.show("Location not available");
+      this.errorService.show('Location not available');
       this.setForecast({});
       return of(0);
     }
@@ -70,8 +70,8 @@ export abstract class AbstractSource extends InjectableSuperclass {
 
   private setForecast(forecast: Forecast) {
     this.store.batch((batch) => {
-      batch("allowSourceFallback").set(false);
-      this.sourceStore("forecast").inBatch(batch).set(forecast);
+      batch('allowSourceFallback').set(false);
+      this.sourceStore('forecast').inBatch(batch).set(forecast);
     });
   }
 
@@ -80,8 +80,8 @@ export abstract class AbstractSource extends InjectableSuperclass {
       this.errorService.handleError(error, { logUnexpected: false });
     } else if (fallback && this.store.state().allowSourceFallback) {
       this.store.batch((batch) => {
-        this.sourceStore("show").inBatch(batch).set(false);
-        batch("sources")(fallback)("show").set(true);
+        this.sourceStore('show').inBatch(batch).set(false);
+        batch('sources')(fallback)('show').set(true);
       });
     } else {
       const label = this.sourceStore.state().label;

@@ -1,15 +1,15 @@
-import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { GpsCoords, Location } from "app/state/location";
-import { map } from "rxjs/operators";
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { GpsCoords, Location } from 'app/state/location';
+import { map } from 'rxjs/operators';
 
 const baseUrl =
-  "https://us-central1-proxic.cloudfunctions.net/api/location-iq/v1";
+  'https://us-central1-proxic.cloudfunctions.net/api/location-iq/v1';
 const commonParams = {
-  format: "json",
-  addressdetails: "1",
-  normalizecity: "1",
-  statecode: "1",
+  format: 'json',
+  addressdetails: '1',
+  normalizecity: '1',
+  statecode: '1',
 };
 
 export type ForwardResponse = LocationResponse[];
@@ -34,14 +34,14 @@ interface Address {
   country_code?: string;
 }
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export class LocationIqService {
   constructor(private httpClient: HttpClient) {}
 
   forward(search: string) {
     return this.httpClient
       .get<ForwardResponse>(`${baseUrl}/search.php`, {
-        params: { ...commonParams, q: search, limit: "1" },
+        params: { ...commonParams, q: search, limit: '1' },
       })
       .pipe(map((response) => parseLocation(response[0])));
   }
@@ -84,5 +84,5 @@ function parseCity(address: Address) {
     address.country_code?.toUpperCase(),
   ].find(Boolean);
 
-  return [city, state].filter(Boolean).join(", ");
+  return [city, state].filter(Boolean).join(', ');
 }

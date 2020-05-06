@@ -1,15 +1,15 @@
-import { HttpClient } from "@angular/common/http";
-import { Injectable, Injector } from "@angular/core";
-import { AbstractSource } from "app/sources/abstract-source";
-import { Condition } from "app/state/condition";
-import { Forecast } from "app/state/forecast";
-import { GpsCoords } from "app/state/location";
-import { SourceId } from "app/state/source";
-import { round } from "micro-dash";
-import { map } from "rxjs/operators";
+import { HttpClient } from '@angular/common/http';
+import { Injectable, Injector } from '@angular/core';
+import { AbstractSource } from 'app/sources/abstract-source';
+import { Condition } from 'app/state/condition';
+import { Forecast } from 'app/state/forecast';
+import { GpsCoords } from 'app/state/location';
+import { SourceId } from 'app/state/source';
+import { round } from 'micro-dash';
+import { map } from 'rxjs/operators';
 
 const endpoint =
-  "https://us-central1-proxic.cloudfunctions.net/api/weather-unlocked/api/forecast";
+  'https://us-central1-proxic.cloudfunctions.net/api/weather-unlocked/api/forecast';
 
 export interface ForecastResponse {
   Days: Array<{ Timeframes: Timeframe[] }>;
@@ -26,7 +26,7 @@ export interface Timeframe {
   windspd_kts: number;
 }
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export class WeatherUnlocked extends AbstractSource {
   constructor(private httpClient: HttpClient, injector: Injector) {
     super(SourceId.WEATHER_UNLOCKED, injector);
@@ -48,7 +48,7 @@ export class WeatherUnlocked extends AbstractSource {
 
   private fetchRes(gpsCoords: GpsCoords) {
     return this.httpClient.get<ForecastResponse>(
-      `${endpoint}/${gpsCoords.map((coord) => round(coord, 3)).join(",")}`,
+      `${endpoint}/${gpsCoords.map((coord) => round(coord, 3)).join(',')}`,
     );
   }
 }
@@ -65,7 +65,7 @@ function addConditions(forecast: Forecast, timeframe: Timeframe) {
 }
 
 function parseTimestamp(timeframe: Timeframe) {
-  const [day, month, year] = timeframe.utcdate.split("/");
+  const [day, month, year] = timeframe.utcdate.split('/');
   const hour = timeframe.utctime / 100;
   return Date.UTC(+year, +month - 1, +day, hour);
 }

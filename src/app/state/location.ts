@@ -1,7 +1,7 @@
 export type GpsCoords = [number, number];
 
 export class Location {
-  search = "";
+  search = '';
   gpsCoords?: GpsCoords;
   city?: string;
 }

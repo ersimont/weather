@@ -1,37 +1,37 @@
-import { OverlayContainer } from "@angular/cdk/overlay";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { DebugElement } from "@angular/core";
-import { ComponentFixtureAutoDetect } from "@angular/core/testing";
-import { MatSnackBar } from "@angular/material/snack-bar";
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { DebugElement } from '@angular/core';
+import { ComponentFixtureAutoDetect } from '@angular/core/testing';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   createHostFactory,
   createSpyObject,
   HostComponent,
   SpectatorHost,
   SpectatorHostFactory,
-} from "@ngneat/spectator";
-import { AppComponent } from "app/app.component";
-import { AppComponentHarness } from "app/app.component.harness";
-import { AppModule } from "app/app.module";
-import { GraphComponentHarness } from "app/misc-components/graph/graph.component.harness";
-import { BrowserService } from "app/misc-services/browser.service";
-import { LocationIqServiceHarness } from "app/misc-services/location-iq.service.harness";
-import { RefreshServiceHarness } from "app/misc-services/refresh.service.harness";
-import { LocationOptionsComponentHarness } from "app/options/location-options/location-options.component.harness";
-import { SourceOptionsComponentHarness } from "app/options/source-options/source-options.component.harness";
-import { UnitOptionsComponentHarness } from "app/options/unit-options/unit-options.component.harness";
-import { ClimacellHarness } from "app/sources/climacell/climacell.harness";
-import { WeatherGovHarness } from "app/sources/weather-gov/weather-gov.harness";
-import { WeatherUnlockedHarness } from "app/sources/weather-unlocked/weather-unlocked.harness";
-import { GpsCoords } from "app/state/location";
-import { WeatherState } from "app/state/weather-state";
-import { WeatherStateHarness } from "app/state/weather-state.harness";
-import { WeatherStoreHarness } from "app/state/weather-store.harness";
-import { eventCatalog } from "app/test-helpers/event-catalog";
-import { EventTrackingServiceHarness } from "app/to-replace/event-tracking/event-tracking.service.harness";
-import { AngularContext } from "app/to-replace/test-context/angular-context";
-import { WhatsNewComponentHarness } from "app/upgrade/whats-new.component.harness";
-import { expectSingleCallAndReset } from "s-ng-dev-utils";
+} from '@ngneat/spectator';
+import { AppComponent } from 'app/app.component';
+import { AppComponentHarness } from 'app/app.component.harness';
+import { AppModule } from 'app/app.module';
+import { GraphComponentHarness } from 'app/misc-components/graph/graph.component.harness';
+import { BrowserService } from 'app/misc-services/browser.service';
+import { LocationIqServiceHarness } from 'app/misc-services/location-iq.service.harness';
+import { RefreshServiceHarness } from 'app/misc-services/refresh.service.harness';
+import { LocationOptionsComponentHarness } from 'app/options/location-options/location-options.component.harness';
+import { SourceOptionsComponentHarness } from 'app/options/source-options/source-options.component.harness';
+import { UnitOptionsComponentHarness } from 'app/options/unit-options/unit-options.component.harness';
+import { ClimacellHarness } from 'app/sources/climacell/climacell.harness';
+import { WeatherGovHarness } from 'app/sources/weather-gov/weather-gov.harness';
+import { WeatherUnlockedHarness } from 'app/sources/weather-unlocked/weather-unlocked.harness';
+import { GpsCoords } from 'app/state/location';
+import { WeatherState } from 'app/state/weather-state';
+import { WeatherStateHarness } from 'app/state/weather-state.harness';
+import { WeatherStoreHarness } from 'app/state/weather-store.harness';
+import { eventCatalog } from 'app/test-helpers/event-catalog';
+import { EventTrackingServiceHarness } from 'app/to-replace/event-tracking/event-tracking.service.harness';
+import { AngularContext } from 'app/to-replace/test-context/angular-context';
+import { WhatsNewComponentHarness } from 'app/upgrade/whats-new.component.harness';
+import { expectSingleCallAndReset } from 's-ng-dev-utils';
 
 const hostTemplate = `
   <div
@@ -98,9 +98,9 @@ export class WeatherGraphContext extends AngularContext {
 
   init({ flushDefaultRequests = true, useInitialState = true } = {}) {
     if (useInitialState) {
-      localStorage.setItem("weather", JSON.stringify(this.initialState));
+      localStorage.setItem('weather', JSON.stringify(this.initialState));
     } else {
-      localStorage.removeItem("weather");
+      localStorage.removeItem('weather');
     }
 
     this.createComponent();
@@ -123,7 +123,7 @@ export class WeatherGraphContext extends AngularContext {
   }
 
   expectErrorShown(message: string) {
-    expectSingleCallAndReset(this.mocks.snackBar.open, message, "OK", {
+    expectSingleCallAndReset(this.mocks.snackBar.open, message, 'OK', {
       duration: 5000,
     });
   }

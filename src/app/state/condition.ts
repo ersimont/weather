@@ -1,13 +1,13 @@
-import { mapToObject } from "s-js-utils";
-import { PercentageUnit, UnitInfo, unitInfo, Units } from "./units";
+import { mapToObject } from 's-js-utils';
+import { PercentageUnit, UnitInfo, unitInfo, Units } from './units';
 
 export enum Condition {
-  TEMP = "temp",
-  FEEL = "feel",
-  DEW = "dew",
-  AMOUNT = "amount",
-  CLOUD = "cloud",
-  WIND = "wind",
+  TEMP = 'temp',
+  FEEL = 'feel',
+  DEW = 'dew',
+  AMOUNT = 'amount',
+  CLOUD = 'cloud',
+  WIND = 'wind',
 }
 
 export type Conditions = Partial<Record<Condition, number>>;
@@ -26,32 +26,32 @@ export interface ConditionInfo {
 
 export const conditionInfo: Record<Condition, ConditionInfo> = {
   [Condition.AMOUNT]: {
-    label: "Precip Amount",
+    label: 'Precip Amount',
     color: colors[Condition.AMOUNT],
     getUnitInfo: (units: Units) => unitInfo[units.amount],
   },
   [Condition.CLOUD]: {
-    label: "Cloud Cover",
+    label: 'Cloud Cover',
     color: colors[Condition.CLOUD],
     getUnitInfo: () => unitInfo[PercentageUnit.PCT],
   },
   [Condition.DEW]: {
-    label: "Dew Point",
+    label: 'Dew Point',
     color: colors[Condition.DEW],
     getUnitInfo: (units: Units) => unitInfo[units.temp],
   },
   [Condition.FEEL]: {
-    label: "Feel",
+    label: 'Feel',
     color: colors[Condition.FEEL],
     getUnitInfo: (units: Units) => unitInfo[units.temp],
   },
   [Condition.TEMP]: {
-    label: "Temp",
+    label: 'Temp',
     color: colors[Condition.TEMP],
     getUnitInfo: (units: Units) => unitInfo[units.temp],
   },
   [Condition.WIND]: {
-    label: "Wind",
+    label: 'Wind',
     color: colors[Condition.WIND],
     getUnitInfo: (units: Units) => unitInfo[units.speed],
   },

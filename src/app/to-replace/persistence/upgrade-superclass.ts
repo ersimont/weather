@@ -1,4 +1,4 @@
-import { assert } from "s-js-utils";
+import { assert } from 's-js-utils';
 
 export interface Upgradable {
   _version: number;
@@ -21,7 +21,7 @@ export class UpgradeSuperclass<T extends Upgradable> {
   }
 
   protected upgradeFromLegacy(_upgradable: T, _targetVersion: number) {
-    throw new Error("Unable to upgrade from legacy version");
+    throw new Error('Unable to upgrade from legacy version');
   }
 
   protected onError(error: any) {

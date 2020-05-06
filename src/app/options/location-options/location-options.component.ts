@@ -3,19 +3,19 @@ import {
   Component,
   Injector,
   ViewChild,
-} from "@angular/core";
-import { MatExpansionPanel } from "@angular/material/expansion";
-import { LocationService } from "app/misc-services/location.service";
-import { WeatherState } from "app/state/weather-state";
-import { WeatherStore } from "app/state/weather-store";
-import { EventTrackingService } from "app/to-replace/event-tracking/event-tracking.service";
-import { StoreObject } from "ng-app-state";
-import { DirectiveSuperclass } from "s-ng-utils";
+} from '@angular/core';
+import { MatExpansionPanel } from '@angular/material/expansion';
+import { LocationService } from 'app/misc-services/location.service';
+import { WeatherState } from 'app/state/weather-state';
+import { WeatherStore } from 'app/state/weather-store';
+import { EventTrackingService } from 'app/to-replace/event-tracking/event-tracking.service';
+import { StoreObject } from 'ng-app-state';
+import { DirectiveSuperclass } from 's-ng-utils';
 
 @Component({
-  selector: "app-location-options",
-  templateUrl: "./location-options.component.html",
-  styleUrls: ["./location-options.component.css"],
+  selector: 'app-location-options',
+  templateUrl: './location-options.component.html',
+  styleUrls: ['./location-options.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LocationOptionsComponent extends DirectiveSuperclass {
@@ -23,7 +23,7 @@ export class LocationOptionsComponent extends DirectiveSuperclass {
   useCurrentLocation: boolean;
   customSearch: string;
 
-  @ViewChild("panel", { read: MatExpansionPanel })
+  @ViewChild('panel', { read: MatExpansionPanel })
   private panel!: MatExpansionPanel;
 
   constructor(
@@ -45,8 +45,8 @@ export class LocationOptionsComponent extends DirectiveSuperclass {
   setUseCurrentLocation(value: boolean) {
     this.locationService.setUseCurrentLocation(value);
     this.eventTrackingService.track(
-      "change_current_selection",
-      "change_location",
+      'change_current_selection',
+      'change_location',
     );
   }
 }

@@ -1,14 +1,14 @@
 import {
   GridResponse,
   PointResponse,
-} from "app/sources/weather-gov/weather-gov";
+} from 'app/sources/weather-gov/weather-gov';
 import {
   gridResponse,
   notAvailableResponse,
   pointResponse,
-} from "app/sources/weather-gov/weather-gov.fixtures";
-import { STestRequest } from "app/test-helpers/s-test-request";
-import { WeatherGraphContext } from "app/test-helpers/weather-graph-context";
+} from 'app/sources/weather-gov/weather-gov.fixtures';
+import { STestRequest } from 'app/test-helpers/s-test-request';
+import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 
 export class WeatherGovHarness {
   constructor(private ctx: WeatherGraphContext) {}
@@ -25,19 +25,19 @@ export class WeatherGovHarness {
 
   expectPoints(gpsCoordinates = this.ctx.currentLocation) {
     return new STestRequest<PointResponse>(
-      "GET",
-      `https://api.weather.gov/points/${gpsCoordinates.join(",")}`,
+      'GET',
+      `https://api.weather.gov/points/${gpsCoordinates.join(',')}`,
       this.ctx,
     );
   }
 
   expectGrid(url = pointResponse.properties.forecastGridData) {
-    return new STestRequest<GridResponse>("GET", url, this.ctx);
+    return new STestRequest<GridResponse>('GET', url, this.ctx);
   }
 
   expectNotAvailableError() {
     this.ctx.expectErrorShown(
-      "Weather.gov is not available here. Try another source (in the settings).",
+      'Weather.gov is not available here. Try another source (in the settings).',
     );
   }
 }

@@ -1,9 +1,9 @@
-import { Injectable } from "@angular/core";
-import { MatDialog } from "@angular/material/dialog";
-import { EventTrackingService } from "app/to-replace/event-tracking/event-tracking.service";
-import { WhatsNewComponent } from "app/upgrade/whats-new.component";
+import { Injectable } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { EventTrackingService } from 'app/to-replace/event-tracking/event-tracking.service';
+import { WhatsNewComponent } from 'app/upgrade/whats-new.component';
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export class WhatsNewService {
   private features: string[] = [];
 
@@ -22,8 +22,8 @@ export class WhatsNewService {
         data: { features: this.features },
       });
       this.eventTrackingService.track(
-        "show_whats_new",
-        "initialization",
+        'show_whats_new',
+        'initialization',
         false,
       );
     }

@@ -1,16 +1,16 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient } from '@angular/common/http';
 import {
   HttpClientTestingModule,
   HttpTestingController,
-} from "@angular/common/http/testing";
-import { fakeAsync, TestBed, tick } from "@angular/core/testing";
+} from '@angular/common/http/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import {
   HttpStatusService,
   provideHttpStatus,
-} from "app/to-replace/http-status.service";
-import { expectSingleCallAndReset } from "s-ng-dev-utils";
+} from 'app/to-replace/http-status.service';
+import { expectSingleCallAndReset } from 's-ng-dev-utils';
 
-describe("HttpStatusService", () => {
+describe('HttpStatusService', () => {
   let http: HttpClient;
   let status: HttpStatusService;
   let httpController: HttpTestingController;
@@ -30,37 +30,37 @@ describe("HttpStatusService", () => {
     expectSingleCallAndReset(inFlight, false);
   });
 
-  it("tracks in flight requests", () => {
-    http.get("url1").subscribe();
+  it('tracks in flight requests', () => {
+    http.get('url1').subscribe();
     expectSingleCallAndReset(inFlight, true);
-    http.get("url2").subscribe();
-    http.get("url3").subscribe();
+    http.get('url2').subscribe();
+    http.get('url3').subscribe();
 
-    httpController.expectOne("url1").flush("");
-    httpController.expectOne("url3").flush("");
+    httpController.expectOne('url1').flush('');
+    httpController.expectOne('url3').flush('');
     expect(inFlight).not.toHaveBeenCalled();
-    httpController.expectOne("url2").flush("");
+    httpController.expectOne('url2').flush('');
     expectSingleCallAndReset(inFlight, false);
 
-    http.get("url4").subscribe();
+    http.get('url4').subscribe();
     expectSingleCallAndReset(inFlight, true);
-    httpController.expectOne("url4").flush("");
+    httpController.expectOne('url4').flush('');
     expectSingleCallAndReset(inFlight, false);
   });
 
   // TODO: fails intermittently
-  it("handles errors", () => {
-    http.get("url1").subscribe();
+  it('handles errors', () => {
+    http.get('url1').subscribe();
     expectSingleCallAndReset(inFlight, true);
-    httpController.expectOne("url1").flush("", { status: 500, statusText: "" });
+    httpController.expectOne('url1').flush('', { status: 500, statusText: '' });
     expectSingleCallAndReset(inFlight, false);
   });
 
-  it("handles cancelled requests (with a timeout workaround :( )", fakeAsync(() => {
-    const subscription = http.get("url1").subscribe();
+  it('handles cancelled requests (with a timeout workaround :( )', fakeAsync(() => {
+    const subscription = http.get('url1').subscribe();
     expectSingleCallAndReset(inFlight, true);
     subscription.unsubscribe();
-    expect(httpController.expectOne("url1").cancelled).toBe(true);
+    expect(httpController.expectOne('url1').cancelled).toBe(true);
 
     tick(10000); // boooo workaround
 

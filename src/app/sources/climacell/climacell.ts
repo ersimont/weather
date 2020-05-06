@@ -1,15 +1,15 @@
-import { HttpClient } from "@angular/common/http";
-import { Injectable, Injector } from "@angular/core";
-import { AbstractSource } from "app/sources/abstract-source";
-import { Condition } from "app/state/condition";
-import { Forecast } from "app/state/forecast";
-import { GpsCoords } from "app/state/location";
-import { SourceId } from "app/state/source";
-import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
+import { HttpClient } from '@angular/common/http';
+import { Injectable, Injector } from '@angular/core';
+import { AbstractSource } from 'app/sources/abstract-source';
+import { Condition } from 'app/state/condition';
+import { Forecast } from 'app/state/forecast';
+import { GpsCoords } from 'app/state/location';
+import { SourceId } from 'app/state/source';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 const endpoint =
-  "https://us-central1-proxic.cloudfunctions.net/api/climacell/v3/weather/forecast/hourly";
+  'https://us-central1-proxic.cloudfunctions.net/api/climacell/v3/weather/forecast/hourly';
 
 export type HourlyResponse = Timeframe[];
 
@@ -23,7 +23,7 @@ export interface Timeframe {
   wind_speed: { value: number };
 }
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export class Climacell extends AbstractSource {
   constructor(private httpClient: HttpClient, injector: Injector) {
     super(SourceId.CLIMACELL, injector);
@@ -39,7 +39,7 @@ export class Climacell extends AbstractSource {
         lat: gpsCoords[0].toString(),
         lon: gpsCoords[1].toString(),
         fields:
-          "cloud_cover,dewpoint,feels_like,precipitation,temp,wind_speed:knots",
+          'cloud_cover,dewpoint,feels_like,precipitation,temp,wind_speed:knots',
       },
     });
   }

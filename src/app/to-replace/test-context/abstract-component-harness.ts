@@ -9,7 +9,7 @@ export abstract class AbstractComponentHarness {
   protected get<T extends Element>(selector: string, options: GetOptions = {}) {
     const all = this.getAll<T>(selector, options);
     expect(all.length)
-      .withContext(".get() must match exactly 1 element")
+      .withContext('.get() must match exactly 1 element')
       .toBe(1);
     return all[0];
   }

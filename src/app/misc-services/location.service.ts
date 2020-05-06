@@ -1,15 +1,15 @@
-import { Injectable } from "@angular/core";
-import { BrowserService } from "app/misc-services/browser.service";
-import { LocationIqService } from "app/misc-services/location-iq.service";
-import { GpsCoords, Location } from "app/state/location";
-import { WeatherState } from "app/state/weather-state";
-import { WeatherStore } from "app/state/weather-store";
-import { EventTrackingService } from "app/to-replace/event-tracking/event-tracking.service";
-import { SnackBarErrorService } from "app/to-replace/snack-bar-error.service";
-import { mapValues } from "micro-dash";
-import { StoreObject } from "ng-app-state";
-import { combineLatest, NEVER, Observable, of, Subject } from "rxjs";
-import { fromPromise } from "rxjs/internal-compatibility";
+import { Injectable } from '@angular/core';
+import { BrowserService } from 'app/misc-services/browser.service';
+import { LocationIqService } from 'app/misc-services/location-iq.service';
+import { GpsCoords, Location } from 'app/state/location';
+import { WeatherState } from 'app/state/weather-state';
+import { WeatherStore } from 'app/state/weather-store';
+import { EventTrackingService } from 'app/to-replace/event-tracking/event-tracking.service';
+import { SnackBarErrorService } from 'app/to-replace/snack-bar-error.service';
+import { mapValues } from 'micro-dash';
+import { StoreObject } from 'ng-app-state';
+import { combineLatest, NEVER, Observable, of, Subject } from 'rxjs';
+import { fromPromise } from 'rxjs/internal-compatibility';
 import {
   catchError,
   distinctUntilChanged,
@@ -17,20 +17,20 @@ import {
   skip,
   switchMap,
   tap,
-} from "rxjs/operators";
-import { InjectableSuperclass } from "s-ng-utils";
+} from 'rxjs/operators';
+import { InjectableSuperclass } from 's-ng-utils';
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export class LocationService extends InjectableSuperclass {
-  $ = this.store("useCurrentLocation").$.pipe(
+  $ = this.store('useCurrentLocation').$.pipe(
     switchMap(
       (useCurrent) =>
-        this.store(useCurrent ? "currentLocation" : "customLocation").$,
+        this.store(useCurrent ? 'currentLocation' : 'customLocation').$,
     ),
   );
   refreshableChange$: Observable<unknown> = combineLatest([
-    this.store("customLocation")("search").$,
-    this.store("useCurrentLocation").$,
+    this.store('customLocation')('search').$,
+    this.store('useCurrentLocation').$,
   ]).pipe(
     map(([search, useCurrent]) => searchToActuallyUse(search, useCurrent)),
     distinctUntilChanged(),
@@ -50,18 +50,18 @@ export class LocationService extends InjectableSuperclass {
 
   setUseCurrentLocation(value: boolean) {
     this.store.batch((batch) => {
-      batch("useCurrentLocation").set(value);
+      batch('useCurrentLocation').set(value);
       clearForecasts(batch);
     });
   }
 
   setCustomSearch(search: string) {
     this.store.batch((batch) => {
-      batch("useCurrentLocation").set(false);
-      batch("customLocation").set({ search, gpsCoords: undefined });
+      batch('useCurrentLocation').set(false);
+      batch('customLocation').set({ search, gpsCoords: undefined });
       clearForecasts(batch);
     });
-    this.eventTrackingService.track("change_custom_search", "change_location");
+    this.eventTrackingService.track('change_custom_search', 'change_location');
   }
 
   getLocation() {
@@ -91,18 +91,18 @@ export class LocationService extends InjectableSuperclass {
       switchMap((gpsCoords: GpsCoords) =>
         this.locationIqService.reverse(gpsCoords).pipe(
           tap((res) => {
-            this.store("currentLocation").assign({ gpsCoords, city: res.city });
+            this.store('currentLocation').assign({ gpsCoords, city: res.city });
           }),
           catchError((err) => {
             console.error(err);
-            this.store("currentLocation")("city").delete();
+            this.store('currentLocation')('city').delete();
             return of(0);
           }),
         ),
       ),
       catchError((err) => {
         console.error(err);
-        this.store("currentLocation").set(new Location());
+        this.store('currentLocation').set(new Location());
         return of(0);
       }),
     );
@@ -117,18 +117,18 @@ export class LocationService extends InjectableSuperclass {
         return NEVER;
       }),
       tap((partialLocation) => {
-        this.store("customLocation").assign(partialLocation);
+        this.store('customLocation').assign(partialLocation);
       }),
     );
   }
 }
 
 function searchToActuallyUse(search: string, useCurrent: boolean) {
-  return useCurrent ? "" : search;
+  return useCurrent ? '' : search;
 }
 
 function clearForecasts(batch: StoreObject<WeatherState>) {
-  batch("sources").setUsing((sources) =>
+  batch('sources').setUsing((sources) =>
     mapValues(sources, (source) => ({ ...source, forecast: {} })),
   );
 }

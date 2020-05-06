@@ -1,27 +1,27 @@
-import { DecimalPipe } from "@angular/common";
-import { identity } from "micro-dash";
+import { DecimalPipe } from '@angular/common';
+import { identity } from 'micro-dash';
 
-export type UnitType = "temp" | "amount" | "speed" | "percentage";
+export type UnitType = 'temp' | 'amount' | 'speed' | 'percentage';
 export type UnitEnum = TempUnit | AmountUnit | SpeedUnit | PercentageUnit;
 
 export enum TempUnit {
-  F = "°F",
-  C = "°C",
+  F = '°F',
+  C = '°C',
 }
 
 export enum AmountUnit {
-  IN = "in",
-  MM = "mm",
+  IN = 'in',
+  MM = 'mm',
 }
 
 export enum SpeedUnit {
-  MPH = "mph",
-  KTS = "kts",
-  KPH = "km/h",
+  MPH = 'mph',
+  KTS = 'kts',
+  KPH = 'km/h',
 }
 
 export enum PercentageUnit {
-  PCT = "%",
+  PCT = '%',
 }
 
 export class Units {

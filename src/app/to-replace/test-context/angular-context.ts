@@ -1,22 +1,22 @@
-import { HttpTestingController } from "@angular/common/http/testing";
-import { AbstractType, InjectFlags, InjectionToken, Type } from "@angular/core";
+import { HttpTestingController } from '@angular/common/http/testing';
+import { AbstractType, InjectFlags, InjectionToken, Type } from '@angular/core';
 import {
   ComponentFixture,
   discardPeriodicTasks,
   flushMicrotasks,
   TestBed,
   tick,
-} from "@angular/core/testing";
-import { DomContext } from "app/to-replace/test-context/dom-context";
+} from '@angular/core/testing';
+import { DomContext } from 'app/to-replace/test-context/dom-context';
 
-const initialStyles = new Set(Array.from(document.querySelectorAll("style")));
+const initialStyles = new Set(Array.from(document.querySelectorAll('style')));
 
 export abstract class AngularContext extends DomContext {
   protected fixture?: ComponentFixture<unknown>;
 
   constructor() {
     super();
-    for (const style of Array.from(document.querySelectorAll("style"))) {
+    for (const style of Array.from(document.querySelectorAll('style'))) {
       if (!initialStyles.has(style)) {
         style.remove();
       }

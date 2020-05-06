@@ -1,13 +1,13 @@
 export class DomContext {
   click(element: HTMLElement) {
-    this.dispatchMouseEvent("mousedown", element);
-    this.dispatchMouseEvent("mouseup", element);
-    this.dispatchMouseEvent("click", element);
+    this.dispatchMouseEvent('mousedown', element);
+    this.dispatchMouseEvent('mouseup', element);
+    this.dispatchMouseEvent('click', element);
   }
 
   setText(text: string, element: HTMLInputElement) {
     element.value = text;
-    this.dispatch(new InputEvent("input", { bubbles: true }), element);
+    this.dispatch(new InputEvent('input', { bubbles: true }), element);
   }
 
   // pressKey(key: string) {
@@ -39,7 +39,7 @@ export class DomContext {
   }
 
   dispatchChange(element: Element, init: EventInit = {}) {
-    this.dispatch(new Event("change", { ...init, bubbles: true }), element);
+    this.dispatch(new Event('change', { ...init, bubbles: true }), element);
   }
 
   dispatch(event: Event, element: Element) {

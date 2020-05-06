@@ -1,12 +1,12 @@
-import { Directive, ElementRef, Injector, Input } from "@angular/core";
-import { EventTrackingService } from "app/to-replace/event-tracking/event-tracking.service";
-import { fromEvent } from "rxjs";
-import { switchMap } from "rxjs/operators";
-import { DirectiveSuperclass } from "s-ng-utils";
+import { Directive, ElementRef, Injector, Input } from '@angular/core';
+import { EventTrackingService } from 'app/to-replace/event-tracking/event-tracking.service';
+import { fromEvent } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { DirectiveSuperclass } from 's-ng-utils';
 
-@Directive({ selector: "[sTrack]" })
+@Directive({ selector: '[sTrack]' })
 export class STrackDirective extends DirectiveSuperclass {
-  @Input("sTrack") event!: string;
+  @Input('sTrack') event!: string;
   @Input() eventName!: string;
   @Input() eventCategory!: string;
 
@@ -17,7 +17,7 @@ export class STrackDirective extends DirectiveSuperclass {
   ) {
     super(injector);
     this.subscribeTo(
-      this.getInput$("event").pipe(
+      this.getInput$('event').pipe(
         switchMap((event) => fromEvent(elementRef.nativeElement, event)),
       ),
       () => {

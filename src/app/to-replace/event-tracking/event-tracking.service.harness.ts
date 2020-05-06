@@ -1,4 +1,4 @@
-import { matches } from "micro-dash";
+import { matches } from 'micro-dash';
 
 export interface TrackingEvent {
   name: string;
@@ -13,7 +13,7 @@ export class EventTrackingServiceHarness {
 
   getErrors() {
     return ga.q
-      .filter(matches(["send", { hitType: "exception" }]))
+      .filter(matches(['send', { hitType: 'exception' }]))
       .map((event) => event[1].exDescription);
   }
 
@@ -31,7 +31,7 @@ export class EventTrackingServiceHarness {
 
 function getEvents() {
   return ga.q
-    .filter(matches(["send", { hitType: "event" }]))
+    .filter(matches(['send', { hitType: 'event' }]))
     .map((command) => ({
       name: command[1].eventAction,
       category: command[1].eventCategory,

@@ -1,15 +1,15 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { SourceId } from "app/state/source";
-import { WeatherState } from "app/state/weather-state";
-import { WeatherStore } from "app/state/weather-store";
-import { EventTrackingService } from "app/to-replace/event-tracking/event-tracking.service";
-import { values } from "micro-dash";
-import { StoreObject } from "ng-app-state";
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { SourceId } from 'app/state/source';
+import { WeatherState } from 'app/state/weather-state';
+import { WeatherStore } from 'app/state/weather-store';
+import { EventTrackingService } from 'app/to-replace/event-tracking/event-tracking.service';
+import { values } from 'micro-dash';
+import { StoreObject } from 'ng-app-state';
 
 @Component({
-  selector: "app-source-options",
-  templateUrl: "./source-options.component.html",
-  styleUrls: ["./source-options.component.css"],
+  selector: 'app-source-options',
+  templateUrl: './source-options.component.html',
+  styleUrls: ['./source-options.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SourceOptionsComponent {
@@ -24,6 +24,6 @@ export class SourceOptionsComponent {
   }
 
   trackChange(sourceId: SourceId) {
-    this.eventTrackingService.track(`change_${sourceId}`, "change_source");
+    this.eventTrackingService.track(`change_${sourceId}`, 'change_source');
   }
 }

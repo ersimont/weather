@@ -1,14 +1,14 @@
-import { HttpRequest } from "@angular/common/http";
+import { HttpRequest } from '@angular/common/http';
 import {
   HttpTestingController,
   TestRequest,
-} from "@angular/common/http/testing";
-import { AngularContext } from "app/to-replace/test-context/angular-context";
-import { isEqual } from "micro-dash";
-import { mapAsKeys } from "s-js-utils";
+} from '@angular/common/http/testing';
+import { AngularContext } from 'app/to-replace/test-context/angular-context';
+import { isEqual } from 'micro-dash';
+import { mapAsKeys } from 's-js-utils';
 
-export type MethodType = "DELETE" | "GET" | "POST" | "PUT";
-export type BodyType = Parameters<TestRequest["flush"]>[0];
+export type MethodType = 'DELETE' | 'GET' | 'POST' | 'PUT';
+export type BodyType = Parameters<TestRequest['flush']>[0];
 export interface STestRequestOptions {
   params?: Record<string, string>;
   body?: BodyType;
@@ -54,7 +54,7 @@ export class STestRequest<T> {
     this.ctx.tick();
   }
 
-  flushError(status = 500, { statusText = "", body = null as BodyType } = {}) {
+  flushError(status = 500, { statusText = '', body = null as BodyType } = {}) {
     this.req.flush(body, { status, statusText });
     this.ctx.tick();
   }

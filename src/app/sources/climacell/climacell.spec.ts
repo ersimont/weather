@@ -1,11 +1,11 @@
-import { fakeAsync } from "@angular/core/testing";
-import { SourceOptionsComponentHarness } from "app/options/source-options/source-options.component.harness";
-import { LocationIqServiceHarness } from "app/misc-services/location-iq.service.harness";
-import { ClimacellHarness } from "app/sources/climacell/climacell.harness";
-import { SourceId } from "app/state/source";
-import { WeatherGraphContext } from "app/test-helpers/weather-graph-context";
+import { fakeAsync } from '@angular/core/testing';
+import { SourceOptionsComponentHarness } from 'app/options/source-options/source-options.component.harness';
+import { LocationIqServiceHarness } from 'app/misc-services/location-iq.service.harness';
+import { ClimacellHarness } from 'app/sources/climacell/climacell.harness';
+import { SourceId } from 'app/state/source';
+import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 
-describe("Climacell", () => {
+describe('Climacell', () => {
   WeatherGraphContext.setUp();
 
   let ctx: WeatherGraphContext;
@@ -19,14 +19,14 @@ describe("Climacell", () => {
     ctx.harnesses.state.setShowing(SourceId.CLIMACELL);
   });
 
-  it("can cancel its request", fakeAsync(() => {
+  it('can cancel its request', fakeAsync(() => {
     ctx.init({ flushDefaultRequests: false });
 
     iq.flushReverse();
-    sources.toggle("Climacell");
+    sources.toggle('Climacell');
     expect(climacell.expectHourly().isCancelled()).toBe(true);
 
-    sources.toggle("Climacell");
+    sources.toggle('Climacell');
     climacell.flushDefault();
 
     ctx.cleanUp();

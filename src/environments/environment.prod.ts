@@ -1,4 +1,4 @@
 export const environment = {
-  name: "production",
-  gaProperty: "UA-148865234-1",
+  name: 'production',
+  gaProperty: 'UA-148865234-1',
 };

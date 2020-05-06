@@ -1,6 +1,6 @@
-import { SourceId } from "app/state/source";
-import { WeatherGraphContext } from "app/test-helpers/weather-graph-context";
-import { forOwn } from "micro-dash";
+import { SourceId } from 'app/state/source';
+import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
+import { forOwn } from 'micro-dash';
 
 export class WeatherStateHarness {
   constructor(private ctx: WeatherGraphContext) {}
