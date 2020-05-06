@@ -110,7 +110,6 @@ export class LocationService extends InjectableSuperclass {
 
   private refreshCustomLocation(search: string) {
     return this.locationIqService.forward(search).pipe(
-      // TODO: see if the retryAfter() calls can use this instead
       catchError((error) => {
         // TODO: this needs show a relevant message on 404
         this.errorService.handleError(error, { logUnexpected: false });

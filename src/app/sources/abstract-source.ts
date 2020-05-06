@@ -6,10 +6,9 @@ import { GpsCoords } from 'app/state/location';
 import { Source, SourceId } from 'app/state/source';
 import { WeatherStore } from 'app/state/weather-store';
 import { SnackBarErrorService } from 'app/to-replace/snack-bar-error.service';
-import { retryAfter } from 'app/to-replace/retry-after';
 import { StoreObject } from 'ng-app-state';
-import { combineLatest, Observable, of } from 'rxjs';
-import { skip, switchMap, switchMapTo, tap } from 'rxjs/operators';
+import { NEVER, Observable, of } from 'rxjs';
+import { catchError, switchMap, switchMapTo, tap } from 'rxjs/operators';
 import { InjectableSuperclass } from 's-ng-utils';
 
 export const notAvailableHere = Symbol();
@@ -36,12 +35,9 @@ export abstract class AbstractSource extends InjectableSuperclass {
       this.refreshService.refresh$.pipe(
         switchMapTo(this.sourceStore('show').$),
         switchMap((show) => this.refresh(show)),
-        retryAfter((error) => {
+        catchError((error) => {
           this.handleError(error, fallback);
-          return combineLatest([
-            this.refreshService.refresh$,
-            this.sourceStore('show').$,
-          ]).pipe(skip(1));
+          return NEVER;
         }),
       ),
     );
@@ -56,6 +52,7 @@ export abstract class AbstractSource extends InjectableSuperclass {
 
     const gpsCoords = this.locationService.getLocation().gpsCoords;
     if (!gpsCoords) {
+      // TODO: move further up the refresh chain? Or comment on why it's here. Maybe something to do with clearing out the graph from old values.
       this.errorService.show('Location not available');
       this.setForecast({});
       return of(0);
