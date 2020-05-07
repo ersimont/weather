@@ -8,7 +8,7 @@ import { WeatherStore } from 'app/state/weather-store';
 import { SnackBarErrorService } from 'app/to-replace/snack-bar-error.service';
 import { StoreObject } from 'ng-app-state';
 import { NEVER, Observable } from 'rxjs';
-import { catchError, switchMap, switchMapTo, tap } from 'rxjs/operators';
+import { catchError, switchMap, switchMapTo } from 'rxjs/operators';
 import { assert } from 's-js-utils';
 import { InjectableSuperclass } from 's-ng-utils';
 
@@ -37,6 +37,7 @@ export abstract class AbstractSource extends InjectableSuperclass {
         switchMapTo(this.sourceStore('show').$),
         switchMap((show) => this.refresh(show, fallback)),
       ),
+      this.setForecast,
     );
   }
 
@@ -54,17 +55,7 @@ export abstract class AbstractSource extends InjectableSuperclass {
         this.handleError(error, fallback);
         return NEVER;
       }),
-      tap((forecast) => {
-        this.setForecast(forecast);
-      }),
     );
-  }
-
-  private setForecast(forecast: Forecast) {
-    this.store.batch((batch) => {
-      batch('allowSourceFallback').set(false);
-      this.sourceStore('forecast').inBatch(batch).set(forecast);
-    });
   }
 
   private handleError(error: any, fallback: SourceId | undefined) {
@@ -81,5 +72,12 @@ export abstract class AbstractSource extends InjectableSuperclass {
         `${label} is not available here. Try another source (in the settings).`,
       );
     }
+  }
+
+  private setForecast(forecast: Forecast) {
+    this.store.batch((batch) => {
+      batch('allowSourceFallback').set(false);
+      this.sourceStore('forecast').inBatch(batch).set(forecast);
+    });
   }
 }
