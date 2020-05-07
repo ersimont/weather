@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { EventTrackingConfig } from 'app/to-replace/event-tracking/event-tracking-config';
 
-// This was previously written to use the newer library "gtag.js" instead of the older "analyticsjs", but there was no official otp-out of cookies in the newer version. People on the internet report being able to configure it with the setting `client_storage: none`, but that was undocumented. It literally loaded `analytics.js` behind the scenes anyway, so I reverted to the old library.
+// This was previously written to use the newer library "gtag.js" instead of the older "analyticsjs", but there was no official otp-out of cookies in the newer version. People on the internet report being able to configure it with the setting `client_storage: none`, but that was undocumented. It loaded `analytics.js` behind the scenes anyway, so I reverted to that "old" library.
 
 @Injectable({ providedIn: 'root' })
 export class EventTrackingService {

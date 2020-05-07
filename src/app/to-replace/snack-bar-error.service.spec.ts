@@ -39,7 +39,7 @@ describe('SnackBarErrorService', () => {
   beforeEach(() => {
     ctx = new Context();
     errorHandler = ctx.inject(ErrorHandler);
-    events = new EventTrackingServiceHarness();
+    events = new EventTrackingServiceHarness({});
   });
 
   function generateUncaughtPromiseError(error: any) {

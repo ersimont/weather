@@ -60,7 +60,7 @@ export class WeatherGraphContext extends AngularContext {
   harnesses = {
     app: new AppComponentHarness(this),
     climacell: new ClimacellHarness(this),
-    events: new EventTrackingServiceHarness(),
+    events: new EventTrackingServiceHarness(eventCatalog),
     gov: new WeatherGovHarness(this),
     graph: new GraphComponentHarness(this),
     iq: new LocationIqServiceHarness(this),
@@ -112,11 +112,13 @@ export class WeatherGraphContext extends AngularContext {
     }
   }
 
+  // TODO: call this in a finally? Or a wrapped fn?
   cleanUp() {
     super.cleanUp();
 
-    this.harnesses.events.validateEvents(eventCatalog);
+    this.harnesses.events.validateEvents();
 
+    // TODO: this about this.fixture.destroy. Maybe that invalidates the fakeasync checks?
     // https://github.com/angular/components/blob/b612fc42895e47377b353e773d4ba3517c0991e1/src/material/dialog/dialog.spec.ts#L80
     this.inject(OverlayContainer).ngOnDestroy();
     this.tick(1); // the CDK queues this up for its FocusManager

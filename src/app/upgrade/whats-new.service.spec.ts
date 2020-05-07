@@ -17,7 +17,7 @@ describe('WhatsNewService', () => {
     ctx.initialState = v6Default as any;
     ctx.init();
 
-    const tracked = events.getEvents({ name: 'show_whats_new' });
+    const tracked = events.getEvents('show_whats_new');
     expect(tracked.length).toBe(1);
     expect(tracked[0].interaction).toBe(false);
 

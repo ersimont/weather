@@ -1,4 +1,4 @@
-import { matches } from 'micro-dash';
+import { flatten, matches, values } from 'micro-dash';
 
 export interface TrackingEvent {
   name: string;
@@ -7,8 +7,19 @@ export interface TrackingEvent {
 }
 
 export class EventTrackingServiceHarness {
-  getEvents(match: Partial<TrackingEvent>) {
-    return getEvents().filter(matches(match));
+  private validNames: Set<string>;
+
+  constructor(private catalog: Record<string, string[]>) {
+    this.validNames = new Set(flatten(values(catalog)));
+  }
+
+  getEvents(name: string) {
+    if (!this.validNames.has(name)) {
+      // TODO: figure out how to avoid throwing errors in harnesses
+      throw new Error(`${name} is not a valid event`);
+    }
+
+    return getEvents().filter(matches({ name }));
   }
 
   getErrors() {
@@ -17,12 +28,12 @@ export class EventTrackingServiceHarness {
       .map((event) => event[1].exDescription);
   }
 
-  validateEvents(catalog: Record<string, string[]>) {
+  validateEvents() {
     for (const { name, category } of getEvents()) {
-      if (!catalog[category]) {
+      if (!this.catalog[category]) {
         throw new Error(`${category} is not a valid event category`);
       }
-      if (!catalog[category].includes(name)) {
+      if (!this.catalog[category].includes(name)) {
         throw new Error(`${name} is not a valid event within ${category}`);
       }
     }

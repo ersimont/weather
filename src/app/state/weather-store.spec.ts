@@ -31,18 +31,17 @@ describe('WeatherStore', () => {
   it('tracks an event when initializing a fresh state', fakeAsync(() => {
     ctx.init({ useInitialState: false });
 
-    const tracked = events.getEvents({ name: 'initialize_fresh_state' });
+    const tracked = events.getEvents('initialize_fresh_state');
     expect(tracked.length).toBe(1);
     expect(tracked[0].interaction).toBe(false);
 
     ctx.cleanUp();
   }));
 
-  it('does not track an event if there saved state', fakeAsync(() => {
+  it('does not track an event if there is saved state', fakeAsync(() => {
     ctx.init({ useInitialState: true });
 
-    // TODO: somehow verify this against the catalog
-    expect(events.getEvents({ name: 'initialize_fresh_state' }).length).toBe(0);
+    expect(events.getEvents('initialize_fresh_state').length).toBe(0);
 
     ctx.cleanUp();
   }));

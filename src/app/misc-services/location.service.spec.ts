@@ -43,10 +43,8 @@ describe('LocationService', () => {
     ctx.init();
 
     location.setCustomLocation('Neverland');
-    expect(events.getEvents({ name: 'change_custom_search' }).length).toBe(1);
-    expect(events.getEvents({ name: 'change_current_selection' }).length).toBe(
-      0,
-    );
+    expect(events.getEvents('change_custom_search').length).toBe(1);
+    expect(events.getEvents('change_current_selection').length).toBe(0);
 
     iq.expectForward('Neverland');
     ctx.cleanUp();
