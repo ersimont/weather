@@ -2,7 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BrowserService } from 'app/misc-services/browser.service';
 import { LocationIqService } from 'app/misc-services/location-iq.service';
-import { GpsCoords, Location } from 'app/state/location';
+import { GpsCoords } from 'app/state/location';
 import { WeatherState } from 'app/state/weather-state';
 import { WeatherStore } from 'app/state/weather-store';
 import { EventTrackingService } from 'app/to-replace/event-tracking/event-tracking.service';
@@ -94,17 +94,12 @@ export class LocationService extends InjectableSuperclass {
           tap((res) => {
             this.store('currentLocation').assign({ gpsCoords, city: res.city });
           }),
-          catchError((err) => {
-            console.error(err);
-            this.store('currentLocation')('city').delete();
-            return of(0);
-          }),
         ),
       ),
-      catchError((err) => {
-        console.error(err);
-        this.store('currentLocation').set(new Location());
-        return of(0);
+      catchError((error) => {
+        this.store('currentLocation')('city').delete();
+        this.handleNotFound(error);
+        return NEVER;
       }),
     );
   }
@@ -113,9 +108,7 @@ export class LocationService extends InjectableSuperclass {
     return this.locationIqService.forward(search).pipe(
       catchError((error) => {
         if (error instanceof HttpErrorResponse && error.status === 404) {
-          this.errorService.show(
-            'Location not found. Please try a different search.',
-          );
+          this.handleNotFound(error);
         } else {
           this.errorService.handleError(error, { logUnexpected: false });
         }
@@ -125,6 +118,12 @@ export class LocationService extends InjectableSuperclass {
         this.store('customLocation').assign(partialLocation);
       }),
     );
+  }
+
+  private handleNotFound(error: any) {
+    console.error(error);
+    this.errorService.show('Location not found');
+    this.askForLocation$.next();
   }
 }
 

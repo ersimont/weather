@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { BrowserService } from 'app/misc-services/browser.service';
 import { LocationService } from 'app/misc-services/location.service';
 import { EventTrackingService } from 'app/to-replace/event-tracking/event-tracking.service';
-import { SnackBarErrorService } from 'app/to-replace/snack-bar-error.service';
 import { fromEvent, interval, merge, Observable, of } from 'rxjs';
 import { filter, mapTo, switchMap, tap, throttleTime } from 'rxjs/operators';
 import { convertTime } from 's-js-utils';
@@ -16,7 +15,6 @@ export class RefreshService {
 
   constructor(
     private browserService: BrowserService,
-    private errorService: SnackBarErrorService,
     private eventTrackingService: EventTrackingService,
     private locationService: LocationService,
   ) {
@@ -24,22 +22,6 @@ export class RefreshService {
   }
 
   private buildRefresh$() {
-    return this.buildSource$().pipe(
-      switchMap(() => this.locationService.refresh()),
-      filter(() => {
-        if (this.locationService.getLocation().gpsCoords) {
-          return true;
-        }
-
-        this.errorService.show('Location not found');
-        this.locationService.askForLocation$.next();
-        return false;
-      }),
-      cache(),
-    );
-  }
-
-  private buildSource$() {
     const init$ = of('init_refresh');
     const location$ = this.locationService.refreshableChange$.pipe(
       mapTo('location_change_refresh'),
@@ -57,6 +39,8 @@ export class RefreshService {
       tap((source) => {
         this.eventTrackingService.track(source, 'refresh');
       }),
+      switchMap(() => this.locationService.refresh()),
+      cache(),
     );
   }
 }

@@ -2,6 +2,8 @@ import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 import { AbstractComponentHarness } from 'app/to-replace/test-context/abstract-component-harness';
 
 export class AppComponentHarness extends AbstractComponentHarness {
+  defaultTitle = 'Weather Graph';
+
   constructor(private ctx: WeatherGraphContext) {
     super();
   }
@@ -19,6 +21,10 @@ export class AppComponentHarness extends AbstractComponentHarness {
 
   isSidenavExpanded() {
     return this.getSidenav().classList.contains('mat-drawer-opened');
+  }
+
+  getTitle() {
+    return this.get('h1').textContent;
   }
 
   private getMenuButton() {
