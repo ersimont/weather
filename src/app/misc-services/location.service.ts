@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BrowserService } from 'app/misc-services/browser.service';
 import { LocationIqService } from 'app/misc-services/location-iq.service';
@@ -111,8 +112,13 @@ export class LocationService extends InjectableSuperclass {
   private refreshCustomLocation(search: string) {
     return this.locationIqService.forward(search).pipe(
       catchError((error) => {
-        // TODO: this needs show a relevant message on 404
-        this.errorService.handleError(error, { logUnexpected: false });
+        if (error instanceof HttpErrorResponse && error.status === 404) {
+          this.errorService.show(
+            'Location not found. Please try a different search.',
+          );
+        } else {
+          this.errorService.handleError(error, { logUnexpected: false });
+        }
         return NEVER;
       }),
       tap((partialLocation) => {

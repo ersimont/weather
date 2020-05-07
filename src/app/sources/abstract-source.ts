@@ -34,18 +34,14 @@ export abstract class AbstractSource extends InjectableSuperclass {
     this.subscribeTo(
       this.refreshService.refresh$.pipe(
         switchMapTo(this.sourceStore('show').$),
-        switchMap((show) => this.refresh(show)),
-        catchError((error) => {
-          this.handleError(error, fallback);
-          return NEVER;
-        }),
+        switchMap((show) => this.refresh(show, fallback)),
       ),
     );
   }
 
   protected abstract fetch(gpsCoords: GpsCoords): Observable<Forecast>;
 
-  private refresh(show: boolean) {
+  private refresh(show: boolean, fallback?: SourceId) {
     if (!show) {
       return of(0);
     }
@@ -59,6 +55,10 @@ export abstract class AbstractSource extends InjectableSuperclass {
     }
 
     return this.fetch(gpsCoords).pipe(
+      catchError((error) => {
+        this.handleError(error, fallback);
+        return NEVER;
+      }),
       tap((forecast) => {
         this.setForecast(forecast);
       }),

@@ -78,6 +78,29 @@ describe('LocationService', () => {
   }));
 
   describe('refreshing', () => {
+    it('shows a nice message when a custom location is not found', fakeAsync(() => {
+      ctx.initialState.useCurrentLocation = false;
+      ctx.initialState.customLocation.search = 'not a place';
+      ctx.init({ flushDefaultRequests: false });
+
+      iq.expectForward('not a place').flushError(404);
+      ctx.expectErrorShown(
+        'Location not found. Please try a different search.',
+      );
+
+      location.setCustomLocation('a place');
+      iq.expectForward('a place').flushError(500);
+      ctx.expectGenericErrorShown();
+
+      refresh.trigger();
+      iq.expectForward('a place').flush([
+        iq.buildLocationResponse({ lat: '12', lon: '-89' }),
+      ]);
+      gov.flushFixture([12, -89]);
+
+      ctx.cleanUp();
+    }));
+
     it('works after an error fetching current location', fakeAsync(() => {
       const locationStub = ctx.mocks.browser.getCurrentLocation;
       locationStub.and.returnValue(Promise.reject('not allowed'));

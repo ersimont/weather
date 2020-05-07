@@ -122,6 +122,11 @@ export class WeatherGraphContext extends AngularContext {
     this.tick(1); // the CDK queues this up for its FocusManager
   }
 
+  expectGenericErrorShown() {
+    this.expectErrorShown('There was an unexpected error');
+  }
+
+  // TODO: move to harness (along w/ other error expectations)
   expectErrorShown(message: string) {
     expectSingleCallAndReset(this.mocks.snackBar.open, message, 'OK', {
       duration: 5000,
