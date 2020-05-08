@@ -29,8 +29,8 @@ export class LocationIqServiceHarness {
     return this.expectForward(search).flush(this.buildForwardResponse());
   }
 
-  flushReverse() {
-    this.expectReverse().flush(this.buildLocationResponse());
+  flushReverse(gpsCoords = this.ctx.currentLocation) {
+    this.expectReverse(gpsCoords).flush(this.buildLocationResponse());
   }
 
   expectForward(search: string) {

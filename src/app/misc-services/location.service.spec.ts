@@ -50,6 +50,17 @@ describe('LocationService', () => {
     ctx.cleanUp();
   }));
 
+  it('uses the current location when the search is empty', fakeAsync(() => {
+    ctx.initialState.useCurrentLocation = false;
+    ctx.initialState.customLocation.search = '';
+    ctx.init({ flushDefaultRequests: false });
+
+    iq.flushReverse(ctx.currentLocation);
+    gov.expectPoints(ctx.currentLocation);
+
+    ctx.cleanUp();
+  }));
+
   describe('using current location', () => {
     it('allows a reverse lookup to be cancelled', fakeAsync(() => {
       ctx.init();

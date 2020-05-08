@@ -24,10 +24,7 @@ import { InjectableSuperclass } from 's-ng-utils';
 @Injectable({ providedIn: 'root' })
 export class LocationService extends InjectableSuperclass {
   $ = this.store('useCurrentLocation').$.pipe(
-    switchMap(
-      (useCurrent) =>
-        this.store(useCurrent ? 'currentLocation' : 'customLocation').$,
-    ),
+    switchMap(() => this.getActiveLocationStore().$),
   );
   refreshableChange$: Observable<unknown> = combineLatest([
     this.store('customLocation')('search').$,
@@ -66,25 +63,31 @@ export class LocationService extends InjectableSuperclass {
   }
 
   getLocation() {
-    const state = this.store.state();
-    return state.useCurrentLocation
-      ? state.currentLocation
-      : state.customLocation;
+    return this.getActiveLocationStore().state();
   }
 
   refresh() {
+    if (this.shouldUseCurrent()) {
+      return this.refreshCurrentLocation();
+    } else if (this.store.state().customLocation.gpsCoords) {
+      return of(0);
+    } else {
+      return this.refreshCustomLocation();
+    }
+  }
+
+  private getActiveLocationStore() {
+    return this.store(
+      this.shouldUseCurrent() ? 'currentLocation' : 'customLocation',
+    );
+  }
+
+  private shouldUseCurrent() {
     const state = this.store.state();
-    const search = searchToActuallyUse(
+    return !searchToActuallyUse(
       state.customLocation.search,
       state.useCurrentLocation,
     );
-    if (!search) {
-      return this.refreshCurrentLocation();
-    } else if (state.customLocation.gpsCoords) {
-      return of(0);
-    } else {
-      return this.refreshCustomLocation(search);
-    }
   }
 
   private refreshCurrentLocation() {
@@ -104,7 +107,8 @@ export class LocationService extends InjectableSuperclass {
     );
   }
 
-  private refreshCustomLocation(search: string) {
+  private refreshCustomLocation() {
+    const search = this.store.state().customLocation.search;
     return this.locationIqService.forward(search).pipe(
       catchError((error) => {
         if (error instanceof HttpErrorResponse && error.status === 404) {
