@@ -61,6 +61,7 @@ export class GraphComponentHarness {
   }
 
   private getComponent(): GraphComponent {
-    return this.ctx.debugElement.query(By.directive(GraphComponent)).context;
+    return this.ctx.fixture.debugElement.query(By.directive(GraphComponent))
+      .context;
   }
 }

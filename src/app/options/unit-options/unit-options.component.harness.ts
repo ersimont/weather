@@ -32,6 +32,8 @@ export class UnitOptionsComponentHarness extends AbstractComponentHarness {
   }
 
   protected getHost() {
-    return this.get('app-unit-options', { parent: this.ctx.rootElement });
+    return this.get('app-unit-options', {
+      parent: this.ctx.fixture.nativeElement,
+    });
   }
 }

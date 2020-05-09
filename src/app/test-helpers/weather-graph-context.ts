@@ -1,5 +1,5 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, DebugElement } from '@angular/core';
+import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AppComponentHarness } from 'app/app.component.harness';
@@ -60,9 +60,6 @@ export class WeatherGraphContext extends ComponentContext<
     whatsNew: new WhatsNewComponentHarness(),
   };
 
-  rootElement!: Element;
-  debugElement!: DebugElement;
-
   protected componentType = TestComponent;
 
   constructor() {
@@ -102,10 +99,6 @@ export class WeatherGraphContext extends ComponentContext<
     }
 
     super.init({});
-
-    // TODO: remove these & just use fixture?
-    this.rootElement = this.fixture.nativeElement;
-    this.debugElement = this.fixture.debugElement;
 
     if (flushDefaultRequests) {
       this.harnesses.iq.flushReverse();

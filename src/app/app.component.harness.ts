@@ -40,6 +40,6 @@ export class AppComponentHarness extends AbstractComponentHarness {
   }
 
   protected getHost() {
-    return this.get('app-root', { parent: this.ctx.rootElement });
+    return this.get('app-root', { parent: this.ctx.fixture.nativeElement });
   }
 }

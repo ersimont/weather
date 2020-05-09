@@ -47,7 +47,7 @@ export class LocationOptionsComponentHarness extends AbstractComponentHarness {
 
   protected getHost() {
     return this.get('app-location-options', {
-      parent: this.ctx.rootElement,
+      parent: this.ctx.fixture.nativeElement,
     });
   }
 }

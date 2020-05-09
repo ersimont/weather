@@ -17,8 +17,8 @@ export abstract class ComponentContext<
   ComponentType,
   InitOptions
 > extends AngularContext<InitOptions> {
+  fixture!: ComponentFixture<unknown>;
   protected abstract componentType: Type<ComponentType>;
-  protected fixture!: ComponentFixture<unknown>;
 
   constructor(moduleMetadata: TestModuleMetadata) {
     super(
