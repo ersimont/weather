@@ -20,7 +20,7 @@ export interface LocationResponse {
   address: Address;
 }
 
-interface Address {
+export interface Address {
   city?: string;
   city_district?: string;
   town?: string;

@@ -7,9 +7,9 @@ import { WeatherState } from 'app/state/weather-state';
 import { WeatherStore } from 'app/state/weather-store';
 import { EventTrackingService } from 'app/to-replace/event-tracking/event-tracking.service';
 import { SnackBarErrorService } from 'app/to-replace/snack-bar-error.service';
-import { mapValues } from 'micro-dash';
+import { isEqual, mapValues } from 'micro-dash';
 import { StoreObject } from 'ng-app-state';
-import { combineLatest, NEVER, Observable, of, Subject } from 'rxjs';
+import { NEVER, of, Subject } from 'rxjs';
 import { fromPromise } from 'rxjs/internal-compatibility';
 import {
   catchError,
@@ -24,14 +24,11 @@ import { InjectableSuperclass } from 's-ng-utils';
 @Injectable({ providedIn: 'root' })
 export class LocationService extends InjectableSuperclass {
   $ = this.store('useCurrentLocation').$.pipe(
-    switchMap(() => this.getActiveLocationStore().$),
+    switchMap((useCurrent) => this.getLocationStore(useCurrent).$),
   );
-  refreshableChange$: Observable<unknown> = combineLatest([
-    this.store('customLocation')('search').$,
-    this.store('useCurrentLocation').$,
-  ]).pipe(
-    map(([search, useCurrent]) => searchToActuallyUse(search, useCurrent)),
-    distinctUntilChanged(),
+  refreshableChange$ = this.store.$.pipe(
+    map((state) => [state.useCurrentLocation, state.customLocation.search]),
+    distinctUntilChanged(isEqual),
     skip(1),
   );
   askForLocation$ = new Subject<void>();
@@ -48,46 +45,42 @@ export class LocationService extends InjectableSuperclass {
 
   setUseCurrentLocation(value: boolean) {
     this.store.batch((batch) => {
-      batch('useCurrentLocation').set(value);
       clearForecasts(batch);
+      batch('useCurrentLocation').set(value);
+      if (value) {
+        batch('currentLocation')('city').delete();
+      }
     });
   }
 
   setCustomSearch(search: string) {
     this.store.batch((batch) => {
+      clearForecasts(batch);
       batch('useCurrentLocation').set(false);
       batch('customLocation').set({ search, gpsCoords: undefined });
-      clearForecasts(batch);
     });
     this.eventTrackingService.track('change_custom_search', 'change_location');
   }
 
   getLocation() {
-    return this.getActiveLocationStore().state();
+    return this.getLocationStore(this.store.state().useCurrentLocation).state();
   }
 
   refresh() {
-    if (this.shouldUseCurrent()) {
+    const state = this.store.state();
+    if (state.useCurrentLocation) {
       return this.refreshCurrentLocation();
-    } else if (this.store.state().customLocation.gpsCoords) {
+    } else if (state.customLocation.gpsCoords) {
       return of(0);
-    } else {
+    } else if (state.customLocation.search) {
       return this.refreshCustomLocation();
+    } else {
+      return NEVER;
     }
   }
 
-  private getActiveLocationStore() {
-    return this.store(
-      this.shouldUseCurrent() ? 'currentLocation' : 'customLocation',
-    );
-  }
-
-  private shouldUseCurrent() {
-    const state = this.store.state();
-    return !searchToActuallyUse(
-      state.customLocation.search,
-      state.useCurrentLocation,
-    );
+  private getLocationStore(useCurrent: boolean) {
+    return this.store(useCurrent ? 'currentLocation' : 'customLocation');
   }
 
   private refreshCurrentLocation() {
@@ -129,10 +122,6 @@ export class LocationService extends InjectableSuperclass {
     this.errorService.show('Location not found');
     this.askForLocation$.next();
   }
-}
-
-function searchToActuallyUse(search: string, useCurrent: boolean) {
-  return useCurrent ? '' : search;
 }
 
 function clearForecasts(batch: StoreObject<WeatherState>) {

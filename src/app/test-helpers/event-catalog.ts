@@ -23,7 +23,7 @@ export const eventCatalog = {
   navigate: ['click_privacy_policy'],
   refresh: [
     'init_refresh', // TODO: remove
-    'location_change_refresh',
+    'location_change_refresh', // TODO: remove
     'interval_refresh',
     'focus_refresh',
   ],

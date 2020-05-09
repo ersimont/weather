@@ -50,13 +50,55 @@ describe('LocationService', () => {
     ctx.cleanUp();
   }));
 
-  it('uses the current location when the search is empty', fakeAsync(() => {
-    ctx.initialState.useCurrentLocation = false;
+  it('triggers title changes when changing location', fakeAsync(() => {
     ctx.initialState.customLocation.search = '';
-    ctx.init({ flushDefaultRequests: false });
+    ctx.init();
 
-    iq.flushReverse(ctx.currentLocation);
-    gov.expectPoints(ctx.currentLocation);
+    location.select('Custom');
+    expect(app.getTitle()).toBe(app.defaultTitle);
+
+    location.setCustomLocation('new city');
+    expect(app.getTitle()).toBe(app.defaultTitle);
+    iq.expectForward('new city').flush([
+      iq.buildLocationResponse(
+        { lat: '8', lon: '9' },
+        { city: 'The New City of Atlantis' },
+      ),
+    ]);
+    gov.expectPoints([8, 9]);
+    expect(app.getTitle()).toBe('The New City of Atlantis');
+
+    location.select('Current');
+    expect(app.getTitle()).toBe(app.defaultTitle);
+    iq.expectReverse().flush(
+      iq.buildLocationResponse({}, { city: 'The Current City of Atlantis' }),
+    );
+    expect(app.getTitle()).toBe('The Current City of Atlantis');
+    gov.expectPoints();
+
+    ctx.cleanUp();
+  }));
+
+  it('triggers data changes when changing location', fakeAsync(() => {
+    ctx.initialState.customLocation.search = '';
+    ctx.init();
+
+    location.select('Custom');
+    expect(graph.showsData()).toBe(false);
+
+    location.setCustomLocation('new city');
+    expect(graph.showsData()).toBe(false);
+    iq.expectForward('new city').flush([
+      iq.buildLocationResponse({ lat: '8', lon: '9' }),
+    ]);
+    gov.flushFixture([8, 9]);
+    expect(graph.showsData()).toBe(true);
+
+    location.select('Current');
+    expect(graph.showsData()).toBe(false);
+    iq.flushReverse();
+    gov.flushFixture();
+    expect(graph.showsData()).toBe(true);
 
     ctx.cleanUp();
   }));
@@ -144,6 +186,29 @@ describe('LocationService', () => {
         iq.buildLocationResponse({ lat: '12', lon: '-89' }),
       ]);
       gov.flushFixture([12, -89]);
+
+      ctx.cleanUp();
+    }));
+
+    it("reuses gpsCoordinates when the search hasn't changed", fakeAsync(() => {
+      ctx.initialState.useCurrentLocation = false;
+      ctx.initialState.customLocation = {
+        search: 'Montreal',
+        gpsCoords: [45.4972159, -73.6103642],
+        city: 'Montreal, QC',
+      };
+      ctx.init({ flushDefaultRequests: false });
+
+      // no call to locationIq
+      gov.flushFixture([45.4972159, -73.6103642]);
+
+      location.select('Current');
+      iq.flushReverse();
+      gov.flushFixture();
+
+      location.select('Custom');
+      // no call to locationIq
+      gov.flushFixture([45.4972159, -73.6103642]);
 
       ctx.cleanUp();
     }));

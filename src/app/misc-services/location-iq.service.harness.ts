@@ -1,9 +1,11 @@
 import {
+  Address,
   ForwardResponse,
   LocationResponse,
 } from 'app/misc-services/location-iq.service';
 import { STestRequest } from 'app/test-helpers/s-test-request';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
+import { isEmpty } from 'micro-dash';
 import { createBuilder } from 's-js-utils';
 
 export class LocationIqServiceHarness {
@@ -11,17 +13,21 @@ export class LocationIqServiceHarness {
     this.buildLocationResponse(),
   ]);
 
-  buildLocationResponse = createBuilder<LocationResponse>(() => ({
-    lat: '42.180152',
-    lon: '-85.591104',
-    address: {
-      road: 'Cedarview Drive',
-      city: 'Portage',
-      state: 'Michigan',
-      country_code: 'us',
-      state_code: 'mi',
-    },
-  }));
+  buildLocationResponse = createBuilder<LocationResponse, Address>(
+    (_seq, options) => ({
+      lat: '42.180152',
+      lon: '-85.591104',
+      address: isEmpty(options)
+        ? {
+            road: 'Cedarview Drive',
+            city: 'Portage',
+            state: 'Michigan',
+            country_code: 'us',
+            state_code: 'mi',
+          }
+        : options,
+    }),
+  );
 
   constructor(private ctx: WeatherGraphContext) {}
 
