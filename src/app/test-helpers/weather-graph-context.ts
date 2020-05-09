@@ -1,6 +1,5 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, DebugElement } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AppComponentHarness } from 'app/app.component.harness';
 import { AppModule } from 'app/app.module';
@@ -21,7 +20,7 @@ import { WeatherStoreHarness } from 'app/state/weather-store.harness';
 import { eventCatalog } from 'app/test-helpers/event-catalog';
 import { createSpyOfType } from 'app/to-replace/create-spy-of-type';
 import { EventTrackingServiceHarness } from 'app/to-replace/event-tracking/event-tracking.service.harness';
-import { AngularContext } from 'app/to-replace/test-context/angular-context';
+import { ComponentContext } from 'app/to-replace/test-context/component-context';
 import { WhatsNewComponentHarness } from 'app/upgrade/whats-new.component.harness';
 import { expectSingleCallAndReset } from 's-ng-dev-utils';
 
@@ -30,7 +29,10 @@ export interface InitOptions {
   useInitialState: boolean;
 }
 
-export class WeatherGraphContext extends AngularContext<InitOptions> {
+export class WeatherGraphContext extends ComponentContext<
+  TestComponent,
+  InitOptions
+> {
   initialState = new WeatherState();
   currentLocation: GpsCoords = [144, -122];
 
@@ -60,8 +62,10 @@ export class WeatherGraphContext extends AngularContext<InitOptions> {
   rootElement!: Element;
   debugElement!: DebugElement;
 
+  protected componentType = TestComponent;
+
   static setUp() {
-    AngularContext.setUp();
+    ComponentContext.setUp();
   }
 
   constructor() {
@@ -79,11 +83,11 @@ export class WeatherGraphContext extends AngularContext<InitOptions> {
     this.moduleMetadata.declarations.push(TestComponent);
   }
 
+  // TODO: move to harness (along w/ other error expectations below)
   expectGenericErrorShown() {
     this.expectErrorShown('There was an unexpected error');
   }
 
-  // TODO: move to harness (along w/ other error expectations)
   expectErrorShown(message: string) {
     expectSingleCallAndReset(this.mocks.snackBar.open, message, 'OK', {
       duration: 5000,
@@ -104,7 +108,11 @@ export class WeatherGraphContext extends AngularContext<InitOptions> {
       localStorage.removeItem('weather');
     }
 
-    this.createComponent();
+    super.init({});
+
+    // TODO: remove these & just use fixture?
+    this.rootElement = this.fixture.nativeElement;
+    this.debugElement = this.fixture.debugElement;
 
     this.tick();
     if (flushDefaultRequests) {
@@ -122,16 +130,6 @@ export class WeatherGraphContext extends AngularContext<InitOptions> {
     // https://github.com/angular/components/blob/b612fc42895e47377b353e773d4ba3517c0991e1/src/material/dialog/dialog.spec.ts#L80
     this.inject(OverlayContainer).ngOnDestroy();
     this.tick(1); // the CDK queues this up for its FocusManager
-  }
-
-  private createComponent() {
-    this.fixture = TestBed.createComponent(TestComponent);
-    this.fixture.detectChanges();
-    this.tick();
-
-    // TODO: remove these & just use fixture?
-    this.rootElement = this.fixture.nativeElement;
-    this.debugElement = this.fixture.debugElement;
   }
 }
 

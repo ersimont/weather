@@ -4,11 +4,9 @@ import {
 } from '@angular/common/http/testing';
 import { AbstractType, InjectionToken, Type } from '@angular/core';
 import {
-  ComponentFixture,
   ComponentFixtureAutoDetect,
   discardPeriodicTasks,
   fakeAsync,
-  flushMicrotasks,
   TestBed,
   TestModuleMetadata,
   tick,
@@ -17,18 +15,7 @@ import { DomContext } from 'app/to-replace/test-context/dom-context';
 import { isFunction } from 'micro-dash';
 import { assert } from 's-js-utils';
 
-// TODO: try destroying the fixture, or test bed, or platform instead
-const initialStyles = new Set(Array.from(document.querySelectorAll('style')));
-function trimLeftoverStyles() {
-  for (const style of Array.from(document.querySelectorAll('style'))) {
-    if (!initialStyles.has(style)) {
-      style.remove();
-    }
-  }
-}
-
 export abstract class AngularContext<InitOptions> extends DomContext {
-  protected fixture?: ComponentFixture<unknown>;
   protected moduleMetadata: Required<
     Omit<TestModuleMetadata, 'schemas' | 'aotSummaries'>
   > = {
@@ -37,11 +24,7 @@ export abstract class AngularContext<InitOptions> extends DomContext {
     providers: [{ provide: ComponentFixtureAutoDetect, useValue: true }],
   };
 
-  static setUp() {
-    beforeEach(() => {
-      trimLeftoverStyles();
-    });
-  }
+  static setUp() {}
 
   run(test: () => void): void;
   run(options: Partial<InitOptions>, test: () => void): void;
@@ -76,10 +59,6 @@ export abstract class AngularContext<InitOptions> extends DomContext {
   // }
 
   tick(millis?: number) {
-    if (this.fixture) {
-      flushMicrotasks();
-      this.fixture.detectChanges();
-    }
     tick(millis);
   }
 
