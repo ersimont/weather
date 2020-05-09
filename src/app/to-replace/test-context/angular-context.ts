@@ -30,7 +30,7 @@ export abstract class AngularContext<InitOptions> extends DomContext {
   constructor(moduleMetadata: TestModuleMetadata) {
     super();
     TestBed.configureTestingModule(
-      extendMetadata({ imports: [HttpClientTestingModule] }, moduleMetadata),
+      extendMetadata(moduleMetadata, { imports: [HttpClientTestingModule] }),
     );
   }
 

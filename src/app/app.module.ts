@@ -9,10 +9,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { BrowserModule } from '@angular/platform-browser';
-import {
-  BrowserAnimationsModule,
-  NoopAnimationsModule,
-} from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
@@ -36,9 +33,7 @@ import { PrivacyPolicyComponent } from './misc-components/privacy-policy/privacy
     PrivacyPolicyComponent,
   ],
   imports: [
-    environment.name === 'test'
-      ? NoopAnimationsModule // TODO: is there a better way?
-      : BrowserAnimationsModule,
+    BrowserAnimationsModule,
     BrowserModule,
     ChartsModule,
     EventTrackingModule.forRoot({

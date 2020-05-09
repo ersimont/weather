@@ -6,6 +6,7 @@ import {
   TestBed,
   TestModuleMetadata,
 } from '@angular/core/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
   AngularContext,
   extendMetadata,
@@ -21,12 +22,10 @@ export abstract class ComponentContext<
 
   constructor(moduleMetadata: TestModuleMetadata) {
     super(
-      extendMetadata(
-        {
-          providers: [{ provide: ComponentFixtureAutoDetect, useValue: true }],
-        },
-        moduleMetadata,
-      ),
+      extendMetadata(moduleMetadata, {
+        imports: [NoopAnimationsModule],
+        providers: [{ provide: ComponentFixtureAutoDetect, useValue: true }],
+      }),
     );
   }
 
