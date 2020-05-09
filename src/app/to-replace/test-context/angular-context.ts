@@ -4,7 +4,6 @@ import {
 } from '@angular/common/http/testing';
 import { AbstractType, InjectionToken, Type } from '@angular/core';
 import {
-  ComponentFixtureAutoDetect,
   discardPeriodicTasks,
   fakeAsync,
   TestBed,
@@ -12,19 +11,28 @@ import {
   tick,
 } from '@angular/core/testing';
 import { DomContext } from 'app/to-replace/test-context/dom-context';
-import { isFunction } from 'micro-dash';
+import { clone, forOwn, isFunction } from 'micro-dash';
+import { isArray } from 'rxjs/internal-compatibility';
 import { assert } from 's-js-utils';
 
-export abstract class AngularContext<InitOptions> extends DomContext {
-  protected moduleMetadata: Required<
-    Omit<TestModuleMetadata, 'schemas' | 'aotSummaries'>
-  > = {
-    imports: [HttpClientTestingModule],
-    declarations: [],
-    providers: [{ provide: ComponentFixtureAutoDetect, useValue: true }],
-  };
+export function extendMetadata(
+  metadata: TestModuleMetadata,
+  toAdd: TestModuleMetadata,
+): TestModuleMetadata {
+  const result: any = clone(metadata);
+  forOwn(toAdd, (val, key) => {
+    result[key] = isArray(result[key]) ? result[key].concat(val) : val;
+  });
+  return result;
+}
 
-  static setUp() {}
+export abstract class AngularContext<InitOptions> extends DomContext {
+  constructor(moduleMetadata: TestModuleMetadata) {
+    super();
+    TestBed.configureTestingModule(
+      extendMetadata({ imports: [HttpClientTestingModule] }, moduleMetadata),
+    );
+  }
 
   run(test: () => void): void;
   run(options: Partial<InitOptions>, test: () => void): void;
@@ -36,7 +44,6 @@ export abstract class AngularContext<InitOptions> extends DomContext {
       options = optionsOrTest;
     }
 
-    TestBed.configureTestingModule(this.moduleMetadata);
     fakeAsync(() => {
       assert(test);
       this.init(options);
@@ -51,12 +58,6 @@ export abstract class AngularContext<InitOptions> extends DomContext {
   inject<T>(token: Type<T> | InjectionToken<T> | AbstractType<T>) {
     return TestBed.inject(token);
   }
-
-  // injectIfProvided<T>(
-  //   token: Type<T> | InjectionToken<T> | AbstractType<T>,
-  // ): T | undefined {
-  //   return TestBed.inject(token, undefined, InjectFlags.Optional);
-  // }
 
   tick(millis?: number) {
     tick(millis);

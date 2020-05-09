@@ -1,6 +1,6 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ErrorHandler } from '@angular/core';
-import { fakeAsync, TestBed } from '@angular/core/testing';
+import { fakeAsync } from '@angular/core/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { EventTrackingModule } from 'app/to-replace/event-tracking/event-tracking.module';
@@ -12,27 +12,25 @@ import {
 import { AngularContext } from 'app/to-replace/test-context/angular-context';
 
 class Context extends AngularContext<{}> {
-  static setUp() {
-    beforeEach(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          EventTrackingModule.forRoot(),
-          MatSnackBarModule,
-          NoopAnimationsModule,
-        ],
-        providers: [provideErrorHandler()],
-      });
+  constructor() {
+    super({
+      imports: [
+        EventTrackingModule.forRoot(),
+        MatSnackBarModule,
+        NoopAnimationsModule,
+      ],
+      providers: [provideErrorHandler()],
     });
+  }
 
-    afterEach(() => {
-      TestBed.inject(OverlayContainer).ngOnDestroy();
-    });
+  protected cleanUp() {
+    this.inject(OverlayContainer).ngOnDestroy();
+    this.tick(5000);
+    super.cleanUp();
   }
 }
 
 describe('SnackBarErrorService', () => {
-  Context.setUp();
-
   let ctx: Context;
   let errorHandler: ErrorHandler;
   let events: EventTrackingServiceHarness;
@@ -54,38 +52,50 @@ describe('SnackBarErrorService', () => {
   describe('.handleError()', () => {
     describe('with a PresentableError', () => {
       it('does not track an event', () => {
-        errorHandler.handleError(new PresentableError('nope'));
-        expect(events.getErrors()).toEqual([]);
+        ctx.run(() => {
+          errorHandler.handleError(new PresentableError('nope'));
+          expect(events.getErrors()).toEqual([]);
+        });
       });
     });
 
     describe("with an 'unhandled rejection' PresentableError", () => {
       it('does not track an event', () => {
-        errorHandler.handleError(
-          generateUncaughtPromiseError(new PresentableError('still no')),
+        const error = generateUncaughtPromiseError(
+          new PresentableError('still no'),
         );
-        expect(events.getErrors()).toEqual([]);
+        ctx.run(() => {
+          errorHandler.handleError(error);
+          expect(events.getErrors()).toEqual([]);
+        });
       });
     });
 
     describe('with an Error object that is not presentable', () => {
       it('tracks an event', () => {
-        errorHandler.handleError(new Error('present'));
-        expect(events.getErrors()).toEqual(['present']);
+        ctx.run(() => {
+          errorHandler.handleError(new Error('present'));
+          expect(events.getErrors()).toEqual(['present']);
+        });
       });
     });
 
     describe("with an 'unhandled rejection' that is not presentable", () => {
       it('tracks an event', () => {
-        errorHandler.handleError(generateUncaughtPromiseError('track me'));
-        expect(events.getErrors()).toEqual(['track me']);
+        const error = generateUncaughtPromiseError('track me');
+        ctx.run(() => {
+          errorHandler.handleError(error);
+          expect(events.getErrors()).toEqual(['track me']);
+        });
       });
     });
 
     describe('with a string', () => {
       it('tracks an event', () => {
-        errorHandler.handleError("I'm a string");
-        expect(events.getErrors()).toEqual(["I'm a string"]);
+        ctx.run(() => {
+          errorHandler.handleError("I'm a string");
+          expect(events.getErrors()).toEqual(["I'm a string"]);
+        });
       });
     });
   });

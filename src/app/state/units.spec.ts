@@ -8,8 +8,6 @@ import { WeatherStateHarness } from 'app/state/weather-state.harness';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 
 describe('unitInfo', () => {
-  WeatherGraphContext.setUp();
-
   let ctx: WeatherGraphContext;
   let climacell: ClimacellHarness;
   let graph: GraphComponentHarness;

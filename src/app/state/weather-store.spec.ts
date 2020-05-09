@@ -5,8 +5,6 @@ import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 import { EventTrackingServiceHarness } from 'app/to-replace/event-tracking/event-tracking.service.harness';
 
 describe('WeatherStore', () => {
-  WeatherGraphContext.setUp();
-
   let ctx: WeatherGraphContext;
   let events: EventTrackingServiceHarness;
   let store: WeatherStoreHarness;

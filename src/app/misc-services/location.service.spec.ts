@@ -8,8 +8,6 @@ import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 import { EventTrackingServiceHarness } from 'app/to-replace/event-tracking/event-tracking.service.harness';
 
 describe('LocationService', () => {
-  WeatherGraphContext.setUp();
-
   let ctx: WeatherGraphContext;
   let app: AppComponentHarness;
   let events: EventTrackingServiceHarness;

@@ -2,8 +2,6 @@ import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 import { WhatsNewComponentHarness } from 'app/upgrade/whats-new.component.harness';
 
 describe('WhatsNewComponent', () => {
-  WeatherGraphContext.setUp();
-
   let ctx: WeatherGraphContext;
   let whatsNew: WhatsNewComponentHarness;
   beforeEach(() => {

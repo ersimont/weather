@@ -5,8 +5,6 @@ import { SourceId } from 'app/state/source';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 
 describe('WeatherUnlocked', () => {
-  WeatherGraphContext.setUp();
-
   let ctx: WeatherGraphContext;
   let iq: LocationIqServiceHarness;
   let sources: SourceOptionsComponentHarness;

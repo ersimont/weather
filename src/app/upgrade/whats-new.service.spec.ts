@@ -3,8 +3,6 @@ import { EventTrackingServiceHarness } from 'app/to-replace/event-tracking/event
 import { v6Default } from 'app/upgrade/upgrade.service.fixutures';
 
 describe('WhatsNewService', () => {
-  WeatherGraphContext.setUp();
-
   let ctx: WeatherGraphContext;
   let events: EventTrackingServiceHarness;
   beforeEach(() => {

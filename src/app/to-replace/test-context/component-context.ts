@@ -1,20 +1,16 @@
 import { Type } from '@angular/core';
 import {
   ComponentFixture,
+  ComponentFixtureAutoDetect,
   flushMicrotasks,
   TestBed,
+  TestModuleMetadata,
 } from '@angular/core/testing';
-import { AngularContext } from 'app/to-replace/test-context/angular-context';
-
-// TODO: try destroying the fixture, or test bed, or platform instead
-const initialStyles = new Set(Array.from(document.querySelectorAll('style')));
-function trimLeftoverStyles() {
-  for (const style of Array.from(document.querySelectorAll('style'))) {
-    if (!initialStyles.has(style)) {
-      style.remove();
-    }
-  }
-}
+import {
+  AngularContext,
+  extendMetadata,
+} from 'app/to-replace/test-context/angular-context';
+import { trimLeftoverStyles } from 'app/to-replace/trim-leftover-styles';
 
 export abstract class ComponentContext<
   ComponentType,
@@ -23,11 +19,15 @@ export abstract class ComponentContext<
   protected abstract componentType: Type<ComponentType>;
   protected fixture!: ComponentFixture<unknown>;
 
-  static setUp() {
-    AngularContext.setUp();
-    beforeEach(() => {
-      trimLeftoverStyles();
-    });
+  constructor(moduleMetadata: TestModuleMetadata) {
+    super(
+      extendMetadata(
+        {
+          providers: [{ provide: ComponentFixtureAutoDetect, useValue: true }],
+        },
+        moduleMetadata,
+      ),
+    );
   }
 
   tick(millis?: number) {
@@ -37,8 +37,15 @@ export abstract class ComponentContext<
   }
 
   protected init(_options: Partial<InitOptions>) {
+    trimLeftoverStyles();
+    super.init(_options);
     this.fixture = TestBed.createComponent(this.componentType);
     this.fixture.detectChanges();
     this.tick();
+  }
+
+  protected cleanUp() {
+    this.fixture.destroy();
+    super.cleanUp();
   }
 }

@@ -1,5 +1,6 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, DebugElement } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AppComponentHarness } from 'app/app.component.harness';
 import { AppModule } from 'app/app.module';
@@ -64,23 +65,15 @@ export class WeatherGraphContext extends ComponentContext<
 
   protected componentType = TestComponent;
 
-  static setUp() {
-    ComponentContext.setUp();
-  }
-
   constructor() {
-    super();
+    super({ imports: [AppModule], declarations: [TestComponent] });
+
     this.mocks.browser.getCurrentLocation.and.callFake(
       async () => this.currentLocation,
     );
     this.mocks.browser.hasFocus.and.returnValue(true);
-
-    this.moduleMetadata.imports.push(AppModule);
-    this.moduleMetadata.providers.push(
-      { provide: BrowserService, useValue: this.mocks.browser },
-      { provide: MatSnackBar, useValue: this.mocks.snackBar },
-    );
-    this.moduleMetadata.declarations.push(TestComponent);
+    TestBed.overrideProvider(BrowserService, { useValue: this.mocks.browser });
+    TestBed.overrideProvider(MatSnackBar, { useValue: this.mocks.snackBar });
   }
 
   // TODO: move to harness (along w/ other error expectations below)
@@ -114,7 +107,6 @@ export class WeatherGraphContext extends ComponentContext<
     this.rootElement = this.fixture.nativeElement;
     this.debugElement = this.fixture.debugElement;
 
-    this.tick();
     if (flushDefaultRequests) {
       this.harnesses.iq.flushReverse();
       this.harnesses.gov.flushFixture();
@@ -126,7 +118,6 @@ export class WeatherGraphContext extends ComponentContext<
 
     this.harnesses.events.validateEvents();
 
-    // TODO: this about this.fixture.destroy. Maybe that invalidates the fakeasync checks?
     // https://github.com/angular/components/blob/b612fc42895e47377b353e773d4ba3517c0991e1/src/material/dialog/dialog.spec.ts#L80
     this.inject(OverlayContainer).ngOnDestroy();
     this.tick(1); // the CDK queues this up for its FocusManager

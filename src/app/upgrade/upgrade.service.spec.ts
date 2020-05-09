@@ -5,8 +5,6 @@ import { defaultState, v6Default } from 'app/upgrade/upgrade.service.fixutures';
 import { WhatsNewComponentHarness } from 'app/upgrade/whats-new.component.harness';
 
 describe('UpgradeService', () => {
-  WeatherGraphContext.setUp();
-
   let ctx: WeatherGraphContext;
   let iq: LocationIqServiceHarness;
   let store: WeatherStoreHarness;

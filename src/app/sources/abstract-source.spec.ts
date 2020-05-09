@@ -8,8 +8,6 @@ import { WeatherUnlockedHarness } from 'app/sources/weather-unlocked/weather-unl
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 
 describe('AbstractSource', () => {
-  WeatherGraphContext.setUp();
-
   let ctx: WeatherGraphContext;
   let iq: LocationIqServiceHarness;
   let gov: WeatherGovHarness;
