@@ -1,4 +1,3 @@
-import { fakeAsync } from '@angular/core/testing';
 import { GraphComponentHarness } from 'app/misc-components/graph/graph.component.harness';
 import { LocationIqServiceHarness } from 'app/misc-services/location-iq.service.harness';
 import { ClimacellHarness } from 'app/sources/climacell/climacell.harness';
@@ -21,23 +20,22 @@ describe('unitInfo', () => {
     ({ climacell, graph, iq, state } = ctx.harnesses);
   });
 
-  it('rounds MM precipitation to 1 decimal place', fakeAsync(() => {
+  it('rounds MM precipitation to 1 decimal place', () => {
     state.setShowing(SourceId.CLIMACELL);
     ctx.initialState.units.amount = AmountUnit.MM;
-    ctx.init({ flushDefaultRequests: false });
-    iq.flushReverse();
-    climacell
-      .expectHourly()
-      .flush(
-        climacell.buildHourlyResponse([
-          climacell.buildTimeframe({ precipitation: { value: 0.06 } }),
-        ]),
-      );
+    ctx.run({ flushDefaultRequests: false }, () => {
+      iq.flushReverse();
+      climacell
+        .expectHourly()
+        .flush(
+          climacell.buildHourlyResponse([
+            climacell.buildTimeframe({ precipitation: { value: 0.06 } }),
+          ]),
+        );
 
-    expect(
-      graph.getTooltipLabel(SourceId.CLIMACELL, Condition.AMOUNT, 0),
-    ).toContain('0.1 mm');
-
-    ctx.cleanUp();
-  }));
+      expect(
+        graph.getTooltipLabel(SourceId.CLIMACELL, Condition.AMOUNT, 0),
+      ).toContain('0.1 mm');
+    });
+  });
 });

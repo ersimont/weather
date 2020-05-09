@@ -20,7 +20,7 @@ export class STestRequest<T> {
   constructor(
     method: MethodType,
     url: string,
-    private ctx: AngularContext,
+    private ctx: AngularContext<any>,
     { params = {}, body = null }: STestRequestOptions = {},
   ) {
     expect().nothing(); // convince jasmine we are expecting something

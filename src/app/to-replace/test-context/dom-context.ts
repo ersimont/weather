@@ -1,3 +1,4 @@
+// TODO: move to a TestElement pattern
 export class DomContext {
   click(element: HTMLElement) {
     this.dispatchMouseEvent('mousedown', element);

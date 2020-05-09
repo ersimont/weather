@@ -11,7 +11,7 @@ import {
 } from 'app/to-replace/snack-bar-error.service';
 import { AngularContext } from 'app/to-replace/test-context/angular-context';
 
-class Context extends AngularContext {
+class Context extends AngularContext<{}> {
   static setUp() {
     beforeEach(() => {
       TestBed.configureTestingModule({

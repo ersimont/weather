@@ -43,7 +43,12 @@ const hostTemplate = `
   </div>
 `;
 
-export class WeatherGraphContext extends AngularContext {
+export interface InitOptions {
+  flushDefaultRequests: boolean;
+  useInitialState: boolean;
+}
+
+export class WeatherGraphContext extends AngularContext<InitOptions> {
   // TODO: remove spectator?
   private static createHost: SpectatorHostFactory<AppComponent, HostComponent>;
 
@@ -96,7 +101,25 @@ export class WeatherGraphContext extends AngularContext {
     this.mocks.browser.hasFocus.and.returnValue(true);
   }
 
-  init({ flushDefaultRequests = true, useInitialState = true } = {}) {
+  expectGenericErrorShown() {
+    this.expectErrorShown('There was an unexpected error');
+  }
+
+  // TODO: move to harness (along w/ other error expectations)
+  expectErrorShown(message: string) {
+    expectSingleCallAndReset(this.mocks.snackBar.open, message, 'OK', {
+      duration: 5000,
+    });
+  }
+
+  expectNoErrorShown() {
+    expect(this.mocks.snackBar.open).not.toHaveBeenCalled();
+  }
+
+  protected init({
+    flushDefaultRequests = true,
+    useInitialState = true,
+  }: Partial<InitOptions> = {}) {
     if (useInitialState) {
       localStorage.setItem('weather', JSON.stringify(this.initialState));
     } else {
@@ -112,8 +135,7 @@ export class WeatherGraphContext extends AngularContext {
     }
   }
 
-  // TODO: call this in a finally? Or a wrapped fn?
-  cleanUp() {
+  protected cleanUp() {
     super.cleanUp();
 
     this.harnesses.events.validateEvents();
@@ -122,21 +144,6 @@ export class WeatherGraphContext extends AngularContext {
     // https://github.com/angular/components/blob/b612fc42895e47377b353e773d4ba3517c0991e1/src/material/dialog/dialog.spec.ts#L80
     this.inject(OverlayContainer).ngOnDestroy();
     this.tick(1); // the CDK queues this up for its FocusManager
-  }
-
-  expectGenericErrorShown() {
-    this.expectErrorShown('There was an unexpected error');
-  }
-
-  // TODO: move to harness (along w/ other error expectations)
-  expectErrorShown(message: string) {
-    expectSingleCallAndReset(this.mocks.snackBar.open, message, 'OK', {
-      duration: 5000,
-    });
-  }
-
-  expectNoErrorShown() {
-    expect(this.mocks.snackBar.open).not.toHaveBeenCalled();
   }
 
   private createComponent() {

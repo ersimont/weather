@@ -1,5 +1,4 @@
 import { HttpTestingController } from '@angular/common/http/testing';
-import { fakeAsync } from '@angular/core/testing';
 import { LocationIqServiceHarness } from 'app/misc-services/location-iq.service.harness';
 import { RefreshServiceHarness } from 'app/misc-services/refresh.service.harness';
 import { SourceOptionsComponentHarness } from 'app/options/source-options/source-options.component.harness';
@@ -22,79 +21,70 @@ describe('AbstractSource', () => {
     ({ iq, gov, unlocked, refresh, sources } = ctx.harnesses);
   });
 
-  it('refreshes (only) when showing', fakeAsync(() => {
-    ctx.init();
-
-    refresh.trigger();
-    iq.flushReverse();
-    gov.flushFixture();
-
-    sources.toggle('Weather.gov');
-    refresh.trigger();
-    iq.flushReverse();
-    ctx.inject(HttpTestingController).verify();
-
-    sources.toggle('Weather.gov');
-    gov.flushFixture();
-
-    refresh.trigger();
-    iq.flushReverse();
-    gov.flushFixture();
-
-    ctx.cleanUp();
-  }));
-
-  it('retries on next refresh after error', fakeAsync(() => {
-    ctx.init({ flushDefaultRequests: false });
-    iq.expectReverse().flushError();
-
-    refresh.trigger();
-    iq.flushReverse();
-    gov.expectPoints().flushError();
-
-    refresh.trigger();
-    iq.flushReverse();
-    gov.expectPoints().flush(pointResponse);
-    gov.expectGrid().flushError();
-
-    refresh.trigger();
-    iq.expectReverse();
-
-    ctx.cleanUp();
-  }));
-
-  describe('fallback', () => {
-    it('happens invisibly on first app load', fakeAsync(() => {
-      ctx.init({ flushDefaultRequests: false });
-
+  it('refreshes (only) when showing', () => {
+    ctx.run(() => {
+      refresh.trigger();
       iq.flushReverse();
-      gov.flushNotAvailable();
-      unlocked.flushDefault();
-      ctx.expectNoErrorShown();
+      gov.flushFixture();
 
-      ctx.cleanUp();
-    }));
+      sources.toggle('Weather.gov');
+      refresh.trigger();
+      iq.flushReverse();
+      ctx.inject(HttpTestingController).verify();
 
-    it('does not happen on refresh', fakeAsync(() => {
-      ctx.init();
+      sources.toggle('Weather.gov');
+      gov.flushFixture();
 
       refresh.trigger();
       iq.flushReverse();
-      gov.flushNotAvailable();
-      gov.expectNotAvailableError();
+      gov.flushFixture();
+    });
+  });
 
-      ctx.cleanUp();
-    }));
+  it('retries on next refresh after error', () => {
+    ctx.run({ flushDefaultRequests: false }, () => {
+      iq.expectReverse().flushError();
 
-    it('does not happen on subsequent app loads', fakeAsync(() => {
-      ctx.initialState.allowSourceFallback = false;
-      ctx.init({ flushDefaultRequests: false });
-
+      refresh.trigger();
       iq.flushReverse();
-      gov.flushNotAvailable();
-      gov.expectNotAvailableError();
+      gov.expectPoints().flushError();
 
-      ctx.cleanUp();
-    }));
+      refresh.trigger();
+      iq.flushReverse();
+      gov.expectPoints().flush(pointResponse);
+      gov.expectGrid().flushError();
+
+      refresh.trigger();
+      iq.expectReverse();
+    });
+  });
+
+  describe('fallback', () => {
+    it('happens invisibly on first app load', () => {
+      ctx.run({ flushDefaultRequests: false }, () => {
+        iq.flushReverse();
+        gov.flushNotAvailable();
+        unlocked.flushDefault();
+        ctx.expectNoErrorShown();
+      });
+    });
+
+    it('does not happen on refresh', () => {
+      ctx.run(() => {
+        refresh.trigger();
+        iq.flushReverse();
+        gov.flushNotAvailable();
+        gov.expectNotAvailableError();
+      });
+    });
+
+    it('does not happen on subsequent app loads', () => {
+      ctx.initialState.allowSourceFallback = false;
+      ctx.run({ flushDefaultRequests: false }, () => {
+        iq.flushReverse();
+        gov.flushNotAvailable();
+        gov.expectNotAvailableError();
+      });
+    });
   });
 });

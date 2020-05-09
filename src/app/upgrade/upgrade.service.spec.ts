@@ -1,4 +1,3 @@
-import { fakeAsync } from '@angular/core/testing';
 import { LocationIqServiceHarness } from 'app/misc-services/location-iq.service.harness';
 import { WeatherStoreHarness } from 'app/state/weather-store.harness';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
@@ -26,16 +25,15 @@ describe('UpgradeService', () => {
       .toEqual(JSON.stringify(defaultState));
   });
 
-  it("upgrades from v6, showing what's new", fakeAsync(() => {
+  it("upgrades from v6, showing what's new", () => {
     ctx.initialState = v6Default as any;
-    ctx.init({ flushDefaultRequests: false });
+    ctx.run({ flushDefaultRequests: false }, () => {
+      expect(store.getPersistedState()).toEqual(defaultState);
+      expect(whatsNew.getFeatures()).toEqual([
+        'You can get your forecast from Climacell. Check it out in the Sources section of the settings.',
+      ]);
 
-    expect(store.getPersistedState()).toEqual(defaultState);
-    expect(whatsNew.getFeatures()).toEqual([
-      'You can get your forecast from Climacell. Check it out in the Sources section of the settings.',
-    ]);
-
-    iq.expectReverse();
-    ctx.cleanUp();
-  }));
+      iq.expectReverse();
+    });
+  });
 });

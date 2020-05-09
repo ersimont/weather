@@ -1,4 +1,3 @@
-import { fakeAsync } from '@angular/core/testing';
 import { UnitOptionsComponentHarness } from 'app/options/unit-options/unit-options.component.harness';
 import { AmountUnit } from 'app/state/units';
 import { WeatherStoreHarness } from 'app/state/weather-store.harness';
@@ -17,32 +16,25 @@ describe('WeatherStore', () => {
     ({ events, store, units } = ctx.harnesses);
   });
 
-  it('persists changes to the state', fakeAsync(() => {
+  it('persists changes to the state', () => {
     ctx.initialState.units.amount = AmountUnit.IN;
-    ctx.init();
+    ctx.run(() => {
+      units.select('MM');
+      expect(store.getPersistedState().units.amount).toBe(AmountUnit.MM);
+    });
+  });
 
-    units.select('MM');
+  it('tracks an event when initializing a fresh state', () => {
+    ctx.run({ useInitialState: false }, () => {
+      const tracked = events.getEvents('initialize_fresh_state');
+      expect(tracked.length).toBe(1);
+      expect(tracked[0].interaction).toBe(false);
+    });
+  });
 
-    expect(store.getPersistedState().units.amount).toBe(AmountUnit.MM);
-
-    ctx.cleanUp();
-  }));
-
-  it('tracks an event when initializing a fresh state', fakeAsync(() => {
-    ctx.init({ useInitialState: false });
-
-    const tracked = events.getEvents('initialize_fresh_state');
-    expect(tracked.length).toBe(1);
-    expect(tracked[0].interaction).toBe(false);
-
-    ctx.cleanUp();
-  }));
-
-  it('does not track an event if there is saved state', fakeAsync(() => {
-    ctx.init({ useInitialState: true });
-
-    expect(events.getEvents('initialize_fresh_state').length).toBe(0);
-
-    ctx.cleanUp();
-  }));
+  it('does not track an event if there is saved state', () => {
+    ctx.run({ useInitialState: true }, () => {
+      expect(events.getEvents('initialize_fresh_state').length).toBe(0);
+    });
+  });
 });
