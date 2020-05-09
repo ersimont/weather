@@ -37,7 +37,7 @@ import { PrivacyPolicyComponent } from './misc-components/privacy-policy/privacy
   ],
   imports: [
     environment.name === 'test'
-      ? NoopAnimationsModule
+      ? NoopAnimationsModule // TODO: is there a better way?
       : BrowserAnimationsModule,
     BrowserModule,
     ChartsModule,

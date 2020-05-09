@@ -1,29 +1,46 @@
-import { HttpTestingController } from '@angular/common/http/testing';
-import { AbstractType, InjectFlags, InjectionToken, Type } from '@angular/core';
+import {
+  HttpClientTestingModule,
+  HttpTestingController,
+} from '@angular/common/http/testing';
+import { AbstractType, InjectionToken, Type } from '@angular/core';
 import {
   ComponentFixture,
+  ComponentFixtureAutoDetect,
   discardPeriodicTasks,
   fakeAsync,
   flushMicrotasks,
   TestBed,
+  TestModuleMetadata,
   tick,
 } from '@angular/core/testing';
 import { DomContext } from 'app/to-replace/test-context/dom-context';
 import { isFunction } from 'micro-dash';
 import { assert } from 's-js-utils';
 
+// TODO: try destroying the fixture, or test bed, or platform instead
 const initialStyles = new Set(Array.from(document.querySelectorAll('style')));
+function trimLeftoverStyles() {
+  for (const style of Array.from(document.querySelectorAll('style'))) {
+    if (!initialStyles.has(style)) {
+      style.remove();
+    }
+  }
+}
 
 export abstract class AngularContext<InitOptions> extends DomContext {
   protected fixture?: ComponentFixture<unknown>;
+  protected moduleMetadata: Required<
+    Omit<TestModuleMetadata, 'schemas' | 'aotSummaries'>
+  > = {
+    imports: [HttpClientTestingModule],
+    declarations: [],
+    providers: [{ provide: ComponentFixtureAutoDetect, useValue: true }],
+  };
 
-  constructor() {
-    super();
-    for (const style of Array.from(document.querySelectorAll('style'))) {
-      if (!initialStyles.has(style)) {
-        style.remove();
-      }
-    }
+  static setUp() {
+    beforeEach(() => {
+      trimLeftoverStyles();
+    });
   }
 
   run(test: () => void): void;
@@ -36,6 +53,7 @@ export abstract class AngularContext<InitOptions> extends DomContext {
       options = optionsOrTest;
     }
 
+    TestBed.configureTestingModule(this.moduleMetadata);
     fakeAsync(() => {
       assert(test);
       this.init(options);
@@ -51,11 +69,11 @@ export abstract class AngularContext<InitOptions> extends DomContext {
     return TestBed.inject(token);
   }
 
-  injectIfProvided<T>(
-    token: Type<T> | InjectionToken<T> | AbstractType<T>,
-  ): T | undefined {
-    return TestBed.inject(token, undefined, InjectFlags.Optional);
-  }
+  // injectIfProvided<T>(
+  //   token: Type<T> | InjectionToken<T> | AbstractType<T>,
+  // ): T | undefined {
+  //   return TestBed.inject(token, undefined, InjectFlags.Optional);
+  // }
 
   tick(millis?: number) {
     if (this.fixture) {
@@ -73,7 +91,7 @@ export abstract class AngularContext<InitOptions> extends DomContext {
   protected init(_options: Partial<InitOptions>) {}
 
   protected cleanUp() {
-    this.injectIfProvided(HttpTestingController)?.verify();
+    this.inject(HttpTestingController).verify();
     discardPeriodicTasks();
   }
 }

@@ -1,16 +1,7 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { DebugElement } from '@angular/core';
-import { ComponentFixtureAutoDetect } from '@angular/core/testing';
+import { Component, DebugElement } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import {
-  createHostFactory,
-  createSpyObject,
-  HostComponent,
-  SpectatorHost,
-  SpectatorHostFactory,
-} from '@ngneat/spectator';
-import { AppComponent } from 'app/app.component';
 import { AppComponentHarness } from 'app/app.component.harness';
 import { AppModule } from 'app/app.module';
 import { GraphComponentHarness } from 'app/misc-components/graph/graph.component.harness';
@@ -28,20 +19,11 @@ import { WeatherState } from 'app/state/weather-state';
 import { WeatherStateHarness } from 'app/state/weather-state.harness';
 import { WeatherStoreHarness } from 'app/state/weather-store.harness';
 import { eventCatalog } from 'app/test-helpers/event-catalog';
+import { createSpyOfType } from 'app/to-replace/create-spy-of-type';
 import { EventTrackingServiceHarness } from 'app/to-replace/event-tracking/event-tracking.service.harness';
 import { AngularContext } from 'app/to-replace/test-context/angular-context';
 import { WhatsNewComponentHarness } from 'app/upgrade/whats-new.component.harness';
 import { expectSingleCallAndReset } from 's-ng-dev-utils';
-
-const hostTemplate = `
-  <div
-    [style.width.px]="width"
-    [style.height.px]="height"
-    style="position: relative; margin: 20px auto; border: 1px solid;"
-  >
-    <app-root></app-root>
-  </div>
-`;
 
 export interface InitOptions {
   flushDefaultRequests: boolean;
@@ -49,17 +31,13 @@ export interface InitOptions {
 }
 
 export class WeatherGraphContext extends AngularContext<InitOptions> {
-  // TODO: remove spectator?
-  private static createHost: SpectatorHostFactory<AppComponent, HostComponent>;
-
   initialState = new WeatherState();
-  screenSize = { width: 400, height: 600 };
   currentLocation: GpsCoords = [144, -122];
 
   // TODO: move to harnesses
   mocks = {
-    browser: createSpyObject(BrowserService),
-    snackBar: createSpyObject(MatSnackBar),
+    browser: createSpyOfType(BrowserService),
+    snackBar: createSpyOfType(MatSnackBar),
   };
 
   harnesses = {
@@ -82,15 +60,8 @@ export class WeatherGraphContext extends AngularContext<InitOptions> {
   rootElement!: Element;
   debugElement!: DebugElement;
 
-  protected spectator!: SpectatorHost<AppComponent>;
-
   static setUp() {
-    WeatherGraphContext.createHost = createHostFactory({
-      component: AppComponent,
-      declareComponent: false,
-      imports: [AppModule, HttpClientTestingModule],
-      providers: [{ provide: ComponentFixtureAutoDetect, useValue: true }],
-    });
+    AngularContext.setUp();
   }
 
   constructor() {
@@ -99,6 +70,13 @@ export class WeatherGraphContext extends AngularContext<InitOptions> {
       async () => this.currentLocation,
     );
     this.mocks.browser.hasFocus.and.returnValue(true);
+
+    this.moduleMetadata.imports.push(AppModule);
+    this.moduleMetadata.providers.push(
+      { provide: BrowserService, useValue: this.mocks.browser },
+      { provide: MatSnackBar, useValue: this.mocks.snackBar },
+    );
+    this.moduleMetadata.declarations.push(TestComponent);
   }
 
   expectGenericErrorShown() {
@@ -147,15 +125,23 @@ export class WeatherGraphContext extends AngularContext<InitOptions> {
   }
 
   private createComponent() {
-    this.spectator = WeatherGraphContext.createHost(hostTemplate, {
-      hostProps: this.screenSize,
-      providers: [
-        { provide: BrowserService, useValue: this.mocks.browser },
-        { provide: MatSnackBar, useValue: this.mocks.snackBar },
-      ],
-    });
-    this.fixture = this.spectator.fixture;
-    this.rootElement = this.spectator.hostElement;
-    this.debugElement = this.spectator.debugElement;
+    this.fixture = TestBed.createComponent(TestComponent);
+    this.fixture.detectChanges();
+    this.tick();
+
+    // TODO: remove these & just use fixture?
+    this.rootElement = this.fixture.nativeElement;
+    this.debugElement = this.fixture.debugElement;
   }
 }
+
+@Component({
+  template: `
+    <div
+      style="width: 400px; height: 600px; position: relative; margin: 20px auto; border: 1px solid;"
+    >
+      <app-root></app-root>
+    </div>
+  `,
+})
+class TestComponent {}
