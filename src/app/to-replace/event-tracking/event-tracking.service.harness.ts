@@ -15,7 +15,6 @@ export class EventTrackingServiceHarness {
 
   getEvents(name: string) {
     if (!this.validNames.has(name)) {
-      // TODO: figure out how to avoid throwing errors in harnesses
       throw new Error(`${name} is not a valid event`);
     }
 

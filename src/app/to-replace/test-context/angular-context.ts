@@ -26,7 +26,7 @@ export function extendMetadata(
   return result;
 }
 
-export abstract class AngularContext<InitOptions> extends DomContext {
+export abstract class AngularContext<InitOptions = {}> extends DomContext {
   constructor(moduleMetadata: TestModuleMetadata) {
     super();
     TestBed.configureTestingModule(
