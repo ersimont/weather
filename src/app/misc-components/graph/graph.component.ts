@@ -1,25 +1,29 @@
 import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Injector } from '@angular/core';
+import {
+  defaultChartOptions,
+  getXAxisRange,
+} from 'app/misc-components/graph/chartjs-config';
+import { Condition, conditionInfo } from 'app/state/condition';
+import { SourceId } from 'app/state/source';
+import { AmountUnit } from 'app/state/units';
+import { WeatherState } from 'app/state/weather-state';
+import { WeatherStore } from 'app/state/weather-store';
 import { EventTrackingService } from 'app/to-replace/event-tracking/event-tracking.service';
 import {
   ChartData,
   ChartDataSets,
-  ChartOptions,
   ChartPoint,
   ChartTooltipItem,
   PointStyle,
 } from 'chart.js';
+import 'chartjs-plugin-annotation';
 import 'chartjs-plugin-zoom';
-import { forEach, keys } from 'micro-dash';
+import { cloneDeep, forEach, keys, set } from 'micro-dash';
 import { ThemeService } from 'ng2-charts';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DirectiveSuperclass } from 's-ng-utils';
-import { Condition, conditionInfo } from '../../state/condition';
-import { SourceId } from '../../state/source';
-import { AmountUnit, unitInfo } from '../../state/units';
-import { WeatherState } from '../../state/weather-state';
-import { WeatherStore } from '../../state/weather-store';
 import { SetRangeAction } from './set-range-action';
 
 const pointStyles: { [id in SourceId]: PointStyle } = {
@@ -77,65 +81,19 @@ export class GraphComponent extends DirectiveSuperclass {
     });
   }
 
-  // eslint-disable-next-line max-lines-per-function
-  private getChartOptions(): ChartOptions {
-    return {
-      responsive: true,
-      maintainAspectRatio: false,
-      animation: { duration: 0 },
-      legend: { display: false },
-      tooltips: {
-        footerFontStyle: 'italic',
-        callbacks: {
-          label: this.getTooltipLabel.bind(this),
-          footer: this.getTooltipFooter.bind(this),
-        },
-      },
-      scales: {
-        xAxes: [
-          {
-            type: 'time',
-            time: {
-              displayFormats: { day: 'dddd' },
-              tooltipFormat: 'dddd h:mm a',
-              minUnit: 'hour',
-            },
-            ticks: {
-              ...getXAxisRange(1),
-              major: { enabled: true, fontStyle: 'bold' },
-            },
-          },
-        ],
-        yAxes: [
-          { id: 'dynamic', position: 'left', ticks: { beginAtZero: true } },
-          { id: 'percentage', position: 'right', ticks: { min: 0, max: 100 } },
-          {
-            id: 'inches',
-            display: false,
-            ticks: { min: 0, max: unitInfo[AmountUnit.IN].convert(10) },
-          },
-          { id: 'millimeters', display: false, ticks: { min: 0, max: 10 } },
-        ],
-      },
-      plugins: {
-        zoom: {
-          pan: {
-            enabled: true,
-            mode: 'x',
-            onPanComplete: () => {
-              this.eventTrackingService.track('change_pan', 'zoom_and_pan');
-            },
-          },
-          zoom: {
-            enabled: true,
-            mode: 'x',
-            onZoomComplete: () => {
-              this.eventTrackingService.track('change_zoom', 'zoom_and_pan');
-            },
-          },
-        },
-      },
-    };
+  private getChartOptions() {
+    const options = cloneDeep(defaultChartOptions);
+    set(options, ['tooltips', 'callbacks'], {
+      label: this.getTooltipLabel.bind(this),
+      footer: this.getTooltipFooter.bind(this),
+    });
+    set(options, ['plugins', 'zoom', 'pan', 'onPanComplete'], () => {
+      this.eventTrackingService.track('change_pan', 'zoom_and_pan');
+    });
+    set(options, ['plugins', 'zoom', 'zoom', 'onZoomComplete'], () => {
+      this.eventTrackingService.track('change_zoom', 'zoom_and_pan');
+    });
+    return options;
   }
 
   private getTooltipLabel(item: ChartTooltipItem, data: ChartData) {
@@ -149,17 +107,6 @@ export class GraphComponent extends DirectiveSuperclass {
     const sourceId = decodeLabelValues(items[0], data).sourceId;
     return `Source: ${this.store.state().sources[sourceId].label}`;
   }
-}
-
-function getXAxisRange(days: number) {
-  const d = new Date();
-  d.setMinutes(0, 0, 0);
-  const min = d.toISOString();
-
-  d.setDate(d.getDate() + days);
-  const max = d.toISOString();
-
-  return { min, max };
 }
 
 function addDataSets(
