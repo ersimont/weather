@@ -1,5 +1,6 @@
 import { AmountUnit, unitInfo } from 'app/state/units';
 import { ChartOptions } from 'chart.js';
+import { times } from 'micro-dash';
 
 export const defaultChartOptions: ChartOptions = {
   responsive: true,
@@ -41,6 +42,15 @@ export const defaultChartOptions: ChartOptions = {
   },
 };
 
+// separate b/c the typing complains
+(defaultChartOptions as any).annotation = {
+  drawTime: 'beforeDatasetsDraw',
+  annotations: [
+    ...times(20, (i) => buildDayLine(i - 4)),
+    buildLine(new Date(), 'indianred'),
+  ],
+};
+
 export function getXAxisRange(days: number) {
   const d = new Date();
   d.setMinutes(0, 0, 0);
@@ -50,4 +60,21 @@ export function getXAxisRange(days: number) {
   const max = d.toISOString();
 
   return { min, max };
+}
+
+function buildDayLine(offset: number) {
+  const date = new Date();
+  date.setHours(0, 0, 0, 0);
+  date.setDate(date.getDate() + offset);
+  return buildLine(date, 'silver');
+}
+
+function buildLine(date: Date, color: string) {
+  return {
+    type: 'line',
+    mode: 'vertical',
+    scaleID: 'x-axis-0',
+    value: +date,
+    borderColor: color,
+  };
 }

@@ -29,6 +29,7 @@
     "@ngrx/store": "^9.0.0",
     "@ngrx/store-devtools": "^9.0.0",
     "chart.js": "^2.8.0",
+    "chartjs-plugin-annotation": "^0.5.7",
     "chartjs-plugin-zoom": "^0.7.4",
     "micro-dash": "^7.0.0",
     "moment": "^2.24.0",
