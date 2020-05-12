@@ -52,6 +52,7 @@ import { PrivacyPolicyComponent } from './misc-components/privacy-policy/privacy
     OptionsModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.name === 'production',
+      registrationStrategy: 'registerWithDelay',
     }),
     StoreModule.forRoot({}, { metaReducers: [ngAppStateReducer] }),
     environment.name === 'development' ? StoreDevtoolsModule.instrument() : [],
