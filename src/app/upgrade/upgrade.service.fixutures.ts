@@ -42,3 +42,60 @@ export const v6Default = {
     wind: true,
   },
 };
+
+export const v5Example = {
+  version: 5,
+  useCurrentLocation: true,
+  currentLocation: {
+    search: '',
+    gpsCoords: [42.1716779, -85.5900794],
+    city: 'Portage, MI',
+  },
+  customLocation: {
+    search: '',
+  },
+  sources: {
+    weatherGov: {
+      label: 'Weather.gov',
+      show: false,
+      forecast: {
+        '1569441600000': {
+          temp: 22.77777777777783,
+          feel: 22.77777777777783,
+          dew: 16.666666666666742,
+          chance: 13,
+          amount: 0,
+          wind: 6.687772,
+        },
+      },
+    },
+    weatherUnlocked: {
+      label: 'Weather Unlocked',
+      show: true,
+      forecast: {
+        '1589241600000': {
+          amount: 0,
+          cloud: 4,
+          dew: 1,
+          feel: 5,
+          temp: 7.5,
+          wind: 8,
+        },
+      },
+    },
+  },
+  units: {
+    temp: '°C',
+    amount: 'mm',
+    speed: 'km/h',
+  },
+  showConditions: {
+    temp: true,
+    feel: false,
+    dew: true,
+    wind: false,
+    chance: true,
+    amount: true,
+  },
+  allowSourceFallback: false,
+};

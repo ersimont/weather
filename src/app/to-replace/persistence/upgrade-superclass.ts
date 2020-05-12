@@ -7,20 +7,19 @@ export interface Upgradable {
 export class UpgradeSuperclass<T extends Upgradable> {
   protected upgradeFrom: Record<
     number,
-    (upgradable: T, targetVersion: number) => void
+    (upgradable: T, targetVersion: number) => T
   > = {};
 
   upgrade(upgradable: T, fresh: T) {
     try {
-      this.upgradeTo(fresh._version, upgradable);
-      return upgradable;
+      return this.upgradeTo(fresh._version, upgradable);
     } catch (error) {
       this.onError(error);
       return fresh;
     }
   }
 
-  protected upgradeFromLegacy(_upgradable: T, _targetVersion: number) {
+  protected upgradeFromLegacy(_upgradable: T, _targetVersion: number): T {
     throw new Error('Unable to upgrade from legacy version');
   }
 
@@ -32,7 +31,7 @@ export class UpgradeSuperclass<T extends Upgradable> {
     let lastVersion = upgradable._version;
     assert(lastVersion === undefined || lastVersion <= targetVersion);
     while (lastVersion !== targetVersion) {
-      this.upgradeOneStep(upgradable, targetVersion);
+      upgradable = this.upgradeOneStep(upgradable, targetVersion);
       const newVersion = upgradable._version;
       if (lastVersion) {
         assert(
@@ -46,14 +45,15 @@ export class UpgradeSuperclass<T extends Upgradable> {
       );
       lastVersion = newVersion;
     }
+    return upgradable;
   }
 
   private upgradeOneStep(upgradable: T, targetVersion: number) {
     const version = upgradable._version;
     if (version === undefined) {
-      this.upgradeFromLegacy(upgradable, targetVersion);
+      return this.upgradeFromLegacy(upgradable, targetVersion);
     } else if (this.upgradeFrom[version]) {
-      this.upgradeFrom[version](upgradable, targetVersion);
+      return this.upgradeFrom[version](upgradable, targetVersion);
     } else {
       throw new Error(`Unable to upgrade from version ${version}`);
     }

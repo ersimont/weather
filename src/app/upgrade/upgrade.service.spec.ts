@@ -1,7 +1,11 @@
 import { LocationIqServiceHarness } from 'app/misc-services/location-iq.service.harness';
 import { WeatherStoreHarness } from 'app/state/weather-store.harness';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
-import { defaultState, v6Default } from 'app/upgrade/upgrade.service.fixutures';
+import {
+  defaultState,
+  v5Example,
+  v6Default,
+} from 'app/upgrade/upgrade.service.fixutures';
 import { WhatsNewComponentHarness } from 'app/upgrade/whats-new.component.harness';
 
 describe('UpgradeService', () => {
@@ -32,6 +36,16 @@ describe('UpgradeService', () => {
       ]);
 
       iq.expectReverse();
+    });
+  });
+
+  it('uses a fresh state from v5, logging an error', () => {
+    ctx.initialState = v5Example as any;
+    ctx.run({ flushDefaultRequests: false }, () => {
+      expect(store.getPersistedState()).toEqual(defaultState);
+
+      iq.expectReverse();
+      ctx.expectGenericErrorShown();
     });
   });
 });

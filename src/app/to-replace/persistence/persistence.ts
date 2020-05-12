@@ -21,9 +21,10 @@ export class Persistence<T extends Upgradable> {
     const saved = JSON.parse(savedStr);
     if (upgrader) {
       assert(defaultValue);
-      upgrader.upgrade(saved, defaultValue);
+      return upgrader.upgrade(saved, defaultValue);
+    } else {
+      return saved;
     }
-    return saved;
   }
 
   put(state: T) {
