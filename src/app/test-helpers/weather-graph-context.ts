@@ -19,7 +19,7 @@ import { WeatherState } from 'app/state/weather-state';
 import { WeatherStateHarness } from 'app/state/weather-state.harness';
 import { WeatherStoreHarness } from 'app/state/weather-store.harness';
 import { eventCatalog } from 'app/test-helpers/event-catalog';
-import { createSpyOfType } from 'app/to-replace/create-spy-of-type';
+import { createSpyObject } from 'app/to-replace/create-spy-object';
 import { EventTrackingServiceHarness } from 'app/to-replace/event-tracking/event-tracking.service.harness';
 import { ComponentContext } from 'app/to-replace/test-context/component-context';
 import { WhatsNewComponentHarness } from 'app/upgrade/whats-new.component.harness';
@@ -39,8 +39,8 @@ export class WeatherGraphContext extends ComponentContext<
 
   // TODO: move to harnesses
   mocks = {
-    browser: createSpyOfType(BrowserService),
-    snackBar: createSpyOfType(MatSnackBar),
+    browser: createSpyObject(BrowserService),
+    snackBar: createSpyObject(MatSnackBar),
   };
 
   harnesses = {

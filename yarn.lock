@@ -7586,10 +7586,10 @@ s-js-utils@^6.0.0:
   resolved "https://registry.yarnpkg.com/s-js-utils/-/s-js-utils-6.2.1.tgz#fa8b953933d409ff44cb869d74719a6f87188288"
   integrity sha512-BCLSHdpgq+FXmT1AUZkdnXukKl+sttSMpXdurQCzPPTAgQRTcgNm7Hb0uzfW2/eLC95hsViDZuDzlkwxP1MjlQ==
 
-s-ng-dev-utils@^1.1.1:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/s-ng-dev-utils/-/s-ng-dev-utils-1.1.2.tgz#70730a2ca1b121d757dbbd7ff6782e52b7ff5f8d"
-  integrity sha512-72CUvkYB+vLhQi+B87gY4tWtth7ke3Cexn9mHPrX5lp87iJZ90wHxUvYJ6007hqvMVJamBPuUVH3XV4BW+QFBA==
+s-ng-dev-utils@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/s-ng-dev-utils/-/s-ng-dev-utils-1.2.0.tgz#2934db5fa44634e20c9423fe2aba5dd3ddeaae1f"
+  integrity sha512-lorDyuMK1Bf9i+nI/Ff6VG9Vcawe/9BB7B1oqtzr+Cuid6fCySlK1efptmnoG8Np0rANM8U7njZJaqVILjI/lQ==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^2.29.0"
     "@typescript-eslint/parser" "^2.29.0"

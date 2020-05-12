@@ -11,7 +11,7 @@ import {
   AngularContext,
   extendMetadata,
 } from 'app/to-replace/test-context/angular-context';
-import { trimLeftoverStyles } from 'app/to-replace/trim-leftover-styles';
+import { trimLeftoverStyles } from 's-ng-dev-utils';
 
 export abstract class ComponentContext<
   ComponentType,
