@@ -1,19 +1,29 @@
 import { HarnessEnvironment } from '@angular/cdk/testing';
 import { UnitTestElement } from '@angular/cdk/testing/testbed';
-import { flush, tick } from '@angular/core/testing';
+import { flush } from '@angular/core/testing';
+import { synchronize } from 'app/to-replace/fake-async-harnesses/synchronize';
+import { AngularContext } from 'app/to-replace/test-context/angular-context';
 import { bindKey } from 'micro-dash';
 
 export class FakeAsyncHarnessEnvironment extends HarnessEnvironment<Element> {
+  static documentRootLoader(ctx: AngularContext) {
+    return synchronize(new FakeAsyncHarnessEnvironment(document.body, ctx));
+  }
+
+  protected constructor(rawRootElement: Element, private ctx: AngularContext) {
+    super(rawRootElement);
+  }
+
   async waitForTasksOutsideAngular() {
     flush();
   }
 
   async forceStabilize() {
-    tick();
+    this.ctx.tick();
   }
 
   protected createEnvironment(element: Element) {
-    return new FakeAsyncHarnessEnvironment(element);
+    return new FakeAsyncHarnessEnvironment(element, this.ctx);
   }
 
   protected createTestElement(element: Element) {
