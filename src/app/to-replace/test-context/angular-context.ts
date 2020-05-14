@@ -2,10 +2,16 @@ import {
   HttpClientTestingModule,
   HttpTestingController,
 } from '@angular/common/http/testing';
-import { AbstractType, InjectionToken, Type } from '@angular/core';
+import {
+  AbstractType,
+  ApplicationRef,
+  InjectionToken,
+  Type,
+} from '@angular/core';
 import {
   discardPeriodicTasks,
   fakeAsync,
+  flushMicrotasks,
   TestBed,
   TestModuleMetadata,
   tick,
@@ -60,6 +66,8 @@ export abstract class AngularContext<InitOptions = {}> extends DomContext {
   }
 
   tick(millis?: number) {
+    flushMicrotasks();
+    this.inject(ApplicationRef).tick();
     tick(millis);
   }
 

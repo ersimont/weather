@@ -5,6 +5,7 @@ import {
   flushMicrotasks,
   TestBed,
   TestModuleMetadata,
+  tick,
 } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
@@ -32,7 +33,7 @@ export abstract class ComponentContext<
   tick(millis?: number) {
     flushMicrotasks();
     this.fixture.detectChanges();
-    super.tick(millis);
+    tick(millis);
   }
 
   protected init(_options: Partial<InitOptions>) {

@@ -40,12 +40,11 @@ function synchronizePromise<T extends PromiseLike<any>>(promise: T) {
   return synchronize(awaited);
 }
 
-const proxyTarget = Symbol('proxy target');
+const proxyTarget = Symbol('proxy target'); // trick from https://stackoverflow.com/a/53431924/1836506
 function synchronizeObject(obj: any): any {
   return new Proxy(obj, {
     get(target, p, receiver) {
       if (p === proxyTarget) {
-        // https://stackoverflow.com/a/53431924/1836506
         return obj;
       } else {
         return synchronize(Reflect.get(target, p, receiver));

@@ -13,12 +13,9 @@ import {
   provideErrorHandler,
   SnackBarErrorService,
 } from 'app/to-replace/snack-bar-error.service';
-import { ComponentContext } from 'app/to-replace/test-context/component-context';
-import { DummyComponent } from 'app/to-replace/test-context/dummy.component';
+import { AngularContext } from 'app/to-replace/test-context/angular-context';
 
-class Context extends ComponentContext<DummyComponent, {}> {
-  protected componentType = DummyComponent;
-
+class Context extends AngularContext {
   constructor() {
     super({
       imports: [
@@ -27,7 +24,6 @@ class Context extends ComponentContext<DummyComponent, {}> {
         NoopAnimationsModule,
       ],
       providers: [provideErrorHandler()],
-      declarations: [DummyComponent],
     });
   }
 
