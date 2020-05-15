@@ -1,11 +1,11 @@
-import { AppComponentHarness } from 'app/app.component.harness';
-import { GraphComponentHarness } from 'app/misc-components/graph/graph.component.harness';
-import { LocationIqServiceHarness } from 'app/misc-services/location-iq.service.harness';
-import { RefreshServiceHarness } from 'app/misc-services/refresh.service.harness';
-import { LocationOptionsComponentHarness } from 'app/options/location-options/location-options.component.harness';
-import { WeatherGovHarness } from 'app/sources/weather-gov/weather-gov.harness';
-import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
-import { EventTrackingServiceHarness } from 'app/to-replace/event-tracking/event-tracking.service.harness';
+import { AppComponentHarness } from "app/app.component.harness";
+import { GraphComponentHarness } from "app/misc-components/graph/graph.component.harness";
+import { LocationIqServiceHarness } from "app/misc-services/location-iq.service.harness";
+import { RefreshServiceHarness } from "app/misc-services/refresh.service.harness";
+import { LocationOptionsComponentHarness } from "app/options/location-options/location-options.component.harness";
+import { WeatherGovHarness } from "app/sources/weather-gov/weather-gov.harness";
+import { WeatherGraphContext } from "app/test-helpers/weather-graph-context";
+import { EventTrackingServiceHarness } from "app/to-replace/event-tracking/event-tracking.service.harness";
 
 describe('LocationService', () => {
   let ctx: WeatherGraphContext;
@@ -13,11 +13,10 @@ describe('LocationService', () => {
   let gov: WeatherGovHarness;
   let graph: GraphComponentHarness;
   let iq: LocationIqServiceHarness;
-  let location: LocationOptionsComponentHarness;
   let refresh: RefreshServiceHarness;
   beforeEach(() => {
     ctx = new WeatherGraphContext();
-    ({ events, gov, graph, iq, location, refresh } = ctx.harnesses);
+    ({ events, gov, graph, iq, refresh } = ctx.harnesses);
   });
 
   it('clears the forecasts when changing whether to use current', () => {
@@ -28,7 +27,7 @@ describe('LocationService', () => {
       gov.flushFixture([0, 0]);
       expect(graph.showsData()).toBe(true);
 
-      location.select('Current');
+      ctx.getHarness(LocationOptionsComponentHarness).select('Current');
       expect(graph.showsData()).toBe(false);
 
       iq.expectReverse();
@@ -37,6 +36,7 @@ describe('LocationService', () => {
 
   it('tracks an event when searching for a new location', () => {
     ctx.run(() => {
+      const location = ctx.getHarness(LocationOptionsComponentHarness);
       location.setCustomLocation('Neverland');
       expect(events.getEvents('change_custom_search').length).toBe(1);
       expect(events.getEvents('change_current_selection').length).toBe(0);
@@ -48,6 +48,7 @@ describe('LocationService', () => {
   it('triggers title changes when changing location', () => {
     ctx.initialState.customLocation.search = '';
     ctx.run(() => {
+      const location = ctx.getHarness(LocationOptionsComponentHarness);
       const app = ctx.getHarness(AppComponentHarness);
 
       location.select('Custom');
@@ -77,6 +78,7 @@ describe('LocationService', () => {
   it('triggers data changes when changing location', () => {
     ctx.initialState.customLocation.search = '';
     ctx.run(() => {
+      const location = ctx.getHarness(LocationOptionsComponentHarness);
       location.select('Custom');
       expect(graph.showsData()).toBe(false);
 
@@ -99,6 +101,7 @@ describe('LocationService', () => {
   describe('using current location', () => {
     it('allows a reverse lookup to be cancelled', () => {
       ctx.run(() => {
+        const location = ctx.getHarness(LocationOptionsComponentHarness);
         refresh.trigger();
         location.setCustomLocation('Montreal');
         expect(iq.expectReverse().isCancelled()).toBe(true);
@@ -151,6 +154,7 @@ describe('LocationService', () => {
     it('clears the forecasts when searching for a new location', () => {
       ctx.initialState.customLocation.gpsCoords = [0, 0];
       ctx.run({ flushDefaultRequests: false }, () => {
+        const location = ctx.getHarness(LocationOptionsComponentHarness);
         gov.flushFixture([0, 0]);
         expect(graph.showsData()).toBe(true);
 
@@ -163,6 +167,7 @@ describe('LocationService', () => {
 
     it('shows a nice message when not found, and can retry', () => {
       ctx.run({ flushDefaultRequests: false }, () => {
+        const location = ctx.getHarness(LocationOptionsComponentHarness);
         iq.expectForward('Initial search').flushError(404);
         ctx.expectErrorShown('Location not found');
 
@@ -186,6 +191,7 @@ describe('LocationService', () => {
         city: 'Montreal, QC',
       };
       ctx.run({ flushDefaultRequests: false }, () => {
+        const location = ctx.getHarness(LocationOptionsComponentHarness);
         // no call to locationIq
         gov.flushFixture([45.4972159, -73.6103642]);
 

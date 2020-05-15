@@ -1,53 +1,42 @@
+import { ComponentHarness } from '@angular/cdk/testing';
+import { MatExpansionPanelHarness } from '@angular/material/expansion/testing';
+import { MatInputHarness } from '@angular/material/input/testing';
+import { MatRadioGroupHarness } from '@angular/material/radio/testing';
 import { AppComponentHarness } from 'app/app.component.harness';
-import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
-import { AbstractComponentHarness } from 'app/to-replace/test-context/abstract-component-harness';
 
-export class LocationOptionsComponentHarness extends AbstractComponentHarness {
-  constructor(private ctx: WeatherGraphContext) {
-    super();
+export class LocationOptionsComponentHarness extends ComponentHarness {
+  static hostSelector = 'app-location-options';
+
+  private getApp = this.documentRootLocatorFactory().locatorFor(
+    AppComponentHarness,
+  );
+  private getExpansionPanel = this.locatorFor(MatExpansionPanelHarness);
+  private getRadioGroup = this.locatorFor(MatRadioGroupHarness);
+  private getInput = this.locatorFor(MatInputHarness);
+
+  async setCustomLocation(search: string) {
+    await this.ensureExpanded();
+    await (await this.getInput()).setValue(search);
+    this.getNativeInput().dispatchEvent(new Event('change'));
   }
 
-  setCustomLocation(search: string) {
-    this.ensureExpanded();
-    const customInput = this.getCustomInput();
-    this.ctx.setText(search, customInput);
-    this.ctx.dispatchChange(customInput);
-  }
-
-  select(label: string) {
-    this.ensureExpanded();
-    this.ctx.click(this.getRadioLabel(label));
-  }
-
-  ensureExpanded() {
-    this.ctx.getHarness(AppComponentHarness).ensureSidenavOpen();
-    if (!this.isExpanded()) {
-      this.ctx.click(this.getHeader());
-    }
-  }
-
-  isExpanded() {
-    return this.getHeader().classList.contains('mat-expanded');
-  }
-
-  getHeader() {
-    return this.get<HTMLElement>('mat-expansion-panel-header');
-  }
-
-  getRadioLabel(text: string) {
-    const container = this.get('.radio-container', { text });
-    return this.get<HTMLElement>('mat-radio-button label', {
-      parent: container,
+  async select(label: 'Current' | 'Custom') {
+    await this.ensureExpanded();
+    await (await this.getRadioGroup()).checkRadioButton({
+      label: label === 'Custom' ? '' : label,
     });
   }
 
-  getCustomInput() {
-    return this.get<HTMLInputElement>('mat-form-field input');
+  async ensureExpanded() {
+    await (await this.getApp()).ensureSidenavOpen();
+    await (await this.getExpansionPanel()).expand();
   }
 
-  protected getHost() {
-    return this.get('app-location-options', {
-      parent: this.ctx.fixture.nativeElement,
-    });
+  async isExpanded() {
+    return (await this.getExpansionPanel()).isExpanded();
+  }
+
+  private getNativeInput() {
+    return document.querySelector('app-location-options mat-form-field input')!;
   }
 }

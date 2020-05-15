@@ -7,7 +7,6 @@ import { GraphComponentHarness } from 'app/misc-components/graph/graph.component
 import { BrowserService } from 'app/misc-services/browser.service';
 import { LocationIqServiceHarness } from 'app/misc-services/location-iq.service.harness';
 import { RefreshServiceHarness } from 'app/misc-services/refresh.service.harness';
-import { LocationOptionsComponentHarness } from 'app/options/location-options/location-options.component.harness';
 import { SourceOptionsComponentHarness } from 'app/options/source-options/source-options.component.harness';
 import { UnitOptionsComponentHarness } from 'app/options/unit-options/unit-options.component.harness';
 import { ClimacellHarness } from 'app/sources/climacell/climacell.harness';
@@ -47,7 +46,6 @@ export class WeatherGraphContext extends ComponentContext<
     gov: new WeatherGovHarness(this),
     graph: new GraphComponentHarness(this),
     iq: new LocationIqServiceHarness(this),
-    location: new LocationOptionsComponentHarness(this),
     refresh: new RefreshServiceHarness(this),
     sources: new SourceOptionsComponentHarness(this),
     state: new WeatherStateHarness(this),
@@ -110,6 +108,7 @@ export class WeatherGraphContext extends ComponentContext<
     // https://github.com/angular/components/blob/b612fc42895e47377b353e773d4ba3517c0991e1/src/material/dialog/dialog.spec.ts#L80
     this.inject(OverlayContainer).ngOnDestroy();
     this.tick(1); // the CDK queues this up for its FocusManager
+    this.tick(150); // material ripple effects set this
   }
 }
 
