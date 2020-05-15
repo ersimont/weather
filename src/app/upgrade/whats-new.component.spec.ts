@@ -9,7 +9,7 @@ describe('WhatsNewComponent', () => {
 
   it('does not show when there is no upgrade', () => {
     ctx.run(() => {
-      expect(ctx.getAllHarnesses(WhatsNewComponentHarness).length).toBe(0);
+      expect(ctx.getHarnessOptional(WhatsNewComponentHarness)).toBeNull();
     });
   });
 });

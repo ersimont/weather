@@ -105,18 +105,14 @@ describe('SnackBarErrorService', () => {
   });
 
   describe('.show()', () => {
-    function getSnackBarCount() {
-      return ctx.getAllHarnesses(MatSnackBarHarness).length;
-    }
-
     it('displays a snack bar for 5 seconds', () => {
       ctx.run(() => {
         service.show('hi');
-        expect(getSnackBarCount()).toBe(1);
+        expect(ctx.getHarnessOptional(MatSnackBarHarness)).not.toBeNull();
         ctx.tick(4999);
-        expect(getSnackBarCount()).toBe(1);
+        expect(ctx.getHarnessOptional(MatSnackBarHarness)).not.toBeNull();
         ctx.tick(1);
-        expect(getSnackBarCount()).toBe(0);
+        expect(ctx.getHarnessOptional(MatSnackBarHarness)).toBeNull();
       });
     });
 
@@ -133,7 +129,7 @@ describe('SnackBarErrorService', () => {
         const snackBar = ctx.getHarness(MatSnackBarHarness);
         expect(snackBar.getActionDescription()).toBe('OK');
         snackBar.dismissWithAction();
-        expect(getSnackBarCount()).toBe(0);
+        expect(ctx.getHarnessOptional(MatSnackBarHarness)).toBeNull();
       });
     });
   });

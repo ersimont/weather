@@ -83,6 +83,12 @@ export abstract class AngularContext<InitOptions = {}> extends DomContext {
     return this.loader.getHarness(query) as SynchronizedObject<T>;
   }
 
+  getHarnessOptional<T extends ComponentHarness>(
+    query: HarnessQuery<T>,
+  ): SynchronizedObject<T> {
+    return this.loader.locatorForOptional(query)();
+  }
+
   getAllHarnesses<T extends ComponentHarness>(
     query: HarnessQuery<T>,
   ): Array<SynchronizedObject<T>> {
