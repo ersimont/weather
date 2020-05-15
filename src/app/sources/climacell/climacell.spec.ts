@@ -8,16 +8,17 @@ describe('Climacell', () => {
   let ctx: WeatherGraphContext;
   let climacell: ClimacellHarness;
   let iq: LocationIqServiceHarness;
-  let sources: SourceOptionsComponentHarness;
   beforeEach(() => {
     ctx = new WeatherGraphContext();
-    ({ climacell, iq, sources } = ctx.harnesses);
+    ({ climacell, iq } = ctx.harnesses);
 
     ctx.harnesses.state.setShowing(SourceId.CLIMACELL);
   });
 
   it('can cancel its request', () => {
     ctx.run({ flushDefaultRequests: false }, () => {
+      const sources = ctx.getHarness(SourceOptionsComponentHarness);
+
       iq.flushReverse();
       sources.toggle('Climacell');
       expect(climacell.expectHourly().isCancelled()).toBe(true);

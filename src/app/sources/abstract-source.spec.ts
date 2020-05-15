@@ -13,14 +13,15 @@ describe('AbstractSource', () => {
   let gov: WeatherGovHarness;
   let unlocked: WeatherUnlockedHarness;
   let refresh: RefreshServiceHarness;
-  let sources: SourceOptionsComponentHarness;
   beforeEach(() => {
     ctx = new WeatherGraphContext();
-    ({ iq, gov, unlocked, refresh, sources } = ctx.harnesses);
+    ({ iq, gov, unlocked, refresh } = ctx.harnesses);
   });
 
   it('refreshes (only) when showing', () => {
     ctx.run(() => {
+      const sources = ctx.getHarness(SourceOptionsComponentHarness);
+
       refresh.trigger();
       iq.flushReverse();
       gov.flushFixture();

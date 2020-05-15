@@ -1,39 +1,28 @@
+import { ComponentHarness } from '@angular/cdk/testing';
+import { MatExpansionPanelHarness } from '@angular/material/expansion/testing';
+import { MatSlideToggleHarness } from '@angular/material/slide-toggle/testing';
 import { AppComponentHarness } from 'app/app.component.harness';
-import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
-import { AbstractComponentHarness } from 'app/to-replace/test-context/abstract-component-harness';
 
-export class SourceOptionsComponentHarness extends AbstractComponentHarness {
-  constructor(private ctx: WeatherGraphContext) {
-    super();
+export class SourceOptionsComponentHarness extends ComponentHarness {
+  static hostSelector = 'app-source-options';
+
+  private getApp = this.documentRootLocatorFactory().locatorFor(
+    AppComponentHarness,
+  );
+  private getExpansionPanel = this.locatorFor(MatExpansionPanelHarness);
+
+  async toggle(label: string) {
+    await this.ensureExpanded();
+    await (await this.getToggle(label)).toggle();
   }
 
-  toggle(label: string) {
-    this.ensureExpanded();
-    this.ctx.click(this.getToggleLabel(label));
+  private async ensureExpanded() {
+    await (await this.getApp()).ensureSidenavOpen();
+    await (await this.getExpansionPanel()).expand();
   }
 
-  ensureExpanded() {
-    this.ctx.getHarness(AppComponentHarness).ensureSidenavOpen();
-    if (!this.isExpanded()) {
-      this.ctx.click(this.getHeader());
-    }
-  }
-
-  isExpanded() {
-    return this.getHeader().classList.contains('mat-expanded');
-  }
-
-  getHeader() {
-    return this.get<HTMLElement>('mat-expansion-panel-header');
-  }
-
-  getToggleLabel(text: string) {
-    return this.get<HTMLElement>('label', { text });
-  }
-
-  protected getHost() {
-    return this.get('app-source-options', {
-      parent: this.ctx.fixture.nativeElement,
-    });
+  private getToggle(label: string) {
+    const locator = this.locatorFor(MatSlideToggleHarness.with({ label }));
+    return locator();
   }
 }

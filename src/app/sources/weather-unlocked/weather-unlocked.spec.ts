@@ -7,17 +7,18 @@ import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 describe('WeatherUnlocked', () => {
   let ctx: WeatherGraphContext;
   let iq: LocationIqServiceHarness;
-  let sources: SourceOptionsComponentHarness;
   let unlocked: WeatherUnlockedHarness;
   beforeEach(() => {
     ctx = new WeatherGraphContext();
-    ({ iq, sources, unlocked } = ctx.harnesses);
+    ({ iq, unlocked } = ctx.harnesses);
 
     ctx.harnesses.state.setShowing(SourceId.WEATHER_UNLOCKED);
   });
 
   it('can cancel its request', () => {
     ctx.run({ flushDefaultRequests: false }, () => {
+      const sources = ctx.getHarness(SourceOptionsComponentHarness);
+
       iq.flushReverse();
       sources.toggle('Weather Unlocked');
       expect(unlocked.expectForecast().isCancelled()).toBe(true);

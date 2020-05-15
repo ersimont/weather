@@ -10,14 +10,15 @@ describe('WeatherGov', () => {
   let gov: WeatherGovHarness;
   let iq: LocationIqServiceHarness;
   let refresh: RefreshServiceHarness;
-  let sources: SourceOptionsComponentHarness;
   beforeEach(() => {
     ctx = new WeatherGraphContext();
-    ({ gov, iq, refresh, sources } = ctx.harnesses);
+    ({ gov, iq, refresh } = ctx.harnesses);
   });
 
   it('can cancel the first request', () => {
     ctx.run({ flushDefaultRequests: false }, () => {
+      const sources = ctx.getHarness(SourceOptionsComponentHarness);
+
       iq.flushReverse();
       sources.toggle('Weather.gov');
       expect(gov.expectPoints().isCancelled()).toBe(true);
@@ -29,6 +30,8 @@ describe('WeatherGov', () => {
 
   it('can cancel the second request', () => {
     ctx.run({ flushDefaultRequests: false }, () => {
+      const sources = ctx.getHarness(SourceOptionsComponentHarness);
+
       iq.flushReverse();
       gov.expectPoints().flush(pointResponse);
       sources.toggle('Weather.gov');

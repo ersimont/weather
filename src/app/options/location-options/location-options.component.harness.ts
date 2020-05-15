@@ -27,13 +27,13 @@ export class LocationOptionsComponentHarness extends ComponentHarness {
     });
   }
 
-  async ensureExpanded() {
-    await (await this.getApp()).ensureSidenavOpen();
-    await (await this.getExpansionPanel()).expand();
-  }
-
   async isExpanded() {
     return (await this.getExpansionPanel()).isExpanded();
+  }
+
+  private async ensureExpanded() {
+    await (await this.getApp()).ensureSidenavOpen();
+    await (await this.getExpansionPanel()).expand();
   }
 
   private getNativeInput() {
