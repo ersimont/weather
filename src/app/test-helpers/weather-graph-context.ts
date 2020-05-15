@@ -2,7 +2,6 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AppComponentHarness } from 'app/app.component.harness';
 import { AppModule } from 'app/app.module';
 import { GraphComponentHarness } from 'app/misc-components/graph/graph.component.harness';
 import { BrowserService } from 'app/misc-services/browser.service';
@@ -43,7 +42,6 @@ export class WeatherGraphContext extends ComponentContext<
   };
 
   harnesses = {
-    app: new AppComponentHarness(this),
     climacell: new ClimacellHarness(this),
     events: new EventTrackingServiceHarness(eventCatalog),
     gov: new WeatherGovHarness(this),

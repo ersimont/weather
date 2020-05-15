@@ -9,7 +9,6 @@ import { EventTrackingServiceHarness } from 'app/to-replace/event-tracking/event
 
 describe('LocationService', () => {
   let ctx: WeatherGraphContext;
-  let app: AppComponentHarness;
   let events: EventTrackingServiceHarness;
   let gov: WeatherGovHarness;
   let graph: GraphComponentHarness;
@@ -18,7 +17,7 @@ describe('LocationService', () => {
   let refresh: RefreshServiceHarness;
   beforeEach(() => {
     ctx = new WeatherGraphContext();
-    ({ app, events, gov, graph, iq, location, refresh } = ctx.harnesses);
+    ({ events, gov, graph, iq, location, refresh } = ctx.harnesses);
   });
 
   it('clears the forecasts when changing whether to use current', () => {
@@ -49,6 +48,8 @@ describe('LocationService', () => {
   it('triggers title changes when changing location', () => {
     ctx.initialState.customLocation.search = '';
     ctx.run(() => {
+      const app = ctx.getHarness(AppComponentHarness);
+
       location.select('Custom');
       expect(app.getTitle()).toBe(app.defaultTitle);
 
@@ -110,6 +111,7 @@ describe('LocationService', () => {
       locationStub.and.returnValue(Promise.reject('not allowed'));
       ctx.initialState.currentLocation.city = 'A previous value';
       ctx.run({ flushDefaultRequests: false }, () => {
+        const app = ctx.getHarness(AppComponentHarness);
         expect(app.getTitle()).toBe(app.defaultTitle);
 
         locationStub.and.returnValue(Promise.resolve(ctx.currentLocation));
@@ -125,6 +127,8 @@ describe('LocationService', () => {
     it('clears the city after an error in the reverse lookup, and allows refreshing', () => {
       ctx.initialState.currentLocation.city = 'A previous value';
       ctx.run({ flushDefaultRequests: false }, () => {
+        const app = ctx.getHarness(AppComponentHarness);
+
         iq.expectReverse().flushError();
         expect(app.getTitle()).toBe(app.defaultTitle);
 

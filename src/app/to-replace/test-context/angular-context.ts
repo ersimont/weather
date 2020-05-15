@@ -21,7 +21,7 @@ import {
   tick,
 } from '@angular/core/testing';
 import { FakeAsyncHarnessEnvironment } from 'app/to-replace/fake-async-harnesses/fake-async-harness-environment';
-import { SynchronizedObject } from 'app/to-replace/fake-async-harnesses/synchronize';
+import { Synchronized } from 'app/to-replace/fake-async-harnesses/synchronize';
 import { DomContext } from 'app/to-replace/test-context/dom-context';
 import { clone, forOwn, isFunction } from 'micro-dash';
 import { isArray } from 'rxjs/internal-compatibility';
@@ -77,23 +77,17 @@ export abstract class AngularContext<InitOptions = {}> extends DomContext {
     return TestBed.inject(token);
   }
 
-  getHarness<T extends ComponentHarness>(
-    query: HarnessQuery<T>,
-  ): SynchronizedObject<T> {
-    return this.loader.getHarness(query) as SynchronizedObject<T>;
+  getHarness<T extends ComponentHarness>(query: HarnessQuery<T>) {
+    return this.loader.getHarness(query) as Synchronized<T>;
   }
 
-  getHarnessOptional<T extends ComponentHarness>(
-    query: HarnessQuery<T>,
-  ): SynchronizedObject<T> {
-    return this.loader.locatorForOptional(query)();
+  getHarnessOptional<T extends ComponentHarness>(query: HarnessQuery<T>) {
+    return this.loader.locatorForOptional(query)() as Synchronized<T>;
   }
 
-  getAllHarnesses<T extends ComponentHarness>(
-    query: HarnessQuery<T>,
-  ): Array<SynchronizedObject<T>> {
+  getAllHarnesses<T extends ComponentHarness>(query: HarnessQuery<T>) {
     return (this.loader.getAllHarnesses(query) as unknown) as Array<
-      SynchronizedObject<T>
+      Synchronized<T>
     >;
   }
 

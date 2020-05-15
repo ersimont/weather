@@ -1,45 +1,38 @@
-import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
-import { AbstractComponentHarness } from 'app/to-replace/test-context/abstract-component-harness';
+import { ComponentHarness } from '@angular/cdk/testing';
+import { MatButtonHarness } from '@angular/material/button/testing';
+import { MatActionListItemHarness } from '@angular/material/list/testing';
+import { MatSidenavHarness } from '@angular/material/sidenav/testing';
 
-export class AppComponentHarness extends AbstractComponentHarness {
+export class AppComponentHarness extends ComponentHarness {
+  static hostSelector = 'app-root';
+
   defaultTitle = 'Weather Graph';
 
-  constructor(private ctx: WeatherGraphContext) {
-    super();
+  private getMenuButton = this.locatorFor(
+    MatButtonHarness.with({ text: 'menu' }),
+  );
+  private getPrivacyPolicyItem = this.locatorFor(
+    MatActionListItemHarness.with({ text: 'Privacy Policy' }),
+  );
+  private getSidenav = this.locatorFor(MatSidenavHarness);
+
+  async openPrivacyPolicy() {
+    await this.ensureSidenavOpen();
+    await (await this.getPrivacyPolicyItem()).click();
   }
 
-  openPrivacyPolicy() {
-    this.ensureSidenavExpanded();
-    this.ctx.click(this.getPrivacyPolicyButton());
-  }
-
-  ensureSidenavExpanded() {
-    if (!this.isSidenavExpanded()) {
-      this.ctx.click(this.getMenuButton());
+  async ensureSidenavOpen() {
+    if (!(await this.isSidenavOpen())) {
+      await (await this.getMenuButton()).click();
     }
   }
 
-  isSidenavExpanded() {
-    return this.getSidenav().classList.contains('mat-drawer-opened');
+  async isSidenavOpen() {
+    return (await this.getSidenav()).isOpen();
   }
 
-  getTitle() {
-    return this.get('h1').textContent;
-  }
-
-  private getMenuButton() {
-    return this.get<HTMLElement>('button', { text: 'menu' });
-  }
-
-  private getPrivacyPolicyButton() {
-    return this.get<HTMLButtonElement>('button', { text: 'Privacy Policy' });
-  }
-
-  private getSidenav() {
-    return this.get<HTMLElement>('mat-sidenav');
-  }
-
-  protected getHost() {
-    return this.get('app-root', { parent: this.ctx.fixture.nativeElement });
+  async getTitle() {
+    const loader = await this.locatorFor('h1');
+    return (await loader()).text();
   }
 }

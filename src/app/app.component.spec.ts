@@ -7,19 +7,18 @@ import { EventTrackingServiceHarness } from 'app/to-replace/event-tracking/event
 
 describe('AppComponent', () => {
   let ctx: WeatherGraphContext;
-  let app: AppComponentHarness;
   let events: EventTrackingServiceHarness;
   let gov: WeatherGovHarness;
   let iq: LocationIqServiceHarness;
   let location: LocationOptionsComponentHarness;
   beforeEach(() => {
     ctx = new WeatherGraphContext();
-    ({ app, events, gov, iq, location } = ctx.harnesses);
+    ({ events, gov, iq, location } = ctx.harnesses);
   });
 
   it('tracks an event when opening the privacy policy', () => {
     ctx.run(() => {
-      app.openPrivacyPolicy();
+      ctx.getHarness(AppComponentHarness).openPrivacyPolicy();
       expect(events.getEvents('click_privacy_policy').length).toBe(1);
     });
   });
@@ -51,8 +50,10 @@ describe('AppComponent', () => {
         // when the app opens
         ctx.initialState.useCurrentLocation = true;
         ctx.run({ flushDefaultRequests: false }, () => {
+          const app = ctx.getHarness(AppComponentHarness);
+
           ctx.expectErrorShown('Location not found');
-          expect(app.isSidenavExpanded()).toBe(true);
+          expect(app.isSidenavOpen()).toBe(true);
           expect(location.isExpanded()).toBe(true);
 
           // when switching to Current
@@ -72,8 +73,10 @@ describe('AppComponent', () => {
         ctx.initialState.customLocation.search = 'an old search';
         ctx.initialState.customLocation.gpsCoords = [0, 0];
         ctx.run({ flushDefaultRequests: false }, () => {
+          const app = ctx.getHarness(AppComponentHarness);
+
           ctx.expectErrorShown('Location not found');
-          expect(app.isSidenavExpanded()).toBe(true);
+          expect(app.isSidenavOpen()).toBe(true);
           expect(location.isExpanded()).toBe(true);
 
           // when switching to Current

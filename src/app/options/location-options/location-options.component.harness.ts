@@ -20,7 +20,7 @@ export class LocationOptionsComponentHarness extends AbstractComponentHarness {
   }
 
   ensureExpanded() {
-    new AppComponentHarness(this.ctx).ensureSidenavExpanded();
+    this.ctx.getHarness(AppComponentHarness).ensureSidenavOpen();
     if (!this.isExpanded()) {
       this.ctx.click(this.getHeader());
     }
