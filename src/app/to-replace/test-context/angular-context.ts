@@ -22,7 +22,6 @@ import {
 } from '@angular/core/testing';
 import { FakeAsyncHarnessEnvironment } from 'app/to-replace/fake-async-harnesses/fake-async-harness-environment';
 import { Synchronized } from 'app/to-replace/fake-async-harnesses/synchronize';
-import { DomContext } from 'app/to-replace/test-context/dom-context';
 import { clone, forOwn, isFunction } from 'micro-dash';
 import { isArray } from 'rxjs/internal-compatibility';
 import { assert } from 's-js-utils';
@@ -38,11 +37,10 @@ export function extendMetadata(
   return result;
 }
 
-export abstract class AngularContext<InitOptions = {}> extends DomContext {
+export abstract class AngularContext<InitOptions = {}> {
   private loader = FakeAsyncHarnessEnvironment.documentRootLoader(this);
 
   constructor(moduleMetadata: TestModuleMetadata) {
-    super();
     TestBed.configureTestingModule(
       extendMetadata(moduleMetadata, { imports: [HttpClientTestingModule] }),
     );
@@ -95,11 +93,6 @@ export abstract class AngularContext<InitOptions = {}> extends DomContext {
     flushMicrotasks();
     this.inject(ApplicationRef).tick();
     tick(millis);
-  }
-
-  dispatch(event: Event, element: Element) {
-    super.dispatch(event, element);
-    this.tick();
   }
 
   protected init(_options: Partial<InitOptions>) {}
