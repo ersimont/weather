@@ -1,16 +1,12 @@
-import { AbstractComponentHarness } from 'app/to-replace/test-context/abstract-component-harness';
+import { ComponentHarness } from '@angular/cdk/testing';
 
-export class WhatsNewComponentHarness extends AbstractComponentHarness {
-  getFeatures() {
-    return this.getAll('li').map((li) => li.textContent);
-  }
+export class WhatsNewComponentHarness extends ComponentHarness {
+  static hostSelector = 'app-whats-new';
 
-  isShowing() {
-    // TODO: move to a framework-y way to get other-than-1 harness
-    return this.getAll('app-whats-new', { parent: document.body }).length > 0;
-  }
+  private getItems = this.locatorForAll('li');
 
-  protected getHost() {
-    return this.get('app-whats-new', { parent: document.body });
+  async getFeatures() {
+    const items = await this.getItems();
+    return Promise.all(items.map((li) => li.text()));
   }
 }

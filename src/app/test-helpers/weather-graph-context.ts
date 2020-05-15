@@ -22,7 +22,6 @@ import { eventCatalog } from 'app/test-helpers/event-catalog';
 import { createSpyObject } from 'app/to-replace/create-spy-object';
 import { EventTrackingServiceHarness } from 'app/to-replace/event-tracking/event-tracking.service.harness';
 import { ComponentContext } from 'app/to-replace/test-context/component-context';
-import { WhatsNewComponentHarness } from 'app/upgrade/whats-new.component.harness';
 import { expectSingleCallAndReset } from 's-ng-dev-utils';
 
 export interface InitOptions {
@@ -57,7 +56,6 @@ export class WeatherGraphContext extends ComponentContext<
     store: new WeatherStoreHarness(),
     units: new UnitOptionsComponentHarness(this),
     unlocked: new WeatherUnlockedHarness(this),
-    whatsNew: new WhatsNewComponentHarness(),
   };
 
   protected componentType = TestComponent;

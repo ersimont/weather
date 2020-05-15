@@ -6,8 +6,6 @@ import { MatSnackBarHarness } from '@angular/material/snack-bar/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { EventTrackingModule } from 'app/to-replace/event-tracking/event-tracking.module';
 import { EventTrackingServiceHarness } from 'app/to-replace/event-tracking/event-tracking.service.harness';
-import { FakeAsyncHarnessEnvironment } from 'app/to-replace/fake-async-harnesses/fake-async-harness-environment';
-import { Synchronized } from 'app/to-replace/fake-async-harnesses/synchronize';
 import {
   PresentableError,
   provideErrorHandler,
@@ -107,23 +105,11 @@ describe('SnackBarErrorService', () => {
   });
 
   describe('.show()', () => {
-    let loader: Synchronized<FakeAsyncHarnessEnvironment>;
-    beforeEach(() => {
-      loader = FakeAsyncHarnessEnvironment.documentRootLoader(ctx);
-    });
-
-    function getSnackBar() {
-      return loader.getHarness(MatSnackBarHarness) as Synchronized<
-        MatSnackBarHarness
-      >;
-    }
-
     function getSnackBarCount() {
-      return loader.getAllHarnesses(MatSnackBarHarness).length;
+      return ctx.getAllHarnesses(MatSnackBarHarness).length;
     }
 
     it('displays a snack bar for 5 seconds', () => {
-      // TODO: try applicationRef.tick() instead of using a dummy component
       ctx.run(() => {
         service.show('hi');
         expect(getSnackBarCount()).toBe(1);
@@ -137,15 +123,14 @@ describe('SnackBarErrorService', () => {
     it('shows the message', () => {
       ctx.run(() => {
         service.show('hi');
-        const snackBar = getSnackBar();
-        expect(snackBar.getMessage()).toBe('hi');
+        expect(ctx.getHarness(MatSnackBarHarness).getMessage()).toBe('hi');
       });
     });
 
     it('is dismissable with "OK"', () => {
       ctx.run(() => {
         service.show('hi');
-        const snackBar = getSnackBar();
+        const snackBar = ctx.getHarness(MatSnackBarHarness);
         expect(snackBar.getActionDescription()).toBe('OK');
         snackBar.dismissWithAction();
         expect(getSnackBarCount()).toBe(0);

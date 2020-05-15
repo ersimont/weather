@@ -15,8 +15,8 @@ import {
 import { trimLeftoverStyles } from 's-ng-dev-utils';
 
 export abstract class ComponentContext<
-  ComponentType,
-  InitOptions
+  ComponentType = unknown,
+  InitOptions = {}
 > extends AngularContext<InitOptions> {
   fixture!: ComponentFixture<unknown>;
   protected abstract componentType: Type<ComponentType>;

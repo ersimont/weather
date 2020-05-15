@@ -1,4 +1,8 @@
 import {
+  ComponentHarness,
+  HarnessQuery,
+} from '@angular/cdk/testing/component-harness';
+import {
   HttpClientTestingModule,
   HttpTestingController,
 } from '@angular/common/http/testing';
@@ -16,6 +20,8 @@ import {
   TestModuleMetadata,
   tick,
 } from '@angular/core/testing';
+import { FakeAsyncHarnessEnvironment } from 'app/to-replace/fake-async-harnesses/fake-async-harness-environment';
+import { SynchronizedObject } from 'app/to-replace/fake-async-harnesses/synchronize';
 import { DomContext } from 'app/to-replace/test-context/dom-context';
 import { clone, forOwn, isFunction } from 'micro-dash';
 import { isArray } from 'rxjs/internal-compatibility';
@@ -33,6 +39,8 @@ export function extendMetadata(
 }
 
 export abstract class AngularContext<InitOptions = {}> extends DomContext {
+  private loader = FakeAsyncHarnessEnvironment.documentRootLoader(this);
+
   constructor(moduleMetadata: TestModuleMetadata) {
     super();
     TestBed.configureTestingModule(
@@ -55,6 +63,10 @@ export abstract class AngularContext<InitOptions = {}> extends DomContext {
       this.init(options);
       try {
         test();
+      } catch (err) {
+        // tslint:disable-next-line:no-console
+        console.debug(err);
+        throw err;
       } finally {
         this.cleanUp();
       }
@@ -63,6 +75,20 @@ export abstract class AngularContext<InitOptions = {}> extends DomContext {
 
   inject<T>(token: Type<T> | InjectionToken<T> | AbstractType<T>) {
     return TestBed.inject(token);
+  }
+
+  getHarness<T extends ComponentHarness>(
+    query: HarnessQuery<T>,
+  ): SynchronizedObject<T> {
+    return this.loader.getHarness(query) as SynchronizedObject<T>;
+  }
+
+  getAllHarnesses<T extends ComponentHarness>(
+    query: HarnessQuery<T>,
+  ): Array<SynchronizedObject<T>> {
+    return (this.loader.getAllHarnesses(query) as unknown) as Array<
+      SynchronizedObject<T>
+    >;
   }
 
   tick(millis?: number) {

@@ -3,15 +3,13 @@ import { WhatsNewComponentHarness } from 'app/upgrade/whats-new.component.harnes
 
 describe('WhatsNewComponent', () => {
   let ctx: WeatherGraphContext;
-  let whatsNew: WhatsNewComponentHarness;
   beforeEach(() => {
     ctx = new WeatherGraphContext();
-    ({ whatsNew } = ctx.harnesses);
   });
 
   it('does not show when there is no upgrade', () => {
     ctx.run(() => {
-      expect(whatsNew.isShowing()).toBe(false);
+      expect(ctx.getAllHarnesses(WhatsNewComponentHarness).length).toBe(0);
     });
   });
 });
