@@ -1,39 +1,16 @@
-import { AppComponentHarness } from 'app/app.component.harness';
-import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
-import { AbstractComponentHarness } from 'app/to-replace/test-context/abstract-component-harness';
+import { MatButtonToggleHarness } from '@angular/material/button-toggle/testing';
+import { AbstractOptionPanelHarness } from 'app/test-helpers/abstract-option-panel-harness';
 
-export class UnitOptionsComponentHarness extends AbstractComponentHarness {
-  constructor(private ctx: WeatherGraphContext) {
-    super();
+export class UnitOptionsComponentHarness extends AbstractOptionPanelHarness {
+  static hostSelector = 'app-unit-options';
+
+  async select(unitLabel: string) {
+    await this.ensureExpanded();
+    await (await this.getButton(unitLabel)).check();
   }
 
-  select(unitLabel: string) {
-    this.ensureExpanded();
-    this.ctx.click(this.getButton(unitLabel));
-  }
-
-  ensureExpanded() {
-    this.ctx.getHarness(AppComponentHarness).ensureSidenavOpen();
-    if (!this.isExpanded()) {
-      this.ctx.click(this.getHeader());
-    }
-  }
-
-  isExpanded() {
-    return this.getHeader().classList.contains('mat-expanded');
-  }
-
-  getHeader() {
-    return this.get<HTMLElement>('mat-expansion-panel-header');
-  }
-
-  getButton(text: string) {
-    return this.get<HTMLButtonElement>('button', { text });
-  }
-
-  protected getHost() {
-    return this.get('app-unit-options', {
-      parent: this.ctx.fixture.nativeElement,
-    });
+  private getButton(text: string) {
+    const locator = this.locatorFor(MatButtonToggleHarness.with({ text }));
+    return locator();
   }
 }

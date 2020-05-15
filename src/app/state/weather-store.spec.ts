@@ -8,16 +8,15 @@ describe('WeatherStore', () => {
   let ctx: WeatherGraphContext;
   let events: EventTrackingServiceHarness;
   let store: WeatherStoreHarness;
-  let units: UnitOptionsComponentHarness;
   beforeEach(() => {
     ctx = new WeatherGraphContext();
-    ({ events, store, units } = ctx.harnesses);
+    ({ events, store } = ctx.harnesses);
   });
 
   it('persists changes to the state', () => {
     ctx.initialState.units.amount = AmountUnit.IN;
     ctx.run(() => {
-      units.select('MM');
+      ctx.getHarness(UnitOptionsComponentHarness).select('MM');
       expect(store.getPersistedState().units.amount).toBe(AmountUnit.MM);
     });
   });

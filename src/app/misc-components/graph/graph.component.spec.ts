@@ -15,11 +15,10 @@ describe('GraphComponent', () => {
   let graph: GraphComponentHarness;
   let iq: LocationIqServiceHarness;
   let state: WeatherStateHarness;
-  let units: UnitOptionsComponentHarness;
   let unlocked: WeatherUnlockedHarness;
   beforeEach(() => {
     ctx = new WeatherGraphContext();
-    ({ graph, gov, iq, state, units, unlocked } = ctx.harnesses);
+    ({ graph, gov, iq, state, unlocked } = ctx.harnesses);
   });
 
   describe('tooltip', () => {
@@ -36,7 +35,7 @@ describe('GraphComponent', () => {
         expect(
           graph.getTooltipLabel(SourceId.WEATHER_UNLOCKED, Condition.TEMP, 0),
         ).toBe('Temp: 22 °C');
-        units.select('°F');
+        ctx.getHarness(UnitOptionsComponentHarness).select('°F');
         expect(
           graph.getTooltipLabel(SourceId.WEATHER_UNLOCKED, Condition.TEMP, 0),
         ).toBe('Temp: 71 °F');
@@ -53,7 +52,7 @@ describe('GraphComponent', () => {
         expect(graph.getTooltipFooter(SourceId.WEATHER_GOV)).toBe(
           'Source: Weather.gov',
         );
-        units.select('°F');
+        ctx.getHarness(UnitOptionsComponentHarness).select('°F');
         expect(graph.getTooltipFooter(SourceId.WEATHER_UNLOCKED)).toBe(
           'Source: Weather Unlocked',
         );

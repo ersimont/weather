@@ -7,7 +7,6 @@ import { GraphComponentHarness } from 'app/misc-components/graph/graph.component
 import { BrowserService } from 'app/misc-services/browser.service';
 import { LocationIqServiceHarness } from 'app/misc-services/location-iq.service.harness';
 import { RefreshServiceHarness } from 'app/misc-services/refresh.service.harness';
-import { UnitOptionsComponentHarness } from 'app/options/unit-options/unit-options.component.harness';
 import { ClimacellHarness } from 'app/sources/climacell/climacell.harness';
 import { WeatherGovHarness } from 'app/sources/weather-gov/weather-gov.harness';
 import { WeatherUnlockedHarness } from 'app/sources/weather-unlocked/weather-unlocked.harness';
@@ -48,7 +47,6 @@ export class WeatherGraphContext extends ComponentContext<
     refresh: new RefreshServiceHarness(this),
     state: new WeatherStateHarness(this),
     store: new WeatherStoreHarness(),
-    units: new UnitOptionsComponentHarness(this),
     unlocked: new WeatherUnlockedHarness(this),
   };
 
