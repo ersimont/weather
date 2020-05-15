@@ -5,7 +5,7 @@ import { Condition, Conditions } from 'app/state/condition';
 import { Forecast } from 'app/state/forecast';
 import { GpsCoords } from 'app/state/location';
 import { SourceId } from 'app/state/source';
-import { get } from 'micro-dash';
+import { get, round } from 'micro-dash';
 import { duration } from 'moment';
 import { throwError } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
@@ -53,8 +53,10 @@ export class WeatherGov extends AbstractSource {
   }
 
   private fetchPoint(gpsCoords: GpsCoords) {
+    const endpoint = `https://api.weather.gov/points`;
     return this.httpClient.get<PointResponse>(
-      `https://api.weather.gov/points/${gpsCoords.join(',')}`,
+      // weather.gov seems to redirect to a URL w/ GPS rounded to 4 decimal places. So we'll save the extra request.
+      `${endpoint}/${gpsCoords.map((coord) => round(coord, 4)).join(',')}`,
     );
   }
 

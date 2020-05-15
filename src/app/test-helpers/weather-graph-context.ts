@@ -108,7 +108,7 @@ export class WeatherGraphContext extends ComponentContext<
     // https://github.com/angular/components/blob/b612fc42895e47377b353e773d4ba3517c0991e1/src/material/dialog/dialog.spec.ts#L80
     this.inject(OverlayContainer).ngOnDestroy();
     this.tick(1); // the CDK queues this up for its FocusManager
-    this.tick(150); // material ripple effects set this
+    this.tick(150); // material ripple effect
   }
 }
 

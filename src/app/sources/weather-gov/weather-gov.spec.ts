@@ -54,4 +54,12 @@ describe('WeatherGov', () => {
       gov.flushFixture();
     });
   });
+
+  it('rounds gps coordinates to 4 decimal places', () => {
+    ctx.currentLocation = [12.34567, 76.54321];
+    ctx.run({ flushDefaultRequests: false }, () => {
+      iq.flushReverse();
+      gov.expectPoints([12.3457, 76.5432]);
+    });
+  });
 });

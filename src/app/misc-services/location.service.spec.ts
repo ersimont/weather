@@ -1,11 +1,11 @@
-import { AppComponentHarness } from "app/app.component.harness";
-import { GraphComponentHarness } from "app/misc-components/graph/graph.component.harness";
-import { LocationIqServiceHarness } from "app/misc-services/location-iq.service.harness";
-import { RefreshServiceHarness } from "app/misc-services/refresh.service.harness";
-import { LocationOptionsComponentHarness } from "app/options/location-options/location-options.component.harness";
-import { WeatherGovHarness } from "app/sources/weather-gov/weather-gov.harness";
-import { WeatherGraphContext } from "app/test-helpers/weather-graph-context";
-import { EventTrackingServiceHarness } from "app/to-replace/event-tracking/event-tracking.service.harness";
+import { AppComponentHarness } from 'app/app.component.harness';
+import { GraphComponentHarness } from 'app/misc-components/graph/graph.component.harness';
+import { LocationIqServiceHarness } from 'app/misc-services/location-iq.service.harness';
+import { RefreshServiceHarness } from 'app/misc-services/refresh.service.harness';
+import { LocationOptionsComponentHarness } from 'app/options/location-options/location-options.component.harness';
+import { WeatherGovHarness } from 'app/sources/weather-gov/weather-gov.harness';
+import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
+import { EventTrackingServiceHarness } from 'app/to-replace/event-tracking/event-tracking.service.harness';
 
 describe('LocationService', () => {
   let ctx: WeatherGraphContext;
@@ -187,13 +187,13 @@ describe('LocationService', () => {
       ctx.initialState.useCurrentLocation = false;
       ctx.initialState.customLocation = {
         search: 'Montreal',
-        gpsCoords: [45.4972159, -73.6103642],
+        gpsCoords: [45.4972, -73.6104],
         city: 'Montreal, QC',
       };
       ctx.run({ flushDefaultRequests: false }, () => {
         const location = ctx.getHarness(LocationOptionsComponentHarness);
         // no call to locationIq
-        gov.flushFixture([45.4972159, -73.6103642]);
+        gov.flushFixture([45.4972, -73.6104]);
 
         location.select('Current');
         iq.flushReverse();
@@ -201,7 +201,7 @@ describe('LocationService', () => {
 
         location.select('Custom');
         // no call to locationIq
-        gov.flushFixture([45.4972159, -73.6103642]);
+        gov.flushFixture([45.4972, -73.6104]);
       });
     });
   });

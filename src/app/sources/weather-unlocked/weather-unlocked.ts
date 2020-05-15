@@ -48,6 +48,7 @@ export class WeatherUnlocked extends AbstractSource {
 
   private fetchRes(gpsCoords: GpsCoords) {
     return this.httpClient.get<ForecastResponse>(
+      // weather unlocked docs say to use 3 decimal places
       `${endpoint}/${gpsCoords.map((coord) => round(coord, 3)).join(',')}`,
     );
   }
