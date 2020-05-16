@@ -19,7 +19,7 @@ import {
 } from 'chart.js';
 import 'chartjs-plugin-annotation';
 import 'chartjs-plugin-zoom';
-import { cloneDeep, forEach, keys, set } from 'micro-dash';
+import { cloneDeep, debounce, forEach, keys, set } from 'micro-dash';
 import { ThemeService } from 'ng2-charts';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -87,12 +87,20 @@ export class GraphComponent extends DirectiveSuperclass {
       label: this.getTooltipLabel.bind(this),
       footer: this.getTooltipFooter.bind(this),
     });
-    set(options, ['plugins', 'zoom', 'pan', 'onPanComplete'], () => {
-      this.eventTrackingService.track('change_pan', 'zoom_and_pan');
-    });
-    set(options, ['plugins', 'zoom', 'zoom', 'onZoomComplete'], () => {
-      this.eventTrackingService.track('change_zoom', 'zoom_and_pan');
-    });
+    set(
+      options,
+      ['plugins', 'zoom', 'pan', 'onPan'],
+      debounce(() => {
+        this.eventTrackingService.track('change_pan', 'zoom_and_pan');
+      }, 5000),
+    );
+    set(
+      options,
+      ['plugins', 'zoom', 'zoom', 'onZoom'],
+      debounce(() => {
+        this.eventTrackingService.track('change_zoom', 'zoom_and_pan');
+      }, 5000),
+    );
     return options;
   }
 

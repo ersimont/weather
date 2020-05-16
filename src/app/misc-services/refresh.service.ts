@@ -3,7 +3,14 @@ import { BrowserService } from 'app/misc-services/browser.service';
 import { LocationService } from 'app/misc-services/location.service';
 import { EventTrackingService } from 'app/to-replace/event-tracking/event-tracking.service';
 import { fromEvent, interval, merge, Observable, of } from 'rxjs';
-import { filter, mapTo, switchMap, tap, throttleTime } from 'rxjs/operators';
+import {
+  filter,
+  mapTo,
+  startWith,
+  switchMap,
+  tap,
+  throttleTime,
+} from 'rxjs/operators';
 import { convertTime } from 's-js-utils';
 import { cache } from 's-rxjs-utils';
 
@@ -22,22 +29,21 @@ export class RefreshService {
   }
 
   private buildRefresh$() {
-    const init$ = of('init_refresh');
-    const location$ = this.locationService.refreshableChange$.pipe(
-      mapTo('location_change_refresh'),
-    );
     const interval$ = interval(refreshMillis).pipe(mapTo('interval_refresh'));
     const focus$ = fromEvent(window, 'focus').pipe(mapTo('focus_refresh'));
-
-    return merge(init$, location$).pipe(
-      switchMap((source) =>
-        merge(of(source), interval$, focus$).pipe(
+    return this.locationService.refreshableChange$.pipe(
+      startWith(undefined),
+      switchMap((source1) =>
+        merge(of(source1), focus$).pipe(
+          switchMap((source2) => merge(of(source2), interval$)),
           filter(() => this.browserService.hasFocus()),
           throttleTime(refreshMillis),
         ),
       ),
       tap((source) => {
-        this.eventTrackingService.track(source, 'refresh');
+        if (source) {
+          this.eventTrackingService.track(source, 'refresh');
+        }
       }),
       switchMap(() => this.locationService.refresh()),
       cache(),
