@@ -1,6 +1,6 @@
 <canvas
   baseChart
   chartType="line"
-  [options]="chartOptions"
+  [options]="optionStore.$ | async"
   [datasets]="dataSets$ | async"
 ></canvas>

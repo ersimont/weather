@@ -1,13 +1,15 @@
+import { GpsCoords } from 'app/state/location';
 import { AmountUnit, unitInfo } from 'app/state/units';
 import { ChartOptions } from 'chart.js';
-import { times } from 'micro-dash';
+import { convertTime } from 's-js-utils';
+import { getTimes, GetTimesResult } from 'suncalc';
 
 export const defaultChartOptions: ChartOptions = {
   responsive: true,
   maintainAspectRatio: false,
   animation: { duration: 0 },
   legend: { display: false },
-  tooltips: { footerFontStyle: 'italic' },
+  tooltips: { footerFontStyle: 'italic', callbacks: {} },
   scales: {
     xAxes: [
       {
@@ -17,10 +19,7 @@ export const defaultChartOptions: ChartOptions = {
           tooltipFormat: 'dddd h:mm a',
           minUnit: 'hour',
         },
-        ticks: {
-          ...getXAxisRange(1),
-          major: { enabled: true, fontStyle: 'bold' },
-        },
+        ticks: { major: { enabled: true, fontStyle: 'bold' } },
       },
     ],
     yAxes: [
@@ -43,38 +42,33 @@ export const defaultChartOptions: ChartOptions = {
 };
 
 // separate b/c the typing complains
-(defaultChartOptions as any).annotation = {
-  drawTime: 'beforeDatasetsDraw',
-  annotations: [
-    ...times(20, (i) => buildDayLine(i - 4)),
-    buildLine(new Date(), 'indianred'),
-  ],
-};
+(defaultChartOptions as any).annotation = { drawTime: 'beforeDatasetsDraw' };
 
-export function getXAxisRange(days: number) {
-  const d = new Date();
-  d.setMinutes(0, 0, 0);
-  const min = d.toISOString();
-
-  d.setDate(d.getDate() + days);
-  const max = d.toISOString();
-
-  return { min, max };
+const oneDay = convertTime(1, 'd', 'ms');
+export function buildNightBoxes(
+  min: number,
+  max: number,
+  gpsCoords: GpsCoords,
+) {
+  const sunTimes: GetTimesResult[] = [];
+  for (let time = min - oneDay; time < max + oneDay; time += oneDay) {
+    sunTimes.push(getTimes(new Date(time), ...gpsCoords));
+  }
+  return sunTimes.slice(0, -1).map(({ sunset }, i) => ({
+    type: 'box',
+    xScaleID: 'x-axis-0',
+    xMin: +sunset,
+    xMax: +sunTimes[i + 1].sunrise,
+    backgroundColor: 'rgb(0, 0, 0, 0.05)',
+  }));
 }
 
-function buildDayLine(offset: number) {
-  const date = new Date();
-  date.setHours(0, 0, 0, 0);
-  date.setDate(date.getDate() + offset);
-  return buildLine(date, 'silver');
-}
-
-function buildLine(date: Date, color: string) {
+export function buildNowLine() {
   return {
     type: 'line',
     mode: 'vertical',
     scaleID: 'x-axis-0',
-    value: +date,
-    borderColor: color,
+    value: +new Date(),
+    borderColor: 'indianred',
   };
 }

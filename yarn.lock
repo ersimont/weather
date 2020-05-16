@@ -1143,6 +1143,11 @@
   resolved "https://registry.yarnpkg.com/@types/source-list-map/-/source-list-map-0.1.2.tgz#0078836063ffaf17412349bba364087e0ac02ec9"
   integrity sha512-K5K+yml8LTo9bWJI/rECfIPrGgxdpeNbj+d53lwN4QjW1MCwlkhUms+gtdzigTeUyBr09+u8BwOIY3MXvHdcsA==
 
+"@types/suncalc@^1.8.0":
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/@types/suncalc/-/suncalc-1.8.0.tgz#0f5a91cf413e667ea472947c1962521c1064bf56"
+  integrity sha512-1Bx7KgoCLP8LuKaY9whWiX0Y8JMEB9gmZHNJigainwFuv3gEkZvTx0AGNvnA5nSu1daQcJDKScm9tNpW/ZjpjA==
+
 "@types/webpack-sources@^0.1.5":
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/@types/webpack-sources/-/webpack-sources-0.1.7.tgz#0a330a9456113410c74a5d64180af0cbca007141"
@@ -8431,6 +8436,11 @@ stylus@0.54.7:
     semver "^6.0.0"
     source-map "^0.7.3"
 
+suncalc@^1.8.0:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/suncalc/-/suncalc-1.8.0.tgz#1d9898109563078750f4994a959e654d876acbf5"
+  integrity sha1-HZiYEJVjB4dQ9JlKlZ5lTYdqy/U=
+
 supports-color@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-2.0.0.tgz#535d045ce6b6363fa40117084629995e9df324c7"
@@ -8991,7 +9001,7 @@ util@^0.11.0:
   dependencies:
     inherits "2.0.3"
 
-utility-types@~3.10.0:
+utility-types@^3.10.0, utility-types@~3.10.0:
   version "3.10.0"
   resolved "https://registry.yarnpkg.com/utility-types/-/utility-types-3.10.0.tgz#ea4148f9a741015f05ed74fd615e1d20e6bed82b"
   integrity sha512-O11mqxmi7wMKCo6HKFt5AhO4BwY3VV68YU07tgxfz8zJTIxr4BpsezN49Ffwy9j3ZpwwJp4fkRwjRzq3uWE6Rg==

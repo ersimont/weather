@@ -28,6 +28,7 @@
     "@angular/service-worker": "~9.1.4",
     "@ngrx/store": "^9.0.0",
     "@ngrx/store-devtools": "^9.0.0",
+    "@types/suncalc": "^1.8.0",
     "chart.js": "^2.8.0",
     "chartjs-plugin-annotation": "^0.5.7",
     "chartjs-plugin-zoom": "^0.7.4",
@@ -39,6 +40,7 @@
     "s-js-utils": "^6.0.0",
     "s-ng-utils": "^2.0.0",
     "s-rxjs-utils": "^3.0.0",
+    "suncalc": "^1.8.0",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"
   },
@@ -66,7 +68,8 @@
     "source-map-explorer": "^2.4.2",
     "ts-node": "~8.3.0",
     "tslint": "~6.1.0",
-    "typescript": "~3.8.3"
+    "typescript": "~3.8.3",
+    "utility-types": "^3.10.0"
   },
   "prettier": {
     "trailingComma": "all",

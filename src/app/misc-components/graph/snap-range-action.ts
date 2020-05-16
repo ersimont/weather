@@ -2,12 +2,13 @@ import { OperatorFunction } from 'rxjs';
 import { Action } from '@ngrx/store';
 import { filter } from 'rxjs/operators';
 
-export class SetRangeAction {
+// TODO: move to event service
+export class SnapRangeAction {
   static filter = filter(
-    ({ type }) => type === 'SET_RANGE',
-  ) as OperatorFunction<Action, SetRangeAction>;
+    ({ type }) => type === 'SNAP_RANGE',
+  ) as OperatorFunction<Action, SnapRangeAction>;
 
-  readonly type = 'SET_RANGE';
+  readonly type = 'SNAP_RANGE';
 
   constructor(public days: number) {}
 }

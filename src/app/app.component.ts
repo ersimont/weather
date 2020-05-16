@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSidenav } from '@angular/material/sidenav';
-import { SetRangeAction } from 'app/misc-components/graph/set-range-action';
+import { SnapRangeAction } from 'app/misc-components/graph/snap-range-action';
 import { PrivacyPolicyComponent } from 'app/misc-components/privacy-policy/privacy-policy.component';
 import { InitService } from 'app/misc-services/init.service';
 import { LocationService } from 'app/misc-services/location.service';
@@ -46,7 +46,7 @@ export class AppComponent extends DirectiveSuperclass {
   }
 
   setRange(days: number, action: string) {
-    this.store.dispatch(new SetRangeAction(days));
+    this.store.dispatch(new SnapRangeAction(days));
     this.eventTrackingService.track(action, 'set_range');
   }
 

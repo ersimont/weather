@@ -3,7 +3,7 @@ import { GraphComponent } from 'app/misc-components/graph/graph.component';
 import { Condition } from 'app/state/condition';
 import { SourceId } from 'app/state/source';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
-import { ChartPoint, ChartTooltipItem } from 'chart.js';
+import { ChartDataSets, ChartPoint, ChartTooltipItem } from 'chart.js';
 import { take } from 'rxjs/operators';
 
 const sourceOrder = [
@@ -28,30 +28,28 @@ export class GraphComponentHarness {
   }
 
   getTooltipLabel(sourceId: SourceId, condition: Condition, index: number) {
-    const chartOptions = this.getComponent().chartOptions;
-    const datasets = this.getDataSets();
-
     const datasetIndex =
       conditionOrder.length * sourceOrder.indexOf(sourceId) +
       conditionOrder.indexOf(condition);
-    const chartPoints = datasets[datasetIndex].data as ChartPoint[];
+    const chartPoints = this.getDataSets()[datasetIndex].data as ChartPoint[];
     const value = chartPoints[index].y!.toString();
     const item: ChartTooltipItem = { value, datasetIndex, index };
-    const getLabel = chartOptions.tooltips!.callbacks!.label!;
-    return getLabel(item, { datasets });
+    const getLabel = this.getOptions().tooltips.callbacks.label;
+    return getLabel(item, { datasets: this.getDataSets() });
   }
 
   getTooltipFooter(sourceId: SourceId) {
-    const chartOptions = this.getComponent().chartOptions;
-    const datasets = this.getDataSets();
-
     const datasetIndex = conditionOrder.length * sourceOrder.indexOf(sourceId);
-    const getFooter = chartOptions.tooltips!.callbacks!.footer!;
-    return getFooter([{ datasetIndex }], { datasets });
+    const getFooter = this.getOptions().tooltips.callbacks.footer;
+    return getFooter([{ datasetIndex }], { datasets: this.getDataSets() });
+  }
+
+  private getOptions() {
+    return this.getComponent().optionStore.state();
   }
 
   private getDataSets() {
-    let dataSets: Chart.ChartDataSets[];
+    let dataSets: ChartDataSets[];
     this.getComponent()
       .dataSets$.pipe(take(1))
       .subscribe((ds) => {
