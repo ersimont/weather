@@ -21,6 +21,7 @@ import { LocationService } from 'app/misc-services/location.service';
 import { conditionInfo } from 'app/state/condition';
 import { WeatherStore } from 'app/state/weather-store';
 import { EventTrackingService } from 'app/to-replace/event-tracking/event-tracking.service';
+import * as Chart from 'chart.js';
 import { ChartData, ChartOptions, ChartTooltipItem } from 'chart.js';
 import 'chartjs-plugin-annotation';
 import 'chartjs-plugin-zoom';
@@ -31,7 +32,6 @@ import { convertTime } from 's-js-utils';
 import { DirectiveSuperclass } from 's-ng-utils';
 import { DeepRequired } from 'utility-types';
 import { SnapRangeAction } from './snap-range-action';
-import * as Chart from 'chart.js';
 
 @Component({
   selector: 'app-graph',
@@ -41,8 +41,9 @@ import * as Chart from 'chart.js';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GraphComponent extends DirectiveSuperclass {
-  private optionStore: StoreObject<DeepRequired<ChartOptions>>;
-  private dataSets$ = this.store.$.pipe(map(buildDataSets));
+  // the are only public for tests
+  optionStore: StoreObject<DeepRequired<ChartOptions>>;
+  dataSets$ = this.store.$.pipe(map(buildDataSets));
 
   private trackPan = debounce(() => {
     this.eventTrackingService.track('change_pan', 'zoom_and_pan');

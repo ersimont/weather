@@ -17,13 +17,13 @@ export const defaultChartOptions: ChartOptions = {
     xAxes: [
       {
         type: 'time',
+        gridLines,
         time: {
           displayFormats: { day: 'dddd' },
           tooltipFormat: 'dddd h:mm a',
           minUnit: 'hour',
         },
         ticks: { major: { enabled: true, fontStyle: 'bold' } },
-        gridLines,
       },
     ],
     yAxes: [
