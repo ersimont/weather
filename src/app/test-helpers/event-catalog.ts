@@ -21,12 +21,7 @@ export const eventCatalog = {
   ],
   initialization: ['initialize_fresh_state', 'show_whats_new'],
   navigate: ['click_privacy_policy'],
-  refresh: [
-    'init_refresh', // TODO: remove
-    'location_change_refresh', // TODO: remove
-    'interval_refresh',
-    'focus_refresh',
-  ],
+  refresh: ['interval_refresh', 'focus_refresh'],
   set_range: ['click_day', 'click_three_days', 'click_week'],
   zoom_and_pan: ['change_pan', 'change_zoom'],
 };

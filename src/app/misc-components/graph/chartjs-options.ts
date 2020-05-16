@@ -4,6 +4,8 @@ import { ChartOptions } from 'chart.js';
 import { convertTime } from 's-js-utils';
 import { getTimes, GetTimesResult } from 'suncalc';
 
+const gridLines = { color: 'rgba(0, 0, 0, 0.05)' };
+
 export const defaultChartOptions: ChartOptions = {
   responsive: true,
   maintainAspectRatio: false,
@@ -20,11 +22,22 @@ export const defaultChartOptions: ChartOptions = {
           minUnit: 'hour',
         },
         ticks: { major: { enabled: true, fontStyle: 'bold' } },
+        gridLines,
       },
     ],
     yAxes: [
-      { id: 'dynamic', position: 'left', ticks: { beginAtZero: true } },
-      { id: 'percentage', position: 'right', ticks: { min: 0, max: 100 } },
+      {
+        id: 'dynamic',
+        position: 'left',
+        gridLines,
+        ticks: { beginAtZero: true },
+      },
+      {
+        id: 'percentage',
+        position: 'right',
+        gridLines,
+        ticks: { min: 0, max: 100 },
+      },
       {
         id: 'inches',
         display: false,
@@ -44,13 +57,19 @@ export const defaultChartOptions: ChartOptions = {
 // separate b/c the typing complains
 (defaultChartOptions as any).annotation = { drawTime: 'beforeDatasetsDraw' };
 
-const oneDay = convertTime(1, 'd', 'ms');
+export function buildMaxRange() {
+  const min = midnight(-1);
+  const max = midnight(8);
+  return { rangeMin: { x: min }, rangeMax: { x: max } };
+}
+
 export function buildNightBoxes(
   min: number,
   max: number,
   gpsCoords: GpsCoords,
 ) {
   const sunTimes: GetTimesResult[] = [];
+  const oneDay = convertTime(1, 'd', 'ms');
   for (let time = min - oneDay; time < max + oneDay; time += oneDay) {
     sunTimes.push(getTimes(new Date(time), ...gpsCoords));
   }
@@ -71,4 +90,10 @@ export function buildNowLine() {
     value: +new Date(),
     borderColor: 'indianred',
   };
+}
+
+function midnight(offset: number) {
+  const date = new Date();
+  date.setHours(0, 0, 0, 0);
+  return +date + convertTime(offset, 'd', 'ms');
 }

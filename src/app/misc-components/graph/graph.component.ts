@@ -6,6 +6,7 @@ import {
   decodeLabelValues,
 } from 'app/misc-components/graph/chartjs-datasets';
 import {
+  buildMaxRange,
   buildNightBoxes,
   buildNowLine,
   defaultChartOptions,
@@ -89,13 +90,14 @@ export class GraphComponent extends DirectiveSuperclass {
 
   private setRange({ min, max }: { min: number; max: number }) {
     this.optionStore('scales')('xAxes')(0)('ticks').assign({ min, max });
+    const maxRange = buildMaxRange();
+    this.optionStore('plugins')('zoom')('pan').assign(maxRange);
+    this.optionStore('plugins')('zoom')('zoom').assign(maxRange);
 
     const gpsCoords = this.locationService.getLocation().gpsCoords;
     const nightBoxes = gpsCoords ? buildNightBoxes(min, max, gpsCoords) : [];
-    this.optionStore('annotation' as any)('annotations').set([
-      ...nightBoxes,
-      buildNowLine(),
-    ]);
+    const annotations = [...nightBoxes, buildNowLine()];
+    this.optionStore('annotation' as any).assign({ annotations });
   }
 
   private getTooltipLabel(item: ChartTooltipItem, data: ChartData) {
