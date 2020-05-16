@@ -1,5 +1,11 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Injector } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Injector,
+  ViewChild,
+} from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
   buildDataSets,
@@ -25,6 +31,7 @@ import { convertTime } from 's-js-utils';
 import { DirectiveSuperclass } from 's-ng-utils';
 import { DeepRequired } from 'utility-types';
 import { SnapRangeAction } from './snap-range-action';
+import * as Chart from 'chart.js';
 
 @Component({
   selector: 'app-graph',
@@ -34,8 +41,8 @@ import { SnapRangeAction } from './snap-range-action';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GraphComponent extends DirectiveSuperclass {
-  optionStore: StoreObject<DeepRequired<ChartOptions>>;
-  dataSets$ = this.store.$.pipe(map(buildDataSets));
+  private optionStore: StoreObject<DeepRequired<ChartOptions>>;
+  private dataSets$ = this.store.$.pipe(map(buildDataSets));
 
   private trackPan = debounce(() => {
     this.eventTrackingService.track('change_pan', 'zoom_and_pan');
@@ -62,6 +69,21 @@ export class GraphComponent extends DirectiveSuperclass {
     this.snapRange(1);
     this.subscribeTo(store.action$.pipe(SnapRangeAction.filter), ({ days }) => {
       this.snapRange(days);
+    });
+  }
+
+  @ViewChild('canvas')
+  set canvas(canvas: ElementRef<HTMLCanvasElement>) {
+    const chart = new Chart(canvas.nativeElement.getContext('2d')!, {
+      type: 'line',
+    });
+    this.subscribeTo(this.optionStore.$, (options) => {
+      chart.options = options;
+      chart.update();
+    });
+    this.subscribeTo(this.dataSets$, (dataSets) => {
+      chart.data.datasets = dataSets;
+      chart.update();
     });
   }
 

@@ -1055,12 +1055,19 @@
     semver "7.1.3"
     semver-intersect "1.4.0"
 
-"@types/chart.js@^2.7.48":
+"@types/chart.js@*", "@types/chart.js@^2.9.20":
   version "2.9.20"
   resolved "https://registry.yarnpkg.com/@types/chart.js/-/chart.js-2.9.20.tgz#db503fc0d478d1d2a99eb0099d5c2b9c77599931"
   integrity sha512-Xv4dd+DYqtTdUWbDIwaDEFtUIFwoQN44wiDDrWXdJtfGtOFlFIxXrsu8D+XJCS9o7mZbW29X8vPptwVrduz4JA==
   dependencies:
     moment "^2.10.2"
+
+"@types/chartjs-plugin-annotation@^0.5.0":
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@types/chartjs-plugin-annotation/-/chartjs-plugin-annotation-0.5.0.tgz#e7815c32d324a2e3afa4ce0269ac53651606de4a"
+  integrity sha512-fIqDjJdTrPlwisI+JT33pOGBfy7adyEssg7I8FtP84wGeL5F6rKPLtmDXDT5UFJtxDgbV69pKinvMRVwdPzNtw==
+  dependencies:
+    "@types/chart.js" "*"
 
 "@types/color-name@^1.1.1":
   version "1.1.1"
@@ -2277,10 +2284,10 @@ chartjs-plugin-annotation@^0.5.7:
   dependencies:
     chart.js "^2.4.0"
 
-chartjs-plugin-zoom@^0.7.4:
-  version "0.7.6"
-  resolved "https://registry.yarnpkg.com/chartjs-plugin-zoom/-/chartjs-plugin-zoom-0.7.6.tgz#cd4a0cd28ad1d3a047be928b3927a34b8bcda40d"
-  integrity sha512-3je4J1xFf0AOX1G/mSlMgsNR34qpVT3rsj8Oi+fVpPSsMlhpEAc3MRyLwulfGmz1Q4IGvdong91mNBx0uSLFig==
+chartjs-plugin-zoom@^0.7.7:
+  version "0.7.7"
+  resolved "https://registry.yarnpkg.com/chartjs-plugin-zoom/-/chartjs-plugin-zoom-0.7.7.tgz#b25989bd6183cc51d5bb9293c20b4b7942555584"
+  integrity sha512-8fOHPPiZTT2+K0w278TQWYs/DtPg06s1OpTqdXxPpdfH7QQbl6Io/WuE1FjPehDWVCxpe3tSTts+dPbxgq2Z5g==
   dependencies:
     hammerjs "^2.0.8"
 
@@ -5917,15 +5924,6 @@ ng-app-state@^12.0.0:
   version "12.0.0"
   resolved "https://registry.yarnpkg.com/ng-app-state/-/ng-app-state-12.0.0.tgz#1535390b8c1e26d1c459f31616edbe7ff30447d2"
   integrity sha512-k1IHKrEs76vox6/4wIoPd8y2qPnlQ9L/rgl5akKzq4l7sWE3qn7zPoLlOx229kCKi7PXJ9LWPbWZKk2EiC452w==
-
-ng2-charts@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/ng2-charts/-/ng2-charts-2.3.0.tgz#e4dd1f7fe12dc2635d5e8c4f101a8d4c4f433754"
-  integrity sha512-D5K7OqF0m5lOBYvNOsraoEo4OPHja9zfGNj+HWy2nUcP0LP2s+Y/QaQlkG/1rHlwXq9HPm8rLxzSutA0eLHxGQ==
-  dependencies:
-    "@types/chart.js" "^2.7.48"
-    lodash "^4.17.11"
-    tslib "^1.9.0"
 
 nice-try@^1.0.4:
   version "1.0.5"

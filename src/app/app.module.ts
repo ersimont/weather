@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -21,7 +22,6 @@ import { provideHttpStatus } from 'app/to-replace/http-status.service';
 import { provideErrorHandler } from 'app/to-replace/snack-bar-error.service';
 import { WhatsNewComponent } from 'app/upgrade/whats-new.component';
 import { ngAppStateReducer } from 'ng-app-state';
-import { ChartsModule } from 'ng2-charts';
 import { environment } from '../environments/environment';
 import { PrivacyPolicyComponent } from './misc-components/privacy-policy/privacy-policy.component';
 
@@ -35,7 +35,7 @@ import { PrivacyPolicyComponent } from './misc-components/privacy-policy/privacy
   imports: [
     BrowserAnimationsModule,
     BrowserModule,
-    ChartsModule,
+    CommonModule,
     EventTrackingModule.forRoot({
       gaProperty: environment.gaProperty,
       log: environment.name === 'development',

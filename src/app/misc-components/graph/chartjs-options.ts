@@ -1,6 +1,7 @@
 import { GpsCoords } from 'app/state/location';
 import { AmountUnit, unitInfo } from 'app/state/units';
 import { ChartOptions } from 'chart.js';
+import { AnnotationOptions } from 'chartjs-plugin-annotation';
 import { convertTime } from 's-js-utils';
 import { getTimes, GetTimesResult } from 'suncalc';
 
@@ -67,7 +68,7 @@ export function buildNightBoxes(
   min: number,
   max: number,
   gpsCoords: GpsCoords,
-) {
+): AnnotationOptions[] {
   const sunTimes: GetTimesResult[] = [];
   const oneDay = convertTime(1, 'd', 'ms');
   for (let time = min - oneDay; time < max + oneDay; time += oneDay) {
@@ -78,7 +79,9 @@ export function buildNightBoxes(
     xScaleID: 'x-axis-0',
     xMin: +sunset,
     xMax: +sunTimes[i + 1].sunrise,
-    backgroundColor: 'rgb(0, 0, 0, 0.05)',
+    yMin: -9999,
+    yMax: 9999,
+    backgroundColor: 'rgba(0, 0, 0, 0.05)',
   }));
 }
 
