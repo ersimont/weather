@@ -62,6 +62,7 @@ describe('LocationService', () => {
           { city: 'The New City of Atlantis' },
         ),
       ]);
+      iq.flushTimezone([8, 9]);
       gov.expectPoints([8, 9]);
       expect(app.getTitle()).toBe('The New City of Atlantis');
 
@@ -87,6 +88,7 @@ describe('LocationService', () => {
       iq.expectForward('new city').flush([
         iq.buildLocationResponse({ lat: '8', lon: '9' }),
       ]);
+      iq.flushTimezone([8, 9]);
       gov.flushFixture([8, 9]);
       expect(graph.showsData()).toBe(true);
 
@@ -179,6 +181,7 @@ describe('LocationService', () => {
         iq.expectForward('a place').flush([
           iq.buildLocationResponse({ lat: '12', lon: '-89' }),
         ]);
+        iq.flushTimezone([12, -89]);
         gov.flushFixture([12, -89]);
       });
     });

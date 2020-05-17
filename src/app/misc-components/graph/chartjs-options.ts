@@ -1,7 +1,10 @@
 import { GpsCoords } from 'app/state/location';
 import { AmountUnit, unitInfo } from 'app/state/units';
 import { ChartOptions } from 'chart.js';
-import { AnnotationOptions } from 'chartjs-plugin-annotation';
+import {
+  AnnotationOptions,
+  LineAnnotationOptions,
+} from 'chartjs-plugin-annotation';
 import { convertTime } from 's-js-utils';
 import { getTimes, GetTimesResult } from 'suncalc';
 
@@ -59,17 +62,13 @@ export const defaultChartOptions: ChartOptions = {
 (defaultChartOptions as any).annotation = { drawTime: 'beforeDatasetsDraw' };
 
 export function buildMaxRange() {
-  const min = midnight(-1);
-  const max = midnight(8);
+  const { min, max } = getMinMax();
   return { rangeMin: { x: min }, rangeMax: { x: max } };
 }
 
-export function buildNightBoxes(
-  min: number,
-  max: number,
-  gpsCoords: GpsCoords,
-): AnnotationOptions[] {
+export function buildNightBoxes(gpsCoords: GpsCoords): AnnotationOptions[] {
   const sunTimes: GetTimesResult[] = [];
+  const { min, max } = getMinMax();
   const oneDay = convertTime(1, 'd', 'ms');
   for (let time = min - oneDay; time < max + oneDay; time += oneDay) {
     sunTimes.push(getTimes(new Date(time), ...gpsCoords));
@@ -85,7 +84,7 @@ export function buildNightBoxes(
   }));
 }
 
-export function buildNowLine() {
+export function buildNowLine(): LineAnnotationOptions {
   return {
     type: 'line',
     mode: 'vertical',
@@ -95,7 +94,12 @@ export function buildNowLine() {
   };
 }
 
+function getMinMax() {
+  return { min: midnight(-1), max: midnight(8) };
+}
+
 function midnight(offset: number) {
+  // TODO: pass this in, so it's accounted for in observables
   const date = new Date();
   date.setHours(0, 0, 0, 0);
   return +date + convertTime(offset, 'd', 'ms');

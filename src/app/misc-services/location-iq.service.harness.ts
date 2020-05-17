@@ -2,7 +2,9 @@ import {
   Address,
   ForwardResponse,
   LocationResponse,
+  TimezoneResponse,
 } from 'app/misc-services/location-iq.service';
+import { GpsCoords } from 'app/state/location';
 import { STestRequest } from 'app/test-helpers/s-test-request';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 import { isEmpty } from 'micro-dash';
@@ -12,7 +14,6 @@ export class LocationIqServiceHarness {
   buildForwardResponse = createBuilder<ForwardResponse>(() => [
     this.buildLocationResponse(),
   ]);
-
   buildLocationResponse = createBuilder<LocationResponse, Address>(
     (_seq, options) => ({
       lat: '42.180152',
@@ -28,11 +29,14 @@ export class LocationIqServiceHarness {
         : options,
     }),
   );
+  buildTimezoneResponse = createBuilder<TimezoneResponse>(() => ({
+    timezone: { name: 'America/Detroit' },
+  }));
 
   constructor(private ctx: WeatherGraphContext) {}
 
-  flushForward(search: string) {
-    return this.expectForward(search).flush(this.buildForwardResponse());
+  flushTimezone(gpsCoords: GpsCoords) {
+    this.expectTimezone(gpsCoords).flush(this.buildTimezoneResponse());
   }
 
   flushReverse(gpsCoords = this.ctx.currentLocation) {
@@ -71,6 +75,17 @@ export class LocationIqServiceHarness {
           normalizecity: '1',
           statecode: '1',
         },
+      },
+    );
+  }
+
+  expectTimezone(gpsCoords: GpsCoords) {
+    return new STestRequest<TimezoneResponse>(
+      'GET',
+      'https://us-central1-proxic.cloudfunctions.net/api/location-iq/v1/timezone.php',
+      this.ctx,
+      {
+        params: { lat: gpsCoords[0].toString(), lon: gpsCoords[1].toString() },
       },
     );
   }

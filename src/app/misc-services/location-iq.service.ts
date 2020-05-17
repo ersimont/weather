@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { GpsCoords, Location } from 'app/state/location';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 
 const baseUrl =
   'https://us-central1-proxic.cloudfunctions.net/api/location-iq/v1';
@@ -18,6 +18,10 @@ export interface LocationResponse {
   lat: string;
   lon: string;
   address: Address;
+}
+
+export interface TimezoneResponse {
+  timezone: { name: string };
 }
 
 export interface Address {
@@ -43,7 +47,14 @@ export class LocationIqService {
       .get<ForwardResponse>(`${baseUrl}/search.php`, {
         params: { ...commonParams, q: search, limit: '1' },
       })
-      .pipe(map((response) => parseLocation(response[0])));
+      .pipe(
+        map((response) => parseLocation(response[0])),
+        switchMap((location) =>
+          this.timezone(location.gpsCoords!).pipe(
+            map((timezone) => ({ ...location, timezone })),
+          ),
+        ),
+      );
   }
 
   reverse(gpsCoords: GpsCoords) {
@@ -56,6 +67,18 @@ export class LocationIqService {
         },
       })
       .pipe(map(parseLocation));
+  }
+
+  // TODO: test error & cancel
+  private timezone(gpsCoords: GpsCoords) {
+    return this.httpClient
+      .get<TimezoneResponse>(`${baseUrl}/timezone.php`, {
+        params: {
+          lat: gpsCoords[0].toString(),
+          lon: gpsCoords[1].toString(),
+        },
+      })
+      .pipe(map((response) => response.timezone.name));
   }
 }
 

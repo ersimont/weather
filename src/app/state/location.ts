@@ -4,4 +4,5 @@ export class Location {
   search = '';
   gpsCoords?: GpsCoords;
   city?: string;
+  timezone?: string;
 }

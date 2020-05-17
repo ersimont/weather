@@ -1,10 +1,8 @@
-import { By } from '@angular/platform-browser';
-import { GraphComponent } from 'app/misc-components/graph/graph.component';
+import { GraphStore } from 'app/misc-components/graph/graph-store';
 import { Condition } from 'app/state/condition';
 import { SourceId } from 'app/state/source';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
-import { ChartDataSets, ChartPoint, ChartTooltipItem } from 'chart.js';
-import { take } from 'rxjs/operators';
+import { ChartPoint, ChartTooltipItem } from 'chart.js';
 
 const sourceOrder = [
   SourceId.CLIMACELL,
@@ -45,21 +43,10 @@ export class GraphComponentHarness {
   }
 
   private getOptions() {
-    return this.getComponent().optionStore.state();
+    return this.ctx.inject(GraphStore).state().options;
   }
 
   private getDataSets() {
-    let dataSets: ChartDataSets[];
-    this.getComponent()
-      .dataSets$.pipe(take(1))
-      .subscribe((ds) => {
-        dataSets = ds;
-      });
-    return dataSets!;
-  }
-
-  private getComponent(): GraphComponent {
-    return this.ctx.fixture.debugElement.query(By.directive(GraphComponent))
-      .context;
+    return this.ctx.inject(GraphStore).state().data;
   }
 }

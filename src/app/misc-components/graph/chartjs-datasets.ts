@@ -17,7 +17,7 @@ const radii: { [id in SourceId]: number } = {
   [SourceId.WEATHER_UNLOCKED]: 6,
 };
 
-export function buildDataSets(state: WeatherState) {
+export function buildDatasets(state: WeatherState) {
   const dataSets: ChartDataSets[] = [];
   forEach(state.sources, (_, sourceId) => {
     addDataSets(sourceId, dataSets, state);

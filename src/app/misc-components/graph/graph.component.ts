@@ -6,31 +6,22 @@ import {
   Injector,
   ViewChild,
 } from '@angular/core';
-import { Store } from '@ngrx/store';
-import {
-  buildDataSets,
-  decodeLabelValues,
-} from 'app/misc-components/graph/chartjs-datasets';
-import {
-  buildMaxRange,
-  buildNightBoxes,
-  buildNowLine,
-  defaultChartOptions,
-} from 'app/misc-components/graph/chartjs-options';
+import { decodeLabelValues } from 'app/misc-components/graph/chartjs-datasets';
+import { buildMaxRange } from 'app/misc-components/graph/chartjs-options';
+import { GraphStore } from 'app/misc-components/graph/graph-store';
 import { LocationService } from 'app/misc-services/location.service';
 import { conditionInfo } from 'app/state/condition';
 import { WeatherStore } from 'app/state/weather-store';
 import { EventTrackingService } from 'app/to-replace/event-tracking/event-tracking.service';
 import * as Chart from 'chart.js';
-import { ChartData, ChartOptions, ChartTooltipItem } from 'chart.js';
+import { ChartData, ChartTooltipItem } from 'chart.js';
 import 'chartjs-plugin-annotation';
 import 'chartjs-plugin-zoom';
-import { debounce } from 'micro-dash';
-import { AppStore, StoreObject } from 'ng-app-state';
-import { map } from 'rxjs/operators';
+import { clone, debounce } from 'micro-dash';
+import * as moment from 'moment';
+import 'moment-timezone';
 import { convertTime } from 's-js-utils';
 import { DirectiveSuperclass } from 's-ng-utils';
-import { DeepRequired } from 'utility-types';
 import { SnapRangeAction } from './snap-range-action';
 
 @Component({
@@ -41,10 +32,6 @@ import { SnapRangeAction } from './snap-range-action';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GraphComponent extends DirectiveSuperclass {
-  // the are only public for tests
-  optionStore: StoreObject<DeepRequired<ChartOptions>>;
-  dataSets$ = this.store.$.pipe(map(buildDataSets));
-
   private trackPan = debounce(() => {
     this.eventTrackingService.track('change_pan', 'zoom_and_pan');
   }, 5000);
@@ -55,45 +42,48 @@ export class GraphComponent extends DirectiveSuperclass {
   constructor(
     private demicalPipe: DecimalPipe,
     private eventTrackingService: EventTrackingService,
+    public graphStore: GraphStore, // public for tests
     injector: Injector,
-    private locationService: LocationService,
-    ngrxStore: Store<any>,
-    private store: WeatherStore,
+    locationService: LocationService,
+    private weatherStore: WeatherStore,
   ) {
     super(injector);
-    this.optionStore = new AppStore(
-      ngrxStore,
-      'Chart.js Options',
-      defaultChartOptions as DeepRequired<ChartOptions>,
-    );
     this.addCallbacks();
     this.snapRange(1);
-    this.subscribeTo(store.action$.pipe(SnapRangeAction.filter), ({ days }) => {
-      this.snapRange(days);
+    this.subscribeTo(
+      weatherStore.action$.pipe(SnapRangeAction.filter),
+      ({ days }) => {
+        this.snapRange(days);
+      },
+    );
+    this.subscribeTo(locationService.$, (location) => {
+      if (location.timezone) {
+        moment.tz.setDefault(location.timezone);
+      } else {
+        moment.tz.setDefault();
+      }
     });
   }
 
   @ViewChild('canvas')
   set canvas(canvas: ElementRef<HTMLCanvasElement>) {
-    const chart = new Chart(canvas.nativeElement.getContext('2d')!, {
-      type: 'line',
-    });
-    this.subscribeTo(this.optionStore.$, (options) => {
-      chart.options = options;
-      chart.update();
-    });
-    this.subscribeTo(this.dataSets$, (dataSets) => {
-      chart.data.datasets = dataSets;
+    const ctx = canvas.nativeElement.getContext('2d')!;
+    const chart = new Chart(ctx, { type: 'line' });
+    this.subscribeTo(this.graphStore.$, (graphState) => {
+      chart.options = graphState.options;
+      chart.data.datasets = graphState.data.map(clone);
       chart.update();
     });
   }
 
   private addCallbacks() {
-    this.optionStore('tooltips')('callbacks').assign({
+    const optionStore = this.graphStore('options');
+    const zoomStore = optionStore('plugins')('zoom');
+
+    optionStore('tooltips')('callbacks').assign({
       label: this.getTooltipLabel.bind(this),
       footer: this.getTooltipFooter.bind(this),
     });
-    const zoomStore = this.optionStore('plugins')('zoom');
     zoomStore('pan')('onPanComplete').set((evt: any) => {
       this.setRange(evt.chart.options.scales.xAxes[0].ticks);
       this.trackPan();
@@ -111,27 +101,26 @@ export class GraphComponent extends DirectiveSuperclass {
     this.setRange({ min, max: min + convertTime(days, 'd', 'ms') });
   }
 
-  private setRange({ min, max }: { min: number; max: number }) {
-    this.optionStore('scales')('xAxes')(0)('ticks').assign({ min, max });
-    const maxRange = buildMaxRange();
-    this.optionStore('plugins')('zoom')('pan').assign(maxRange);
-    this.optionStore('plugins')('zoom')('zoom').assign(maxRange);
+  private setRange(range: { min: number; max: number }) {
+    this.graphStore('options')('scales')('xAxes')(0)('ticks').assign(range);
 
-    const gpsCoords = this.locationService.getLocation().gpsCoords;
-    const nightBoxes = gpsCoords ? buildNightBoxes(min, max, gpsCoords) : [];
-    const annotations = [...nightBoxes, buildNowLine()];
-    this.optionStore('annotation' as any).assign({ annotations });
+    // TODO: move to some date observable
+    const maxRange = buildMaxRange();
+    this.graphStore('options')('plugins')('zoom').batch((batch) => {
+      batch('pan').assign(maxRange);
+      batch('zoom').assign(maxRange);
+    });
   }
 
   private getTooltipLabel(item: ChartTooltipItem, data: ChartData) {
     const conditionInf = conditionInfo[decodeLabelValues(item, data).condition];
-    const unitInf = conditionInf.getUnitInfo(this.store.state().units);
+    const unitInf = conditionInf.getUnitInfo(this.weatherStore.state().units);
     const display = unitInf.getDisplay(+item.value!, this.demicalPipe);
     return `${conditionInf.label}: ${display}`;
   }
 
   private getTooltipFooter(items: ChartTooltipItem[], data: ChartData) {
     const sourceId = decodeLabelValues(items[0], data).sourceId;
-    return `Source: ${this.store.state().sources[sourceId].label}`;
+    return `Source: ${this.weatherStore.state().sources[sourceId].label}`;
   }
 }
