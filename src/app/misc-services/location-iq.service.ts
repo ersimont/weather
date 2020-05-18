@@ -69,7 +69,6 @@ export class LocationIqService {
       .pipe(map(parseLocation));
   }
 
-  // TODO: test error & cancel
   private timezone(gpsCoords: GpsCoords) {
     return this.httpClient
       .get<TimezoneResponse>(`${baseUrl}/timezone.php`, {
