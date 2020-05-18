@@ -32,7 +32,6 @@ export class GraphStore extends AppStore<GraphState> {
       batch('data').set(buildDatasets(weatherState));
 
       // TODO: move to subscription on combination time & gps
-      // TODO: test night boxes after changing location
       const gpsCoords = this.locationService.getLocation().gpsCoords;
       const nightBoxes = gpsCoords ? buildNightBoxes(gpsCoords) : [];
       const annotations = [...nightBoxes, buildNowLine()];
