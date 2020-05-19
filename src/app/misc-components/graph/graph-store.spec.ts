@@ -1,3 +1,4 @@
+import { tick } from '@angular/core/testing';
 import { GraphStateHarness } from 'app/misc-components/graph/graph-state.harness';
 import { GraphStoreHarness } from 'app/misc-components/graph/graph-store.harness';
 import { LocationIqServiceHarness } from 'app/misc-services/location-iq.service.harness';
@@ -50,6 +51,38 @@ describe('GraphStore', () => {
         expect(graphState.getNightBoxes()[0]).toEqual({
           from: 342153281946,
           to: 342191404335,
+        });
+      });
+    });
+  });
+
+  describe('now line', () => {
+    it('updates with time', () => {
+      ctx.startTime = new Date('1980-11-04T15:00:00.000Z');
+      ctx.run(() => {
+        const graphState = new GraphStateHarness(ctx);
+        expect(graphState.getNowLine()).toEqual(342198000000);
+
+        tick(60000);
+        expect(graphState.getNowLine()).toEqual(342198060000);
+      });
+    });
+  });
+
+  describe('bounding', () => {
+    it('updates with time', () => {
+      ctx.startTime = new Date('1980-11-04T15:00:00.000Z');
+      ctx.run(() => {
+        const graphState = new GraphStateHarness(ctx);
+        expect(graphState.getBoundaries()).toEqual({
+          min: 342111600000,
+          max: 342889200000,
+        });
+
+        tick(60000);
+        expect(graphState.getBoundaries()).toEqual({
+          min: 342111660000,
+          max: 342889260000,
         });
       });
     });

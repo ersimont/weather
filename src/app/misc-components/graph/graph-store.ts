@@ -44,12 +44,10 @@ export class GraphStore extends AppStore<GraphState> {
 
   private updateAnnotations(gpsCoords: GpsCoords | undefined, now: number) {
     const nightBoxes = gpsCoords ? buildNightBoxes(now, gpsCoords) : [];
-    // TODO: test night line
     const annotations = [...nightBoxes, buildNowLine(now)];
     this('options')('annotation' as any).assign({ annotations });
   }
 
-  // TODO: test boundaries
   private updateBoundaries(now: number) {
     const maxRange = buildBoundaries(now);
     this('options')('plugins')('zoom').batch((batch) => {
