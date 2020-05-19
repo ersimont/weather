@@ -57,7 +57,6 @@ export class GraphComponent extends DirectiveSuperclass {
       },
     );
     this.subscribeTo(locationService.$, (location) => {
-      // TODO: test setting time zone
       if (location.timezone) {
         moment.tz.setDefault(location.timezone);
       } else {

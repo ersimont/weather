@@ -3,6 +3,7 @@ import { Condition } from 'app/state/condition';
 import { SourceId } from 'app/state/source';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 import { ChartPoint, ChartTooltipItem } from 'chart.js';
+import * as moment from 'moment';
 
 const sourceOrder = [
   SourceId.CLIMACELL,
@@ -40,6 +41,10 @@ export class GraphComponentHarness {
     const datasetIndex = conditionOrder.length * sourceOrder.indexOf(sourceId);
     const getFooter = this.getOptions().tooltips.callbacks.footer;
     return getFooter([{ datasetIndex }], { datasets: this.getDataSets() });
+  }
+
+  getTimeZone() {
+    return moment().zoneName();
   }
 
   private getOptions() {
