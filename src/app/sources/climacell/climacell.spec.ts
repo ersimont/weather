@@ -1,4 +1,5 @@
 import { LocationIqServiceHarness } from 'app/misc-services/location-iq.service.harness';
+import { RefreshServiceHarness } from 'app/misc-services/refresh.service.harness';
 import { SourceOptionsComponentHarness } from 'app/options/source-options/source-options.component.harness';
 import { ClimacellHarness } from 'app/sources/climacell/climacell.harness';
 import { SourceId } from 'app/state/source';
@@ -8,11 +9,23 @@ describe('Climacell', () => {
   let ctx: WeatherGraphContext;
   let climacell: ClimacellHarness;
   let iq: LocationIqServiceHarness;
+  let refresh: RefreshServiceHarness;
   beforeEach(() => {
     ctx = new WeatherGraphContext();
-    ({ climacell, iq } = ctx.harnesses);
+    ({ climacell, iq, refresh } = ctx.harnesses);
 
     ctx.harnesses.state.setShowing(SourceId.CLIMACELL);
+  });
+
+  it('handles errors', () => {
+    ctx.run({ flushDefaultRequests: false }, () => {
+      iq.flushReverse();
+      climacell.expectHourly().flushError();
+
+      refresh.trigger();
+      iq.flushReverse();
+      climacell.expectHourly();
+    });
   });
 
   it('can cancel its request', () => {

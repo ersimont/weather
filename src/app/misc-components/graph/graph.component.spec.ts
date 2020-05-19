@@ -9,6 +9,7 @@ import { TempUnit } from 'app/state/units';
 import { WeatherStateHarness } from 'app/state/weather-state.harness';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 
+// TODO: see if any of these should move out to GraphStore (or somewhere)
 describe('GraphComponent', () => {
   let ctx: WeatherGraphContext;
   let gov: WeatherGovHarness;
