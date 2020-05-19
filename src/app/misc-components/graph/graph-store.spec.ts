@@ -1,4 +1,5 @@
 import { GraphStateHarness } from 'app/misc-components/graph/graph-state.harness';
+import { GraphStoreHarness } from 'app/misc-components/graph/graph-store.harness';
 import { LocationIqServiceHarness } from 'app/misc-services/location-iq.service.harness';
 import { RefreshServiceHarness } from 'app/misc-services/refresh.service.harness';
 import { WeatherGovHarness } from 'app/sources/weather-gov/weather-gov.harness';
@@ -6,43 +7,51 @@ import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 
 describe('GraphStore', () => {
   let ctx: WeatherGraphContext;
+  let gov: WeatherGovHarness;
+  let iq: LocationIqServiceHarness;
+  let refresh: RefreshServiceHarness;
   beforeEach(() => {
     ctx = new WeatherGraphContext();
+    ({ gov, iq, refresh } = ctx.harnesses);
   });
 
-  it('adjusts the night boxes when changing location', () => {
-    jasmine.clock().mockDate(new Date(1980, 11, 4, 10));
-    ctx.run(() => {
-      const graphState = new GraphStateHarness(ctx);
-      expect(graphState.getNightBoxes()).toEqual([
-        { from: 1589590989347, to: 1589641750190 },
-        { from: 1589677344441, to: 1589728198775 },
-        { from: 1589763700995, to: 1589814646909 },
-        { from: 1589850059026, to: 1589901094556 },
-        { from: 1589936418550, to: 1589987541684 },
-        { from: 1590022779583, to: 1590073988257 },
-        { from: 1590109142141, to: 1590160434239 },
-        { from: 1590195506237, to: 1590246879595 },
-        { from: 1590281871887, to: 1590333324288 },
-        { from: 1590368239101, to: 1590419768283 },
-      ]);
+  describe('night boxing', () => {
+    it('updates with location', () => {
+      ctx.startTime = new Date('1980-11-04T15:00:00.000Z');
+      ctx.run(() => {
+        const graphState = new GraphStateHarness(ctx);
+        expect(graphState.getNightBoxes()[0]).toEqual({
+          from: 342066821989,
+          to: 342105060171,
+        });
 
-      ctx.mocks.browser.getCurrentLocation.and.resolveTo([10, -20]);
-      new RefreshServiceHarness(ctx).trigger();
-      new LocationIqServiceHarness(ctx).flushReverse([10, -20]);
-      expect(graphState.getNightBoxes()).toEqual([
-        { from: 1589657727316, to: 1589698797424 },
-        { from: 1589744140785, to: 1589785189551 },
-        { from: 1589830554533, to: 1589871582427 },
-        { from: 1589916968546, to: 1589957976046 },
-        { from: 1590003382809, to: 1590044370406 },
-        { from: 1590089797307, to: 1590130765502 },
-        { from: 1590176212024, to: 1590217161327 },
-        { from: 1590262626943, to: 1590303557877 },
-        { from: 1590349042048, to: 1590389955144 },
-        { from: 1590435457322, to: 1590476353121 },
-      ]);
-      new WeatherGovHarness(ctx).expectPoints([10, -20]);
+        ctx.mocks.browser.getCurrentLocation.and.resolveTo([10, -20]);
+        refresh.trigger();
+        iq.flushReverse([10, -20]);
+        expect(graphState.getNightBoxes()[0]).toEqual({
+          from: 342039449477,
+          to: 342083544424,
+        });
+        gov.expectPoints([10, -20]);
+      });
+    });
+
+    it('updates with time', () => {
+      ctx.startTime = new Date('1980-11-04T15:00:00.000Z');
+      ctx.run(() => {
+        const graphState = new GraphStateHarness(ctx);
+        expect(graphState.getNightBoxes()[0]).toEqual({
+          from: 342066821989,
+          to: 342105060171,
+        });
+
+        jasmine.clock().mockDate(new Date('1980-11-05T15:00:00.000Z'));
+        new GraphStoreHarness(ctx).triggerAnnotationUpdate();
+        expect(graphState.getNightBoxes()[0]).toEqual({
+          from: 342153281946,
+          to: 342191404335,
+        });
+      });
     });
   });
 });

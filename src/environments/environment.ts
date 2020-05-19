@@ -5,6 +5,7 @@
 export const environment = {
   name: 'development',
   gaProperty: 'UA-148865234-2',
+  paintGraph: true,
 };
 
 /*

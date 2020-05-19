@@ -1,6 +1,7 @@
 export const environment = {
   name: 'test',
   gaProperty: undefined,
+  paintGraph: false,
 };
 
 /*

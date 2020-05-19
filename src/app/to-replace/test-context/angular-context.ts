@@ -38,6 +38,8 @@ export function extendMetadata(
 }
 
 export abstract class AngularContext<InitOptions = {}> {
+  startTime = new Date();
+
   private loader = FakeAsyncHarnessEnvironment.documentRootLoader(this);
 
   constructor(moduleMetadata: TestModuleMetadata) {
@@ -56,8 +58,11 @@ export abstract class AngularContext<InitOptions = {}> {
       options = optionsOrTest;
     }
 
+    jasmine.clock().install();
     fakeAsync(() => {
+      jasmine.clock().mockDate(this.startTime);
       assert(test);
+
       this.init(options);
       try {
         test();
@@ -69,6 +74,7 @@ export abstract class AngularContext<InitOptions = {}> {
         this.cleanUp();
       }
     })();
+    jasmine.clock().uninstall();
   }
 
   inject<T>(token: Type<T> | InjectionToken<T> | AbstractType<T>) {

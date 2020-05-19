@@ -61,14 +61,17 @@ export const defaultChartOptions: ChartOptions = {
 // separate b/c the typing complains
 (defaultChartOptions as any).annotation = { drawTime: 'beforeDatasetsDraw' };
 
-export function buildMaxRange() {
-  const { min, max } = getMinMax();
+export function buildBoundaries(now: number) {
+  const { min, max } = getMinMax(now);
   return { rangeMin: { x: min }, rangeMax: { x: max } };
 }
 
-export function buildNightBoxes(gpsCoords: GpsCoords): AnnotationOptions[] {
+export function buildNightBoxes(
+  now: number,
+  gpsCoords: GpsCoords,
+): AnnotationOptions[] {
   const sunTimes: GetTimesResult[] = [];
-  const { min, max } = getMinMax();
+  const { min, max } = getMinMax(now);
   const oneDay = convertTime(1, 'd', 'ms');
   for (let time = min - oneDay; time < max + oneDay; time += oneDay) {
     sunTimes.push(getTimes(new Date(time), ...gpsCoords));
@@ -84,23 +87,17 @@ export function buildNightBoxes(gpsCoords: GpsCoords): AnnotationOptions[] {
   }));
 }
 
-export function buildNowLine(): LineAnnotationOptions {
+export function buildNowLine(now: number): LineAnnotationOptions {
   return {
     type: 'line',
     mode: 'vertical',
     scaleID: 'x-axis-0',
-    value: +new Date(),
+    value: now,
     borderColor: 'indianred',
   };
 }
 
-function getMinMax() {
-  return { min: midnight(-1), max: midnight(8) };
-}
-
-function midnight(offset: number) {
-  // TODO: pass this in, so it's accounted for in observables
-  const date = new Date();
-  date.setHours(0, 0, 0, 0);
-  return +date + convertTime(offset, 'd', 'ms');
+function getMinMax(now: number) {
+  const oneDay = convertTime(1, 'd', 'ms');
+  return { min: now - oneDay, max: now + 8 * oneDay };
 }

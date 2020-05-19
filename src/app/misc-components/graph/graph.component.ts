@@ -7,7 +7,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import { decodeLabelValues } from 'app/misc-components/graph/chartjs-datasets';
-import { buildMaxRange } from 'app/misc-components/graph/chartjs-options';
 import { GraphStore } from 'app/misc-components/graph/graph-store';
 import { LocationService } from 'app/misc-services/location.service';
 import { conditionInfo } from 'app/state/condition';
@@ -22,6 +21,7 @@ import * as moment from 'moment';
 import 'moment-timezone';
 import { convertTime } from 's-js-utils';
 import { DirectiveSuperclass } from 's-ng-utils';
+import { environment } from '../../../environments/environment';
 import { SnapRangeAction } from './snap-range-action';
 
 @Component({
@@ -69,11 +69,13 @@ export class GraphComponent extends DirectiveSuperclass {
   set canvas(canvas: ElementRef<HTMLCanvasElement>) {
     const ctx = canvas.nativeElement.getContext('2d')!;
     const chart = new Chart(ctx, { type: 'line' });
-    this.subscribeTo(this.graphStore.$, (graphState) => {
-      chart.options = graphState.options;
-      chart.data.datasets = graphState.data.map(clone);
-      chart.update();
-    });
+    if (environment.paintGraph) {
+      this.subscribeTo(this.graphStore.$, (graphState) => {
+        chart.options = graphState.options;
+        chart.data.datasets = graphState.data.map(clone);
+        chart.update();
+      });
+    }
   }
 
   private addCallbacks() {
@@ -103,13 +105,6 @@ export class GraphComponent extends DirectiveSuperclass {
 
   private setRange(range: { min: number; max: number }) {
     this.graphStore('options')('scales')('xAxes')(0)('ticks').assign(range);
-
-    // TODO: move to some date observable
-    const maxRange = buildMaxRange();
-    this.graphStore('options')('plugins')('zoom').batch((batch) => {
-      batch('pan').assign(maxRange);
-      batch('zoom').assign(maxRange);
-    });
   }
 
   private getTooltipLabel(item: ChartTooltipItem, data: ChartData) {
