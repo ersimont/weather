@@ -20,7 +20,7 @@ export const eventCatalog = {
     'change_percentage',
   ],
   initialization: ['initialize_fresh_state', 'show_whats_new'],
-  navigate: ['click_privacy_policy'],
+  navigate: ['click_about', 'click_privacy_policy'],
   refresh: ['interval_refresh', 'focus_refresh'],
   set_range: ['click_day', 'click_three_days', 'click_week'],
   zoom_and_pan: ['change_pan', 'change_zoom'],

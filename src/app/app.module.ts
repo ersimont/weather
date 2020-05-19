@@ -23,10 +23,12 @@ import { provideErrorHandler } from 'app/to-replace/snack-bar-error.service';
 import { WhatsNewComponent } from 'app/upgrade/whats-new.component';
 import { ngAppStateReducer } from 'ng-app-state';
 import { environment } from '../environments/environment';
+import { AboutComponent } from './misc-components/about/about.component';
 import { PrivacyPolicyComponent } from './misc-components/privacy-policy/privacy-policy.component';
 
 @NgModule({
   declarations: [
+    AboutComponent,
     AppComponent,
     GraphComponent,
     WhatsNewComponent,
@@ -38,6 +40,7 @@ import { PrivacyPolicyComponent } from './misc-components/privacy-policy/privacy
     CommonModule,
     EventTrackingModule.forRoot({
       gaProperty: environment.gaProperty,
+      // TODO: move to booleans
       log: environment.name === 'development',
     }),
     HttpClientModule,
@@ -51,6 +54,7 @@ import { PrivacyPolicyComponent } from './misc-components/privacy-policy/privacy
     MatToolbarModule,
     OptionsModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
+      // TODO: move to booleans
       enabled: environment.name === 'production',
       registrationStrategy: 'registerWithDelay',
     }),

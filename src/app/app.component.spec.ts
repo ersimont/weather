@@ -15,6 +15,13 @@ describe('AppComponent', () => {
     ({ events, gov, iq } = ctx.harnesses);
   });
 
+  it('tracks an event when opening the about popup', () => {
+    ctx.run(() => {
+      ctx.getHarness(AppComponentHarness).openAbout();
+      expect(events.getEvents('click_about').length).toBe(1);
+    });
+  });
+
   it('tracks an event when opening the privacy policy', () => {
     ctx.run(() => {
       ctx.getHarness(AppComponentHarness).openPrivacyPolicy();

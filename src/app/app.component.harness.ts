@@ -11,10 +11,18 @@ export class AppComponentHarness extends ComponentHarness {
   private getMenuButton = this.locatorFor(
     MatButtonHarness.with({ text: 'menu' }),
   );
+  private getAboutItem = this.locatorFor(
+    MatActionListItemHarness.with({ text: 'About' }),
+  );
   private getPrivacyPolicyItem = this.locatorFor(
     MatActionListItemHarness.with({ text: 'Privacy Policy' }),
   );
   private getSidenav = this.locatorFor(MatSidenavHarness);
+
+  async openAbout() {
+    await this.ensureSidenavOpen();
+    await (await this.getAboutItem()).click();
+  }
 
   async openPrivacyPolicy() {
     await this.ensureSidenavOpen();
