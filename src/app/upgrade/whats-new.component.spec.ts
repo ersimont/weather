@@ -9,6 +9,8 @@ describe('WhatsNewComponent', () => {
 
   it('does not show when there is no upgrade', () => {
     ctx.run(() => {
+      ctx.cleanUpFreshInit();
+
       expect(ctx.getHarnessOptional(WhatsNewComponentHarness)).toBeNull();
     });
   });

@@ -1,3 +1,5 @@
+import { WeatherState } from 'app/state/weather-state';
+
 export const v7Default = {
   _version: 7,
   allowSourceFallback: true,
@@ -18,9 +20,9 @@ export const v7Default = {
     cloud: true,
     wind: true,
   },
-};
+} as const;
 
-export const defaultState = v7Default;
+export const defaultState = v7Default as WeatherState;
 
 export const v6Default = {
   version: 6,
@@ -41,7 +43,7 @@ export const v6Default = {
     cloud: true,
     wind: true,
   },
-};
+} as const;
 
 export const v5Example = {
   version: 5,
@@ -98,4 +100,4 @@ export const v5Example = {
     amount: true,
   },
   allowSourceFallback: false,
-};
+} as const;

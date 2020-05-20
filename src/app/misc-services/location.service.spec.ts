@@ -35,7 +35,10 @@ describe('LocationService', () => {
   });
 
   it('tracks an event when searching for a new location', () => {
+    state.setCustomLocation();
     ctx.run(() => {
+      gov.expectPoints();
+
       const location = ctx.getHarness(LocationOptionsComponentHarness);
       location.setCustomLocation('Neverland');
       expect(events.getEvents('change_custom_search').length).toBe(1);
@@ -46,24 +49,28 @@ describe('LocationService', () => {
   });
 
   it('triggers title changes when changing location', () => {
+    ctx.initialState.useCurrentLocation = true;
+    ctx.initialState.currentLocation.city = 'Starting point';
     ctx.run(() => {
+      iq.expectReverse();
       const location = ctx.getHarness(LocationOptionsComponentHarness);
       const app = ctx.getHarness(AppComponentHarness);
 
+      expect(app.getTitle()).toBe('Starting point');
       location.select('Custom');
       expect(app.getTitle()).toBe(app.defaultTitle);
 
       location.setCustomLocation('new city');
-      expect(app.getTitle()).toBe(app.defaultTitle);
       iq.expectForward('new city').flush([
         iq.buildLocationResponse(
           { lat: '8', lon: '9' },
           { city: 'The New City of Atlantis' },
         ),
       ]);
+      // TODO: change to expect & move below expectation after changing that behavior. Here and in next test
       iq.flushTimezone([8, 9]);
-      gov.expectPoints([8, 9]);
       expect(app.getTitle()).toBe('The New City of Atlantis');
+      gov.expectPoints([8, 9]);
 
       location.select('Current');
       expect(app.getTitle()).toBe(app.defaultTitle);
@@ -77,12 +84,10 @@ describe('LocationService', () => {
 
   it('triggers data changes when changing location', () => {
     ctx.run(() => {
+      ctx.cleanUpFreshInit();
       const location = ctx.getHarness(LocationOptionsComponentHarness);
-      location.select('Custom');
-      expect(graph.showsData()).toBe(false);
 
       location.setCustomLocation('new city');
-      expect(graph.showsData()).toBe(false);
       iq.expectForward('new city').flush([
         iq.buildLocationResponse({ lat: '8', lon: '9' }),
       ]);

@@ -62,6 +62,8 @@ describe('AbstractSource', () => {
   describe('fallback', () => {
     it('happens invisibly on first app load', () => {
       ctx.run({ useInitialState: false }, () => {
+        ctx.cleanUpFreshInit();
+
         ctx.getHarness(LocationOptionsComponentHarness).select('Current');
         iq.flushReverse();
         gov.flushNotAvailable();
@@ -72,6 +74,8 @@ describe('AbstractSource', () => {
 
     it('does not happen on refresh', () => {
       ctx.run({ useInitialState: false }, () => {
+        ctx.cleanUpFreshInit();
+
         ctx.getHarness(LocationOptionsComponentHarness).select('Current');
         iq.flushReverse();
         gov.flushFixture();

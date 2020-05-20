@@ -46,6 +46,8 @@ describe('UpgradeService', () => {
     ctx.run(() => {
       expect(store.getPersistedState()).toEqual(defaultState);
       ctx.expectGenericErrorShown();
+
+      ctx.cleanUpFreshInit();
     });
   });
 });

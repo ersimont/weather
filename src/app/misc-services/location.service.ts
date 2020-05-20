@@ -59,6 +59,7 @@ export class LocationService extends InjectableSuperclass {
     this.store.batch((batch) => {
       clearForecasts(batch);
       batch('useCurrentLocation').set(false);
+      // TODO: think about clearing timezone (with test)
       batch('customLocation').set({ search, gpsCoords: undefined });
     });
     this.eventTrackingService.track('change_custom_search', 'change_location');
@@ -73,12 +74,19 @@ export class LocationService extends InjectableSuperclass {
     if (state.useCurrentLocation) {
       return this.refreshCurrentLocation();
     } else if (state.customLocation.gpsCoords) {
+      // TODO: what about missing time zone?
       return of(0);
     } else if (state.customLocation.search) {
       return this.refreshCustomLocation();
     } else {
       return NEVER;
     }
+  }
+
+  isBlank() {
+    // TODO: test both cases
+    const state = this.store.state();
+    return !(state.useCurrentLocation || state.customLocation.search);
   }
 
   private getLocationStore(useCurrent: boolean) {

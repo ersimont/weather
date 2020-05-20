@@ -123,7 +123,7 @@ describe('SnackBarErrorService', () => {
       });
     });
 
-    it('is dismissable with "OK"', () => {
+    it('is dismissible with "OK"', () => {
       ctx.run(() => {
         service.show('hi');
         const snackBar = ctx.getHarness(MatSnackBarHarness);

@@ -5,6 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AppModule } from 'app/app.module';
 import { GraphComponentHarness } from 'app/misc-components/graph/graph.component.harness';
 import { BrowserService } from 'app/misc-services/browser.service';
+import { InitServiceHarness } from 'app/misc-services/init.service.harness';
 import { LocationIqServiceHarness } from 'app/misc-services/location-iq.service.harness';
 import { RefreshServiceHarness } from 'app/misc-services/refresh.service.harness';
 import { ClimacellHarness } from 'app/sources/climacell/climacell.harness';
@@ -21,7 +22,6 @@ import { ComponentContext } from 'app/to-replace/test-context/component-context'
 import { expectSingleCallAndReset } from 's-ng-dev-utils';
 
 export interface InitOptions {
-  flushDefaultRequests: boolean;
   useInitialState: boolean;
 }
 
@@ -43,6 +43,7 @@ export class WeatherGraphContext extends ComponentContext<
     events: new EventTrackingServiceHarness(eventCatalog),
     gov: new WeatherGovHarness(this),
     graph: new GraphComponentHarness(this),
+    init: new InitServiceHarness(this),
     iq: new LocationIqServiceHarness(this),
     refresh: new RefreshServiceHarness(this),
     state: new WeatherStateHarness(this),
@@ -76,6 +77,10 @@ export class WeatherGraphContext extends ComponentContext<
 
   expectNoErrorShown() {
     expect(this.mocks.snackBar.open).not.toHaveBeenCalled();
+  }
+
+  cleanUpFreshInit() {
+    this.harnesses.init.cleanUpFreshInit();
   }
 
   protected init({ useInitialState = true }: Partial<InitOptions> = {}) {

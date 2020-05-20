@@ -61,7 +61,7 @@ describe('LocationIqService', () => {
     it('handles an error', () => {
       ctx.initialState.useCurrentLocation = false;
       ctx.initialState.customLocation.search = 'bad';
-      ctx.run({ flushDefaultRequests: false }, () => {
+      ctx.run(() => {
         iq.expectForward('bad').flush([
           iq.buildLocationResponse({ lat: '6', lon: '1' }),
         ]);
@@ -75,7 +75,7 @@ describe('LocationIqService', () => {
     it('can cancel', () => {
       ctx.initialState.useCurrentLocation = false;
       ctx.initialState.customLocation.search = 'oops';
-      ctx.run({ flushDefaultRequests: false }, () => {
+      ctx.run(() => {
         iq.expectForward('oops').flush([
           iq.buildLocationResponse({ lat: '6', lon: '1' }),
         ]);
