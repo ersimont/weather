@@ -1,5 +1,4 @@
 import { GraphComponentHarness } from 'app/misc-components/graph/graph.component.harness';
-import { LocationIqServiceHarness } from 'app/misc-services/location-iq.service.harness';
 import { ClimacellHarness } from 'app/sources/climacell/climacell.harness';
 import { Condition } from 'app/state/condition';
 import { SourceId } from 'app/state/source';
@@ -11,18 +10,17 @@ describe('unitInfo', () => {
   let ctx: WeatherGraphContext;
   let climacell: ClimacellHarness;
   let graph: GraphComponentHarness;
-  let iq: LocationIqServiceHarness;
   let state: WeatherStateHarness;
   beforeEach(() => {
     ctx = new WeatherGraphContext();
-    ({ climacell, graph, iq, state } = ctx.harnesses);
+    ({ climacell, graph, state } = ctx.harnesses);
   });
 
   it('rounds MM precipitation to 1 decimal place', () => {
+    state.setCustomLocation();
     state.setShowing(SourceId.CLIMACELL);
     ctx.initialState.units.amount = AmountUnit.MM;
-    ctx.run({ flushDefaultRequests: false }, () => {
-      iq.flushReverse();
+    ctx.run(() => {
       climacell
         .expectHourly()
         .flush(

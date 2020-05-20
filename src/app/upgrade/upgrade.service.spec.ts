@@ -28,8 +28,11 @@ describe('UpgradeService', () => {
 
   it("upgrades from v6, showing what's new", () => {
     ctx.initialState = v6Default as any;
-    ctx.run({ flushDefaultRequests: false }, () => {
-      expect(store.getPersistedState()).toEqual(defaultState);
+    ctx.run(() => {
+      expect(store.getPersistedState()).toEqual({
+        ...defaultState,
+        useCurrentLocation: true,
+      });
       expect(ctx.getHarness(WhatsNewComponentHarness).getFeatures()).toEqual([
         'You can get your forecast from Climacell. Check it out in the Sources section of the settings.',
       ]);
@@ -40,10 +43,8 @@ describe('UpgradeService', () => {
 
   it('uses a fresh state from v5, logging an error', () => {
     ctx.initialState = v5Example as any;
-    ctx.run({ flushDefaultRequests: false }, () => {
+    ctx.run(() => {
       expect(store.getPersistedState()).toEqual(defaultState);
-
-      iq.expectReverse();
       ctx.expectGenericErrorShown();
     });
   });

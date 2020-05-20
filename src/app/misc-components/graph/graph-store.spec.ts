@@ -19,27 +19,35 @@ describe('GraphStore', () => {
   describe('night boxing', () => {
     it('updates with location', () => {
       ctx.startTime = new Date('1980-11-04T15:00:00.000Z');
+      ctx.currentLocation = [144, -122];
+      ctx.initialState.useCurrentLocation = true;
       ctx.run(() => {
+        iq.flushReverse([144, -122]);
+        gov.expectPoints([144, -122]);
         const graphState = new GraphStateHarness(ctx);
         expect(graphState.getNightBoxes()[0]).toEqual({
           from: 342066821989,
           to: 342105060171,
         });
 
-        ctx.mocks.browser.getCurrentLocation.and.resolveTo([10, -20]);
+        ctx.currentLocation = [10, -20];
         refresh.trigger();
         iq.flushReverse([10, -20]);
+        gov.expectPoints([10, -20]);
         expect(graphState.getNightBoxes()[0]).toEqual({
           from: 342039449477,
           to: 342083544424,
         });
-        gov.expectPoints([10, -20]);
       });
     });
 
     it('updates with time', () => {
       ctx.startTime = new Date('1980-11-04T15:00:00.000Z');
+      ctx.currentLocation = [144, -122];
+      ctx.initialState.useCurrentLocation = true;
       ctx.run(() => {
+        iq.flushReverse([144, -122]);
+        gov.expectPoints([144, -122]);
         const graphState = new GraphStateHarness(ctx);
         expect(graphState.getNightBoxes()[0]).toEqual({
           from: 342066821989,

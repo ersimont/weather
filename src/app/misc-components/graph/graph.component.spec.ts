@@ -28,7 +28,7 @@ describe('GraphComponent', () => {
     ctx.initialState.customLocation.gpsCoords = [-44, 171];
     ctx.initialState.customLocation.timezone = 'Pacific/Auckland';
     state.setShowing(SourceId.WEATHER_UNLOCKED);
-    ctx.run({ flushDefaultRequests: false }, () => {
+    ctx.run(() => {
       unlocked.expectForecast([-44, 171]);
       expect(graph.getTimeZone()).toBe('NZST');
 
@@ -43,7 +43,8 @@ describe('GraphComponent', () => {
       const timeframe = unlocked.buildTimeframe({ temp_c: 21.6 });
       state.setShowing(SourceId.WEATHER_UNLOCKED);
       ctx.initialState.units.temp = TempUnit.C;
-      ctx.run({ flushDefaultRequests: false }, () => {
+      ctx.initialState.useCurrentLocation = true;
+      ctx.run(() => {
         iq.flushReverse();
         unlocked
           .expectForecast()
@@ -60,8 +61,9 @@ describe('GraphComponent', () => {
     });
 
     it('displays the source in its footer', () => {
+      ctx.initialState.useCurrentLocation = true;
       state.setShowing(SourceId.WEATHER_GOV, SourceId.WEATHER_UNLOCKED);
-      ctx.run({ flushDefaultRequests: false }, () => {
+      ctx.run(() => {
         iq.flushReverse();
         gov.flushFixture();
         unlocked.flushDefault();

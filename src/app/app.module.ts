@@ -59,6 +59,7 @@ import { PrivacyPolicyComponent } from './misc-components/privacy-policy/privacy
       registrationStrategy: 'registerWithDelay',
     }),
     StoreModule.forRoot({}, { metaReducers: [ngAppStateReducer] }),
+    // TODO: move to booleans
     environment.name === 'development' ? StoreDevtoolsModule.instrument() : [],
   ],
   providers: [provideErrorHandler(), provideHttpStatus()],

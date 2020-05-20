@@ -16,7 +16,7 @@ describe('LocationIqService', () => {
     it('handles an error', () => {
       ctx.initialState.useCurrentLocation = false;
       ctx.initialState.customLocation.search = 'bad';
-      ctx.run({ flushDefaultRequests: false }, () => {
+      ctx.run(() => {
         iq.expectForward('bad').flushError();
 
         refresh.trigger();
@@ -27,7 +27,7 @@ describe('LocationIqService', () => {
     it('can cancel', () => {
       ctx.initialState.useCurrentLocation = false;
       ctx.initialState.customLocation.search = 'oops';
-      ctx.run({ flushDefaultRequests: false }, () => {
+      ctx.run(() => {
         ctx.getHarness(LocationOptionsComponentHarness).select('Current');
         expect(iq.expectForward('oops').isCancelled()).toBe(true);
         iq.expectReverse();
@@ -37,7 +37,8 @@ describe('LocationIqService', () => {
 
   describe('.reverse()', () => {
     it('handles an error', () => {
-      ctx.run({ flushDefaultRequests: false }, () => {
+      ctx.initialState.useCurrentLocation = true;
+      ctx.run(() => {
         iq.expectReverse().flushError();
 
         refresh.trigger();
@@ -46,7 +47,8 @@ describe('LocationIqService', () => {
     });
 
     it('can cancel', () => {
-      ctx.run({ flushDefaultRequests: false }, () => {
+      ctx.initialState.useCurrentLocation = true;
+      ctx.run(() => {
         const location = ctx.getHarness(LocationOptionsComponentHarness);
         location.setCustomLocation('New place');
         expect(iq.expectReverse().isCancelled()).toBe(true);

@@ -24,7 +24,10 @@ describe('RefreshService', () => {
   }
 
   it('refreshes after 30 minutes, with an event', () => {
+    ctx.initialState.useCurrentLocation = true;
     ctx.run(() => {
+      iq.expectReverse();
+
       ctx.tick(refreshInterval - 1);
       http.verify();
       expect(events.getEvents('interval_refresh').length).toBe(0);
@@ -36,7 +39,10 @@ describe('RefreshService', () => {
   });
 
   it('resets the refresh interval after any other refresh', () => {
+    ctx.initialState.useCurrentLocation = true;
     ctx.run(() => {
+      iq.expectReverse();
+
       ctx.tick(refreshInterval / 2);
       ctx.getHarness(LocationOptionsComponentHarness).setCustomLocation('loc1');
       iq.expectForward('loc1');
@@ -60,7 +66,10 @@ describe('RefreshService', () => {
   });
 
   it('allows a location refresh during cooldown', () => {
+    ctx.initialState.useCurrentLocation = true;
     ctx.run(() => {
+      iq.expectReverse();
+
       ctx.tick(refreshInterval / 2);
       ctx.getHarness(LocationOptionsComponentHarness).setCustomLocation('loc1');
       iq.expectForward('loc1');
@@ -68,7 +77,10 @@ describe('RefreshService', () => {
   });
 
   it('forbids focus refreshes during cooldown', () => {
+    ctx.initialState.useCurrentLocation = true;
     ctx.run(() => {
+      iq.expectReverse();
+
       ctx.tick(refreshInterval / 2);
       dispatchFocus();
       http.verify();
@@ -78,7 +90,8 @@ describe('RefreshService', () => {
 
   it('refreshes when the tab gains focus, with an event', () => {
     ctx.mocks.browser.hasFocus.and.returnValue(false);
-    ctx.run({ flushDefaultRequests: false }, () => {
+    ctx.initialState.useCurrentLocation = true;
+    ctx.run(() => {
       http.verify();
       expect(events.getEvents('focus_refresh').length).toBe(0);
 
@@ -91,7 +104,8 @@ describe('RefreshService', () => {
 
   it('only refreshes when the tab has focus', () => {
     ctx.mocks.browser.hasFocus.and.returnValue(false);
-    ctx.run({ flushDefaultRequests: false }, () => {
+    ctx.initialState.useCurrentLocation = true;
+    ctx.run(() => {
       ctx.tick(refreshInterval);
       dispatchFocus();
       ctx.getHarness(LocationOptionsComponentHarness).setCustomLocation('loc1');

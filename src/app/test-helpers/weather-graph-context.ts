@@ -78,10 +78,7 @@ export class WeatherGraphContext extends ComponentContext<
     expect(this.mocks.snackBar.open).not.toHaveBeenCalled();
   }
 
-  protected init({
-    flushDefaultRequests = true,
-    useInitialState = true,
-  }: Partial<InitOptions> = {}) {
+  protected init({ useInitialState = true }: Partial<InitOptions> = {}) {
     if (useInitialState) {
       localStorage.setItem('weather', JSON.stringify(this.initialState));
     } else {
@@ -89,11 +86,6 @@ export class WeatherGraphContext extends ComponentContext<
     }
 
     super.init({});
-
-    if (flushDefaultRequests) {
-      this.harnesses.iq.flushReverse();
-      this.harnesses.gov.flushFixture();
-    }
   }
 
   protected cleanUp() {

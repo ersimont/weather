@@ -1,7 +1,7 @@
 export const v7Default = {
   _version: 7,
   allowSourceFallback: true,
-  useCurrentLocation: true,
+  useCurrentLocation: false,
   currentLocation: { search: '' },
   customLocation: { search: '' },
   sources: {

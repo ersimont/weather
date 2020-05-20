@@ -8,7 +8,7 @@ export class WeatherState {
   _version = 7;
 
   allowSourceFallback = true;
-  useCurrentLocation = true;
+  useCurrentLocation = false;
   currentLocation = new Location();
   customLocation = new Location();
 
