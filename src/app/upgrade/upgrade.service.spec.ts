@@ -1,6 +1,7 @@
 import { LocationIqServiceHarness } from 'app/misc-services/location-iq.service.harness';
 import { WeatherStoreHarness } from 'app/state/weather-store.harness';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
+import { SnackBarErrorServiceHarness } from 'app/to-replace/snack-bar-error.service.harness';
 import {
   defaultState,
   v5Example,
@@ -10,11 +11,12 @@ import { WhatsNewComponentHarness } from 'app/upgrade/whats-new.component.harnes
 
 describe('UpgradeService', () => {
   let ctx: WeatherGraphContext;
+  let errors: SnackBarErrorServiceHarness;
   let iq: LocationIqServiceHarness;
   let store: WeatherStoreHarness;
   beforeEach(() => {
     ctx = new WeatherGraphContext();
-    ({ iq, store } = ctx.harnesses);
+    ({ errors, iq, store } = ctx.harnesses);
   });
 
   it('defaults to a fresh, up-to-date state', () => {
@@ -45,7 +47,7 @@ describe('UpgradeService', () => {
     ctx.initialState = v5Example as any;
     ctx.run(() => {
       expect(store.getPersistedState()).toEqual(defaultState);
-      ctx.expectGenericErrorShown();
+      errors.expectGeneric();
 
       ctx.cleanUpFreshInit();
     });

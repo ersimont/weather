@@ -1,14 +1,16 @@
 import { AppComponentHarness } from 'app/app.component.harness';
+import { InitServiceHarness } from 'app/misc-services/init.service.harness';
 import { LocationIqServiceHarness } from 'app/misc-services/location-iq.service.harness';
 import { LocationOptionsComponentHarness } from 'app/options/location-options/location-options.component.harness';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 
 describe('InitService', () => {
   let ctx: WeatherGraphContext;
+  let init: InitServiceHarness;
   let iq: LocationIqServiceHarness;
   beforeEach(() => {
     ctx = new WeatherGraphContext();
-    ({ iq } = ctx.harnesses);
+    ({ init, iq } = ctx.harnesses);
   });
 
   it('asks for location when none is selected', () => {
@@ -19,9 +21,9 @@ describe('InitService', () => {
       );
 
       ctx.tick(1999);
-      ctx.expectNoErrorShown();
+      init.expectNoPrompt();
       ctx.tick(1);
-      ctx.expectErrorShown('Choose a location'); // TODO: not an error!
+      init.expectPrompt();
     });
   });
 
@@ -36,7 +38,7 @@ describe('InitService', () => {
       );
 
       ctx.tick(2000);
-      ctx.expectNoErrorShown(); // TODO: not an error!
+      init.expectNoPrompt();
     });
   });
 });

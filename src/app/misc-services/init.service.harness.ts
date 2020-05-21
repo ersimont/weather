@@ -1,3 +1,4 @@
+import { MatSnackBarHarness } from '@angular/material/snack-bar/testing';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 
 export class InitServiceHarness {
@@ -5,6 +6,16 @@ export class InitServiceHarness {
 
   cleanUpFreshInit() {
     this.ctx.tick(2000);
-    this.ctx.expectErrorShown('Choose a location'); // TODO: not an error
+    this.expectPrompt();
+  }
+
+  expectNoPrompt() {
+    expect(this.ctx.getHarnessOptional(MatSnackBarHarness)).toBe(null);
+  }
+
+  expectPrompt() {
+    const bar = this.ctx.getHarness(MatSnackBarHarness);
+    expect(bar.getMessage()).toBe('Choose a location');
+    bar.dismissWithAction();
   }
 }

@@ -1,7 +1,6 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { AppModule } from 'app/app.module';
 import { GraphComponentHarness } from 'app/misc-components/graph/graph.component.harness';
 import { BrowserService } from 'app/misc-services/browser.service';
@@ -18,8 +17,8 @@ import { WeatherStoreHarness } from 'app/state/weather-store.harness';
 import { eventCatalog } from 'app/test-helpers/event-catalog';
 import { createSpyObject } from 'app/to-replace/create-spy-object';
 import { EventTrackingServiceHarness } from 'app/to-replace/event-tracking/event-tracking.service.harness';
+import { SnackBarErrorServiceHarness } from 'app/to-replace/snack-bar-error.service.harness';
 import { ComponentContext } from 'app/to-replace/test-context/component-context';
-import { expectSingleCallAndReset } from 's-ng-dev-utils';
 
 export interface InitOptions {
   useInitialState: boolean;
@@ -32,15 +31,13 @@ export class WeatherGraphContext extends ComponentContext<
   initialState = new WeatherState();
   currentLocation: GpsCoords = [144, -122];
 
-  // TODO: move to harnesses
-  mocks = {
-    browser: createSpyObject(BrowserService),
-    snackBar: createSpyObject(MatSnackBar),
-  };
+  // TODO: move to harness
+  mocks = { browser: createSpyObject(BrowserService) };
 
   harnesses = {
     climacell: new ClimacellHarness(this),
     events: new EventTrackingServiceHarness(eventCatalog),
+    errors: new SnackBarErrorServiceHarness(this),
     gov: new WeatherGovHarness(this),
     graph: new GraphComponentHarness(this),
     init: new InitServiceHarness(this),
@@ -61,22 +58,7 @@ export class WeatherGraphContext extends ComponentContext<
     );
     this.mocks.browser.hasFocus.and.returnValue(true);
     TestBed.overrideProvider(BrowserService, { useValue: this.mocks.browser });
-    TestBed.overrideProvider(MatSnackBar, { useValue: this.mocks.snackBar });
-  }
-
-  // TODO: move to harness (along w/ other error expectations below)
-  expectGenericErrorShown() {
-    this.expectErrorShown('There was an unexpected error');
-  }
-
-  expectErrorShown(message: string) {
-    expectSingleCallAndReset(this.mocks.snackBar.open, message, 'OK', {
-      duration: 5000,
-    });
-  }
-
-  expectNoErrorShown() {
-    expect(this.mocks.snackBar.open).not.toHaveBeenCalled();
+    this.harnesses.errors.install();
   }
 
   cleanUpFreshInit() {

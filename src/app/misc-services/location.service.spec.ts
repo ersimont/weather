@@ -7,10 +7,12 @@ import { WeatherGovHarness } from 'app/sources/weather-gov/weather-gov.harness';
 import { WeatherStateHarness } from 'app/state/weather-state.harness';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 import { EventTrackingServiceHarness } from 'app/to-replace/event-tracking/event-tracking.service.harness';
+import { SnackBarErrorServiceHarness } from 'app/to-replace/snack-bar-error.service.harness';
 
 describe('LocationService', () => {
   let ctx: WeatherGraphContext;
   let events: EventTrackingServiceHarness;
+  let errors: SnackBarErrorServiceHarness;
   let gov: WeatherGovHarness;
   let graph: GraphComponentHarness;
   let iq: LocationIqServiceHarness;
@@ -18,7 +20,7 @@ describe('LocationService', () => {
   let state: WeatherStateHarness;
   beforeEach(() => {
     ctx = new WeatherGraphContext();
-    ({ events, gov, graph, iq, refresh, state } = ctx.harnesses);
+    ({ events, errors, gov, graph, iq, refresh, state } = ctx.harnesses);
   });
 
   it('clears the forecasts when changing whether to use current', () => {
@@ -176,11 +178,11 @@ describe('LocationService', () => {
       ctx.run(() => {
         const location = ctx.getHarness(LocationOptionsComponentHarness);
         iq.expectForward('Initial search').flushError(404);
-        ctx.expectErrorShown('Location not found');
+        errors.expect('Location not found');
 
         location.setCustomLocation('a place');
         iq.expectForward('a place').flushError(500);
-        ctx.expectGenericErrorShown();
+        errors.expectGeneric();
 
         refresh.trigger();
         iq.expectForward('a place').flush([

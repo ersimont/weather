@@ -8,9 +8,11 @@ import { WeatherGovHarness } from 'app/sources/weather-gov/weather-gov.harness';
 import { WeatherUnlockedHarness } from 'app/sources/weather-unlocked/weather-unlocked.harness';
 import { WeatherStateHarness } from 'app/state/weather-state.harness';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
+import { SnackBarErrorServiceHarness } from 'app/to-replace/snack-bar-error.service.harness';
 
 describe('AbstractSource', () => {
   let ctx: WeatherGraphContext;
+  let errors: SnackBarErrorServiceHarness;
   let iq: LocationIqServiceHarness;
   let gov: WeatherGovHarness;
   let unlocked: WeatherUnlockedHarness;
@@ -18,7 +20,7 @@ describe('AbstractSource', () => {
   let state: WeatherStateHarness;
   beforeEach(() => {
     ctx = new WeatherGraphContext();
-    ({ iq, gov, unlocked, refresh, state } = ctx.harnesses);
+    ({ iq, errors, gov, unlocked, refresh, state } = ctx.harnesses);
   });
 
   it('refreshes (only) when showing', () => {
@@ -68,7 +70,7 @@ describe('AbstractSource', () => {
         iq.flushReverse();
         gov.flushNotAvailable();
         unlocked.flushDefault();
-        ctx.expectNoErrorShown();
+        errors.verify();
       });
     });
 

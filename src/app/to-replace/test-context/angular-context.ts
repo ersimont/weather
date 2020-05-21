@@ -86,7 +86,7 @@ export abstract class AngularContext<InitOptions = {}> {
   }
 
   getHarnessOptional<T extends ComponentHarness>(query: HarnessQuery<T>) {
-    return this.loader.locatorForOptional(query)() as Synchronized<T>;
+    return this.loader.locatorForOptional(query)() as Synchronized<T> | null;
   }
 
   getAllHarnesses<T extends ComponentHarness>(query: HarnessQuery<T>) {

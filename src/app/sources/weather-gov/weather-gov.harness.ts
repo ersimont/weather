@@ -36,7 +36,7 @@ export class WeatherGovHarness {
   }
 
   expectNotAvailableError() {
-    this.ctx.expectErrorShown(
+    this.ctx.harnesses.errors.expect(
       'Weather.gov is not available here. Try another source (in the settings).',
     );
   }
