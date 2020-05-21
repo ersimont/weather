@@ -1,7 +1,10 @@
-export const environment = {
-  name: 'test',
-  gaProperty: undefined,
+import { enableProdMode } from '@angular/core';
+
+export const environment: Env = {
+  pwa: false,
+  logEvents: false,
   paintGraph: false,
+  storeDevtools: false,
 };
 
 /*
@@ -13,3 +16,4 @@ export const environment = {
  */
 // import 'zone.js/dist/zone-error'; // Included with Angular CLI.
 Error.stackTraceLimit = 0;
+enableProdMode();

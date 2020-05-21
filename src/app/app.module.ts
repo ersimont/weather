@@ -40,8 +40,7 @@ import { PrivacyPolicyComponent } from './misc-components/privacy-policy/privacy
     CommonModule,
     EventTrackingModule.forRoot({
       gaProperty: environment.gaProperty,
-      // TODO: move to booleans
-      log: environment.name === 'development',
+      log: environment.logEvents,
     }),
     HttpClientModule,
     MatButtonModule,
@@ -53,14 +52,13 @@ import { PrivacyPolicyComponent } from './misc-components/privacy-policy/privacy
     MatSnackBarModule,
     MatToolbarModule,
     OptionsModule,
-    ServiceWorkerModule.register('ngsw-worker.js', {
-      // TODO: move to booleans
-      enabled: environment.name === 'production',
-      registrationStrategy: 'registerWithDelay',
-    }),
     StoreModule.forRoot({}, { metaReducers: [ngAppStateReducer] }),
-    // TODO: move to booleans
-    environment.name === 'development' ? StoreDevtoolsModule.instrument() : [],
+    environment.pwa
+      ? ServiceWorkerModule.register('ngsw-worker.js', {
+          registrationStrategy: 'registerWithDelay',
+        })
+      : [],
+    environment.storeDevtools ? StoreDevtoolsModule.instrument() : [],
   ],
   providers: [provideErrorHandler(), provideHttpStatus()],
   bootstrap: [AppComponent],
