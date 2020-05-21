@@ -97,6 +97,11 @@ export class LocationService extends InjectableSuperclass {
     return fromPromise(this.browserService.getCurrentLocation()).pipe(
       switchMap((gpsCoords: GpsCoords) =>
         this.locationIqService.reverse(gpsCoords).pipe(
+          catchError((error) => {
+            this.store('currentLocation')('city').delete();
+            this.errorService.handleError(error, { logUnexpected: false });
+            return NEVER;
+          }),
           tap((res) => {
             this.store('currentLocation').assign({ gpsCoords, city: res.city });
           }),

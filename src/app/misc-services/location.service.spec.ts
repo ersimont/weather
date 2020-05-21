@@ -122,6 +122,7 @@ describe('LocationService', () => {
       ctx.initialState.useCurrentLocation = true;
       ctx.initialState.currentLocation.city = 'A previous value';
       ctx.run(() => {
+        errors.expect('Location not found');
         const app = ctx.getHarness(AppComponentHarness);
         expect(app.getTitle()).toBe(app.defaultTitle);
 
@@ -142,6 +143,7 @@ describe('LocationService', () => {
         const app = ctx.getHarness(AppComponentHarness);
 
         iq.expectReverse().flushError();
+        errors.expectGeneric();
         expect(app.getTitle()).toBe(app.defaultTitle);
 
         refresh.trigger();

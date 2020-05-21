@@ -46,15 +46,18 @@ describe('AbstractSource', () => {
     ctx.initialState.useCurrentLocation = true;
     ctx.run(() => {
       iq.expectReverse().flushError();
+      errors.expectGeneric();
 
       refresh.trigger();
       iq.flushReverse();
       gov.expectPoints().flushError();
+      errors.expectGeneric();
 
       refresh.trigger();
       iq.flushReverse();
       gov.expectPoints().flush(pointResponse);
       gov.expectGrid().flushError();
+      errors.expectGeneric();
 
       refresh.trigger();
       iq.expectReverse();

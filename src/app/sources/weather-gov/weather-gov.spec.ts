@@ -4,15 +4,17 @@ import { pointResponse } from 'app/sources/weather-gov/weather-gov.fixtures';
 import { WeatherGovHarness } from 'app/sources/weather-gov/weather-gov.harness';
 import { WeatherStateHarness } from 'app/state/weather-state.harness';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
+import { SnackBarErrorServiceHarness } from 'app/to-replace/snack-bar-error.service.harness';
 
 describe('WeatherGov', () => {
   let ctx: WeatherGraphContext;
+  let errors: SnackBarErrorServiceHarness;
   let gov: WeatherGovHarness;
   let refresh: RefreshServiceHarness;
   let state: WeatherStateHarness;
   beforeEach(() => {
     ctx = new WeatherGraphContext();
-    ({ gov, refresh, state } = ctx.harnesses);
+    ({ errors, gov, refresh, state } = ctx.harnesses);
   });
 
   it('can cancel the first request', () => {
@@ -44,10 +46,12 @@ describe('WeatherGov', () => {
     state.setCustomLocation();
     ctx.run(() => {
       gov.expectPoints().flushError();
+      errors.expectGeneric();
 
       refresh.trigger();
       gov.expectPoints().flush(pointResponse);
       gov.expectGrid().flushError();
+      errors.expectGeneric();
 
       refresh.trigger();
       gov.flushFixture();

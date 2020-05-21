@@ -2,14 +2,16 @@ import { LocationIqServiceHarness } from 'app/misc-services/location-iq.service.
 import { RefreshServiceHarness } from 'app/misc-services/refresh.service.harness';
 import { LocationOptionsComponentHarness } from 'app/options/location-options/location-options.component.harness';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
+import { SnackBarErrorServiceHarness } from 'app/to-replace/snack-bar-error.service.harness';
 
 describe('LocationIqService', () => {
   let ctx: WeatherGraphContext;
+  let errors: SnackBarErrorServiceHarness;
   let iq: LocationIqServiceHarness;
   let refresh: RefreshServiceHarness;
   beforeEach(() => {
     ctx = new WeatherGraphContext();
-    ({ iq, refresh } = ctx.harnesses);
+    ({ errors, iq, refresh } = ctx.harnesses);
   });
 
   describe('.forward()', () => {
@@ -18,6 +20,7 @@ describe('LocationIqService', () => {
       ctx.initialState.customLocation.search = 'bad';
       ctx.run(() => {
         iq.expectForward('bad').flushError();
+        errors.expectGeneric();
 
         refresh.trigger();
         iq.expectForward('bad');
@@ -40,6 +43,7 @@ describe('LocationIqService', () => {
       ctx.initialState.useCurrentLocation = true;
       ctx.run(() => {
         iq.expectReverse().flushError();
+        errors.expectGeneric();
 
         refresh.trigger();
         iq.expectReverse();
@@ -66,6 +70,7 @@ describe('LocationIqService', () => {
           iq.buildLocationResponse({ lat: '6', lon: '1' }),
         ]);
         iq.expectTimezone([6, 1]).flushError();
+        errors.expectGeneric();
 
         refresh.trigger();
         iq.expectForward('bad');
