@@ -1,8 +1,8 @@
 import { Observable, Subscription } from 'rxjs';
 
-type Constructor<T> = new (...args: any[]) => T;
+type Constructor = new (...args: any[]) => {};
 
-export function mixInSubscriptionManager<B extends Constructor<{}>>(Base: B) {
+export function mixInSubscriptionManager<B extends Constructor>(Base: B) {
   return class extends Base {
     private subscriptions = new Subscription();
 

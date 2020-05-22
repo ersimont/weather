@@ -1,10 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { AbstractOptionDirective } from 'app/options/abstract-option-directive/abstract-option.directive';
 import { Condition, conditionInfo } from 'app/state/condition';
-import { WeatherState } from 'app/state/weather-state';
-import { WeatherStore } from 'app/state/weather-store';
-import { EventTrackingService } from 'app/to-replace/event-tracking/event-tracking.service';
-import { bindKey, values } from 'micro-dash';
-import { StoreObject } from 'ng-app-state';
+import { values } from 'micro-dash';
 
 @Component({
   selector: 'app-condition-options',
@@ -12,14 +9,9 @@ import { StoreObject } from 'ng-app-state';
   styleUrls: ['./condition-options.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ConditionOptionsComponent {
-  store: StoreObject<WeatherState>;
+export class ConditionOptionsComponent extends AbstractOptionDirective {
   conditions = values(Condition);
   conditionInfo: any = conditionInfo;
-  trackEvent: EventTrackingService['track'];
 
-  constructor(eventTrackingService: EventTrackingService, store: WeatherStore) {
-    this.trackEvent = bindKey(eventTrackingService, 'track');
-    this.store = store.withCaching();
-  }
+  protected optionType = 'condition';
 }

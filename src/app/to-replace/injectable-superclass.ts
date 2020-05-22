@@ -2,9 +2,9 @@ import { OnDestroy } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { mixInSubscriptionManager } from './subscription-manager';
 
-type Constructor<T> = new (...args: any[]) => T;
+type Constructor = new (...args: any[]) => {};
 
-export function mixInInjectableSuperclass<B extends Constructor<{}>>(Base: B) {
+export function mixInInjectableSuperclass<B extends Constructor>(Base: B) {
   return class extends mixInSubscriptionManager(Base) implements OnDestroy {
     /**
      * An observable that emits once when this object is destroyed, then completes.

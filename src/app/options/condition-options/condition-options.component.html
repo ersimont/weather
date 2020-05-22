@@ -3,7 +3,7 @@
   <div *ngFor="let condition of conditions" [ngClass]="condition">
     <mat-slide-toggle
       [nasModel]="store('showConditions')(condition)"
-      (change)="trackEvent('change_' + condition, 'change_condition')"
+      (change)="trackChange(condition)"
     >
       {{ conditionInfo[condition].label }}
     </mat-slide-toggle>

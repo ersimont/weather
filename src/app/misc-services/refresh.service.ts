@@ -34,6 +34,7 @@ export class RefreshService {
     return this.locationService.refreshableChange$.pipe(
       startWith(undefined),
       switchMap((source1) =>
+        // TODO: merge seems to be big in the final bundle. Make my operator for this pattern? `continueWith()`?
         merge(of(source1), focus$).pipe(
           switchMap((source2) => merge(of(source2), interval$)),
           filter(() => this.browserService.hasFocus()),

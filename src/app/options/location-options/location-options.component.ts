@@ -6,11 +6,7 @@ import {
 } from '@angular/core';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { LocationService } from 'app/misc-services/location.service';
-import { WeatherState } from 'app/state/weather-state';
-import { WeatherStore } from 'app/state/weather-store';
-import { EventTrackingService } from 'app/to-replace/event-tracking/event-tracking.service';
-import { StoreObject } from 'ng-app-state';
-import { DirectiveSuperclass } from 's-ng-utils';
+import { AbstractOptionDirective } from 'app/options/abstract-option-directive/abstract-option.directive';
 
 @Component({
   selector: 'app-location-options',
@@ -18,24 +14,19 @@ import { DirectiveSuperclass } from 's-ng-utils';
   styleUrls: ['./location-options.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LocationOptionsComponent extends DirectiveSuperclass {
-  store: StoreObject<WeatherState>;
+export class LocationOptionsComponent extends AbstractOptionDirective {
   useCurrentLocation: boolean;
   customSearch: string;
 
-  @ViewChild('panel', { read: MatExpansionPanel })
+  protected optionType = 'location';
+
+  @ViewChild(MatExpansionPanel)
   private panel!: MatExpansionPanel;
 
-  constructor(
-    private eventTrackingService: EventTrackingService,
-    injector: Injector,
-    public locationService: LocationService,
-    store: WeatherStore,
-  ) {
+  constructor(injector: Injector, public locationService: LocationService) {
     super(injector);
-    this.store = store.withCaching();
-    this.useCurrentLocation = store.state().useCurrentLocation;
-    this.customSearch = store.state().customLocation.search;
+    this.useCurrentLocation = this.store.state().useCurrentLocation;
+    this.customSearch = this.store.state().customLocation.search;
 
     this.subscribeTo(this.locationService.askForLocation$, () => {
       this.panel.open();
@@ -44,9 +35,6 @@ export class LocationOptionsComponent extends DirectiveSuperclass {
 
   setUseCurrentLocation(value: boolean) {
     this.locationService.setUseCurrentLocation(value);
-    this.eventTrackingService.track(
-      'change_current_selection',
-      'change_location',
-    );
+    this.trackChange('current_selection');
   }
 }
