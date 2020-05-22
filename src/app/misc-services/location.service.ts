@@ -85,7 +85,6 @@ export class LocationService extends InjectableSuperclass {
   }
 
   isBlank() {
-    // TODO: test both cases
     const state = this.store.state();
     return !(state.useCurrentLocation || state.customLocation.search);
   }

@@ -69,10 +69,8 @@ describe('LocationService', () => {
           { city: 'The New City of Atlantis' },
         ),
       ]);
-      // TODO: change to expect & move below expectation after changing that behavior. Here and in next test
-      iq.flushTimezone([8, 9]);
       expect(app.getTitle()).toBe('The New City of Atlantis');
-      gov.expectPoints([8, 9]);
+      iq.expectTimezone([8, 9]);
 
       location.select('Current');
       expect(app.getTitle()).toBe(app.defaultTitle);

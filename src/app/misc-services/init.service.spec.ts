@@ -27,10 +27,26 @@ describe('InitService', () => {
     });
   });
 
-  it('does not ask for location when one is selected', () => {
+  it('does not ask for location when current is selected', () => {
     ctx.initialState.useCurrentLocation = true;
     ctx.run({ useInitialState: true }, () => {
       iq.expectReverse();
+
+      expect(ctx.getHarness(AppComponentHarness).isSidenavOpen()).toBe(false);
+      expect(ctx.getHarness(LocationOptionsComponentHarness).isExpanded()).toBe(
+        false,
+      );
+
+      ctx.tick(2000);
+      init.expectNoPrompt();
+    });
+  });
+
+  it('does not ask for location when a custom one has been entered', () => {
+    ctx.initialState.useCurrentLocation = false;
+    ctx.initialState.customLocation.search = 'Entered';
+    ctx.run({ useInitialState: true }, () => {
+      iq.expectForward('Entered');
 
       expect(ctx.getHarness(AppComponentHarness).isSidenavOpen()).toBe(false);
       expect(ctx.getHarness(LocationOptionsComponentHarness).isExpanded()).toBe(
