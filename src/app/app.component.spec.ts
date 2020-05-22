@@ -1,4 +1,5 @@
 import { AppComponentHarness } from 'app/app.component.harness';
+import { GraphStateHarness } from 'app/misc-components/graph/graph-state.harness';
 import { LocationIqServiceHarness } from 'app/misc-services/location-iq.service.harness';
 import { LocationOptionsComponentHarness } from 'app/options/location-options/location-options.component.harness';
 import { WeatherGovHarness } from 'app/sources/weather-gov/weather-gov.harness';
@@ -34,6 +35,26 @@ describe('AppComponent', () => {
 
       ctx.getHarness(AppComponentHarness).openPrivacyPolicy();
       expect(events.getEvents('click_privacy_policy').length).toBe(1);
+    });
+  });
+
+  it('has buttons to snap to date ranges', () => {
+    ctx.startTime = new Date(2020, 5, 21);
+    ctx.run(() => {
+      const app = ctx.getHarness(AppComponentHarness);
+      const graphState = new GraphStateHarness(ctx);
+      ctx.cleanUpFreshInit();
+
+      app.snapToRange('three-days');
+      expect(graphState.getRange()).toEqual([1592708400000, 1592967600000]);
+
+      jasmine.clock().mockDate(new Date(2020, 5, 22));
+      app.snapToRange('day');
+      expect(graphState.getRange()).toEqual([1592794800000, 1592881200000]);
+
+      jasmine.clock().mockDate(new Date(2020, 5, 23));
+      app.snapToRange('week');
+      expect(graphState.getRange()).toEqual([1592881200000, 1593486000000]);
     });
   });
 

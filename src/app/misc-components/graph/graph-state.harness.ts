@@ -9,6 +9,11 @@ import { last } from 'micro-dash';
 export class GraphStateHarness {
   constructor(private ctx: WeatherGraphContext) {}
 
+  getRange(): [number, number] {
+    const ticks = this.getState().options.scales.xAxes[0].ticks;
+    return [ticks.min, ticks.max];
+  }
+
   getNightBoxes() {
     const boxes = this.getAnnotations().slice(0, -1) as BoxAnnotationOptions[];
     return boxes.map((box: BoxAnnotationOptions) => ({
@@ -23,8 +28,7 @@ export class GraphStateHarness {
   }
 
   getBoundaries() {
-    const state = this.ctx.inject(GraphStore).state();
-    const pan = state.options.plugins.zoom.pan;
+    const pan = this.getState().options.plugins.zoom.pan;
     return {
       min: pan.rangeMin.x as number,
       max: pan.rangeMax.x as number,
@@ -32,7 +36,10 @@ export class GraphStateHarness {
   }
 
   private getAnnotations() {
-    const state = this.ctx.inject(GraphStore).state();
-    return state.options.annotation.annotations;
+    return this.getState().options.annotation.annotations;
+  }
+
+  private getState() {
+    return this.ctx.inject(GraphStore).state();
   }
 }

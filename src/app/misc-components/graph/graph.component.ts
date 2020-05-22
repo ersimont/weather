@@ -19,10 +19,9 @@ import 'chartjs-plugin-zoom';
 import { clone, debounce } from 'micro-dash';
 import * as moment from 'moment';
 import 'moment-timezone';
-import { convertTime } from 's-js-utils';
+import { assert } from 's-js-utils';
 import { DirectiveSuperclass } from 's-ng-utils';
 import { environment } from '../../../environments/environment';
-import { SnapRangeAction } from './snap-range-action';
 
 @Component({
   selector: 'app-graph',
@@ -42,20 +41,13 @@ export class GraphComponent extends DirectiveSuperclass {
   constructor(
     private demicalPipe: DecimalPipe,
     private eventTrackingService: EventTrackingService,
-    public graphStore: GraphStore, // public for tests
+    private graphStore: GraphStore,
     injector: Injector,
     locationService: LocationService,
     private weatherStore: WeatherStore,
   ) {
     super(injector);
     this.addCallbacks();
-    this.snapRange(1);
-    this.subscribeTo(
-      weatherStore.action$.pipe(SnapRangeAction.filter),
-      ({ days }) => {
-        this.snapRange(days);
-      },
-    );
     this.subscribeTo(locationService.$, (location) => {
       if (location.timezone) {
         moment.tz.setDefault(location.timezone);
@@ -67,7 +59,8 @@ export class GraphComponent extends DirectiveSuperclass {
 
   @ViewChild('canvas')
   set canvas(canvas: ElementRef<HTMLCanvasElement>) {
-    const ctx = canvas.nativeElement.getContext('2d')!;
+    const ctx = canvas.nativeElement.getContext('2d');
+    assert(ctx, 'no 2d context available');
     const chart = new Chart(ctx, { type: 'line' });
     if (environment.paintGraph) {
       this.subscribeTo(this.graphStore.$, (graphState) => {
@@ -87,24 +80,13 @@ export class GraphComponent extends DirectiveSuperclass {
       footer: this.getTooltipFooter.bind(this),
     });
     zoomStore('pan')('onPanComplete').set((evt: any) => {
-      this.setRange(evt.chart.options.scales.xAxes[0].ticks);
+      this.graphStore.setRange(evt.chart.options.scales.xAxes[0].ticks);
       this.trackPan();
     });
     zoomStore('zoom')('onZoomComplete').set((evt: any) => {
-      this.setRange(evt.chart.options.scales.xAxes[0].ticks);
+      this.graphStore.setRange(evt.chart.options.scales.xAxes[0].ticks);
       this.trackZoom();
     });
-  }
-
-  private snapRange(days: number) {
-    const d = new Date();
-    d.setHours(d.getHours() - 1, 0, 0, 0);
-    const min = d.getTime();
-    this.setRange({ min, max: min + convertTime(days, 'd', 'ms') });
-  }
-
-  private setRange(range: { min: number; max: number }) {
-    this.graphStore('options')('scales')('xAxes')(0)('ticks').assign(range);
   }
 
   private getTooltipLabel(item: ChartTooltipItem, data: ChartData) {

@@ -7,11 +7,10 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { MatSidenav } from '@angular/material/sidenav';
 import { AboutComponent } from 'app/misc-components/about/about.component';
-import { SnapRangeAction } from 'app/misc-components/graph/snap-range-action';
+import { GraphStore } from 'app/misc-components/graph/graph-store';
 import { PrivacyPolicyComponent } from 'app/misc-components/privacy-policy/privacy-policy.component';
 import { InitService } from 'app/misc-services/init.service';
 import { LocationService } from 'app/misc-services/location.service';
-import { WeatherStore } from 'app/state/weather-store';
 import { EventTrackingService } from 'app/to-replace/event-tracking/event-tracking.service';
 import { HttpStatusService } from 'app/to-replace/http-status.service';
 import { Observable } from 'rxjs';
@@ -30,12 +29,12 @@ export class AppComponent extends DirectiveSuperclass {
 
   constructor(
     private eventTrackingService: EventTrackingService,
+    private graphStore: GraphStore,
     public httpStatusService: HttpStatusService,
     injector: Injector,
     initService: InitService,
     private locationService: LocationService,
     private matDialog: MatDialog,
-    private store: WeatherStore,
   ) {
     super(injector);
     initService.initializeApp();
@@ -47,7 +46,7 @@ export class AppComponent extends DirectiveSuperclass {
   }
 
   setRange(days: number, action: string) {
-    this.store.dispatch(new SnapRangeAction(days));
+    this.graphStore.snapToRange(days);
     this.eventTrackingService.track(action, 'set_range');
   }
 

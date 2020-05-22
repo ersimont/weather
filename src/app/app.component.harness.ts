@@ -24,6 +24,10 @@ export class AppComponentHarness extends ComponentHarness {
     await (await this.getAboutItem()).click();
   }
 
+  async snapToRange(range: 'day' | 'three-days' | 'week') {
+    (await this.getRangeButton(range)).click();
+  }
+
   async openPrivacyPolicy() {
     await this.ensureSidenavOpen();
     await (await this.getPrivacyPolicyItem()).click();
@@ -42,5 +46,16 @@ export class AppComponentHarness extends ComponentHarness {
   async getTitle() {
     const loader = await this.locatorFor('h1');
     return (await loader()).text();
+  }
+
+  private async getRangeButton(className: string) {
+    const buttons = await this.locatorForAll(MatButtonHarness)();
+    for (const button of buttons) {
+      const bh = await button.host();
+      if (await bh.hasClass(className)) {
+        return button;
+      }
+    }
+    throw new Error(`No button found with class ${className}`);
   }
 }

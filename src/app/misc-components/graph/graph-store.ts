@@ -14,6 +14,7 @@ import { WeatherStore } from 'app/state/weather-store';
 import { AppStore } from 'ng-app-state';
 import { interval } from 'rxjs';
 import { startWith, switchMapTo } from 'rxjs/operators';
+import { convertTime } from 's-js-utils';
 import { delayOnMicrotaskQueue } from 's-rxjs-utils';
 
 @Injectable({ providedIn: 'root' })
@@ -26,6 +27,7 @@ export class GraphStore extends AppStore<GraphState> {
     super(ngrxStore, 'graph', new GraphState());
 
     // options
+    this.snapToRange(1);
     const tick = interval(60000).pipe(startWith(0));
     tick.subscribe(() => {
       this.updateBoundaries(Date.now());
@@ -40,6 +42,17 @@ export class GraphStore extends AppStore<GraphState> {
     weatherStore.$.pipe(delayOnMicrotaskQueue()).subscribe((weatherState) => {
       this.updateFromWeatherState(weatherState);
     });
+  }
+
+  snapToRange(days: number) {
+    const d = new Date();
+    d.setHours(d.getHours() - 1, 0, 0, 0);
+    const min = d.getTime();
+    this.setRange({ min, max: min + convertTime(days, 'd', 'ms') });
+  }
+
+  setRange(range: { min: number; max: number }) {
+    this('options')('scales')('xAxes')(0)('ticks').assign(range);
   }
 
   private updateAnnotations(gpsCoords: GpsCoords | undefined, now: number) {

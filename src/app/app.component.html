@@ -4,13 +4,17 @@
   </button>
   <h1>{{ title$ | async }}</h1>
 
-  <button mat-icon-button (click)="setRange(1, 'click_day')">
+  <button mat-icon-button class="day" (click)="setRange(1, 'click_day')">
     <mat-icon svgIcon="day"></mat-icon>
   </button>
-  <button mat-icon-button (click)="setRange(3, 'click_three_days')">
+  <button
+    mat-icon-button
+    class="three-days"
+    (click)="setRange(3, 'click_three_days')"
+  >
     <mat-icon svgIcon="three-days"></mat-icon>
   </button>
-  <button mat-icon-button (click)="setRange(7, 'click_week')">
+  <button mat-icon-button class="week" (click)="setRange(7, 'click_week')">
     <mat-icon svgIcon="week"></mat-icon>
   </button>
 
