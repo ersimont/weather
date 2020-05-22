@@ -11,6 +11,7 @@ import { LocationService } from 'app/misc-services/location.service';
 import { GpsCoords } from 'app/state/location';
 import { WeatherState } from 'app/state/weather-state';
 import { WeatherStore } from 'app/state/weather-store';
+import { mixInInjectableSuperclass } from 'app/to-replace/injectable-superclass';
 import { AppStore } from 'ng-app-state';
 import { interval } from 'rxjs';
 import { startWith, switchMapTo } from 'rxjs/operators';
@@ -18,7 +19,9 @@ import { convertTime } from 's-js-utils';
 import { delayOnMicrotaskQueue } from 's-rxjs-utils';
 
 @Injectable({ providedIn: 'root' })
-export class GraphStore extends AppStore<GraphState> {
+export class GraphStore extends mixInInjectableSuperclass(AppStore)<
+  GraphState
+> {
   constructor(
     locationService: LocationService,
     ngrxStore: Store<any>,
@@ -38,10 +41,12 @@ export class GraphStore extends AppStore<GraphState> {
 
     // data
     this.updateFromWeatherState(weatherStore.state());
-    // TODO: figure a way to use subscribeTo
-    weatherStore.$.pipe(delayOnMicrotaskQueue()).subscribe((weatherState) => {
-      this.updateFromWeatherState(weatherState);
-    });
+    this.subscribeTo(
+      weatherStore.$.pipe(delayOnMicrotaskQueue()),
+      (weatherState) => {
+        this.updateFromWeatherState(weatherState);
+      },
+    );
   }
 
   snapToRange(days: number) {
