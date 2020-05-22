@@ -2,7 +2,7 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { AppModule } from 'app/app.module';
-import { GraphComponentHarness } from 'app/misc-components/graph/graph.component.harness';
+import { GraphComponentHarness } from 'app/graph/graph.component.harness';
 import { BrowserService } from 'app/misc-services/browser.service';
 import { InitServiceHarness } from 'app/misc-services/init.service.harness';
 import { LocationIqServiceHarness } from 'app/misc-services/location-iq.service.harness';

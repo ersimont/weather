@@ -1,5 +1,5 @@
 import { AppComponentHarness } from 'app/app.component.harness';
-import { GraphStateHarness } from 'app/misc-components/graph/graph-state.harness';
+import { GraphStateHarness } from 'app/graph/state/graph-state.harness';
 import { LocationIqServiceHarness } from 'app/misc-services/location-iq.service.harness';
 import { LocationOptionsComponentHarness } from 'app/options/location-options/location-options.component.harness';
 import { WeatherGovHarness } from 'app/sources/weather-gov/weather-gov.harness';

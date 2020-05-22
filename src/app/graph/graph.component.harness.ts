@@ -1,4 +1,6 @@
-import { GraphStore } from 'app/misc-components/graph/graph-store';
+import { By } from '@angular/platform-browser';
+import { GraphComponent } from 'app/graph/graph.component';
+import { GraphStore } from 'app/graph/state/graph-store';
 import { Condition } from 'app/state/condition';
 import { SourceId } from 'app/state/source';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
@@ -48,10 +50,16 @@ export class GraphComponentHarness {
   }
 
   private getOptions() {
-    return this.ctx.inject(GraphStore).state().options;
+    return this.getGraphStore().state().options;
   }
 
   private getDataSets() {
-    return this.ctx.inject(GraphStore).state().data;
+    return this.getGraphStore().state().data;
+  }
+
+  private getGraphStore() {
+    return this.ctx.fixture.debugElement
+      .query(By.directive(GraphComponent))
+      .injector.get(GraphStore);
   }
 }

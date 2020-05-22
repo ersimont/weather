@@ -6,8 +6,8 @@ import {
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSidenav } from '@angular/material/sidenav';
+import { GraphStore } from 'app/graph/state/graph-store';
 import { AboutComponent } from 'app/misc-components/about/about.component';
-import { GraphStore } from 'app/misc-components/graph/graph-store';
 import { PrivacyPolicyComponent } from 'app/misc-components/privacy-policy/privacy-policy.component';
 import { InitService } from 'app/misc-services/init.service';
 import { LocationService } from 'app/misc-services/location.service';

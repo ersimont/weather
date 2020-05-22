@@ -1,4 +1,4 @@
-import { GraphComponentHarness } from 'app/misc-components/graph/graph.component.harness';
+import { GraphComponentHarness } from 'app/graph/graph.component.harness';
 import { ClimacellHarness } from 'app/sources/climacell/climacell.harness';
 import { Condition } from 'app/state/condition';
 import { SourceId } from 'app/state/source';

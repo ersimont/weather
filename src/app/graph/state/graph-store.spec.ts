@@ -1,6 +1,6 @@
 import { tick } from '@angular/core/testing';
-import { GraphStateHarness } from 'app/misc-components/graph/graph-state.harness';
-import { GraphStoreHarness } from 'app/misc-components/graph/graph-store.harness';
+import { GraphStateHarness } from 'app/graph/state/graph-state.harness';
+import { GraphStoreHarness } from 'app/graph/state/graph-store.harness';
 import { LocationIqServiceHarness } from 'app/misc-services/location-iq.service.harness';
 import { RefreshServiceHarness } from 'app/misc-services/refresh.service.harness';
 import { WeatherGovHarness } from 'app/sources/weather-gov/weather-gov.harness';

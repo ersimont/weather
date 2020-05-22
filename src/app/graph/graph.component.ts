@@ -6,8 +6,8 @@ import {
   Injector,
   ViewChild,
 } from '@angular/core';
-import { decodeLabelValues } from 'app/misc-components/graph/chartjs-datasets';
-import { GraphStore } from 'app/misc-components/graph/graph-store';
+import { decodeLabelValues } from 'app/graph/chartjs-datasets';
+import { GraphStore } from 'app/graph/state/graph-store';
 import { LocationService } from 'app/misc-services/location.service';
 import { conditionInfo } from 'app/state/condition';
 import { WeatherStore } from 'app/state/weather-store';
@@ -21,7 +21,7 @@ import * as moment from 'moment';
 import 'moment-timezone';
 import { assert } from 's-js-utils';
 import { DirectiveSuperclass } from 's-ng-utils';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-graph',

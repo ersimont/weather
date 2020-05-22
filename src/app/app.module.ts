@@ -15,7 +15,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { AppComponent } from 'app/app.component';
-import { GraphComponent } from 'app/misc-components/graph/graph.component';
+import { GraphModule } from 'app/graph/graph.module';
 import { OptionsModule } from 'app/options/options.module';
 import { EventTrackingModule } from 'app/to-replace/event-tracking/event-tracking.module';
 import { provideHttpStatus } from 'app/to-replace/http-status.service';
@@ -30,7 +30,6 @@ import { PrivacyPolicyComponent } from './misc-components/privacy-policy/privacy
   declarations: [
     AboutComponent,
     AppComponent,
-    GraphComponent,
     WhatsNewComponent,
     PrivacyPolicyComponent,
   ],
@@ -42,6 +41,7 @@ import { PrivacyPolicyComponent } from './misc-components/privacy-policy/privacy
       gaProperty: environment.gaProperty,
       log: environment.logEvents,
     }),
+    GraphModule,
     HttpClientModule,
     MatButtonModule,
     MatDialogModule,

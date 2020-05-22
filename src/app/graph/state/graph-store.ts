@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { buildDatasets } from 'app/misc-components/graph/chartjs-datasets';
+import { buildDatasets } from 'app/graph/chartjs-datasets';
 import {
   buildBoundaries,
   buildNightBoxes,
   buildNowLine,
-} from 'app/misc-components/graph/chartjs-options';
-import { GraphState } from 'app/misc-components/graph/graph-state';
+} from 'app/graph/chartjs-options';
+import { GraphModule } from 'app/graph/graph.module';
+import { GraphState } from 'app/graph/state/graph-state';
 import { LocationService } from 'app/misc-services/location.service';
 import { GpsCoords } from 'app/state/location';
 import { WeatherState } from 'app/state/weather-state';
@@ -18,7 +19,7 @@ import { startWith, switchMapTo } from 'rxjs/operators';
 import { convertTime } from 's-js-utils';
 import { delayOnMicrotaskQueue } from 's-rxjs-utils';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: GraphModule })
 export class GraphStore extends mixInInjectableSuperclass(AppStore)<
   GraphState
 > {

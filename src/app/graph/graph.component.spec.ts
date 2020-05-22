@@ -1,4 +1,4 @@
-import { GraphComponentHarness } from 'app/misc-components/graph/graph.component.harness';
+import { GraphComponentHarness } from 'app/graph/graph.component.harness';
 import { LocationIqServiceHarness } from 'app/misc-services/location-iq.service.harness';
 import { LocationOptionsComponentHarness } from 'app/options/location-options/location-options.component.harness';
 import { UnitOptionsComponentHarness } from 'app/options/unit-options/unit-options.component.harness';

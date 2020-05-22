@@ -1,4 +1,4 @@
-import { GraphStore } from 'app/misc-components/graph/graph-store';
+import { GraphStore } from 'app/graph/state/graph-store';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 import {
   BoxAnnotationOptions,
