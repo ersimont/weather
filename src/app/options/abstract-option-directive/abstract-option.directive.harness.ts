@@ -12,8 +12,16 @@ export abstract class AbstractOptionDirectiveHarness extends ComponentHarness {
     return (await this.getExpansionPanel()).isExpanded();
   }
 
+  async expand() {
+    await (await this.getExpansionPanel()).expand();
+  }
+
+  async collapse() {
+    await (await this.getExpansionPanel()).collapse();
+  }
+
   protected async ensureExpanded() {
     await (await this.getApp()).ensureSidenavOpen();
-    await (await this.getExpansionPanel()).expand();
+    await this.expand();
   }
 }
