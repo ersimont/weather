@@ -34,7 +34,7 @@ export class LocationOptionsComponent extends AbstractOptionDirective {
     });
   }
 
-  setUseCurrentLocation(event: MatRadioChange) {
+  setUseCurrentLocation(event: MatRadioChange | Event) {
     if (event instanceof MatRadioChange) {
       this.locationService.setUseCurrentLocation(event.value);
       this.trackChange('current_selection');
