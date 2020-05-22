@@ -1,7 +1,7 @@
 import { MatSlideToggleHarness } from '@angular/material/slide-toggle/testing';
-import { AbstractOptionPanelHarness } from 'app/test-helpers/abstract-option-panel-harness';
+import { AbstractOptionDirectiveHarness } from 'app/options/abstract-option-directive/abstract-option.directive.harness';
 
-export class SourceOptionsComponentHarness extends AbstractOptionPanelHarness {
+export class SourceOptionsComponentHarness extends AbstractOptionDirectiveHarness {
   static hostSelector = 'app-source-options';
 
   async toggle(label: string) {

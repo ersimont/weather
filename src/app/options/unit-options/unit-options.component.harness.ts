@@ -1,7 +1,7 @@
 import { MatButtonToggleHarness } from '@angular/material/button-toggle/testing';
-import { AbstractOptionPanelHarness } from 'app/test-helpers/abstract-option-panel-harness';
+import { AbstractOptionDirectiveHarness } from 'app/options/abstract-option-directive/abstract-option.directive.harness';
 
-export class UnitOptionsComponentHarness extends AbstractOptionPanelHarness {
+export class UnitOptionsComponentHarness extends AbstractOptionDirectiveHarness {
   static hostSelector = 'app-unit-options';
 
   async select(unitLabel: string) {

@@ -1,8 +1,8 @@
 import { MatInputHarness } from '@angular/material/input/testing';
 import { MatRadioGroupHarness } from '@angular/material/radio/testing';
-import { AbstractOptionPanelHarness } from 'app/test-helpers/abstract-option-panel-harness';
+import { AbstractOptionDirectiveHarness } from 'app/options/abstract-option-directive/abstract-option.directive.harness';
 
-export class LocationOptionsComponentHarness extends AbstractOptionPanelHarness {
+export class LocationOptionsComponentHarness extends AbstractOptionDirectiveHarness {
   static hostSelector = 'app-location-options';
 
   private getRadioGroup = this.locatorFor(MatRadioGroupHarness);
