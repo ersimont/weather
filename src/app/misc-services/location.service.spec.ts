@@ -157,13 +157,8 @@ describe('LocationService', () => {
   });
 
   describe('using custom location', () => {
-    beforeEach(() => {
-      ctx.initialState.useCurrentLocation = false;
-      ctx.initialState.customLocation.search = 'Initial search';
-    });
-
     it('clears the forecasts when searching for a new location', () => {
-      ctx.initialState.customLocation.gpsCoords = [0, 0];
+      state.setCustomLocation([0, 0]);
       ctx.run(() => {
         const location = ctx.getHarness(LocationOptionsComponentHarness);
         gov.flushFixture([0, 0]);
@@ -176,7 +171,27 @@ describe('LocationService', () => {
       });
     });
 
+    it('clears the timezone when searching for a new location (production bug)', () => {
+      state.setCustomLocation([1, 2]);
+      ctx.run(() => {
+        const location = ctx.getHarness(LocationOptionsComponentHarness);
+        gov.expectPoints([1, 2]);
+
+        location.setCustomLocation('city 2');
+        iq.expectForward('city 2').flush([
+          iq.buildLocationResponse({ lat: '3', lon: '4' }),
+        ]);
+        iq.expectTimezone([3, 4]).flushError();
+        errors.expectGeneric();
+
+        refresh.trigger();
+        iq.expectTimezone([3, 4]); // <- this was not happening
+      });
+    });
+
     it('shows a nice message when not found, and can retry', () => {
+      ctx.initialState.useCurrentLocation = false;
+      ctx.initialState.customLocation.search = 'Initial search';
       ctx.run(() => {
         const location = ctx.getHarness(LocationOptionsComponentHarness);
         iq.expectForward('Initial search').flushError(404);
@@ -195,10 +210,11 @@ describe('LocationService', () => {
       });
     });
 
-    it("reuses gpsCoordinates when the search hasn't changed", () => {
+    it("reuses gps coordinates & timezone when the search hasn't changed", () => {
       state.setCustomLocation([45.4972, -73.6104]);
       ctx.run(() => {
         const location = ctx.getHarness(LocationOptionsComponentHarness);
+
         // no call to locationIq
         gov.flushFixture([45.4972, -73.6104]);
 
@@ -209,6 +225,27 @@ describe('LocationService', () => {
         location.select('Custom');
         // no call to locationIq
         gov.flushFixture([45.4972, -73.6104]);
+      });
+    });
+
+    it('picks up from the time zone if that was the only piece missing', () => {
+      state.setCustomLocation([45.4972, -73.6104]);
+      ctx.initialState.customLocation.timezone = undefined;
+      ctx.run(() => {
+        const location = ctx.getHarness(LocationOptionsComponentHarness);
+
+        // no forward search
+        iq.expectTimezone([45.4972, -73.6104]);
+
+        location.select('Current');
+        iq.expectReverse();
+
+        location.select('Custom');
+        iq.expectTimezone([45.4972, -73.6104]).flushError();
+        errors.expectGeneric();
+
+        refresh.trigger();
+        iq.expectTimezone([45.4972, -73.6104]);
       });
     });
   });

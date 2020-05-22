@@ -75,11 +75,14 @@ export class WeatherGraphContext extends ComponentContext<
     super.init({});
   }
 
-  protected cleanUp() {
-    super.cleanUp();
-
+  protected verify() {
+    super.verify();
     this.harnesses.events.validateEvents();
     this.harnesses.errors.verify();
+  }
+
+  protected cleanUp() {
+    super.cleanUp();
 
     // https://github.com/angular/components/blob/b612fc42895e47377b353e773d4ba3517c0991e1/src/material/dialog/dialog.spec.ts#L80
     this.inject(OverlayContainer).ngOnDestroy();

@@ -2,7 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BrowserService } from 'app/misc-services/browser.service';
 import { LocationIqService } from 'app/misc-services/location-iq.service';
-import { GpsCoords } from 'app/state/location';
+import { GpsCoords, Location } from 'app/state/location';
 import { WeatherState } from 'app/state/weather-state';
 import { WeatherStore } from 'app/state/weather-store';
 import { EventTrackingService } from 'app/to-replace/event-tracking/event-tracking.service';
@@ -20,6 +20,7 @@ import {
   switchMap,
   tap,
 } from 'rxjs/operators';
+import { assert } from 's-js-utils';
 import { InjectableSuperclass } from 's-ng-utils';
 
 @Injectable({ providedIn: 'root' })
@@ -59,8 +60,7 @@ export class LocationService extends InjectableSuperclass {
     this.store.batch((batch) => {
       clearForecasts(batch);
       batch('useCurrentLocation').set(false);
-      // TODO: think about clearing timezone (with test)
-      batch('customLocation').set({ search, gpsCoords: undefined });
+      batch('customLocation').set(new Location(search));
     });
     this.eventTrackingService.track('change_custom_search', 'change_location');
   }
@@ -73,9 +73,10 @@ export class LocationService extends InjectableSuperclass {
     const state = this.store.state();
     if (state.useCurrentLocation) {
       return this.refreshCurrentLocation();
-    } else if (state.customLocation.gpsCoords) {
-      // TODO: what about missing time zone?
+    } else if (state.customLocation.timezone) {
       return of(0);
+    } else if (state.customLocation.gpsCoords) {
+      return this.refreshTimezone();
     } else if (state.customLocation.search) {
       return this.refreshCustomLocation();
     } else {
@@ -128,6 +129,21 @@ export class LocationService extends InjectableSuperclass {
       }),
       tap((partialLocation) => {
         this.store('customLocation').assign(partialLocation);
+      }),
+      switchMap(() => this.refreshTimezone()),
+    );
+  }
+
+  private refreshTimezone() {
+    const gpsCoords = this.store.state().customLocation.gpsCoords;
+    assert(gpsCoords, 'should have gps before timezone');
+    return this.locationIqService.timezone(gpsCoords).pipe(
+      catchError((error) => {
+        this.errorService.handleError(error, { logUnexpected: false });
+        return NEVER;
+      }),
+      tap((timezone) => {
+        this.store('customLocation')('timezone').set(timezone);
       }),
     );
   }

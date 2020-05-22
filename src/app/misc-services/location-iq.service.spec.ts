@@ -73,7 +73,7 @@ describe('LocationIqService', () => {
         errors.expectGeneric();
 
         refresh.trigger();
-        iq.expectForward('bad');
+        iq.expectTimezone([6, 1]);
       });
     });
 

@@ -80,9 +80,8 @@ describe('AppComponent', () => {
     describe('when a current location has been determined before', () => {
       it('shows an error and opens location settings', () => {
         // when the app opens
+        state.setCustomLocation([0, 0]);
         ctx.initialState.useCurrentLocation = true;
-        ctx.initialState.customLocation.search = 'an old search';
-        ctx.initialState.customLocation.gpsCoords = [0, 0];
         ctx.run(() => {
           const app = ctx.getHarness(AppComponentHarness);
           const location = ctx.getHarness(LocationOptionsComponentHarness);

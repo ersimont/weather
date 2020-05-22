@@ -66,10 +66,7 @@ export abstract class AngularContext<InitOptions = {}> {
       this.init(options);
       try {
         test();
-      } catch (err) {
-        // tslint:disable-next-line:no-console
-        console.debug(err);
-        throw err;
+        this.verify();
       } finally {
         this.cleanUp();
       }
@@ -103,8 +100,11 @@ export abstract class AngularContext<InitOptions = {}> {
 
   protected init(_options: Partial<InitOptions>) {}
 
-  protected cleanUp() {
+  protected verify() {
     this.inject(HttpTestingController).verify();
+  }
+
+  protected cleanUp() {
     discardPeriodicTasks();
   }
 }
