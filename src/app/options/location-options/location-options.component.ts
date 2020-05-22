@@ -5,6 +5,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { MatExpansionPanel } from '@angular/material/expansion';
+import { MatRadioChange } from '@angular/material/radio';
 import { LocationService } from 'app/misc-services/location.service';
 import { AbstractOptionDirective } from 'app/options/abstract-option-directive/abstract-option.directive';
 
@@ -33,8 +34,10 @@ export class LocationOptionsComponent extends AbstractOptionDirective {
     });
   }
 
-  setUseCurrentLocation(value: boolean) {
-    this.locationService.setUseCurrentLocation(value);
-    this.trackChange('current_selection');
+  setUseCurrentLocation(event: MatRadioChange) {
+    if (event instanceof MatRadioChange) {
+      this.locationService.setUseCurrentLocation(event.value);
+      this.trackChange('current_selection');
+    }
   }
 }

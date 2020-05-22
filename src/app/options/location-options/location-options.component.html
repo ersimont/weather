@@ -2,7 +2,7 @@
   <mat-expansion-panel-header>Location</mat-expansion-panel-header>
   <mat-radio-group
     [value]="store('useCurrentLocation').$ | async"
-    (change)="setUseCurrentLocation($event.value)"
+    (change)="setUseCurrentLocation($event)"
   >
     <div class="radio-container">
       <mat-radio-button class="current-radio" [value]="true">
