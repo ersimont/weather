@@ -16,10 +16,10 @@ export class GraphStateHarness {
 
   getNightBoxes() {
     const boxes = this.getAnnotations().slice(0, -1) as BoxAnnotationOptions[];
-    return boxes.map((box: BoxAnnotationOptions) => ({
-      from: box.xMin as number,
-      to: box.xMax as number,
-    }));
+    return boxes.map((box: BoxAnnotationOptions) => [
+      box.xMin as number,
+      box.xMax as number,
+    ]);
   }
 
   getNowLine() {
@@ -29,10 +29,7 @@ export class GraphStateHarness {
 
   getBoundaries() {
     const pan = this.getState().options.plugins.zoom.pan;
-    return {
-      min: pan.rangeMin.x as number,
-      max: pan.rangeMax.x as number,
-    };
+    return [pan.rangeMin.x as number, pan.rangeMax.x as number];
   }
 
   private getAnnotations() {

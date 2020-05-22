@@ -6,6 +6,7 @@ import {
   defaultState,
   v5Example,
   v6Default,
+  v7Default,
 } from 'app/upgrade/upgrade.service.fixutures';
 import { WhatsNewComponentHarness } from 'app/upgrade/whats-new.component.harness';
 
@@ -26,6 +27,15 @@ describe('UpgradeService', () => {
         'Default state changed. You need to handle it in the upgrade service.',
       )
       .toEqual(JSON.stringify(defaultState));
+  });
+
+  it('upgrades from v7', () => {
+    ctx.initialState = v7Default as any;
+    ctx.run(() => {
+      expect(store.getPersistedState()).toEqual(defaultState);
+
+      ctx.cleanUpFreshInit();
+    });
   });
 
   it("upgrades from v6, showing what's new", () => {

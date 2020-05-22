@@ -46,15 +46,15 @@ describe('AppComponent', () => {
       ctx.cleanUpFreshInit();
 
       app.snapToRange('three-days');
-      expect(graphState.getRange()).toEqual([1592708400000, 1592967600000]);
+      expect(graphState.getRange()).toEqual([1592706600000, 1592965800000]);
 
-      jasmine.clock().mockDate(new Date(2020, 5, 22));
+      ctx.tick(1, 'min');
       app.snapToRange('day');
-      expect(graphState.getRange()).toEqual([1592794800000, 1592881200000]);
+      expect(graphState.getRange()).toEqual([1592706660000, 1592793060000]);
 
-      jasmine.clock().mockDate(new Date(2020, 5, 23));
+      ctx.tick(2, 'min');
       app.snapToRange('week');
-      expect(graphState.getRange()).toEqual([1592881200000, 1593486000000]);
+      expect(graphState.getRange()).toEqual([1592706780000, 1593311580000]);
     });
   });
 

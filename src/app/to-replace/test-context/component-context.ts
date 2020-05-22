@@ -12,6 +12,7 @@ import {
   AngularContext,
   extendMetadata,
 } from 'app/to-replace/test-context/angular-context';
+import { convertTime } from 's-js-utils';
 import { trimLeftoverStyles } from 's-ng-dev-utils';
 
 export abstract class ComponentContext<
@@ -30,10 +31,10 @@ export abstract class ComponentContext<
     );
   }
 
-  tick(millis?: number) {
+  tick(amount = 0, unit = 'ms') {
     flushMicrotasks();
     this.fixture.detectChanges();
-    tick(millis);
+    tick(convertTime(amount, unit, 'ms'));
   }
 
   protected init(_options: Partial<InitOptions>) {

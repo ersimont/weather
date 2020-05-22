@@ -4,11 +4,10 @@ export interface Upgradable {
   _version: number;
 }
 
+export type Upgrader<T> = (upgradable: T, targetVersion: number) => T;
+
 export class UpgradeSuperclass<T extends Upgradable> {
-  protected upgradeFrom: Record<
-    number,
-    (upgradable: T, targetVersion: number) => T
-  > = {};
+  private upgraders = new Map<number | undefined, Upgrader<T>>();
 
   upgrade(upgradable: T, fresh: T) {
     try {
@@ -19,8 +18,11 @@ export class UpgradeSuperclass<T extends Upgradable> {
     }
   }
 
-  protected upgradeFromLegacy(_upgradable: T, _targetVersion: number): T {
-    throw new Error('Unable to upgrade from legacy version');
+  protected registerVersion(
+    version: number | undefined,
+    upgrader: Upgrader<T>,
+  ) {
+    this.upgraders.set(version, upgrader.bind(this));
   }
 
   protected onError(error: any) {
@@ -50,12 +52,11 @@ export class UpgradeSuperclass<T extends Upgradable> {
 
   private upgradeOneStep(upgradable: T, targetVersion: number) {
     const version = upgradable._version;
-    if (version === undefined) {
-      return this.upgradeFromLegacy(upgradable, targetVersion);
-    } else if (this.upgradeFrom[version]) {
-      return this.upgradeFrom[version](upgradable, targetVersion);
-    } else {
+    const upgrader = this.upgraders.get(version);
+    if (!upgrader) {
       throw new Error(`Unable to upgrade from version ${version}`);
     }
+
+    return upgrader(upgradable, targetVersion);
   }
 }

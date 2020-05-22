@@ -4,5 +4,5 @@ import { DeepRequired } from 'utility-types';
 
 export class GraphState {
   options = defaultChartOptions as DeepRequired<ChartOptions>;
-  data!: ChartDataSets[];
+  data: ChartDataSets[] = [];
 }

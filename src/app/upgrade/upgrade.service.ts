@@ -13,9 +13,24 @@ export class UpgradeService extends UpgradeSuperclass<WeatherState> {
     private whatsNewService: WhatsNewService,
   ) {
     super();
+    this.registerVersion(7, this.upgradeFrom7);
+    this.registerVersion(undefined, this.upgradeFromLegacy);
   }
 
-  protected upgradeFromLegacy(state: WeatherState) {
+  protected onError(error: any) {
+    // test this once there is a way to activate it
+    this.errorService.handleError(error);
+  }
+
+  private upgradeFrom7(state: WeatherState) {
+    return {
+      ...state,
+      _version: 8,
+      viewRange: { min: -5400000, max: 81000000 },
+    };
+  }
+
+  private upgradeFromLegacy(state: WeatherState) {
     const oldVersion = (state as any).version;
     assert(oldVersion === 6, 'Unable to upgrade from version ' + oldVersion);
 
@@ -31,10 +46,5 @@ export class UpgradeService extends UpgradeSuperclass<WeatherState> {
       'You can get your forecast from Climacell. Check it out in the Sources section of the settings.',
     );
     return state;
-  }
-
-  protected onError(error: any) {
-    // test this once there is a way to activate it
-    this.errorService.handleError(error);
   }
 }

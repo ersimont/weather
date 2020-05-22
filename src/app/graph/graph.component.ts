@@ -80,11 +80,11 @@ export class GraphComponent extends DirectiveSuperclass {
       footer: this.getTooltipFooter.bind(this),
     });
     zoomStore('pan')('onPanComplete').set((evt: any) => {
-      this.graphStore.setRange(evt.chart.options.scales.xAxes[0].ticks);
+      this.updateRange(evt);
       this.trackPan();
     });
     zoomStore('zoom')('onZoomComplete').set((evt: any) => {
-      this.graphStore.setRange(evt.chart.options.scales.xAxes[0].ticks);
+      this.updateRange(evt);
       this.trackZoom();
     });
   }
@@ -99,5 +99,11 @@ export class GraphComponent extends DirectiveSuperclass {
   private getTooltipFooter(items: ChartTooltipItem[], data: ChartData) {
     const sourceId = decodeLabelValues(items[0], data).sourceId;
     return `Source: ${this.weatherStore.state().sources[sourceId].label}`;
+  }
+
+  private updateRange(evt: any) {
+    const { min, max } = evt.chart.options.scales.xAxes[0].ticks;
+    const now = Date.now();
+    this.weatherStore('viewRange').set({ min: min - now, max: max - now });
   }
 }
