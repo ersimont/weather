@@ -14,6 +14,7 @@ export const defaultChartOptions: ChartOptions = {
   responsive: true,
   maintainAspectRatio: false,
   animation: { duration: 0 },
+  responsiveAnimationDuration: 0,
   legend: { display: false },
   tooltips: { footerFontStyle: 'italic', callbacks: {} },
   scales: {

@@ -64,6 +64,8 @@ function addDataSet(
     borderColor: color,
     backgroundColor: color + fillAlpha,
     pointBackgroundColor: color,
+    pointHoverBorderColor: color,
+    pointHoverBackgroundColor: color,
     pointStyle,
     radius: radii[sourceId],
     pointHitRadius: 25,
