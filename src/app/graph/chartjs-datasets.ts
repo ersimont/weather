@@ -54,9 +54,7 @@ function addDataSet(
   yAxisID: string,
   fillAlpha = '00',
 ) {
-  const conditionInf = conditionInfo[condition];
-  const color = conditionInf.color;
-  const pointStyle = pointStyles[sourceId];
+  const color = conditionInfo[condition].color;
   dataSets.push({
     label: encodeLabelValues(sourceId, condition),
     data: getData(sourceId, condition, state),
@@ -66,7 +64,7 @@ function addDataSet(
     pointBackgroundColor: color,
     pointHoverBorderColor: color,
     pointHoverBackgroundColor: color,
-    pointStyle,
+    pointStyle: pointStyles[sourceId],
     radius: radii[sourceId],
     pointHitRadius: 25,
   });

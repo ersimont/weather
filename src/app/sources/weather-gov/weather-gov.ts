@@ -88,18 +88,27 @@ function addFromZone(
   zoneKey: keyof GridResponse['properties'],
 ) {
   for (const v of zone.properties[zoneKey].values) {
-    const [timeString, durationString] = v.validTime.split('/');
-    const time = new Date(timeString).getTime();
+    const [startString, durationString] = v.validTime.split('/');
+    const length = duration(durationString);
+    const time = new Date(startString).getTime() + length.asMilliseconds() / 2;
 
     let value = v.value;
     if (condition === Condition.AMOUNT) {
-      value /= duration(durationString).asHours();
+      value /= length.asHours();
     }
-
-    let conditions: Conditions = forecast[time];
-    if (!conditions) {
-      conditions = forecast[time] = {};
-    }
-    conditions[condition] = value;
+    addCondition(forecast, time, condition, value);
   }
+}
+
+function addCondition(
+  forecast: Forecast,
+  time: number,
+  condition: Condition,
+  value: number,
+) {
+  let conditions: Conditions = forecast[time];
+  if (!conditions) {
+    conditions = forecast[time] = {};
+  }
+  conditions[condition] = value;
 }
