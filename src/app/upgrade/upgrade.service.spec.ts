@@ -7,6 +7,7 @@ import {
   v5Example,
   v6Default,
   v7Default,
+  v8Default,
 } from 'app/upgrade/upgrade.service.fixutures';
 import { WhatsNewComponentHarness } from 'app/upgrade/whats-new.component.harness';
 
@@ -20,19 +21,39 @@ describe('UpgradeService', () => {
     ({ errors, iq, store } = ctx.harnesses);
   });
 
+  // This is a sanity check that will not catch any change that should necessitate an upgrade. But it will catch some.
   it('defaults to a fresh, up-to-date state', () => {
-    // This is a sanity check that will not catch any change that should necessitate an upgrade. But it will catch some.
-    expect(JSON.stringify(ctx.initialState))
-      .withContext(
-        'Default state changed. You need to handle it in the upgrade service.',
-      )
-      .toEqual(JSON.stringify(defaultState));
+    ctx.run({ useInitialState: false }, () => {
+      expect(store.getPersistedState())
+        .withContext(
+          'Default state changed. You need to handle it in the upgrade service.',
+        )
+        .toEqual(defaultState);
+      expect(ctx.getHarnessOptional(WhatsNewComponentHarness)).toBe(null);
+
+      ctx.cleanUpFreshInit();
+    });
+  });
+
+  it('upgrades from v8', () => {
+    ctx.initialState = v8Default as any;
+    ctx.run(() => {
+      expect(store.getPersistedState()).toEqual(defaultState);
+      expect(ctx.getHarness(WhatsNewComponentHarness).getFeatures()).toEqual([
+        'You can get your forecast from OpenWeather. Check it out in the Sources section of the settings.',
+      ]);
+
+      ctx.cleanUpFreshInit();
+    });
   });
 
   it('upgrades from v7', () => {
     ctx.initialState = v7Default as any;
     ctx.run(() => {
       expect(store.getPersistedState()).toEqual(defaultState);
+      expect(ctx.getHarness(WhatsNewComponentHarness).getFeatures()).toEqual([
+        'You can get your forecast from OpenWeather. Check it out in the Sources section of the settings.',
+      ]);
 
       ctx.cleanUpFreshInit();
     });
@@ -46,6 +67,7 @@ describe('UpgradeService', () => {
         useCurrentLocation: true,
       });
       expect(ctx.getHarness(WhatsNewComponentHarness).getFeatures()).toEqual([
+        'You can get your forecast from OpenWeather. Check it out in the Sources section of the settings.',
         'You can get your forecast from Climacell. Check it out in the Sources section of the settings.',
       ]);
 
@@ -57,6 +79,7 @@ describe('UpgradeService', () => {
     ctx.initialState = v5Example as any;
     ctx.run(() => {
       expect(store.getPersistedState()).toEqual(defaultState);
+      expect(ctx.getHarnessOptional(WhatsNewComponentHarness)).toBe(null);
       errors.expectGeneric();
 
       ctx.cleanUpFreshInit();

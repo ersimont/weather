@@ -7,12 +7,14 @@ import { forEach, keys } from 'micro-dash';
 
 const pointStyles: { [id in SourceId]: PointStyle } = {
   [SourceId.CLIMACELL]: 'rect',
+  [SourceId.OPEN_WEATHER]: 'rectRot',
   [SourceId.WEATHER_GOV]: 'circle',
   [SourceId.WEATHER_UNLOCKED]: 'triangle',
 };
 
 const radii: { [id in SourceId]: number } = {
   [SourceId.CLIMACELL]: 5,
+  [SourceId.OPEN_WEATHER]: 5,
   [SourceId.WEATHER_GOV]: 4,
   [SourceId.WEATHER_UNLOCKED]: 6,
 };

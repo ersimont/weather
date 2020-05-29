@@ -8,6 +8,7 @@ import { InitServiceHarness } from 'app/misc-services/init.service.harness';
 import { LocationIqServiceHarness } from 'app/misc-services/location-iq.service.harness';
 import { RefreshServiceHarness } from 'app/misc-services/refresh.service.harness';
 import { ClimacellHarness } from 'app/sources/climacell/climacell.harness';
+import { OpenWeatherHarness } from 'app/sources/open-weather/open-weather.harness';
 import { WeatherGovHarness } from 'app/sources/weather-gov/weather-gov.harness';
 import { WeatherUnlockedHarness } from 'app/sources/weather-unlocked/weather-unlocked.harness';
 import { GpsCoords } from 'app/state/location';
@@ -42,6 +43,7 @@ export class WeatherGraphContext extends ComponentContext<
     graph: new GraphComponentHarness(this),
     init: new InitServiceHarness(this),
     iq: new LocationIqServiceHarness(this),
+    openWeather: new OpenWeatherHarness(this),
     refresh: new RefreshServiceHarness(this),
     state: new WeatherStateHarness(this),
     store: new WeatherStoreHarness(),

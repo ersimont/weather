@@ -2,11 +2,17 @@ import { mapToObject } from 's-js-utils';
 import { PercentageUnit, UnitInfo, unitInfo, Units } from './units';
 
 export enum Condition {
+  /** store in celsius */
   TEMP = 'temp',
+  /** store in celsius */
   FEEL = 'feel',
+  /** store in celsius */
   DEW = 'dew',
+  /** store in mm */
   AMOUNT = 'amount',
+  /** store in percent [0-100] */
   CLOUD = 'cloud',
+  /** store in knots */
   WIND = 'wind',
 }
 

@@ -6,15 +6,16 @@ import { ViewRange } from 'app/state/viewRange';
 import { mapToObject } from 's-js-utils';
 
 export class WeatherState {
-  _version = 8;
+  _version = 9;
 
   useCurrentLocation = false;
   currentLocation = new Location();
   customLocation = new Location();
 
   allowSourceFallback = true;
-  sources: Record<SourceId, Source> = {
+  sources: { [source in SourceId]: Source } = {
     climacell: new Source('Climacell', false),
+    openWeather: new Source('OpenWeather', false),
     weatherGov: new Source('Weather.gov', true),
     weatherUnlocked: new Source('Weather Unlocked', false),
   };

@@ -1,5 +1,31 @@
 import { WeatherState } from 'app/state/weather-state';
 
+export const v9Default = {
+  _version: 9,
+  useCurrentLocation: false,
+  currentLocation: { search: '' },
+  customLocation: { search: '' },
+  allowSourceFallback: true,
+  sources: {
+    climacell: { label: 'Climacell', show: false, forecast: {} },
+    openWeather: { label: 'OpenWeather', show: false, forecast: {} },
+    weatherGov: { label: 'Weather.gov', show: true, forecast: {} },
+    weatherUnlocked: { label: 'Weather Unlocked', show: false, forecast: {} },
+  },
+  units: { temp: '°F', amount: 'in', speed: 'mph' },
+  showConditions: {
+    temp: true,
+    feel: true,
+    dew: true,
+    amount: true,
+    cloud: true,
+    wind: true,
+  },
+  viewRange: { min: -5400000, max: 81000000 },
+};
+
+export const defaultState = v9Default as WeatherState;
+
 export const v8Default = {
   _version: 8,
   useCurrentLocation: false,
@@ -22,8 +48,6 @@ export const v8Default = {
   },
   viewRange: { min: -5400000, max: 81000000 },
 };
-
-export const defaultState = v8Default as WeatherState;
 
 export const v7Default = {
   _version: 7,

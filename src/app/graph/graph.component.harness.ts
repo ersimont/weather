@@ -9,6 +9,7 @@ import * as moment from 'moment';
 
 const sourceOrder = [
   SourceId.CLIMACELL,
+  SourceId.OPEN_WEATHER,
   SourceId.WEATHER_GOV,
   SourceId.WEATHER_UNLOCKED,
 ];

@@ -1,9 +1,10 @@
 import { Forecast } from './forecast';
 
 export enum SourceId {
+  CLIMACELL = 'climacell',
+  OPEN_WEATHER = 'openWeather',
   WEATHER_GOV = 'weatherGov',
   WEATHER_UNLOCKED = 'weatherUnlocked',
-  CLIMACELL = 'climacell',
 }
 
 export class Source {

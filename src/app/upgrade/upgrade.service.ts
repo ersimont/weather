@@ -13,6 +13,7 @@ export class UpgradeService extends UpgradeSuperclass<WeatherState> {
     private whatsNewService: WhatsNewService,
   ) {
     super();
+    this.registerVersion(8, this.upgradeFrom8);
     this.registerVersion(7, this.upgradeFrom7);
     this.registerVersion(undefined, this.upgradeFromLegacy);
   }
@@ -20,6 +21,20 @@ export class UpgradeService extends UpgradeSuperclass<WeatherState> {
   protected onError(error: any) {
     // test this once there is a way to activate it
     this.errorService.handleError(error);
+  }
+
+  private upgradeFrom8(state: WeatherState) {
+    state = cloneDeep(state);
+    state.sources = {
+      openWeather: { label: 'OpenWeather', show: false, forecast: {} },
+      ...state.sources,
+    };
+    state._version = 9;
+
+    this.whatsNewService.add(
+      'You can get your forecast from OpenWeather. Check it out in the Sources section of the settings.',
+    );
+    return state;
   }
 
   private upgradeFrom7(state: WeatherState) {

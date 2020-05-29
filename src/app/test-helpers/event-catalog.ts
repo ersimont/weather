@@ -9,9 +9,10 @@ export const eventCatalog = {
   ],
   change_location: ['change_current_selection', 'change_custom_search'],
   change_source: [
+    'change_climacell',
+    'change_openWeather',
     'change_weatherGov',
     'change_weatherUnlocked',
-    'change_climacell',
   ],
   change_unit: [
     'change_temp',

@@ -13,7 +13,7 @@ export class WhatsNewService {
   ) {}
 
   add(feature: string) {
-    this.features.push(feature);
+    this.features.unshift(feature);
   }
 
   showNewFeatures() {
