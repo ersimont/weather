@@ -2,8 +2,8 @@ import {
   ForecastResponse,
   Timeframe,
 } from 'app/sources/weather-unlocked/weather-unlocked';
-import { STestRequest } from 'app/test-helpers/s-test-request';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
+import { STestRequest } from 'app/to-replace/test-context/s-test-request';
 import { createBuilder } from 's-js-utils';
 
 export class WeatherUnlockedHarness {

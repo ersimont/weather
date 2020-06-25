@@ -1,26 +1,27 @@
 import { Injectable } from '@angular/core';
 import { WeatherState } from 'app/state/weather-state';
-import { UpgradeSuperclass } from 'app/to-replace/persistence/upgrade-superclass';
+import { MigrationManager } from 'app/to-replace/persistence/migration-manager';
 import { SnackBarErrorService } from 'app/to-replace/snack-bar-error.service';
 import { WhatsNewService } from 'app/upgrade/whats-new.service';
 import { cloneDeep } from 'micro-dash';
 import { assert } from 's-js-utils';
 
 @Injectable({ providedIn: 'root' })
-export class UpgradeService extends UpgradeSuperclass<WeatherState> {
+export class UpgradeService extends MigrationManager<WeatherState> {
   constructor(
     private errorService: SnackBarErrorService,
     private whatsNewService: WhatsNewService,
   ) {
     super();
-    this.registerVersion(8, this.upgradeFrom8);
-    this.registerVersion(7, this.upgradeFrom7);
-    this.registerVersion(undefined, this.upgradeFromLegacy);
+    this.registerMigration(8, this.upgradeFrom8);
+    this.registerMigration(7, this.upgradeFrom7);
+    this.registerMigration(undefined, this.upgradeFromLegacy);
   }
 
-  protected onError(error: any) {
+  protected onError(error: any, _object: unknown, defaultValue: WeatherState) {
     // test this once there is a way to activate it
     this.errorService.handleError(error);
+    return defaultValue;
   }
 
   private upgradeFrom8(state: WeatherState) {

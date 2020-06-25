@@ -5,8 +5,8 @@ import {
   TimezoneResponse,
 } from 'app/misc-services/location-iq.service';
 import { GpsCoords } from 'app/state/location';
-import { STestRequest } from 'app/test-helpers/s-test-request';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
+import { STestRequest } from 'app/to-replace/test-context/s-test-request';
 import { isEmpty } from 'micro-dash';
 import { createBuilder } from 's-js-utils';
 

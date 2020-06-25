@@ -7,8 +7,8 @@ import {
   notAvailableResponse,
   pointResponse,
 } from 'app/sources/weather-gov/weather-gov.fixtures';
-import { STestRequest } from 'app/test-helpers/s-test-request';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
+import { STestRequest } from 'app/to-replace/test-context/s-test-request';
 
 export class WeatherGovHarness {
   constructor(private ctx: WeatherGraphContext) {}

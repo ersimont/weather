@@ -19,10 +19,7 @@ export class WeatherStore extends mixInInjectableSuperclass(AppStore)<
   ) {
     const persistence = new Persistence<WeatherState>('weather');
     const freshState = new WeatherState();
-    const initialState = persistence.get({
-      defaultValue: freshState,
-      upgrader: upgradeService,
-    });
+    const initialState = upgradeService.run(persistence, freshState);
     super(ngrxStore, 'weather', initialState);
 
     if (initialState === freshState) {
