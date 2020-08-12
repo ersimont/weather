@@ -19,9 +19,12 @@ import { eventCatalog } from 'app/test-helpers/event-catalog';
 import { createSpyObject } from 'app/to-replace/create-spy-object';
 import { EventTrackingServiceHarness } from 'app/to-replace/event-tracking/event-tracking.service.harness';
 import { SnackBarErrorServiceHarness } from 'app/to-replace/snack-bar-error.service.harness';
-import { ComponentContext } from 'app/to-replace/test-context/component-context';
+import {
+  ComponentContext,
+  ComponentContextInit,
+} from 'app/to-replace/test-context/component-context';
 
-export interface InitOptions {
+export interface InitOptions extends ComponentContextInit<TestComponent> {
   useInitialState: boolean;
 }
 
@@ -77,8 +80,8 @@ export class WeatherGraphContext extends ComponentContext<
     super.init({});
   }
 
-  protected verify() {
-    super.verify();
+  protected verifyPostTestConditions() {
+    super.verifyPostTestConditions();
     this.harnesses.events.validateEvents();
     this.harnesses.errors.verify();
   }
