@@ -8,7 +8,7 @@ import {
   provideHttpStatus,
 } from 'app/to-replace/http-status.service';
 import { AngularContext } from 'app/to-replace/test-context/angular-context';
-import { expectSingleCallAndReset } from 's-ng-dev-utils';
+import { expectSingleCallAndReset } from '@s-libs/ng-dev';
 
 class Context extends AngularContext {
   constructor() {

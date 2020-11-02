@@ -8,7 +8,7 @@ import { GpsCoords } from 'app/state/location';
 import { SourceId } from 'app/state/source';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { convertTime } from 's-js-utils';
+import { convertTime } from '@s-libs/js-core';
 
 const endpoint =
   'https://us-central1-proxic.cloudfunctions.net/api/openweathermap/data/2.5/forecast';

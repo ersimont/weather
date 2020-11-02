@@ -19,9 +19,9 @@ import {
 } from '@angular/core/testing';
 import { FakeAsyncHarnessEnvironment } from 'app/to-replace/fake-async-harnesses/fake-async-harness-environment';
 import { Synchronized } from 'app/to-replace/fake-async-harnesses/synchronize';
-import { clone, forOwn, isFunction } from 'micro-dash';
+import { clone, forOwn, isFunction } from '@s-libs/micro-dash';
 import { isArray } from 'rxjs/internal-compatibility';
-import { assert, convertTime } from 's-js-utils';
+import { assert, convertTime } from '@s-libs/js-core';
 
 /** @hidden */
 export function extendMetadata(

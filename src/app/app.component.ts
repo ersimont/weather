@@ -16,7 +16,7 @@ import { EventTrackingService } from 'app/to-replace/event-tracking/event-tracki
 import { HttpStatusService } from 'app/to-replace/http-status.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { DirectiveSuperclass } from 's-ng-utils';
+import { DirectiveSuperclass } from '@s-libs/ng-core';
 
 @Component({
   selector: 'app-root',

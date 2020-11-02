@@ -5,7 +5,7 @@ import {
   AnnotationOptions,
   LineAnnotationOptions,
 } from 'chartjs-plugin-annotation';
-import { convertTime } from 's-js-utils';
+import { convertTime } from '@s-libs/js-core';
 import { getTimes, GetTimesResult } from 'suncalc';
 
 const gridLines = { color: 'rgba(0, 0, 0, 0.05)' };

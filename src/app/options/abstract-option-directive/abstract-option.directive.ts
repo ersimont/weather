@@ -1,15 +1,13 @@
 import { Directive, ElementRef, Injector, ViewChild } from '@angular/core';
 import { MatExpansionPanelHeader } from '@angular/material/expansion';
-import { WeatherState } from 'app/state/weather-state';
+import { DirectiveSuperclass } from '@s-libs/ng-core';
 import { WeatherStore } from 'app/state/weather-store';
 import { EventTrackingService } from 'app/to-replace/event-tracking/event-tracking.service';
-import { StoreObject } from 'ng-app-state';
 import { fromEvent } from 'rxjs';
-import { DirectiveSuperclass } from 's-ng-utils';
 
 @Directive()
 export abstract class AbstractOptionDirective extends DirectiveSuperclass {
-  store: StoreObject<WeatherState>;
+  store: WeatherStore;
 
   protected abstract optionType: string;
 
@@ -20,7 +18,7 @@ export abstract class AbstractOptionDirective extends DirectiveSuperclass {
 
   constructor(injector: Injector) {
     super(injector);
-    this.store = injector.get(WeatherStore).withCaching();
+    this.store = injector.get(WeatherStore);
     this.eventTrackingService = injector.get(EventTrackingService);
   }
 

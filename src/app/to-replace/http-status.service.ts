@@ -5,7 +5,7 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { Injectable, Provider } from '@angular/core';
-import { noop, once } from 'micro-dash';
+import { noop, once } from '@s-libs/micro-dash';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { distinctUntilChanged, map, tap } from 'rxjs/operators';
 

@@ -5,7 +5,7 @@ import { Condition, Conditions } from 'app/state/condition';
 import { Forecast } from 'app/state/forecast';
 import { GpsCoords } from 'app/state/location';
 import { SourceId } from 'app/state/source';
-import { get, round } from 'micro-dash';
+import { get, round } from '@s-libs/micro-dash';
 import { duration } from 'moment';
 import { throwError } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';

@@ -5,7 +5,7 @@ import {
   TestModuleMetadata,
 } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { trimLeftoverStyles } from 's-ng-dev-utils';
+import { trimLeftoverStyles } from '@s-libs/ng-dev';
 import { AngularContext, extendMetadata } from './angular-context';
 
 /** @hidden */

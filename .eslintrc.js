@@ -1,1 +1,1 @@
-module.exports = require("s-ng-dev-utils/.eslintrc");
+module.exports = require("@s-libs/ng-dev/.eslintrc");

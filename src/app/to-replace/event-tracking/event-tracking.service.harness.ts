@@ -1,4 +1,4 @@
-import { flatten, matches, values } from 'micro-dash';
+import { flatten, matches, values } from '@s-libs/micro-dash';
 
 export interface TrackingEvent {
   name: string;

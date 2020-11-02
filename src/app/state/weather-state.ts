@@ -3,7 +3,7 @@ import { Location } from 'app/state/location';
 import { Source, SourceId } from 'app/state/source';
 import { Units } from 'app/state/units';
 import { ViewRange } from 'app/state/viewRange';
-import { mapToObject } from 's-js-utils';
+import { mapToObject } from '@s-libs/js-core';
 
 export class WeatherState {
   _version = 9;

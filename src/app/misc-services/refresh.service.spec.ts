@@ -3,7 +3,7 @@ import { LocationIqServiceHarness } from 'app/misc-services/location-iq.service.
 import { LocationOptionsComponentHarness } from 'app/options/location-options/location-options.component.harness';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 import { EventTrackingServiceHarness } from 'app/to-replace/event-tracking/event-tracking.service.harness';
-import { convertTime } from 's-js-utils';
+import { convertTime } from '@s-libs/js-core';
 
 const refreshInterval = convertTime(30, 'min', 'ms');
 

@@ -4,7 +4,7 @@ import {
   BoxAnnotationOptions,
   LineAnnotationOptions,
 } from 'chartjs-plugin-annotation';
-import { last } from 'micro-dash';
+import { last } from '@s-libs/micro-dash';
 
 export class GraphStateHarness {
   constructor(private ctx: WeatherGraphContext) {}

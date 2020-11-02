@@ -1,7 +1,7 @@
 import { MatInputHarness } from '@angular/material/input/testing';
 import { MatRadioGroupHarness } from '@angular/material/radio/testing';
 import { AbstractOptionDirectiveHarness } from 'app/options/abstract-option-directive/abstract-option.directive.harness';
-import { assert } from 's-js-utils';
+import { assert } from '@s-libs/js-core';
 
 export class LocationOptionsComponentHarness extends AbstractOptionDirectiveHarness {
   static hostSelector = 'app-location-options';

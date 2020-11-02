@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { values } from '@s-libs/micro-dash';
 import { AbstractOptionDirective } from 'app/options/abstract-option-directive/abstract-option.directive';
 import { AmountUnit, SpeedUnit, TempUnit } from 'app/state/units';
-import { values } from 'micro-dash';
 
 @Component({
   selector: 'app-unit-options',

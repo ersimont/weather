@@ -1,4 +1,4 @@
-import { isFunction, keys } from 'micro-dash';
+import { isFunction, keys } from '@s-libs/micro-dash';
 
 /**
  * Creates an array of function property names from own enumerable properties of `object`.

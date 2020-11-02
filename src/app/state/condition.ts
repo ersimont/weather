@@ -1,4 +1,4 @@
-import { mapToObject } from 's-js-utils';
+import { mapToObject } from '@s-libs/js-core';
 import { PercentageUnit, UnitInfo, unitInfo, Units } from './units';
 
 export enum Condition {

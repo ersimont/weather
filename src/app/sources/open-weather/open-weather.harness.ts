@@ -1,6 +1,6 @@
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 import { STestRequest } from 'app/to-replace/test-context/s-test-request';
-import { createBuilder } from 's-js-utils';
+import { createBuilder } from '@s-libs/js-core';
 import { ForecastResponse, Timeframe } from './open-weather.service';
 
 export class OpenWeatherHarness {

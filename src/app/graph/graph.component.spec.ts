@@ -27,6 +27,7 @@ describe('GraphComponent', () => {
     ctx.initialState.customLocation.search = 'New Zealand';
     ctx.initialState.customLocation.gpsCoords = [-44, 171];
     ctx.initialState.customLocation.timezone = 'Pacific/Auckland';
+    ctx.startTime = new Date('2020-07-07'); // avoid daylight savings
     state.setShowing(SourceId.WEATHER_UNLOCKED);
     ctx.run(() => {
       unlocked.expectForecast([-44, 171]);

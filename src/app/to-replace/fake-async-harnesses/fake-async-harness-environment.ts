@@ -4,7 +4,7 @@ import { flush } from '@angular/core/testing';
 import { synchronize } from 'app/to-replace/fake-async-harnesses/synchronize';
 import { AngularContext } from 'app/to-replace/test-context/angular-context';
 import { ComponentContext } from 'app/to-replace/test-context/component-context';
-import { bindKey } from 'micro-dash';
+import { bindKey } from '@s-libs/micro-dash';
 
 export class FakeAsyncHarnessEnvironment extends HarnessEnvironment<Element> {
   static loader(ctx: ComponentContext) {

@@ -1,14 +1,14 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { assert } from '@s-libs/js-core';
+import { isEqual, mapValues } from '@s-libs/micro-dash';
+import { InjectableSuperclass } from '@s-libs/ng-core';
 import { BrowserService } from 'app/misc-services/browser.service';
 import { LocationIqService } from 'app/misc-services/location-iq.service';
 import { GpsCoords, Location } from 'app/state/location';
-import { WeatherState } from 'app/state/weather-state';
 import { WeatherStore } from 'app/state/weather-store';
 import { EventTrackingService } from 'app/to-replace/event-tracking/event-tracking.service';
 import { SnackBarErrorService } from 'app/to-replace/snack-bar-error.service';
-import { isEqual, mapValues } from 'micro-dash';
-import { StoreObject } from 'ng-app-state';
 import { NEVER, of, Subject } from 'rxjs';
 import { fromPromise } from 'rxjs/internal-compatibility';
 import {
@@ -20,8 +20,6 @@ import {
   switchMap,
   tap,
 } from 'rxjs/operators';
-import { assert } from 's-js-utils';
-import { InjectableSuperclass } from 's-ng-utils';
 
 @Injectable({ providedIn: 'root' })
 export class LocationService extends InjectableSuperclass {
@@ -47,20 +45,20 @@ export class LocationService extends InjectableSuperclass {
   }
 
   setUseCurrentLocation(value: boolean) {
-    this.store.batch((batch) => {
-      clearForecasts(batch);
-      batch('useCurrentLocation').set(value);
+    this.store.batch(() => {
+      this.clearForecasts();
+      this.store('useCurrentLocation').set(value);
       if (value) {
-        batch('currentLocation')('city').delete();
+        this.store('currentLocation')('city').delete();
       }
     });
   }
 
   setCustomSearch(search: string) {
-    this.store.batch((batch) => {
-      clearForecasts(batch);
-      batch('useCurrentLocation').set(false);
-      batch('customLocation').set(new Location(search));
+    this.store.batch(() => {
+      this.clearForecasts();
+      this.store('useCurrentLocation').set(false);
+      this.store('customLocation').set(new Location(search));
     });
     this.eventTrackingService.track('change_custom_search', 'change_location');
   }
@@ -152,10 +150,10 @@ export class LocationService extends InjectableSuperclass {
     this.errorService.show('Location not found');
     this.askForLocation$.next();
   }
-}
 
-function clearForecasts(batch: StoreObject<WeatherState>) {
-  batch('sources').setUsing((sources) =>
-    mapValues(sources, (source) => ({ ...source, forecast: {} })),
-  );
+  private clearForecasts() {
+    this.store('sources').setUsing((sources) =>
+      mapValues(sources, (source) => ({ ...source, forecast: {} })),
+    );
+  }
 }

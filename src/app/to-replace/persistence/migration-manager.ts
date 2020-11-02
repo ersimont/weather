@@ -1,4 +1,4 @@
-import { assert } from 's-js-utils';
+import { assert } from '@s-libs/js-core';
 import { Persistence } from './persistence';
 
 /**

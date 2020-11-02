@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
 import { buildDatasets } from 'app/graph/chartjs-datasets';
 import {
   buildBoundaries,
@@ -13,22 +12,21 @@ import { ViewRange } from 'app/state/viewRange';
 import { WeatherState } from 'app/state/weather-state';
 import { WeatherStore } from 'app/state/weather-store';
 import { mixInInjectableSuperclass } from 'app/to-replace/injectable-superclass';
-import { mapValues } from 'micro-dash';
-import { AppStore } from 'ng-app-state';
+import { mapValues } from '@s-libs/micro-dash';
+import { RootStore } from '@s-libs/app-state';
 import { combineLatest, interval } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { delayOnMicrotaskQueue } from 's-rxjs-utils';
+import { delayOnMicrotaskQueue } from '@s-libs/rxjs-core';
 
 @Injectable()
-export class GraphStore extends mixInInjectableSuperclass(AppStore)<
+export class GraphStore extends mixInInjectableSuperclass(RootStore)<
   GraphState
 > {
   constructor(
     private locationService: LocationService,
-    ngrxStore: Store<any>,
     private weatherStore: WeatherStore,
   ) {
-    super(ngrxStore, 'graph', new GraphState());
+    super(new GraphState());
     this.manageOptions();
     this.manageData();
   }
@@ -61,10 +59,10 @@ export class GraphStore extends mixInInjectableSuperclass(AppStore)<
   private updateRange(now: number, range: ViewRange) {
     range = mapValues(range, (value) => now + value);
     const boundaries = buildBoundaries(now);
-    this('options').batch((batch) => {
-      batch('scales')('xAxes')(0)('ticks').assign(range);
-      batch('plugins')('zoom')('pan').assign(boundaries);
-      batch('plugins')('zoom')('zoom').assign(boundaries);
+    this.batch(() => {
+      this('options')('scales')('xAxes')(0)('ticks').assign(range);
+      this('options')('plugins')('zoom')('pan').assign(boundaries);
+      this('options')('plugins')('zoom')('zoom').assign(boundaries);
     });
   }
 

@@ -11,8 +11,8 @@ import {
   tap,
   throttleTime,
 } from 'rxjs/operators';
-import { convertTime } from 's-js-utils';
-import { cache } from 's-rxjs-utils';
+import { convertTime } from '@s-libs/js-core';
+import { cache } from '@s-libs/rxjs-core';
 
 export const refreshMillis = convertTime(30, 'min', 'ms');
 

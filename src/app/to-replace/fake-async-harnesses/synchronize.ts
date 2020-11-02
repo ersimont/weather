@@ -1,7 +1,7 @@
 import { tick } from '@angular/core/testing';
 import { isObject } from 'app/to-replace/is-object';
 import { isPromiseLike } from 'app/to-replace/is-promise-like';
-import { get } from 'micro-dash';
+import { get } from '@s-libs/micro-dash';
 
 export type Synchronized<O extends object> = {
   [K in keyof O]: O[K] extends (...args: any[]) => any

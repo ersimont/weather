@@ -2,7 +2,7 @@ import { Directive, ElementRef, Injector, Input } from '@angular/core';
 import { EventTrackingService } from 'app/to-replace/event-tracking/event-tracking.service';
 import { fromEvent } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { DirectiveSuperclass } from 's-ng-utils';
+import { DirectiveSuperclass } from '@s-libs/ng-core';
 
 @Directive({ selector: '[sTrack]' })
 export class STrackDirective extends DirectiveSuperclass {

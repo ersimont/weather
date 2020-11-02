@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { identity } from 'micro-dash';
+import { identity } from '@s-libs/micro-dash';
 
 export type UnitType = 'temp' | 'amount' | 'speed' | 'percentage';
 export type UnitEnum = TempUnit | AmountUnit | SpeedUnit | PercentageUnit;

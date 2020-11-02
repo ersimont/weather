@@ -3,8 +3,8 @@ import { WeatherState } from 'app/state/weather-state';
 import { MigrationManager } from 'app/to-replace/persistence/migration-manager';
 import { SnackBarErrorService } from 'app/to-replace/snack-bar-error.service';
 import { WhatsNewService } from 'app/upgrade/whats-new.service';
-import { cloneDeep } from 'micro-dash';
-import { assert } from 's-js-utils';
+import { cloneDeep } from '@s-libs/micro-dash';
+import { assert } from '@s-libs/js-core';
 
 @Injectable({ providedIn: 'root' })
 export class UpgradeService extends MigrationManager<WeatherState> {

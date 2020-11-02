@@ -12,8 +12,6 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { StoreModule } from '@ngrx/store';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { AppComponent } from 'app/app.component';
 import { GraphModule } from 'app/graph/graph.module';
 import { OptionsModule } from 'app/options/options.module';
@@ -21,7 +19,6 @@ import { EventTrackingModule } from 'app/to-replace/event-tracking/event-trackin
 import { provideHttpStatus } from 'app/to-replace/http-status.service';
 import { provideErrorHandler } from 'app/to-replace/snack-bar-error.service';
 import { WhatsNewComponent } from 'app/upgrade/whats-new.component';
-import { ngAppStateReducer } from 'ng-app-state';
 import { environment } from '../environments/environment';
 import { AboutComponent } from './misc-components/about/about.component';
 import { PrivacyPolicyComponent } from './misc-components/privacy-policy/privacy-policy.component';
@@ -52,13 +49,11 @@ import { PrivacyPolicyComponent } from './misc-components/privacy-policy/privacy
     MatSnackBarModule,
     MatToolbarModule,
     OptionsModule,
-    StoreModule.forRoot({}, { metaReducers: [ngAppStateReducer] }),
     environment.pwa
       ? ServiceWorkerModule.register('ngsw-worker.js', {
           registrationStrategy: 'registerWithDelay',
         })
       : [],
-    environment.storeDevtools ? StoreDevtoolsModule.instrument() : [],
   ],
   providers: [provideErrorHandler(), provideHttpStatus()],
   bootstrap: [AppComponent],

@@ -1,4 +1,7 @@
 import { Injector } from '@angular/core';
+import { Store } from '@s-libs/app-state';
+import { assert } from '@s-libs/js-core';
+import { InjectableSuperclass } from '@s-libs/ng-core';
 import { LocationService } from 'app/misc-services/location.service';
 import { RefreshService } from 'app/misc-services/refresh.service';
 import { Forecast } from 'app/state/forecast';
@@ -6,11 +9,8 @@ import { GpsCoords } from 'app/state/location';
 import { Source, SourceId } from 'app/state/source';
 import { WeatherStore } from 'app/state/weather-store';
 import { SnackBarErrorService } from 'app/to-replace/snack-bar-error.service';
-import { StoreObject } from 'ng-app-state';
 import { NEVER, Observable } from 'rxjs';
 import { catchError, switchMap, switchMapTo } from 'rxjs/operators';
-import { assert } from 's-js-utils';
-import { InjectableSuperclass } from 's-ng-utils';
 
 export const notAvailableHere = Symbol();
 
@@ -19,7 +19,7 @@ export abstract class AbstractSource extends InjectableSuperclass {
   private locationService: LocationService;
   private refreshService: RefreshService;
   private store: WeatherStore;
-  private sourceStore: StoreObject<Source>;
+  private sourceStore: Store<Source>;
 
   constructor(private key: SourceId, injector: Injector) {
     super();
@@ -62,9 +62,9 @@ export abstract class AbstractSource extends InjectableSuperclass {
     if (error !== notAvailableHere) {
       this.errorService.handleError(error, { logUnexpected: false });
     } else if (fallback && this.store.state().allowSourceFallback) {
-      this.store.batch((batch) => {
-        this.sourceStore('show').inBatch(batch).set(false);
-        batch('sources')(fallback)('show').set(true);
+      this.store.batch(() => {
+        this.sourceStore('show').set(false);
+        this.store('sources')(fallback)('show').set(true);
       });
     } else {
       const label = this.sourceStore.state().label;
@@ -75,9 +75,9 @@ export abstract class AbstractSource extends InjectableSuperclass {
   }
 
   private setForecast(forecast: Forecast) {
-    this.store.batch((batch) => {
-      batch('allowSourceFallback').set(false);
-      this.sourceStore('forecast').inBatch(batch).set(forecast);
+    this.store.batch(() => {
+      this.store('allowSourceFallback').set(false);
+      this.sourceStore('forecast').set(forecast);
     });
   }
 }

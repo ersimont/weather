@@ -1,1 +1,1 @@
-{ "extends": "s-ng-dev-utils/tslint" }
+{ "extends": "@s-libs/ng-dev/tslint" }

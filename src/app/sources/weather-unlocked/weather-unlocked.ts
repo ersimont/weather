@@ -5,7 +5,7 @@ import { Condition } from 'app/state/condition';
 import { Forecast } from 'app/state/forecast';
 import { GpsCoords } from 'app/state/location';
 import { SourceId } from 'app/state/source';
-import { round } from 'micro-dash';
+import { round } from '@s-libs/micro-dash';
 import { map } from 'rxjs/operators';
 
 const endpoint =

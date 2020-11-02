@@ -1,4 +1,4 @@
-import { wrapFunction } from 's-js-utils';
+import { wrapFunction } from '@s-libs/js-core';
 
 export function logTimeouts() {
   window.setTimeout = wrapFunction(window.setTimeout, {

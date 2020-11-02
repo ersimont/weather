@@ -1,7 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { WeatherState } from 'app/state/weather-state';
 import { WeatherStore } from 'app/state/weather-store';
-import { StoreObject } from 'ng-app-state';
 
 @Component({
   selector: 'app-options',
@@ -10,9 +8,5 @@ import { StoreObject } from 'ng-app-state';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OptionsComponent {
-  store: StoreObject<WeatherState>;
-
-  constructor(store: WeatherStore) {
-    this.store = store.withCaching();
-  }
+  constructor(public store: WeatherStore) {}
 }

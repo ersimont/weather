@@ -16,11 +16,11 @@ import * as Chart from 'chart.js';
 import { ChartData, ChartTooltipItem } from 'chart.js';
 import 'chartjs-plugin-annotation';
 import 'chartjs-plugin-zoom';
-import { clone, debounce } from 'micro-dash';
+import { clone, debounce } from '@s-libs/micro-dash';
 import * as moment from 'moment';
 import 'moment-timezone';
-import { assert } from 's-js-utils';
-import { DirectiveSuperclass } from 's-ng-utils';
+import { assert } from '@s-libs/js-core';
+import { DirectiveSuperclass } from '@s-libs/ng-core';
 import { environment } from '../../environments/environment';
 
 @Component({

@@ -3,7 +3,7 @@ import { SourceId } from 'app/state/source';
 import { AmountUnit } from 'app/state/units';
 import { WeatherState } from 'app/state/weather-state';
 import { ChartDataSets, ChartPoint, PointStyle } from 'chart.js';
-import { forEach, keys } from 'micro-dash';
+import { forEach, keys } from '@s-libs/micro-dash';
 
 const pointStyles: { [id in SourceId]: PointStyle } = {
   [SourceId.CLIMACELL]: 'rect',

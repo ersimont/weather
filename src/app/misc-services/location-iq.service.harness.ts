@@ -7,8 +7,8 @@ import {
 import { GpsCoords } from 'app/state/location';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 import { STestRequest } from 'app/to-replace/test-context/s-test-request';
-import { isEmpty } from 'micro-dash';
-import { createBuilder } from 's-js-utils';
+import { isEmpty } from '@s-libs/micro-dash';
+import { createBuilder } from '@s-libs/js-core';
 
 export class LocationIqServiceHarness {
   buildForwardResponse = createBuilder<ForwardResponse>(() => [

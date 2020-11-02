@@ -1,4 +1,4 @@
-import { convertTime } from 's-js-utils';
+import { convertTime } from '@s-libs/js-core';
 
 export class ViewRange {
   min = -convertTime(90, 'min', 'ms');
