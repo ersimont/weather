@@ -18,8 +18,4 @@ export class UnitOptionsComponent extends AbstractOptionDirective {
   ];
 
   protected optionType = 'unit';
-
-  // blah() {
-  //   this.store('units')(this.unitOptions[0].type);
-  // }
 }

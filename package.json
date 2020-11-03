@@ -12,7 +12,7 @@
     "web-worker-start": "http-server -p 8080 -c-1 dist/weather",
     "prettier-all": "prettier --write \"**/*.{css,html,js,json,md,scss,ts,yml}\"",
     "deploy": "ng build --prod --output-path docs --base-href /weather/ && git add docs",
-    "source-map-explorer": "ng build --prod --sourceMap && source-map-explorer 'dist/weather/main-es2015.*.js'",
+    "source-map-explorer": "ng build --prod --sourceMap && source-map-explorer 'dist/weather/main.*.js'",
     "trim-moment-locales": "ts-node -O \"{\\\"module\\\": \\\"commonjs\\\"}\" src/scripts/trim-moment-locales.ts"
   },
   "private": true,

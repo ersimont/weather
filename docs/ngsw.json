@@ -1,23 +1,23 @@
 {
   "configVersion": 1,
-  "timestamp": 1590712926991,
+  "timestamp": 1604375143248,
   "index": "/weather/index.html",
   "assetGroups": [
     {
       "name": "app",
       "installMode": "prefetch",
       "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
       "urls": [
         "/weather/favicon.ico",
         "/weather/index.html",
-        "/weather/main-es2015.21f9e5825e640acb9a7c.js",
-        "/weather/main-es5.21f9e5825e640acb9a7c.js",
+        "/weather/main.9d8fddae8794d62aa065.js",
         "/weather/manifest.webmanifest",
-        "/weather/polyfills-es2015.8af4230e3ab1d4373708.js",
-        "/weather/polyfills-es5.90d595608c7cdc6e187c.js",
-        "/weather/runtime-es2015.d7d9a4226c7c635e73ae.js",
-        "/weather/runtime-es5.d7d9a4226c7c635e73ae.js",
-        "/weather/styles.4c47512999edcd5c06b4.css"
+        "/weather/polyfills.5814cf34b6381dfce7d6.js",
+        "/weather/runtime.0824cc72a1281011b185.js",
+        "/weather/styles.9a43312db44c5846c6ae.css"
       ],
       "patterns": []
     },
@@ -25,6 +25,9 @@
       "name": "assets",
       "installMode": "lazy",
       "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
       "urls": [
         "/weather/assets/icons/icon-1200x630.png",
         "/weather/assets/icons/icon-128x128.png",
@@ -44,26 +47,23 @@
   "dataGroups": [],
   "hashTable": {
     "/weather/assets/icons/icon-1200x630.png": "9dfa7f50f3a41c63debbda0991c1817c6f415a4f",
-    "/weather/assets/icons/icon-128x128.png": "bc3000ce6a0c85ca4d1ac7818a36278cd011cd25",
-    "/weather/assets/icons/icon-144x144.png": "2221d90d912f677f63151a932ad4df17b4d36ebb",
-    "/weather/assets/icons/icon-152x152.png": "0e24afd116cc2201f60117df949cdfe8362ceb8a",
-    "/weather/assets/icons/icon-192x192.png": "783be75f760f1d247a3e647ebf9d5c1c7871f956",
-    "/weather/assets/icons/icon-32x32.png": "430946ffdf13715b480881f4acedaca89b2a4226",
-    "/weather/assets/icons/icon-384x384.png": "8d7da9205a8bb4f0500ba39d51cbab15a44e715a",
-    "/weather/assets/icons/icon-512x512.png": "185cd92635b09235bf858f3b05baf0273eb4ca55",
-    "/weather/assets/icons/icon-72x72.png": "c5888ce97ad56b1ffa04eaf8b26f2c072037f718",
-    "/weather/assets/icons/icon-96x96.png": "d897a564f4f2e6635701403952a4cdc52ede9bfd",
-    "/weather/assets/icons/icon.svg": "8b59eaccdd96476e31721757d6ee8931f91d87b5",
+    "/weather/assets/icons/icon-128x128.png": "c617f9e8631575450133e9f311ed0ece3c8d2fb0",
+    "/weather/assets/icons/icon-144x144.png": "712b376c425569c4ecc4e346f8c95bac4457b575",
+    "/weather/assets/icons/icon-152x152.png": "61299e0b4f041a799066262a53b205e00db955e6",
+    "/weather/assets/icons/icon-192x192.png": "d9ff020f003e6c84d3f5e261bf200aacf61f3704",
+    "/weather/assets/icons/icon-32x32.png": "f2be2d78c349edc716b3b015e771b62b69b73fb5",
+    "/weather/assets/icons/icon-384x384.png": "e4971f68da8936776872725b52000411e543d3c1",
+    "/weather/assets/icons/icon-512x512.png": "2dabd77629e69edb0d6095431836da818bb5a8ac",
+    "/weather/assets/icons/icon-72x72.png": "142fbe6c1f32ae2b202136356721085d4b915270",
+    "/weather/assets/icons/icon-96x96.png": "ca3d16da2ccb01c9157bf52c517ad8d373d88aca",
+    "/weather/assets/icons/icon.svg": "293ff9ec9852a322a7368f146e1420cf5f988bb4",
     "/weather/favicon.ico": "f5ceb58c067a06254eb3b7cbde64e758b23d9b9d",
-    "/weather/index.html": "65a03eb464b0948c96938073b08af9f07c6f91e8",
-    "/weather/main-es2015.21f9e5825e640acb9a7c.js": "afa9686637540802cd181a5c625208023c3dd67e",
-    "/weather/main-es5.21f9e5825e640acb9a7c.js": "5b4dc77784a975f2b66ebbd402a1a1aeea10cacf",
+    "/weather/index.html": "73e87fa67862c5af17d35e3e0e1cf2c95c41e774",
+    "/weather/main.9d8fddae8794d62aa065.js": "c5b4ed914a040a30d5ff30509b639b25dd12f1c0",
     "/weather/manifest.webmanifest": "03a1b781d0fa4e9faa4ff08667df420b3c6962d6",
-    "/weather/polyfills-es2015.8af4230e3ab1d4373708.js": "72ad4ccc0a3916ae4598199447cdeadd6d380570",
-    "/weather/polyfills-es5.90d595608c7cdc6e187c.js": "89222a28dbabb780fc372d33834080e0cd3083d9",
-    "/weather/runtime-es2015.d7d9a4226c7c635e73ae.js": "a9aafcf49f49145093fc831efd9b8e2f6c71bb9c",
-    "/weather/runtime-es5.d7d9a4226c7c635e73ae.js": "a9aafcf49f49145093fc831efd9b8e2f6c71bb9c",
-    "/weather/styles.4c47512999edcd5c06b4.css": "0a367ba3cc13aa4fb7dfbe51330bb367ee71842f"
+    "/weather/polyfills.5814cf34b6381dfce7d6.js": "5d073ab1808d400ada31a564ec984eb4453647de",
+    "/weather/runtime.0824cc72a1281011b185.js": "a9aafcf49f49145093fc831efd9b8e2f6c71bb9c",
+    "/weather/styles.9a43312db44c5846c6ae.css": "ae7eb517a030148480b4ef230ea3c3b94a18ab70"
   },
   "navigationUrls": [
     {
