@@ -13,7 +13,7 @@ import { conditionInfo } from 'app/state/condition';
 import { WeatherStore } from 'app/state/weather-store';
 import { EventTrackingService } from 'app/to-replace/event-tracking/event-tracking.service';
 import * as Chart from 'chart.js';
-import { ChartData, ChartTooltipItem } from 'chart.js';
+import { ChartData, ChartOptions, ChartTooltipItem } from 'chart.js';
 import 'chartjs-plugin-annotation';
 import 'chartjs-plugin-zoom';
 import { clone, debounce } from '@s-libs/micro-dash';
@@ -64,7 +64,7 @@ export class GraphComponent extends DirectiveSuperclass {
     const chart = new Chart(ctx, { type: 'line' });
     if (environment.paintGraph) {
       this.subscribeTo(this.graphStore.$, (graphState) => {
-        chart.options = graphState.options;
+        chart.options = graphState.options as ChartOptions;
         chart.data.datasets = graphState.data.map(clone);
         chart.update();
       });

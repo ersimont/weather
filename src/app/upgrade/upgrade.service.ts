@@ -27,8 +27,8 @@ export class UpgradeService extends MigrationManager<WeatherState> {
   private upgradeFrom8(state: WeatherState) {
     state = cloneDeep(state);
     state.sources = {
-      openWeather: { label: 'OpenWeather', show: false, forecast: {} },
       ...state.sources,
+      openWeather: { label: 'OpenWeather', show: false, forecast: {} },
     };
     state._version = 9;
 
@@ -52,8 +52,8 @@ export class UpgradeService extends MigrationManager<WeatherState> {
 
     state = cloneDeep(state);
     state.sources = {
-      climacell: { label: 'Climacell', show: false, forecast: {} },
       ...state.sources,
+      climacell: { label: 'Climacell', show: false, forecast: {} },
     };
     delete (state as any).version;
     state._version = 7;

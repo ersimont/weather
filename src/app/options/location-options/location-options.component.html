@@ -13,11 +13,12 @@
       <mat-radio-button [value]="false"></mat-radio-button>
       <mat-form-field>
         <input
+          #customInput
           matInput
           name="custom"
           placeholder="Custom"
           [value]="store('customLocation')('search').$ | async"
-          (change)="locationService.setCustomSearch($event.target.value)"
+          (change)="locationService.setCustomSearch(customInput.value)"
         />
       </mat-form-field>
     </div>

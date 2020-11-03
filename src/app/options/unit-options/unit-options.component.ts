@@ -10,11 +10,16 @@ import { AmountUnit, SpeedUnit, TempUnit } from 'app/state/units';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UnitOptionsComponent extends AbstractOptionDirective {
-  unitOptions = [
+  // ngFor was not dealing well with this when using `as const`. maybe try again in a future angular version
+  unitOptions: any[] = [
     { type: 'temp', options: values(TempUnit) },
     { type: 'amount', options: values(AmountUnit) },
     { type: 'speed', options: values(SpeedUnit) },
   ];
 
   protected optionType = 'unit';
+
+  // blah() {
+  //   this.store('units')(this.unitOptions[0].type);
+  // }
 }

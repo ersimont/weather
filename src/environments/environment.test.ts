@@ -15,5 +15,5 @@ export const environment: Env = {
  * on performance if an error is thrown.
  */
 // import 'zone.js/dist/zone-error'; // Included with Angular CLI.
-Error.stackTraceLimit = 0;
+(Error as any).stackTraceLimit = 0;
 enableProdMode();
