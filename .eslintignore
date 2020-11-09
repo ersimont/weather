@@ -4,6 +4,6 @@
 /docs/
 /node_modules/
 
-karma.conf.js
+*.js
 *.spec.ts
 *.fixtures.ts
