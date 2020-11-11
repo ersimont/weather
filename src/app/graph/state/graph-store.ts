@@ -11,7 +11,7 @@ import { GpsCoords } from 'app/state/location';
 import { ViewRange } from 'app/state/viewRange';
 import { WeatherState } from 'app/state/weather-state';
 import { WeatherStore } from 'app/state/weather-store';
-import { mixInInjectableSuperclass } from 'app/to-replace/injectable-superclass';
+import { mixInInjectableSuperclass } from 'app/to-replace/mixins/injectable-superclass';
 import { mapValues } from '@s-libs/micro-dash';
 import { RootStore } from '@s-libs/app-state';
 import { combineLatest, interval } from 'rxjs';

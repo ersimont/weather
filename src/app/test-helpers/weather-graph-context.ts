@@ -1,6 +1,7 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { createSpyObject } from '@s-libs/ng-dev';
 import { AppModule } from 'app/app.module';
 import { GraphComponentHarness } from 'app/graph/graph.component.harness';
 import { BrowserService } from 'app/misc-services/browser.service';
@@ -16,7 +17,6 @@ import { WeatherState } from 'app/state/weather-state';
 import { WeatherStateHarness } from 'app/state/weather-state.harness';
 import { WeatherStoreHarness } from 'app/state/weather-store.harness';
 import { eventCatalog } from 'app/test-helpers/event-catalog';
-import { createSpyObject } from 'app/to-replace/create-spy-object';
 import { EventTrackingServiceHarness } from 'app/to-replace/event-tracking/event-tracking.service.harness';
 import { SnackBarErrorServiceHarness } from 'app/to-replace/snack-bar-error.service.harness';
 import {
