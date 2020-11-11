@@ -27,6 +27,10 @@ exports.config = {
     });
     jasmine
       .getEnv()
-      .addReporter(new SpecReporter({ spec: { displayStacktrace: StacktraceOption.PRETTY } }));
+      .addReporter(
+        new SpecReporter({
+          spec: { displayStacktrace: StacktraceOption.PRETTY },
+        }),
+      );
   },
 };

@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "simonton-weather": {
+      "hosting": {
+        "weather": [
+          "simonton-weather"
+        ]
+      }
+    }
+  }
+}
