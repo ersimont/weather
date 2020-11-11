@@ -18,7 +18,7 @@ describe('RefreshService', () => {
     ({ events, iq } = ctx.harnesses);
   });
 
-  function dispatchFocus() {
+  function dispatchFocus(): void {
     window.dispatchEvent(new Event('focus'));
     ctx.tick();
   }

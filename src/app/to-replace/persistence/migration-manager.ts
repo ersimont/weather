@@ -45,10 +45,10 @@ export type MigrateFunction<T> = (source: T, targetVersion: number) => T;
 export class MigrationManager<T extends VersionedObject> {
   private migrations = new Map<number | undefined, MigrateFunction<T>>();
 
-  run(persistence: Persistence<T>, defaultValue: T) {
+  run(persistence: Persistence<T>, defaultValue: T): T {
     // TODO: use reference if persistence.get() throws error?
-    let object = persistence.get();
-    if (object?.version === defaultValue._version) {
+    let object: T = persistence.get();
+    if (object?._version === defaultValue._version) {
       return object;
     }
 
@@ -70,7 +70,7 @@ export class MigrationManager<T extends VersionedObject> {
    *
    * @param reference An object with the latest `_version`. If an error is thrown during migration, and a subclass overrides `onError` to handle it, `reference` will be returned. In this way it acts as a default value in case migration fails. If `onError` is not overridden, the error will propagate up to the caller.
    */
-  upgrade(object: T, targetVersion: number) {
+  upgrade(object: T, targetVersion: number): T {
     let lastVersion = object._version;
     assert(lastVersion === undefined || lastVersion <= targetVersion);
     while (lastVersion !== targetVersion) {
@@ -115,7 +115,7 @@ export class MigrationManager<T extends VersionedObject> {
   registerMigration(
     sourceVersion: number | undefined,
     migrateFunction: MigrateFunction<T>,
-  ) {
+  ): void {
     this.migrations.set(sourceVersion, migrateFunction.bind(this));
   }
 
@@ -133,7 +133,7 @@ export class MigrationManager<T extends VersionedObject> {
     throw error;
   }
 
-  private upgradeOneStep(upgradable: T, targetVersion: number) {
+  private upgradeOneStep(upgradable: T, targetVersion: number): T {
     const version = upgradable._version;
     const migrationFunction = this.migrations.get(version);
     if (!migrationFunction) {

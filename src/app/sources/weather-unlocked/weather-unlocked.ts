@@ -6,6 +6,7 @@ import { Forecast } from 'app/state/forecast';
 import { GpsCoords } from 'app/state/location';
 import { SourceId } from 'app/state/source';
 import { round } from '@s-libs/micro-dash';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 const endpoint =
@@ -32,7 +33,7 @@ export class WeatherUnlocked extends AbstractSource {
     super(SourceId.WEATHER_UNLOCKED, injector);
   }
 
-  fetch(gpsCoords: GpsCoords) {
+  fetch(gpsCoords: GpsCoords): Observable<Forecast> {
     return this.fetchRes(gpsCoords).pipe(
       map((res) => {
         const forecast: Forecast = {};
@@ -46,7 +47,7 @@ export class WeatherUnlocked extends AbstractSource {
     );
   }
 
-  private fetchRes(gpsCoords: GpsCoords) {
+  private fetchRes(gpsCoords: GpsCoords): Observable<ForecastResponse> {
     return this.httpClient.get<ForecastResponse>(
       // weather unlocked docs say to use 3 decimal places
       `${endpoint}/${gpsCoords.map((coord) => round(coord, 3)).join(',')}`,
@@ -54,7 +55,7 @@ export class WeatherUnlocked extends AbstractSource {
   }
 }
 
-function addConditions(forecast: Forecast, timeframe: Timeframe) {
+function addConditions(forecast: Forecast, timeframe: Timeframe): void {
   forecast[parseTimestamp(timeframe)] = {
     [Condition.AMOUNT]: timeframe.precip_mm / 3,
     [Condition.CLOUD]: timeframe.cloudtotal_pct,
@@ -65,7 +66,7 @@ function addConditions(forecast: Forecast, timeframe: Timeframe) {
   };
 }
 
-function parseTimestamp(timeframe: Timeframe) {
+function parseTimestamp(timeframe: Timeframe): number {
   const [day, month, year] = timeframe.utcdate.split('/');
   const hour = timeframe.utctime / 100;
   return Date.UTC(+year, +month - 1, +day, hour);

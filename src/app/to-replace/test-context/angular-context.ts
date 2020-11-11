@@ -152,15 +152,21 @@ export class AngularContext<InitOptions = {}> {
     return TestBed.inject(token);
   }
 
-  getHarness<T extends ComponentHarness>(query: HarnessQuery<T>) {
+  getHarness<T extends ComponentHarness>(
+    query: HarnessQuery<T>,
+  ): Synchronized<T> {
     return this.loader.getHarness(query) as Synchronized<T>;
   }
 
-  getHarnessOptional<T extends ComponentHarness>(query: HarnessQuery<T>) {
+  getHarnessOptional<T extends ComponentHarness>(
+    query: HarnessQuery<T>,
+  ): Synchronized<T> | null {
     return this.loader.locatorForOptional(query)() as Synchronized<T> | null;
   }
 
-  getAllHarnesses<T extends ComponentHarness>(query: HarnessQuery<T>) {
+  getAllHarnesses<T extends ComponentHarness>(
+    query: HarnessQuery<T>,
+  ): Array<Synchronized<T>> {
     return (this.loader.getAllHarnesses(query) as unknown) as Array<
       Synchronized<T>
     >;

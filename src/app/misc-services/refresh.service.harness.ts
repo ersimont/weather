@@ -4,7 +4,7 @@ import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 export class RefreshServiceHarness {
   constructor(private ctx: WeatherGraphContext) {}
 
-  trigger() {
+  trigger(): void {
     this.ctx.tick(refreshMillis);
   }
 }

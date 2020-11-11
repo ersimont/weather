@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { GpsCoords, Location } from 'app/state/location';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 const baseUrl =
@@ -42,7 +43,7 @@ export interface Address {
 export class LocationIqService {
   constructor(private httpClient: HttpClient) {}
 
-  forward(search: string) {
+  forward(search: string): Observable<Partial<Location>> {
     return this.httpClient
       .get<ForwardResponse>(`${baseUrl}/search.php`, {
         params: { ...commonParams, q: search, limit: '1' },
@@ -50,7 +51,7 @@ export class LocationIqService {
       .pipe(map((response) => parseLocation(response[0])));
   }
 
-  reverse(gpsCoords: GpsCoords) {
+  reverse(gpsCoords: GpsCoords): Observable<Partial<Location>> {
     return this.httpClient
       .get<LocationResponse>(`${baseUrl}/reverse.php`, {
         params: {
@@ -62,7 +63,7 @@ export class LocationIqService {
       .pipe(map(parseLocation));
   }
 
-  timezone(gpsCoords: GpsCoords) {
+  timezone(gpsCoords: GpsCoords): Observable<string> {
     return this.httpClient
       .get<TimezoneResponse>(`${baseUrl}/timezone.php`, {
         params: {
@@ -81,7 +82,7 @@ function parseLocation(response: LocationResponse): Partial<Location> {
   };
 }
 
-function parseCity(address: Address) {
+function parseCity(address: Address): string {
   const city = [
     address.city,
     address.city_district,

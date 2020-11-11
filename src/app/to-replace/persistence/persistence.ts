@@ -31,7 +31,7 @@ export class Persistence<T> {
   /**
    * Serializes `obj` and saves it in local storage.
    */
-  put(obj: T) {
+  put(obj: T): void {
     localStorage.setItem(this.key, JSON.stringify(obj));
   }
 
@@ -41,7 +41,7 @@ export class Persistence<T> {
    * @param defaultValue returned when local storage does not contain anything at `this.key`. If you supply `migrationManager`, it is also passed to it as `reference`.
    * @param migrationManager if supplied will be run with the object to perform any updates needed to an old version saved in local storage.
    */
-  get() {
+  get(): T | undefined {
     const savedStr = localStorage.getItem(this.key);
     return savedStr === null ? undefined : JSON.parse(savedStr);
   }
@@ -49,7 +49,7 @@ export class Persistence<T> {
   /**
    * Deletes the saved item from local storage.
    */
-  clear() {
+  clear(): void {
     localStorage.removeItem(this.key);
   }
 }

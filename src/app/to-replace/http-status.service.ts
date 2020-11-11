@@ -1,5 +1,6 @@
 import {
   HTTP_INTERCEPTORS,
+  HttpEvent,
   HttpHandler,
   HttpInterceptor,
   HttpRequest,
@@ -29,7 +30,10 @@ export class HttpStatusService implements HttpInterceptor {
     );
   }
 
-  intercept(req: HttpRequest<any>, next: HttpHandler) {
+  intercept(
+    req: HttpRequest<any>,
+    next: HttpHandler,
+  ): Observable<HttpEvent<any>> {
     this.count$.next(this.count$.getValue() + 1);
     const finish = once(() => {
       this.count$.next(this.count$.getValue() - 1);

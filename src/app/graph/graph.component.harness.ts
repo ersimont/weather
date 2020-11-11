@@ -4,8 +4,14 @@ import { GraphStore } from 'app/graph/state/graph-store';
 import { Condition } from 'app/state/condition';
 import { SourceId } from 'app/state/source';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
-import { ChartPoint, ChartTooltipItem } from 'chart.js';
+import {
+  ChartDataSets,
+  ChartOptions,
+  ChartPoint,
+  ChartTooltipItem,
+} from 'chart.js';
 import * as moment from 'moment';
+import { DeepRequired } from 'utility-types';
 
 const sourceOrder = [
   SourceId.CLIMACELL,
@@ -25,11 +31,15 @@ const conditionOrder = [
 export class GraphComponentHarness {
   constructor(private ctx: WeatherGraphContext) {}
 
-  showsData() {
+  showsData(): boolean {
     return this.getDataSets().some((dataSet) => dataSet.data?.length);
   }
 
-  getTooltipLabel(sourceId: SourceId, condition: Condition, index: number) {
+  getTooltipLabel(
+    sourceId: SourceId,
+    condition: Condition,
+    index: number,
+  ): string {
     const datasetIndex =
       conditionOrder.length * sourceOrder.indexOf(sourceId) +
       conditionOrder.indexOf(condition);
@@ -37,28 +47,30 @@ export class GraphComponentHarness {
     const value = chartPoints[index].y!.toString();
     const item: ChartTooltipItem = { value, datasetIndex, index };
     const getLabel = this.getOptions().tooltips.callbacks.label;
-    return getLabel(item, { datasets: this.getDataSets() });
+    return getLabel(item, { datasets: this.getDataSets() }) as string;
   }
 
-  getTooltipFooter(sourceId: SourceId) {
+  getTooltipFooter(sourceId: SourceId): string {
     const datasetIndex = conditionOrder.length * sourceOrder.indexOf(sourceId);
     const getFooter = this.getOptions().tooltips.callbacks.footer;
-    return getFooter([{ datasetIndex }], { datasets: this.getDataSets() });
+    return getFooter([{ datasetIndex }], {
+      datasets: this.getDataSets(),
+    }) as string;
   }
 
-  getTimeZone() {
+  getTimeZone(): string {
     return moment().zoneName();
   }
 
-  private getOptions() {
+  private getOptions(): DeepRequired<ChartOptions> {
     return this.getGraphStore().state().options;
   }
 
-  private getDataSets() {
+  private getDataSets(): ChartDataSets[] {
     return this.getGraphStore().state().data;
   }
 
-  private getGraphStore() {
+  private getGraphStore(): GraphStore {
     return this.ctx.fixture.debugElement
       .query(By.directive(GraphComponent))
       .injector.get(GraphStore);

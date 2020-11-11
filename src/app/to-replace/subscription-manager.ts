@@ -2,6 +2,7 @@ import { Observable, Subscription } from 'rxjs';
 
 type Constructor = new (...args: any[]) => {};
 
+// tslint:disable-next-line:typedef
 export function mixInSubscriptionManager<B extends Constructor>(Base: B) {
   return class extends Base {
     private subscriptions = new Subscription();
@@ -11,7 +12,7 @@ export function mixInSubscriptionManager<B extends Constructor>(Base: B) {
       next?: (value: T) => void,
       error?: (error: any) => void,
       complete?: () => void,
-    ) {
+    ): void {
       this.subscriptions.add(
         observable.subscribe(
           next?.bind(this),
@@ -21,7 +22,7 @@ export function mixInSubscriptionManager<B extends Constructor>(Base: B) {
       );
     }
 
-    unsubscribe() {
+    unsubscribe(): void {
       this.subscriptions.unsubscribe();
       this.subscriptions = new Subscription();
     }

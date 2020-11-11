@@ -1,6 +1,8 @@
+import { GraphState } from 'app/graph/state/graph-state';
 import { GraphStore } from 'app/graph/state/graph-store';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 import {
+  AnnotationOptions,
   BoxAnnotationOptions,
   LineAnnotationOptions,
 } from 'chartjs-plugin-annotation';
@@ -14,7 +16,7 @@ export class GraphStateHarness {
     return [ticks.min, ticks.max];
   }
 
-  getNightBoxes() {
+  getNightBoxes(): number[][] {
     const boxes = this.getAnnotations().slice(0, -1) as BoxAnnotationOptions[];
     return boxes.map((box: BoxAnnotationOptions) => [
       box.xMin as number,
@@ -22,21 +24,21 @@ export class GraphStateHarness {
     ]);
   }
 
-  getNowLine() {
+  getNowLine(): number {
     const line = last(this.getAnnotations()) as LineAnnotationOptions;
     return line.value as number;
   }
 
-  getBoundaries() {
+  getBoundaries(): number[] {
     const pan = this.getState().options.plugins.zoom.pan;
     return [pan.rangeMin.x as number, pan.rangeMax.x as number];
   }
 
-  private getAnnotations() {
-    return this.getState().options.annotation.annotations;
+  private getAnnotations(): AnnotationOptions[] {
+    return this.getState().options.annotation.annotations as any;
   }
 
-  private getState() {
+  private getState(): GraphState {
     return this.ctx.inject(GraphStore).state();
   }
 }

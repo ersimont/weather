@@ -35,15 +35,15 @@ export class LocationIqServiceHarness {
 
   constructor(private ctx: WeatherGraphContext) {}
 
-  flushTimezone(gpsCoords: GpsCoords) {
+  flushTimezone(gpsCoords: GpsCoords): void {
     this.expectTimezone(gpsCoords).flush(this.buildTimezoneResponse());
   }
 
-  flushReverse(gpsCoords = this.ctx.currentLocation) {
+  flushReverse(gpsCoords = this.ctx.currentLocation): void {
     this.expectReverse(gpsCoords).flush(this.buildLocationResponse());
   }
 
-  expectForward(search: string) {
+  expectForward(search: string): STestRequest<ForwardResponse> {
     return new STestRequest<ForwardResponse>(
       'GET',
       'https://us-central1-proxic.cloudfunctions.net/api/location-iq/v1/search.php',
@@ -61,7 +61,9 @@ export class LocationIqServiceHarness {
     );
   }
 
-  expectReverse(gpsCoords = this.ctx.currentLocation) {
+  expectReverse(
+    gpsCoords = this.ctx.currentLocation,
+  ): STestRequest<LocationResponse> {
     return new STestRequest<LocationResponse>(
       'GET',
       'https://us-central1-proxic.cloudfunctions.net/api/location-iq/v1/reverse.php',
@@ -79,7 +81,7 @@ export class LocationIqServiceHarness {
     );
   }
 
-  expectTimezone(gpsCoords: GpsCoords) {
+  expectTimezone(gpsCoords: GpsCoords): STestRequest<TimezoneResponse> {
     return new STestRequest<TimezoneResponse>(
       'GET',
       'https://us-central1-proxic.cloudfunctions.net/api/location-iq/v1/timezone.php',

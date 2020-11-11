@@ -16,11 +16,13 @@ export class OpenWeatherHarness {
     list: [this.buildTimeframe()],
   }));
 
-  flushDefault(gpsCoords = this.ctx.currentLocation) {
+  flushDefault(gpsCoords = this.ctx.currentLocation): void {
     this.expectForecast(gpsCoords).flush(this.buildForecastResponse());
   }
 
-  expectForecast(gpsCoords = this.ctx.currentLocation) {
+  expectForecast(
+    gpsCoords = this.ctx.currentLocation,
+  ): STestRequest<ForecastResponse> {
     const url =
       'https://us-central1-proxic.cloudfunctions.net/api/openweathermap/data/2.5/forecast';
     const params = {

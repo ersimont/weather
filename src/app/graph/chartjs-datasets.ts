@@ -19,7 +19,7 @@ const radii: { [id in SourceId]: number } = {
   [SourceId.WEATHER_UNLOCKED]: 6,
 };
 
-export function buildDatasets(state: WeatherState) {
+export function buildDatasets(state: WeatherState): Chart.ChartDataSets[] {
   const dataSets: ChartDataSets[] = [];
   forEach(state.sources, (_, sourceId) => {
     addDataSets(sourceId, dataSets, state);
@@ -31,7 +31,7 @@ function addDataSets(
   sourceId: SourceId,
   dataSets: ChartDataSets[],
   state: WeatherState,
-) {
+): void {
   // the first ones added will be displayed on top of later ones
   addDataSet(sourceId, dataSets, state, Condition.TEMP, 'dynamic');
   addDataSet(sourceId, dataSets, state, Condition.FEEL, 'dynamic');
@@ -55,7 +55,7 @@ function addDataSet(
   condition: Condition,
   yAxisID: string,
   fillAlpha = '00',
-) {
+): void {
   const color = conditionInfo[condition].color;
   dataSets.push({
     label: encodeLabelValues(sourceId, condition),
@@ -76,7 +76,7 @@ function getData(
   sourceId: SourceId,
   condition: Condition,
   state: WeatherState,
-) {
+): Chart.ChartPoint[] {
   const data: ChartPoint[] = [];
   const source = state.sources[sourceId];
   const unitInf = conditionInfo[condition].getUnitInfo(state.units);
@@ -96,7 +96,7 @@ interface LabelIds {
   condition: Condition;
 }
 
-function encodeLabelValues(sourceId: SourceId, condition: Condition) {
+function encodeLabelValues(sourceId: SourceId, condition: Condition): string {
   return JSON.stringify({ sourceId, condition });
 }
 

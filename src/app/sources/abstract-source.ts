@@ -31,7 +31,7 @@ export abstract class AbstractSource extends InjectableSuperclass {
     this.sourceStore = this.store('sources')(this.key);
   }
 
-  initialize(fallback?: SourceId) {
+  initialize(fallback?: SourceId): void {
     this.subscribeTo(
       this.refreshService.refresh$.pipe(
         switchMapTo(this.sourceStore('show').$),
@@ -43,7 +43,7 @@ export abstract class AbstractSource extends InjectableSuperclass {
 
   protected abstract fetch(gpsCoords: GpsCoords): Observable<Forecast>;
 
-  private refresh(show: boolean, fallback?: SourceId) {
+  private refresh(show: boolean, fallback?: SourceId): Observable<Forecast> {
     if (!show) {
       return NEVER;
     }
@@ -58,7 +58,7 @@ export abstract class AbstractSource extends InjectableSuperclass {
     );
   }
 
-  private handleError(error: any, fallback: SourceId | undefined) {
+  private handleError(error: any, fallback: SourceId | undefined): void {
     if (error !== notAvailableHere) {
       this.errorService.handleError(error, { logUnexpected: false });
     } else if (fallback && this.store.state().allowSourceFallback) {
@@ -74,7 +74,7 @@ export abstract class AbstractSource extends InjectableSuperclass {
     }
   }
 
-  private setForecast(forecast: Forecast) {
+  private setForecast(forecast: Forecast): void {
     this.store.batch(() => {
       this.store('allowSourceFallback').set(false);
       this.sourceStore('forecast').set(forecast);

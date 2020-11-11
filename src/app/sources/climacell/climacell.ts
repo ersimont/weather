@@ -33,7 +33,7 @@ export class Climacell extends AbstractSource {
     return this.fetchRes(gpsCoords).pipe(map(extractForecast));
   }
 
-  private fetchRes(gpsCoords: GpsCoords) {
+  private fetchRes(gpsCoords: GpsCoords): Observable<HourlyResponse> {
     return this.httpClient.get<HourlyResponse>(endpoint, {
       params: {
         lat: gpsCoords[0].toString(),
@@ -45,7 +45,7 @@ export class Climacell extends AbstractSource {
   }
 }
 
-function extractForecast(response: Timeframe[]) {
+function extractForecast(response: Timeframe[]): Forecast {
   const forecast: Forecast = {};
   for (const timeframe of response) {
     const time = new Date(timeframe.observation_time.value).getTime();

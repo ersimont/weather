@@ -1,5 +1,8 @@
 // https://en.wikipedia.org/wiki/Dew_point#Calculating_the_dew_point
-export function calcDewPoint(celciusTemp: number, relativeHumidity: number) {
+export function calcDewPoint(
+  celciusTemp: number,
+  relativeHumidity: number,
+): number {
   let b: number;
   let c: number;
   if (celciusTemp > 0) {

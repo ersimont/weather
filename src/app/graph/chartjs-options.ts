@@ -62,7 +62,9 @@ export const defaultChartOptions: ChartOptions = {
 // separate b/c the typing complains
 (defaultChartOptions as any).annotation = { drawTime: 'beforeDatasetsDraw' };
 
-export function buildBoundaries(now: number) {
+export function buildBoundaries(
+  now: number,
+): { rangeMax: { x: number }; rangeMin: { x: number } } {
   const { min, max } = getMinMax(now);
   return { rangeMin: { x: min }, rangeMax: { x: max } };
 }
@@ -98,7 +100,7 @@ export function buildNowLine(now: number): LineAnnotationOptions {
   };
 }
 
-function getMinMax(now: number) {
+function getMinMax(now: number): { min: number; max: number } {
   const oneDay = convertTime(1, 'd', 'ms');
   return { min: now - oneDay, max: now + 8 * oneDay };
 }

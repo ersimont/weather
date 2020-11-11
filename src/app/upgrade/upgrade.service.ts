@@ -18,13 +18,17 @@ export class UpgradeService extends MigrationManager<WeatherState> {
     this.registerMigration(undefined, this.upgradeFromLegacy);
   }
 
-  protected onError(error: any, _object: unknown, defaultValue: WeatherState) {
+  protected onError(
+    error: any,
+    _object: unknown,
+    defaultValue: WeatherState,
+  ): WeatherState {
     // test this once there is a way to activate it
     this.errorService.handleError(error);
     return defaultValue;
   }
 
-  private upgradeFrom8(state: WeatherState) {
+  private upgradeFrom8(state: WeatherState): WeatherState {
     state = cloneDeep(state);
     state.sources = {
       ...state.sources,
@@ -38,7 +42,7 @@ export class UpgradeService extends MigrationManager<WeatherState> {
     return state;
   }
 
-  private upgradeFrom7(state: WeatherState) {
+  private upgradeFrom7(state: WeatherState): WeatherState {
     return {
       ...state,
       _version: 8,
@@ -46,7 +50,7 @@ export class UpgradeService extends MigrationManager<WeatherState> {
     };
   }
 
-  private upgradeFromLegacy(state: WeatherState) {
+  private upgradeFromLegacy(state: WeatherState): WeatherState {
     const oldVersion = (state as any).version;
     assert(oldVersion === 6, 'Unable to upgrade from version ' + oldVersion);
 

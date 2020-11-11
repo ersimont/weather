@@ -14,7 +14,7 @@ export class EventTrackingService {
 
   // TODO: switch to sendEvent, sendPageview, sendSocial, sendTiming
   // https://developers.google.com/analytics/devguides/collection/analyticsjs/command-queue-reference#parameters_3
-  track(name: string, category: string, interaction = true) {
+  track(name: string, category: string, interaction = true): void {
     this.send({
       hitType: 'event',
       eventAction: name,
@@ -23,18 +23,18 @@ export class EventTrackingService {
     });
   }
 
-  sendError(message: string) {
+  sendError(message: string): void {
     this.send({ hitType: 'exception', exDescription: message });
   }
 
-  private send(fields: UniversalAnalytics.FieldsObject) {
+  private send(fields: UniversalAnalytics.FieldsObject): void {
     if (this.config.log) {
       console.log('[analytics]', fields);
     }
     ga('send', fields);
   }
 
-  private initQueue() {
+  private initQueue(): void {
     (window as any).ga = (...args: any[]) => {
       ga.q.push(args);
     };
@@ -46,7 +46,7 @@ export class EventTrackingService {
     ga('send', 'pageview');
   }
 
-  private loadGoogleScript() {
+  private loadGoogleScript(): void {
     (window as any).GoogleAnalyticsObject = 'ga';
 
     const gaTag = document.createElement('script');

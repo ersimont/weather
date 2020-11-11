@@ -12,11 +12,11 @@ export class WhatsNewService {
     private matDialog: MatDialog,
   ) {}
 
-  add(feature: string) {
+  add(feature: string): void {
     this.features.unshift(feature);
   }
 
-  showNewFeatures() {
+  showNewFeatures(): void {
     if (this.features.length) {
       this.matDialog.open(WhatsNewComponent, {
         data: { features: this.features },

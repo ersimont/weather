@@ -9,13 +9,13 @@ export class LocationOptionsComponentHarness extends AbstractOptionDirectiveHarn
   private getRadioGroup = this.locatorFor(MatRadioGroupHarness);
   private getInput = this.locatorFor(MatInputHarness);
 
-  async setCustomLocation(search: string) {
+  async setCustomLocation(search: string): Promise<void> {
     await this.ensureExpanded();
     await (await this.getInput()).setValue(search);
     this.getNativeInput().dispatchEvent(new Event('change', { bubbles: true }));
   }
 
-  async select(label: 'Current' | 'Custom') {
+  async select(label: 'Current' | 'Custom'): Promise<void> {
     await this.ensureExpanded();
     await (await this.getRadioGroup()).checkRadioButton({
       label: label === 'Custom' ? '' : label,
@@ -29,7 +29,7 @@ export class LocationOptionsComponentHarness extends AbstractOptionDirectiveHarn
     return text || 'Custom';
   }
 
-  private getNativeInput() {
+  private getNativeInput(): Element {
     return document.querySelector('app-location-options mat-form-field input')!;
   }
 }

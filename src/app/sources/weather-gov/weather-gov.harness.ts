@@ -13,17 +13,19 @@ import { STestRequest } from 'app/to-replace/test-context/s-test-request';
 export class WeatherGovHarness {
   constructor(private ctx: WeatherGraphContext) {}
 
-  flushFixture(gpsCoordinates = this.ctx.currentLocation) {
+  flushFixture(gpsCoordinates = this.ctx.currentLocation): void {
     this.expectPoints(gpsCoordinates).flush(pointResponse);
     this.expectGrid().flush(gridResponse);
   }
 
-  flushNotAvailable() {
+  flushNotAvailable(): void {
     this.expectPoints().flush(pointResponse);
     this.expectGrid().flushError(404, { body: notAvailableResponse });
   }
 
-  expectPoints(gpsCoordinates = this.ctx.currentLocation) {
+  expectPoints(
+    gpsCoordinates = this.ctx.currentLocation,
+  ): STestRequest<PointResponse> {
     return new STestRequest<PointResponse>(
       'GET',
       `https://api.weather.gov/points/${gpsCoordinates.join(',')}`,
@@ -31,11 +33,13 @@ export class WeatherGovHarness {
     );
   }
 
-  expectGrid(url = pointResponse.properties.forecastGridData) {
+  expectGrid(
+    url = pointResponse.properties.forecastGridData,
+  ): STestRequest<GridResponse> {
     return new STestRequest<GridResponse>('GET', url, this.ctx);
   }
 
-  expectNotAvailableError() {
+  expectNotAvailableError(): void {
     this.ctx.harnesses.errors.expect(
       'Weather.gov is not available here. Try another source (in the settings).',
     );

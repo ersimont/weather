@@ -13,7 +13,7 @@ export class EventTrackingServiceHarness {
     this.validNames = new Set(flatten(values(catalog)));
   }
 
-  getEvents(name: string) {
+  getEvents(name: string): TrackingEvent[] {
     if (!this.validNames.has(name)) {
       throw new Error(`${name} is not a valid event`);
     }
@@ -21,13 +21,13 @@ export class EventTrackingServiceHarness {
     return getEvents().filter(matches({ name }));
   }
 
-  getErrors() {
+  getErrors(): string[] {
     return ga.q
       .filter(matches(['send', { hitType: 'exception' }]))
       .map((event) => event[1].exDescription);
   }
 
-  validateEvents() {
+  validateEvents(): void {
     for (const { name, category } of getEvents()) {
       if (!this.catalog[category]) {
         throw new Error(`${category} is not a valid event category`);
@@ -39,7 +39,7 @@ export class EventTrackingServiceHarness {
   }
 }
 
-function getEvents() {
+function getEvents(): TrackingEvent[] {
   return ga.q
     .filter(matches(['send', { hitType: 'event' }]))
     .map((command) => ({

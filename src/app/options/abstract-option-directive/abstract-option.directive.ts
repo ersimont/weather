@@ -33,7 +33,7 @@ export abstract class AbstractOptionDirective extends DirectiveSuperclass {
     });
   }
 
-  trackChange(id: string) {
+  trackChange(id: string): void {
     this.eventTrackingService.track(
       `change_${id}`,
       `change_${this.optionType}`,

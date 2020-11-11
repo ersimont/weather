@@ -49,7 +49,7 @@ export class OpenWeather extends AbstractSource {
     return this.fetchForecast(gpsCoords).pipe(map(extractForecast));
   }
 
-  private fetchForecast(gpsCoords: GpsCoords) {
+  private fetchForecast(gpsCoords: GpsCoords): Observable<ForecastResponse> {
     return this.httpClient.get<ForecastResponse>(endpoint, {
       params: {
         lat: gpsCoords[0].toString(),
@@ -60,7 +60,7 @@ export class OpenWeather extends AbstractSource {
   }
 }
 
-function extractForecast(response: ForecastResponse) {
+function extractForecast(response: ForecastResponse): Forecast {
   const forecast: Forecast = {};
   for (const timeframe of response.list) {
     const time = timeframe.dt * 1000;
@@ -79,10 +79,10 @@ function extractForecast(response: ForecastResponse) {
   return forecast;
 }
 
-function extractAmount(timeframe: Timeframe) {
+function extractAmount(timeframe: Timeframe): number {
   return timeframe.rain?.['3h'] || timeframe.snow?.['3h'] || 0;
 }
 
-function extractDew(timeframe: Timeframe) {
+function extractDew(timeframe: Timeframe): number {
   return calcDewPoint(timeframe.main.temp, timeframe.main.humidity);
 }

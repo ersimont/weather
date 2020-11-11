@@ -25,7 +25,7 @@ class Context extends AngularContext {
     });
   }
 
-  protected cleanUp() {
+  protected cleanUp(): void {
     this.inject(OverlayContainer).ngOnDestroy();
     this.tick(5000);
     super.cleanUp();
@@ -44,10 +44,10 @@ describe('SnackBarErrorService', () => {
     events = new EventTrackingServiceHarness({});
   });
 
-  function generateUncaughtPromiseError(error: any) {
+  function generateUncaughtPromiseError(error: any): Error {
     try {
       fakeAsync(() => Promise.reject(error))();
-      fail('should not get here');
+      throw new Error('should not get here');
     } catch (error) {
       return error;
     }

@@ -25,11 +25,13 @@ export class WeatherUnlockedHarness {
     }),
   );
 
-  flushDefault() {
+  flushDefault(): void {
     this.expectForecast().flush(this.buildResponse());
   }
 
-  expectForecast(gpsCoords = this.ctx.currentLocation) {
+  expectForecast(
+    gpsCoords = this.ctx.currentLocation,
+  ): STestRequest<ForecastResponse> {
     const url =
       'https://us-central1-proxic.cloudfunctions.net/api/weather-unlocked/api/forecast/' +
       gpsCoords.join(',');

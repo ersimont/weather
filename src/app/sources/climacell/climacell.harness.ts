@@ -19,11 +19,13 @@ export class ClimacellHarness {
     this.buildTimeframe(),
   ]);
 
-  flushDefault(gpsCoords = this.ctx.currentLocation) {
+  flushDefault(gpsCoords = this.ctx.currentLocation): void {
     this.expectHourly(gpsCoords).flush(this.buildHourlyResponse());
   }
 
-  expectHourly(gpsCoords = this.ctx.currentLocation) {
+  expectHourly(
+    gpsCoords = this.ctx.currentLocation,
+  ): STestRequest<HourlyResponse> {
     const url =
       'https://us-central1-proxic.cloudfunctions.net/api/climacell/v3/weather/forecast/hourly';
     const params = {

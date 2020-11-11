@@ -13,7 +13,7 @@ export class SnackBarErrorService implements ErrorHandler {
     private matSnackBar: MatSnackBar,
   ) {}
 
-  handleError(error: any, { logUnexpected = true } = {}) {
+  handleError(error: any, { logUnexpected = true } = {}): void {
     if (error.rejection) {
       error = error.rejection;
     }
@@ -31,7 +31,7 @@ export class SnackBarErrorService implements ErrorHandler {
     this.show(message);
   }
 
-  show(message: string) {
+  show(message: string): void {
     this.matSnackBar.open(message, 'OK', { duration: 5000 });
   }
 }

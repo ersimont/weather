@@ -71,7 +71,7 @@ export class GraphComponent extends DirectiveSuperclass {
     }
   }
 
-  private addCallbacks() {
+  private addCallbacks(): void {
     const optionStore = this.graphStore('options');
     const zoomStore = optionStore('plugins')('zoom');
 
@@ -89,19 +89,19 @@ export class GraphComponent extends DirectiveSuperclass {
     });
   }
 
-  private getTooltipLabel(item: ChartTooltipItem, data: ChartData) {
+  private getTooltipLabel(item: ChartTooltipItem, data: ChartData): string {
     const conditionInf = conditionInfo[decodeLabelValues(item, data).condition];
     const unitInf = conditionInf.getUnitInfo(this.weatherStore.state().units);
     const display = unitInf.getDisplay(+item.value!, this.demicalPipe);
     return `${conditionInf.label}: ${display}`;
   }
 
-  private getTooltipFooter(items: ChartTooltipItem[], data: ChartData) {
+  private getTooltipFooter(items: ChartTooltipItem[], data: ChartData): string {
     const sourceId = decodeLabelValues(items[0], data).sourceId;
     return `Source: ${this.weatherStore.state().sources[sourceId].label}`;
   }
 
-  private updateRange(evt: any) {
+  private updateRange(evt: any): void {
     const { min, max } = evt.chart.options.scales.xAxes[0].ticks;
     const now = Date.now();
     this.weatherStore('viewRange').set({ min: min - now, max: max - now });

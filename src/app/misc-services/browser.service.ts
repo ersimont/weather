@@ -23,7 +23,7 @@ export class BrowserService {
     });
   }
 
-  hasFocus() {
+  hasFocus(): boolean {
     return document.hasFocus();
   }
 }

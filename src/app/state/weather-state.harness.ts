@@ -5,7 +5,7 @@ import { forOwn } from '@s-libs/micro-dash';
 export class WeatherStateHarness {
   constructor(private ctx: WeatherGraphContext) {}
 
-  setCustomLocation(gpsCoords = this.ctx.currentLocation) {
+  setCustomLocation(gpsCoords = this.ctx.currentLocation): void {
     this.ctx.initialState.useCurrentLocation = false;
     this.ctx.initialState.customLocation = {
       gpsCoords,
@@ -15,7 +15,7 @@ export class WeatherStateHarness {
     };
   }
 
-  setShowing(...sourceIds: SourceId[]) {
+  setShowing(...sourceIds: SourceId[]): void {
     forOwn(this.ctx.initialState.sources, (source, id) => {
       source.show = sourceIds.includes(id);
     });

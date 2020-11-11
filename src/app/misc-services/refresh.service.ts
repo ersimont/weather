@@ -28,7 +28,7 @@ export class RefreshService {
     this.refresh$ = this.buildRefresh$();
   }
 
-  private buildRefresh$() {
+  private buildRefresh$(): Observable<unknown> {
     const interval$ = interval(refreshMillis).pipe(mapTo('interval_refresh'));
     const focus$ = fromEvent(window, 'focus').pipe(mapTo('focus_refresh'));
     return this.locationService.refreshableChange$.pipe(

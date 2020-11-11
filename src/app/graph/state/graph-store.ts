@@ -31,7 +31,7 @@ export class GraphStore extends mixInInjectableSuperclass(RootStore)<
     this.manageData();
   }
 
-  private manageOptions() {
+  private manageOptions(): void {
     const now$ = interval(60000).pipe(
       startWith(0),
       map(() => Date.now()),
@@ -50,13 +50,16 @@ export class GraphStore extends mixInInjectableSuperclass(RootStore)<
     );
   }
 
-  private updateAnnotations(now: number, gpsCoords: GpsCoords | undefined) {
+  private updateAnnotations(
+    now: number,
+    gpsCoords: GpsCoords | undefined,
+  ): void {
     const nightBoxes = gpsCoords ? buildNightBoxes(now, gpsCoords) : [];
     const annotations = [...nightBoxes, buildNowLine(now)];
     this('options')('annotation' as any).assign({ annotations });
   }
 
-  private updateRange(now: number, range: ViewRange) {
+  private updateRange(now: number, range: ViewRange): void {
     range = mapValues(range, (value) => now + value);
     const boundaries = buildBoundaries(now);
     this.batch(() => {
@@ -66,14 +69,14 @@ export class GraphStore extends mixInInjectableSuperclass(RootStore)<
     });
   }
 
-  private manageData() {
+  private manageData(): void {
     this.subscribeTo(
       this.weatherStore.$.pipe(delayOnMicrotaskQueue()),
       this.updateData,
     );
   }
 
-  private updateData(weatherState: WeatherState) {
+  private updateData(weatherState: WeatherState): void {
     this('data').set(buildDatasets(weatherState));
   }
 }

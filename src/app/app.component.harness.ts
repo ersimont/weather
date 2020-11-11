@@ -19,36 +19,36 @@ export class AppComponentHarness extends ComponentHarness {
   );
   private getSidenav = this.locatorFor(MatSidenavHarness);
 
-  async openAbout() {
+  async openAbout(): Promise<void> {
     await this.ensureSidenavOpen();
     await (await this.getAboutItem()).click();
   }
 
-  async snapToRange(range: 'day' | 'three-days' | 'week') {
+  async snapToRange(range: 'day' | 'three-days' | 'week'): Promise<void> {
     (await this.getRangeButton(range)).click();
   }
 
-  async openPrivacyPolicy() {
+  async openPrivacyPolicy(): Promise<void> {
     await this.ensureSidenavOpen();
     await (await this.getPrivacyPolicyItem()).click();
   }
 
-  async ensureSidenavOpen() {
+  async ensureSidenavOpen(): Promise<void> {
     if (!(await this.isSidenavOpen())) {
       await (await this.getMenuButton()).click();
     }
   }
 
-  async isSidenavOpen() {
+  async isSidenavOpen(): Promise<boolean> {
     return (await this.getSidenav()).isOpen();
   }
 
-  async getTitle() {
+  async getTitle(): Promise<any> {
     const loader = await this.locatorFor('h1');
     return (await loader()).text();
   }
 
-  private async getRangeButton(className: string) {
+  private async getRangeButton(className: string): Promise<MatButtonHarness> {
     const buttons = await this.locatorForAll(MatButtonHarness)();
     for (const button of buttons) {
       const bh = await button.host();

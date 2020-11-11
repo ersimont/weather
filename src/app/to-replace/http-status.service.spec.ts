@@ -59,7 +59,7 @@ describe('HttpStatusService', () => {
 
   it('handles errors', () => {
     ctx.run(() => {
-      http.get('url1').subscribe({ error() {} });
+      http.get('url1').subscribe({ error(): void {} });
       expectSingleCallAndReset(inFlight, true);
       httpController
         .expectOne('url1')

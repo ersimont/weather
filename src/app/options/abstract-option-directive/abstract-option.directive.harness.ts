@@ -8,20 +8,20 @@ export abstract class AbstractOptionDirectiveHarness extends ComponentHarness {
   );
   private getExpansionPanel = this.locatorFor(MatExpansionPanelHarness);
 
-  async ensureExpanded() {
+  async ensureExpanded(): Promise<void> {
     await (await this.getApp()).ensureSidenavOpen();
     await this.expand();
   }
 
-  async isExpanded() {
+  async isExpanded(): Promise<boolean> {
     return (await this.getExpansionPanel()).isExpanded();
   }
 
-  async expand() {
+  async expand(): Promise<void> {
     await (await this.getExpansionPanel()).expand();
   }
 
-  async collapse() {
+  async collapse(): Promise<void> {
     await (await this.getExpansionPanel()).collapse();
   }
 }

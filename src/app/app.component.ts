@@ -46,22 +46,22 @@ export class AppComponent extends DirectiveSuperclass {
     this.openSideNavWhenAsked();
   }
 
-  setRange(days: number, action: string) {
+  setRange(days: number, action: string): void {
     this.store('viewRange').set(new ViewRange(days));
     this.eventTrackingService.track(action, 'set_range');
   }
 
-  showAbout() {
+  showAbout(): void {
     this.matDialog.open(AboutComponent);
     this.eventTrackingService.track('click_about', 'navigate');
   }
 
-  showPrivacyPolicy() {
+  showPrivacyPolicy(): void {
     this.matDialog.open(PrivacyPolicyComponent);
     this.eventTrackingService.track('click_privacy_policy', 'navigate');
   }
 
-  private openSideNavWhenAsked() {
+  private openSideNavWhenAsked(): void {
     this.subscribeTo(this.locationService.askForLocation$, () => {
       this.sidenav.open();
     });

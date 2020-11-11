@@ -25,7 +25,7 @@ export class InitService {
     private whatsNewService: WhatsNewService,
   ) {}
 
-  initializeApp() {
+  initializeApp(): void {
     this.climacell.initialize();
     this.openWeather.initialize();
     this.weatherGov.initialize(SourceId.WEATHER_UNLOCKED);

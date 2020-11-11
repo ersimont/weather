@@ -66,11 +66,11 @@ export class WeatherGraphContext extends ComponentContext<
     this.harnesses.errors.install();
   }
 
-  cleanUpFreshInit() {
+  cleanUpFreshInit(): void {
     this.harnesses.init.cleanUpFreshInit();
   }
 
-  protected init({ useInitialState = true }: Partial<InitOptions> = {}) {
+  protected init({ useInitialState = true }: Partial<InitOptions> = {}): void {
     if (useInitialState) {
       localStorage.setItem('weather', JSON.stringify(this.initialState));
     } else {
@@ -80,13 +80,13 @@ export class WeatherGraphContext extends ComponentContext<
     super.init({});
   }
 
-  protected verifyPostTestConditions() {
+  protected verifyPostTestConditions(): void {
     super.verifyPostTestConditions();
     this.harnesses.events.validateEvents();
     this.harnesses.errors.verify();
   }
 
-  protected cleanUp() {
+  protected cleanUp(): void {
     super.cleanUp();
 
     // https://github.com/angular/components/blob/b612fc42895e47377b353e773d4ba3517c0991e1/src/material/dialog/dialog.spec.ts#L80

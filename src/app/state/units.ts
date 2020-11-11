@@ -78,6 +78,10 @@ export const unitInfo: Record<UnitEnum, UnitInfo> = {
   },
 };
 
-function round(value: number, precision: number, decimalPipe: DecimalPipe) {
-  return decimalPipe.transform(value, `1.${precision}-${precision}`);
+function round(
+  value: number,
+  precision: number,
+  decimalPipe: DecimalPipe,
+): string {
+  return decimalPipe.transform(value, `1.${precision}-${precision}`)!;
 }

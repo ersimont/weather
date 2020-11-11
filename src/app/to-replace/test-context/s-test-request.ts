@@ -1,4 +1,4 @@
-import { HttpRequest } from '@angular/common/http';
+import { HttpHeaders, HttpRequest } from '@angular/common/http';
 import {
   HttpTestingController,
   TestRequest,
@@ -34,7 +34,7 @@ export class STestRequest<T> {
       throw error;
     }
 
-    function isMatch(req: HttpRequest<any>) {
+    function isMatch(req: HttpRequest<any>): boolean {
       pending.push(req);
       return (
         req.method === method &&
@@ -45,26 +45,32 @@ export class STestRequest<T> {
     }
   }
 
-  getHeaders() {
+  getHeaders(): HttpHeaders {
     return this.req.request.headers;
   }
 
-  flush(body: T) {
+  flush(body: T): void {
     this.req.flush(body);
     this.ctx.tick();
   }
 
-  flushError(status = 500, { statusText = '', body = null as BodyType } = {}) {
+  flushError(
+    status = 500,
+    { statusText = '', body = null as BodyType } = {},
+  ): void {
     this.req.flush(body, { status, statusText });
     this.ctx.tick();
   }
 
-  isCancelled() {
+  isCancelled(): boolean {
     return this.req.cancelled;
   }
 }
 
-function paramsMatch(req: HttpRequest<any>, params: Record<string, string>) {
+function paramsMatch(
+  req: HttpRequest<any>,
+  params: Record<string, string>,
+): boolean {
   const actual = mapAsKeys(req.params.keys(), (key) => req.params.get(key));
   return isEqual(actual, params);
 }

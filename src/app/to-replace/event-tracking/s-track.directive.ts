@@ -4,6 +4,7 @@ import { fromEvent } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { DirectiveSuperclass } from '@s-libs/ng-core';
 
+// tslint:disable-next-line:directive-selector
 @Directive({ selector: '[sTrack]' })
 export class STrackDirective extends DirectiveSuperclass {
   @Input('sTrack') event!: string;

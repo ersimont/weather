@@ -7,7 +7,7 @@ import { isFunction, keys } from '@s-libs/micro-dash';
  * - Lodash: 3,486 bytes
  * - Micro-dash: 225 bytes
  */
-export function functions<T extends object>(obj: T) {
+export function functions<T extends object>(obj: T): any[] {
   return keys(obj).filter(
     (key) => key !== 'constructor' && isFunction(obj[key as keyof T]),
   );

@@ -7,7 +7,7 @@ import { GpsCoords } from 'app/state/location';
 import { SourceId } from 'app/state/source';
 import { get, round } from '@s-libs/micro-dash';
 import { duration } from 'moment';
-import { throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 
 export interface PointResponse {
@@ -35,7 +35,7 @@ export class WeatherGov extends AbstractSource {
     super(SourceId.WEATHER_GOV, injector);
   }
 
-  fetch(gpsCoords: [number, number]) {
+  fetch(gpsCoords: [number, number]): Observable<Forecast> {
     return this.fetchPoint(gpsCoords).pipe(
       switchMap((pointResponse) => this.fetchZone(pointResponse)),
       map(extractForecast),
@@ -52,7 +52,7 @@ export class WeatherGov extends AbstractSource {
     );
   }
 
-  private fetchPoint(gpsCoords: GpsCoords) {
+  private fetchPoint(gpsCoords: GpsCoords): Observable<PointResponse> {
     const endpoint = `https://api.weather.gov/points`;
     return this.httpClient.get<PointResponse>(
       // weather.gov seems to redirect to a URL w/ GPS rounded to 4 decimal places. So we'll save the extra request.
@@ -60,12 +60,12 @@ export class WeatherGov extends AbstractSource {
     );
   }
 
-  private fetchZone(point: PointResponse) {
+  private fetchZone(point: PointResponse): Observable<GridResponse> {
     return this.httpClient.get<GridResponse>(point.properties.forecastGridData);
   }
 }
 
-function extractForecast(gridResponse: GridResponse) {
+function extractForecast(gridResponse: GridResponse): Forecast {
   const forecast: Forecast = {};
   addFromZone(
     forecast,
@@ -86,7 +86,7 @@ function addFromZone(
   zone: GridResponse,
   condition: Condition,
   zoneKey: keyof GridResponse['properties'],
-) {
+): void {
   for (const v of zone.properties[zoneKey].values) {
     const [startString, durationString] = v.validTime.split('/');
     const length = duration(durationString);
@@ -105,7 +105,7 @@ function addCondition(
   time: number,
   condition: Condition,
   value: number,
-) {
+): void {
   let conditions: Conditions = forecast[time];
   if (!conditions) {
     conditions = forecast[time] = {};

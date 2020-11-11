@@ -4,6 +4,7 @@ import { mixInSubscriptionManager } from './subscription-manager';
 
 type Constructor = new (...args: any[]) => {};
 
+// tslint:disable-next-line:typedef
 export function mixInInjectableSuperclass<B extends Constructor>(Base: B) {
   return class extends mixInSubscriptionManager(Base) implements OnDestroy {
     /**
@@ -18,7 +19,7 @@ export function mixInInjectableSuperclass<B extends Constructor>(Base: B) {
       this.destruction$ = this.destructionSubject.asObservable();
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
       this.unsubscribe();
       this.destructionSubject.next();
       this.destructionSubject.complete();

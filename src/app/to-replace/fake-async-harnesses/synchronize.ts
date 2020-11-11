@@ -23,16 +23,16 @@ type SynchronizedPromise<P> = P extends PromiseLike<infer R>
   : 'assertion error';
 
 const proxyTarget = Symbol('proxy target'); // trick from https://stackoverflow.com/a/53431924/1836506
-export function synchronize<T extends object>(obj: T) {
+export function synchronize<T extends object>(obj: T): Synchronized<T> {
   return new Proxy(obj, {
-    get(target, p, receiver) {
+    get(target, p, receiver): any {
       if (p === proxyTarget) {
         return obj;
       } else {
         return synchronizeAny(Reflect.get(target, p, receiver));
       }
     },
-    apply(target, thisArg, argArray) {
+    apply(target, thisArg, argArray): any {
       thisArg = get(thisArg, [proxyTarget], thisArg);
       return synchronizeAny(
         Reflect.apply(target as Function, thisArg, argArray),
@@ -51,7 +51,7 @@ function synchronizeAny(value: any): any {
   }
 }
 
-function synchronizePromise<T extends PromiseLike<any>>(promise: T) {
+function synchronizePromise<T extends PromiseLike<any>>(promise: T): any {
   let awaited: any;
   promise.then((value) => (awaited = value));
   tick();
