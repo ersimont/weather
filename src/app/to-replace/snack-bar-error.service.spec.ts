@@ -4,6 +4,7 @@ import { fakeAsync } from '@angular/core/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSnackBarHarness } from '@angular/material/snack-bar/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { AngularContext } from '@s-libs/ng-dev';
 import { EventTrackingModule } from 'app/to-replace/event-tracking/event-tracking.module';
 import { EventTrackingServiceHarness } from 'app/to-replace/event-tracking/event-tracking.service.harness';
 import {
@@ -11,9 +12,8 @@ import {
   provideErrorHandler,
   SnackBarErrorService,
 } from 'app/to-replace/snack-bar-error.service';
-import { AngularContext } from 'app/to-replace/test-context/angular-context';
 
-class Context extends AngularContext {
+class TestContext extends AngularContext {
   constructor() {
     super({
       imports: [
@@ -33,12 +33,12 @@ class Context extends AngularContext {
 }
 
 describe('SnackBarErrorService', () => {
-  let ctx: Context;
+  let ctx: TestContext;
   let errorHandler: ErrorHandler;
   let service: SnackBarErrorService;
   let events: EventTrackingServiceHarness;
   beforeEach(() => {
-    ctx = new Context();
+    ctx = new TestContext();
     errorHandler = ctx.inject(ErrorHandler);
     service = ctx.inject(SnackBarErrorService);
     events = new EventTrackingServiceHarness({});
@@ -108,11 +108,11 @@ describe('SnackBarErrorService', () => {
     it('displays a snack bar for 5 seconds', () => {
       ctx.run(() => {
         service.show('hi');
-        expect(ctx.getHarnessOptional(MatSnackBarHarness)).not.toBeNull();
+        expect(ctx.getHarnessForOptional(MatSnackBarHarness)).not.toBeNull();
         ctx.tick(4999);
-        expect(ctx.getHarnessOptional(MatSnackBarHarness)).not.toBeNull();
+        expect(ctx.getHarnessForOptional(MatSnackBarHarness)).not.toBeNull();
         ctx.tick(1);
-        expect(ctx.getHarnessOptional(MatSnackBarHarness)).toBeNull();
+        expect(ctx.getHarnessForOptional(MatSnackBarHarness)).toBeNull();
       });
     });
 
@@ -129,7 +129,7 @@ describe('SnackBarErrorService', () => {
         const snackBar = ctx.getHarness(MatSnackBarHarness);
         expect(snackBar.getActionDescription()).toBe('OK');
         snackBar.dismissWithAction();
-        expect(ctx.getHarnessOptional(MatSnackBarHarness)).toBeNull();
+        expect(ctx.getHarnessForOptional(MatSnackBarHarness)).toBeNull();
       });
     });
   });

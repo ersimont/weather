@@ -3,9 +3,9 @@ import {
   HttpTestingController,
   TestRequest,
 } from '@angular/common/http/testing';
-import { AngularContext } from 'app/to-replace/test-context/angular-context';
 import { isEqual } from '@s-libs/micro-dash';
 import { mapAsKeys } from '@s-libs/js-core';
+import { AngularContext } from '@s-libs/ng-dev';
 
 export type MethodType = 'DELETE' | 'GET' | 'POST' | 'PUT';
 export type BodyType = Parameters<TestRequest['flush']>[0];

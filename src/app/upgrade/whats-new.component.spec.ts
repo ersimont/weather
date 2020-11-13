@@ -11,7 +11,7 @@ describe('WhatsNewComponent', () => {
     ctx.run(() => {
       ctx.cleanUpFreshInit();
 
-      expect(ctx.getHarnessOptional(WhatsNewComponentHarness)).toBeNull();
+      expect(ctx.getHarnessForOptional(WhatsNewComponentHarness)).toBeNull();
     });
   });
 });

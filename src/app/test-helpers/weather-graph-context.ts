@@ -1,7 +1,8 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { createSpyObject } from '@s-libs/ng-dev';
+import { ComponentContext, createSpyObject } from '@s-libs/ng-dev';
+import { ComponentContextInit } from '@s-libs/ng-dev/lib/test-context/component-context';
 import { AppModule } from 'app/app.module';
 import { GraphComponentHarness } from 'app/graph/graph.component.harness';
 import { BrowserService } from 'app/misc-services/browser.service';
@@ -19,10 +20,6 @@ import { WeatherStoreHarness } from 'app/state/weather-store.harness';
 import { eventCatalog } from 'app/test-helpers/event-catalog';
 import { EventTrackingServiceHarness } from 'app/to-replace/event-tracking/event-tracking.service.harness';
 import { SnackBarErrorServiceHarness } from 'app/to-replace/snack-bar-error.service.harness';
-import {
-  ComponentContext,
-  ComponentContextInit,
-} from 'app/to-replace/test-context/component-context';
 
 export interface InitOptions extends ComponentContextInit<TestComponent> {
   useInitialState: boolean;

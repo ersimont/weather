@@ -7,10 +7,9 @@ import {
   HttpStatusService,
   provideHttpStatus,
 } from 'app/to-replace/http-status.service';
-import { AngularContext } from 'app/to-replace/test-context/angular-context';
-import { expectSingleCallAndReset } from '@s-libs/ng-dev';
+import { AngularContext, expectSingleCallAndReset } from '@s-libs/ng-dev';
 
-class Context extends AngularContext {
+class TestContext extends AngularContext {
   constructor() {
     super({
       imports: [HttpClientTestingModule],
@@ -20,13 +19,13 @@ class Context extends AngularContext {
 }
 
 describe('HttpStatusService', () => {
-  let ctx: Context;
+  let ctx: TestContext;
   let http: HttpClient;
   let status: HttpStatusService;
   let httpController: HttpTestingController;
   let inFlight: jasmine.Spy;
   beforeEach(() => {
-    ctx = new Context();
+    ctx = new TestContext();
 
     http = ctx.inject(HttpClient);
     status = ctx.inject(HttpStatusService);

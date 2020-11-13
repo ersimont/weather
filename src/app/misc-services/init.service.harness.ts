@@ -10,7 +10,7 @@ export class InitServiceHarness {
   }
 
   expectNoPrompt(): void {
-    expect(this.ctx.getHarnessOptional(MatSnackBarHarness)).toBe(null);
+    expect(this.ctx.getHarnessForOptional(MatSnackBarHarness)).toBe(null);
   }
 
   expectPrompt(): void {

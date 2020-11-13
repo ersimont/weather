@@ -29,7 +29,7 @@ describe('UpgradeService', () => {
           'Default state changed. You need to handle it in the upgrade service.',
         )
         .toEqual(defaultState);
-      expect(ctx.getHarnessOptional(WhatsNewComponentHarness)).toBe(null);
+      expect(ctx.getHarnessForOptional(WhatsNewComponentHarness)).toBe(null);
 
       ctx.cleanUpFreshInit();
     });
@@ -79,7 +79,7 @@ describe('UpgradeService', () => {
     ctx.initialState = v5Example as any;
     ctx.run(() => {
       expect(store.getPersistedState()).toEqual(defaultState);
-      expect(ctx.getHarnessOptional(WhatsNewComponentHarness)).toBe(null);
+      expect(ctx.getHarnessForOptional(WhatsNewComponentHarness)).toBe(null);
       errors.expectGeneric();
 
       ctx.cleanUpFreshInit();
