@@ -1,17 +1,21 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
+  "cli": {
+    "packageManager": "yarn",
+    "analytics": "a1a9bbd1-c91d-474f-8b85-55f897c617d3"
+  },
   "newProjectRoot": "projects",
   "projects": {
     "weather": {
       "projectType": "application",
       "schematics": {
-        "@schematics/angular:application": {
-          "strict": true
-        },
         "@schematics/angular:component": {
           "changeDetection": "OnPush",
           "skipTests": true
+        },
+        "@schematics/angular:application": {
+          "strict": true
         }
       },
       "root": "",
@@ -54,7 +58,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "500kb",
-                  "maximumError": "2mb"
+                  "maximumError": "1mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -136,8 +140,5 @@
       }
     }
   },
-  "defaultProject": "weather",
-  "cli": {
-    "analytics": "a1a9bbd1-c91d-474f-8b85-55f897c617d3"
-  }
+  "defaultProject": "weather"
 }
