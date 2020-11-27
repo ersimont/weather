@@ -1,4 +1,8 @@
 import { Injectable } from '@angular/core';
+import { RootStore } from '@s-libs/app-state';
+import { mapValues } from '@s-libs/micro-dash';
+import { mixInInjectableSuperclass } from '@s-libs/ng-core';
+import { delayOnMicrotaskQueue } from '@s-libs/rxjs-core';
 import { buildDatasets } from 'app/graph/chartjs-datasets';
 import {
   buildBoundaries,
@@ -11,17 +15,13 @@ import { GpsCoords } from 'app/state/location';
 import { ViewRange } from 'app/state/viewRange';
 import { WeatherState } from 'app/state/weather-state';
 import { WeatherStore } from 'app/state/weather-store';
-import { mixInInjectableSuperclass } from 'app/to-replace/mixins/injectable-superclass';
-import { mapValues } from '@s-libs/micro-dash';
-import { RootStore } from '@s-libs/app-state';
 import { combineLatest, interval } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { delayOnMicrotaskQueue } from '@s-libs/rxjs-core';
 
 @Injectable()
-export class GraphStore extends mixInInjectableSuperclass(RootStore)<
-  GraphState
-> {
+export class GraphStore extends mixInInjectableSuperclass(
+  RootStore,
+)<GraphState> {
   constructor(
     private locationService: LocationService,
     private weatherStore: WeatherStore,
