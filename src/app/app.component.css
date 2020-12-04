@@ -6,6 +6,7 @@
 
 mat-toolbar {
   position: relative;
+  min-width: 0;
 }
 
 h1 {

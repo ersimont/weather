@@ -58,6 +58,18 @@ describe('AppComponent', () => {
     });
   });
 
+  it('matches the width of the parent even when the city name is long', () => {
+    ctx.initialState.useCurrentLocation = true;
+    ctx.initialState.currentLocation.city =
+      'Llanfair­pwllgwyngyll­gogery­chwyrn­drobwll­llan­tysilio­gogo­goch';
+    ctx.run(() => {
+      iq.expectReverse();
+
+      const app = ctx.getHarness(AppComponentHarness);
+      expect(app.getHeaderWidth()).toBe('400px');
+    });
+  });
+
   describe('when location access is denied', () => {
     beforeEach(() => {
       ctx.mocks.browser.getCurrentLocation.and.callFake(() =>

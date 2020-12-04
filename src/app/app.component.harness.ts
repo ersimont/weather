@@ -1,9 +1,10 @@
-import { ComponentHarness } from '@angular/cdk/testing';
+import { ContentContainerComponentHarness } from '@angular/cdk/testing';
 import { MatButtonHarness } from '@angular/material/button/testing';
 import { MatActionListItemHarness } from '@angular/material/list/testing';
 import { MatSidenavHarness } from '@angular/material/sidenav/testing';
+import { MatToolbarHarness } from '@angular/material/toolbar/testing';
 
-export class AppComponentHarness extends ComponentHarness {
+export class AppComponentHarness extends ContentContainerComponentHarness {
   static hostSelector = 'app-root';
 
   defaultTitle = 'Weather Graph';
@@ -41,6 +42,11 @@ export class AppComponentHarness extends ComponentHarness {
 
   async isSidenavOpen(): Promise<boolean> {
     return (await this.getSidenav()).isOpen();
+  }
+
+  async getHeaderWidth(): Promise<string> {
+    const toolbar = await this.getHarness(MatToolbarHarness);
+    return (await toolbar.host()).getCssValue('width');
   }
 
   async getTitle(): Promise<any> {
