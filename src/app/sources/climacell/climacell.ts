@@ -8,6 +8,9 @@ import { SourceId } from 'app/state/source';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+// API docs:
+// https://developer.climacell.co/v3/reference
+
 const endpoint =
   'https://us-central1-proxic.cloudfunctions.net/api/climacell/v3/weather/forecast/hourly';
 

@@ -10,6 +10,9 @@ import { duration } from 'moment';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 
+// API docs:
+// https://www.weather.gov/documentation/services-web-api
+
 export interface PointResponse {
   properties: { forecastGridData: string };
 }

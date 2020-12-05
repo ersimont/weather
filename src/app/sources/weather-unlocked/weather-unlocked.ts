@@ -9,6 +9,9 @@ import { round } from '@s-libs/micro-dash';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+// API docs:
+// https://developer.weatherunlocked.com/documentation/localweather/resources
+
 const endpoint =
   'https://us-central1-proxic.cloudfunctions.net/api/weather-unlocked/api/forecast';
 
@@ -34,7 +37,7 @@ export class WeatherUnlocked extends AbstractSource {
   }
 
   fetch(gpsCoords: GpsCoords): Observable<Forecast> {
-    return this.fetchRes(gpsCoords).pipe(
+    return this.fetchForecast(gpsCoords).pipe(
       map((res) => {
         const forecast: Forecast = {};
         for (const day of res.Days) {
@@ -47,7 +50,7 @@ export class WeatherUnlocked extends AbstractSource {
     );
   }
 
-  private fetchRes(gpsCoords: GpsCoords): Observable<ForecastResponse> {
+  private fetchForecast(gpsCoords: GpsCoords): Observable<ForecastResponse> {
     return this.httpClient.get<ForecastResponse>(
       // weather unlocked docs say to use 3 decimal places
       `${endpoint}/${gpsCoords.map((coord) => round(coord, 3)).join(',')}`,

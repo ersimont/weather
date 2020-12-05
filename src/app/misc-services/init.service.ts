@@ -5,7 +5,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { icons } from 'app/icons';
 import { LocationService } from 'app/misc-services/location.service';
 import { Climacell } from 'app/sources/climacell/climacell';
-import { OpenWeather } from 'app/sources/open-weather/open-weather.service';
+import { OpenWeather } from 'app/sources/open-weather/open-weather';
 import { WeatherGov } from 'app/sources/weather-gov/weather-gov';
 import { WeatherUnlocked } from 'app/sources/weather-unlocked/weather-unlocked';
 import { SourceId } from 'app/state/source';

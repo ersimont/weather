@@ -10,6 +10,9 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { convertTime } from '@s-libs/js-core';
 
+// API docs:
+// https://openweathermap.org/forecast5
+
 const endpoint =
   'https://us-central1-proxic.cloudfunctions.net/api/openweathermap/data/2.5/forecast';
 
