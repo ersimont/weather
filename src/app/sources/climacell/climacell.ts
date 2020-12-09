@@ -19,6 +19,7 @@ export type HourlyResponse = Timeframe[];
 export interface Timeframe {
   observation_time: { value: string };
   precipitation: { value: number };
+  precipitation_type: { value: string };
   cloud_cover: { value: number };
   dewpoint: { value: number };
   feels_like: { value: number };
@@ -42,21 +43,25 @@ export class Climacell extends AbstractSource {
         lat: gpsCoords[0].toString(),
         lon: gpsCoords[1].toString(),
         fields:
-          'cloud_cover,dewpoint,feels_like,precipitation,temp,wind_speed:knots',
+          'cloud_cover,dewpoint,feels_like,precipitation,precipitation_type,temp,wind_speed:knots',
       },
     });
   }
 }
 
+const snowTypes = new Set(['snow', 'ice pellets']);
+
 function extractForecast(response: Timeframe[]): Forecast {
   const forecast: Forecast = {};
   for (const timeframe of response) {
     const time = new Date(timeframe.observation_time.value).getTime();
+    const isSnow = snowTypes.has(timeframe.precipitation_type.value);
     forecast[time] = {
-      [Condition.AMOUNT]: timeframe.precipitation.value,
+      [Condition.AMOUNT]: isSnow ? 0 : timeframe.precipitation.value,
       [Condition.CLOUD]: timeframe.cloud_cover.value,
       [Condition.DEW]: timeframe.dewpoint.value,
       [Condition.FEEL]: timeframe.feels_like.value,
+      [Condition.SNOW]: isSnow ? timeframe.precipitation.value : 0,
       [Condition.TEMP]: timeframe.temp.value,
       [Condition.WIND]: timeframe.wind_speed.value,
     };

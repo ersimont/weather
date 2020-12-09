@@ -1,11 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
+import { forOwn, get, round } from '@s-libs/micro-dash';
 import { AbstractSource, notAvailableHere } from 'app/sources/abstract-source';
 import { Condition, Conditions } from 'app/state/condition';
 import { Forecast } from 'app/state/forecast';
 import { GpsCoords } from 'app/state/location';
 import { SourceId } from 'app/state/source';
-import { get, round } from '@s-libs/micro-dash';
 import { duration } from 'moment';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
@@ -20,6 +20,7 @@ export interface PointResponse {
 export interface GridResponse {
   properties: {
     quantitativePrecipitation: GridConditionInfo;
+    snowfallAmount: GridConditionInfo;
     skyCover: GridConditionInfo;
     dewpoint: GridConditionInfo;
     apparentTemperature: GridConditionInfo;
@@ -79,8 +80,10 @@ function extractForecast(gridResponse: GridResponse): Forecast {
   addFromZone(forecast, gridResponse, Condition.CLOUD, 'skyCover');
   addFromZone(forecast, gridResponse, Condition.DEW, 'dewpoint');
   addFromZone(forecast, gridResponse, Condition.FEEL, 'apparentTemperature');
+  addFromZone(forecast, gridResponse, Condition.SNOW, 'snowfallAmount');
   addFromZone(forecast, gridResponse, Condition.TEMP, 'temperature');
   addFromZone(forecast, gridResponse, Condition.WIND, 'windSpeed');
+  deleteEitherAmountOrSnow(forecast);
   return forecast;
 }
 
@@ -114,4 +117,17 @@ function addCondition(
     conditions = forecast[time] = {};
   }
   conditions[condition] = value;
+}
+
+function deleteEitherAmountOrSnow(forecast: Forecast): void {
+  forOwn(forecast, (condition) => {
+    // TODO: simplify
+    const amount = condition[Condition.AMOUNT] || 0;
+    const snow = condition[Condition.SNOW] || 0;
+    if (snow > amount) {
+      delete condition[Condition.AMOUNT];
+    } else {
+      delete condition[Condition.SNOW];
+    }
+  });
 }

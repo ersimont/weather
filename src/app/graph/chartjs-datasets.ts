@@ -45,6 +45,14 @@ function addDataSets(
     state.units.amount === AmountUnit.IN ? 'inches' : 'millimeters',
     '60',
   );
+  addDataSet(
+    sourceId,
+    dataSets,
+    state,
+    Condition.SNOW,
+    state.units.amount === AmountUnit.IN ? 'inches-snow' : 'millimeters-snow',
+    '60',
+  );
   addDataSet(sourceId, dataSets, state, Condition.CLOUD, 'percentage', '20');
 }
 

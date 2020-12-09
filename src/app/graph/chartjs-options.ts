@@ -49,6 +49,13 @@ export const defaultChartOptions: ChartOptions = {
         ticks: { min: 0, max: unitInfo[AmountUnit.IN].convert(10) },
       },
       { id: 'millimeters', display: false, ticks: { min: 0, max: 10 } },
+      // TODO: should snow be reported in centimeters?
+      {
+        id: 'inches-snow',
+        display: false,
+        ticks: { min: 0, max: unitInfo[AmountUnit.IN].convert(500) },
+      },
+      { id: 'millimeters-snow', display: false, ticks: { min: 0, max: 500 } },
     ],
   },
   plugins: {

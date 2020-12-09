@@ -10,6 +10,8 @@ export enum Condition {
   DEW = 'dew',
   /** store in mm */
   AMOUNT = 'amount',
+  /** store in mm */
+  SNOW = 'snow',
   /** store in percent [0-100] */
   CLOUD = 'cloud',
   /** store in knots */
@@ -50,6 +52,11 @@ export const conditionInfo: Record<Condition, ConditionInfo> = {
     label: 'Feel',
     color: colors[Condition.FEEL],
     getUnitInfo: (units: Units) => unitInfo[units.temp],
+  },
+  [Condition.SNOW]: {
+    label: 'Snow',
+    color: colors[Condition.AMOUNT],
+    getUnitInfo: (units: Units) => unitInfo[units.amount],
   },
   [Condition.TEMP]: {
     label: 'Temp',
