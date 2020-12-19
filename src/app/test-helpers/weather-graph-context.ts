@@ -5,6 +5,7 @@ import { ComponentContext, createSpyObject } from '@s-libs/ng-dev';
 import { ComponentContextInit } from '@s-libs/ng-dev/lib/test-context/component-context';
 import { AppModule } from 'app/app.module';
 import { GraphComponentHarness } from 'app/graph/graph.component.harness';
+import { ManualReinstallServiceHarness } from 'app/misc-components/manual-reinstall/manual-reinstall.service.harness';
 import { BrowserService } from 'app/misc-services/browser.service';
 import { InitServiceHarness } from 'app/misc-services/init.service.harness';
 import { LocationIqServiceHarness } from 'app/misc-services/location-iq.service.harness';
@@ -43,6 +44,7 @@ export class WeatherGraphContext extends ComponentContext<
     graph: new GraphComponentHarness(this),
     init: new InitServiceHarness(this),
     iq: new LocationIqServiceHarness(this),
+    manualReinstall: new ManualReinstallServiceHarness(),
     openWeather: new OpenWeatherHarness(this),
     refresh: new RefreshServiceHarness(this),
     state: new WeatherStateHarness(this),

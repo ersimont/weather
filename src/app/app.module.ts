@@ -21,14 +21,16 @@ import { provideErrorHandler } from 'app/to-replace/snack-bar-error.service';
 import { WhatsNewComponent } from 'app/upgrade/whats-new.component';
 import { environment } from '../environments/environment';
 import { AboutComponent } from './misc-components/about/about.component';
+import { ManualReinstallComponent } from './misc-components/manual-reinstall/manual-reinstall.component';
 import { PrivacyPolicyComponent } from './misc-components/privacy-policy/privacy-policy.component';
 
 @NgModule({
   declarations: [
     AboutComponent,
     AppComponent,
-    WhatsNewComponent,
+    ManualReinstallComponent,
     PrivacyPolicyComponent,
+    WhatsNewComponent,
   ],
   imports: [
     BrowserAnimationsModule,

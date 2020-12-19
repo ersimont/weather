@@ -3,6 +3,7 @@ import { MatIconRegistry } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DomSanitizer } from '@angular/platform-browser';
 import { icons } from 'app/icons';
+import { ManualReinstallService } from 'app/misc-components/manual-reinstall/manual-reinstall.service';
 import { LocationService } from 'app/misc-services/location.service';
 import { Climacell } from 'app/sources/climacell/climacell';
 import { OpenWeather } from 'app/sources/open-weather/open-weather';
@@ -17,6 +18,7 @@ export class InitService {
     private climacell: Climacell,
     private domSanitizer: DomSanitizer,
     private locationService: LocationService,
+    private manualReinstallService: ManualReinstallService,
     private matIconRegistry: MatIconRegistry,
     private matSnackBar: MatSnackBar,
     private openWeather: OpenWeather,
@@ -35,6 +37,7 @@ export class InitService {
     );
 
     this.whatsNewService.showNewFeatures();
+    this.manualReinstallService.promptIfAppropriate();
     if (this.locationService.isBlank()) {
       setTimeout(() => {
         this.locationService.askForLocation$.next();
