@@ -1,7 +1,7 @@
 {
   "name": "Weather Graph",
   "short_name": "Weather",
-  "theme_color": "#3f51b5",
+  "theme_color": "#5c6bc0",
   "background_color": "#fafafa",
   "display": "standalone",
   "scope": "./",
