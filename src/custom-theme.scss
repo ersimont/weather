@@ -12,14 +12,19 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$weather-primary: mat-palette($mat-indigo);
+$weather-primary: mat-palette($mat-indigo, 400);
 $weather-accent: mat-palette($mat-blue-grey, A400, A100, A700);
 
 // The warn palette is optional (defaults to red).
 $weather-warn: mat-palette($mat-red);
 
 // Create the theme object (a Sass map containing all of the palettes).
-$weather-theme: mat-light-theme(
+$weather-light-theme: mat-light-theme(
+  $weather-primary,
+  $weather-accent,
+  $weather-warn
+);
+$weather-dark-theme: mat-dark-theme(
   $weather-primary,
   $weather-accent,
   $weather-warn
@@ -28,14 +33,24 @@ $weather-theme: mat-light-theme(
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
-@include angular-material-theme($weather-theme);
+@include angular-material-theme($weather-light-theme);
+@media (prefers-color-scheme: dark) {
+  @include angular-material-theme($weather-dark-theme);
+}
 
 @each $condition, $palette in $condition-palettes {
   $theme: mat-light-theme($weather-primary, $palette);
-
   .#{$condition} {
     @include mat-core-theme($theme);
     @include mat-slide-toggle-theme($theme);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    $theme: mat-dark-theme($weather-primary, $palette);
+    .#{$condition} {
+      @include mat-core-theme($theme);
+      @include mat-slide-toggle-theme($theme);
+    }
   }
 }
 
@@ -62,4 +77,8 @@ $weather-theme: mat-light-theme(
   & > .mat-slide-toggle-thumb {
     box-shadow: none;
   }
+}
+
+a {
+  color: mat-color($weather-accent);
 }
