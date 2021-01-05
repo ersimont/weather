@@ -12,14 +12,14 @@ describe('LocationOptionsComponent', () => {
 
   it('updates the radio button when entering a new location', () => {
     ctx.initialState.useCurrentLocation = true;
-    ctx.run(() => {
-      const location = ctx.getHarness(LocationOptionsComponentHarness);
-      location.ensureExpanded();
-      expect(location.getSelected()).toBe('Current');
+    ctx.run(async () => {
+      const location = await ctx.getHarness(LocationOptionsComponentHarness);
+      await location.ensureExpanded();
+      expect(await location.getSelected()).toBe('Current');
       iq.expectReverse();
 
-      location.setCustomLocation('Select Me');
-      expect(location.getSelected()).toBe('Custom');
+      await location.setCustomLocation('Select Me');
+      expect(await location.getSelected()).toBe('Custom');
       iq.expectForward('Select Me');
     });
   });

@@ -30,8 +30,11 @@ describe('LocationIqService', () => {
     it('can cancel', () => {
       ctx.initialState.useCurrentLocation = false;
       ctx.initialState.customLocation.search = 'oops';
-      ctx.run(() => {
-        ctx.getHarness(LocationOptionsComponentHarness).select('Current');
+      ctx.run(async () => {
+        const locationOptions = await ctx.getHarness(
+          LocationOptionsComponentHarness,
+        );
+        await locationOptions.select('Current');
         expect(iq.expectForward('oops').isCancelled()).toBe(true);
         iq.expectReverse();
       });
@@ -52,9 +55,9 @@ describe('LocationIqService', () => {
 
     it('can cancel', () => {
       ctx.initialState.useCurrentLocation = true;
-      ctx.run(() => {
-        const location = ctx.getHarness(LocationOptionsComponentHarness);
-        location.setCustomLocation('New place');
+      ctx.run(async () => {
+        const location = await ctx.getHarness(LocationOptionsComponentHarness);
+        await location.setCustomLocation('New place');
         expect(iq.expectReverse().isCancelled()).toBe(true);
         iq.expectForward('New place');
       });
@@ -80,11 +83,14 @@ describe('LocationIqService', () => {
     it('can cancel', () => {
       ctx.initialState.useCurrentLocation = false;
       ctx.initialState.customLocation.search = 'oops';
-      ctx.run(() => {
+      ctx.run(async () => {
         iq.expectForward('oops').flush([
           iq.buildLocationResponse({ lat: '6', lon: '1' }),
         ]);
-        ctx.getHarness(LocationOptionsComponentHarness).select('Current');
+        const locationOptions = await ctx.getHarness(
+          LocationOptionsComponentHarness,
+        );
+        await locationOptions.select('Current');
         expect(iq.expectTimezone([6, 1]).isCancelled()).toBe(true);
         iq.expectReverse();
       });

@@ -16,27 +16,30 @@ describe('WeatherStore', () => {
 
   it('persists state changes', () => {
     ctx.initialState.useCurrentLocation = true;
-    ctx.run(() => {
+    ctx.run(async () => {
       iq.expectReverse();
 
-      ctx.getHarness(LocationOptionsComponentHarness).select('Custom');
+      const location = await ctx.getHarness(LocationOptionsComponentHarness);
+      await location.select('Custom');
       expect(store.getPersistedState().useCurrentLocation).toBe(false);
     });
   });
 
   it('tracks an event when initializing a fresh state', () => {
-    ctx.run({ useInitialState: false }, () => {
+    ctx.useInitialState = false;
+    ctx.run(async () => {
       const tracked = events.getEvents('initialize_fresh_state');
       expect(tracked.length).toBe(1);
       expect(tracked[0].interaction).toBe(false);
 
-      ctx.cleanUpFreshInit();
+      await ctx.cleanUpFreshInit();
     });
   });
 
   it('does not track an event if there is saved state', () => {
-    ctx.run({ useInitialState: true }, () => {
-      ctx.cleanUpFreshInit();
+    ctx.useInitialState = true;
+    ctx.run(async () => {
+      await ctx.cleanUpFreshInit();
 
       expect(events.getEvents('initialize_fresh_state').length).toBe(0);
     });

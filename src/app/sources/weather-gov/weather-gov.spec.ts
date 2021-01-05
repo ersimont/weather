@@ -19,25 +19,25 @@ describe('WeatherGov', () => {
 
   it('can cancel the first request', () => {
     state.setCustomLocation();
-    ctx.run(() => {
-      const sources = ctx.getHarness(SourceOptionsComponentHarness);
-      sources.toggle('Weather.gov');
+    ctx.run(async () => {
+      const sources = await ctx.getHarness(SourceOptionsComponentHarness);
+      await sources.toggle('Weather.gov');
       expect(gov.expectPoints().isCancelled()).toBe(true);
 
-      sources.toggle('Weather.gov');
+      await sources.toggle('Weather.gov');
       gov.flushFixture();
     });
   });
 
   it('can cancel the second request', () => {
     state.setCustomLocation();
-    ctx.run(() => {
-      const sources = ctx.getHarness(SourceOptionsComponentHarness);
+    ctx.run(async () => {
+      const sources = await ctx.getHarness(SourceOptionsComponentHarness);
       gov.expectPoints().flush(pointResponse);
-      sources.toggle('Weather.gov');
+      await sources.toggle('Weather.gov');
       expect(gov.expectGrid().isCancelled()).toBe(true);
 
-      sources.toggle('Weather.gov');
+      await sources.toggle('Weather.gov');
       gov.flushFixture();
     });
   });

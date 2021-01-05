@@ -21,39 +21,41 @@ describe('AppComponent', () => {
   });
 
   it('tracks an event when opening the about popup', () => {
-    ctx.run(() => {
-      ctx.cleanUpFreshInit();
+    ctx.run(async () => {
+      await ctx.cleanUpFreshInit();
 
-      ctx.getHarness(AppComponentHarness).openAbout();
+      const app = await ctx.getHarness(AppComponentHarness);
+      await app.openAbout();
       expect(events.getEvents('click_about').length).toBe(1);
     });
   });
 
   it('tracks an event when opening the privacy policy', () => {
-    ctx.run(() => {
-      ctx.cleanUpFreshInit();
+    ctx.run(async () => {
+      await ctx.cleanUpFreshInit();
 
-      ctx.getHarness(AppComponentHarness).openPrivacyPolicy();
+      const app = await ctx.getHarness(AppComponentHarness);
+      await app.openPrivacyPolicy();
       expect(events.getEvents('click_privacy_policy').length).toBe(1);
     });
   });
 
   it('has buttons to snap to date ranges', () => {
     ctx.startTime = new Date(2020, 5, 21);
-    ctx.run(() => {
-      const app = ctx.getHarness(AppComponentHarness);
+    ctx.run(async () => {
+      const app = await ctx.getHarness(AppComponentHarness);
       const graphState = new GraphStateHarness(ctx);
-      ctx.cleanUpFreshInit();
+      await ctx.cleanUpFreshInit();
 
-      app.snapToRange('three-days');
+      await app.snapToRange('three-days');
       expect(graphState.getRange()).toEqual([1592706600000, 1592965800000]);
 
       ctx.tick(1, 'min');
-      app.snapToRange('day');
+      await app.snapToRange('day');
       expect(graphState.getRange()).toEqual([1592706660000, 1592793060000]);
 
       ctx.tick(2, 'min');
-      app.snapToRange('week');
+      await app.snapToRange('week');
       expect(graphState.getRange()).toEqual([1592706780000, 1593311580000]);
     });
   });
@@ -62,11 +64,11 @@ describe('AppComponent', () => {
     ctx.initialState.useCurrentLocation = true;
     ctx.initialState.currentLocation.city =
       'Llanfair­pwllgwyngyll­gogery­chwyrn­drobwll­llan­tysilio­gogo­goch';
-    ctx.run(() => {
+    ctx.run(async () => {
       iq.expectReverse();
 
-      const app = ctx.getHarness(AppComponentHarness);
-      expect(app.getHeaderWidth()).toBe('400px');
+      const app = await ctx.getHarness(AppComponentHarness);
+      expect(await app.getHeaderWidth()).toBe('400px');
     });
   });
 
@@ -79,11 +81,14 @@ describe('AppComponent', () => {
 
     it('does not show an error until Current is selected', () => {
       state.setCustomLocation([0, 0]);
-      ctx.run(() => {
+      ctx.run(async () => {
         gov.expectPoints([0, 0]);
 
         errors.verify();
-        ctx.getHarness(LocationOptionsComponentHarness).select('Current');
+        const locationOptions = await ctx.getHarness(
+          LocationOptionsComponentHarness,
+        );
+        await locationOptions.select('Current');
         errors.expect('Location not found');
       });
     });
@@ -92,19 +97,21 @@ describe('AppComponent', () => {
       it('shows an error and opens location settings', () => {
         // when the app opens
         ctx.initialState.useCurrentLocation = true;
-        ctx.run(() => {
-          const app = ctx.getHarness(AppComponentHarness);
-          const location = ctx.getHarness(LocationOptionsComponentHarness);
+        ctx.run(async () => {
+          const app = await ctx.getHarness(AppComponentHarness);
+          const location = await ctx.getHarness(
+            LocationOptionsComponentHarness,
+          );
 
           errors.expect('Location not found');
-          expect(app.isSidenavOpen()).toBe(true);
-          expect(location.isExpanded()).toBe(true);
+          expect(await app.isSidenavOpen()).toBe(true);
+          expect(await location.isExpanded()).toBe(true);
 
           // when switching to Current
-          location.setCustomLocation('Someplace else');
+          await location.setCustomLocation('Someplace else');
           iq.expectForward('Someplace else');
           errors.verify();
-          location.select('Current');
+          await location.select('Current');
           errors.expect('Location not found');
         });
       });
@@ -115,19 +122,21 @@ describe('AppComponent', () => {
         // when the app opens
         state.setCustomLocation([0, 0]);
         ctx.initialState.useCurrentLocation = true;
-        ctx.run(() => {
-          const app = ctx.getHarness(AppComponentHarness);
-          const location = ctx.getHarness(LocationOptionsComponentHarness);
+        ctx.run(async () => {
+          const app = await ctx.getHarness(AppComponentHarness);
+          const location = await ctx.getHarness(
+            LocationOptionsComponentHarness,
+          );
 
           errors.expect('Location not found');
-          expect(app.isSidenavOpen()).toBe(true);
-          expect(location.isExpanded()).toBe(true);
+          expect(await app.isSidenavOpen()).toBe(true);
+          expect(await location.isExpanded()).toBe(true);
 
           // when switching to Current
-          location.select('Custom');
+          await location.select('Custom');
           gov.expectPoints([0, 0]);
           errors.verify();
-          location.select('Current');
+          await location.select('Current');
           errors.expect('Location not found');
         });
       });

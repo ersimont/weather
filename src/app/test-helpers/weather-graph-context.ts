@@ -1,8 +1,7 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { ComponentContext, createSpyObject } from '@s-libs/ng-dev';
-import { ComponentContextInit } from '@s-libs/ng-dev/lib/test-context/component-context';
+import { ComponentContextNext, createSpyObject } from '@s-libs/ng-dev';
+import { AppComponent } from 'app/app.component';
 import { AppModule } from 'app/app.module';
 import { GraphComponentHarness } from 'app/graph/graph.component.harness';
 import { ManualReinstallServiceHarness } from 'app/misc-components/manual-reinstall/manual-reinstall.service.harness';
@@ -22,16 +21,10 @@ import { eventCatalog } from 'app/test-helpers/event-catalog';
 import { EventTrackingServiceHarness } from 'app/to-replace/event-tracking/event-tracking.service.harness';
 import { SnackBarErrorServiceHarness } from 'app/to-replace/snack-bar-error.service.harness';
 
-export interface InitOptions extends ComponentContextInit<TestComponent> {
-  useInitialState: boolean;
-}
-
-export class WeatherGraphContext extends ComponentContext<
-  TestComponent,
-  InitOptions
-> {
+export class WeatherGraphContext extends ComponentContextNext<AppComponent> {
   initialState = new WeatherState();
   currentLocation: GpsCoords = [144, -122];
+  useInitialState = true;
 
   // TODO: move to harness
   mocks = { browser: createSpyObject(BrowserService) };
@@ -52,10 +45,8 @@ export class WeatherGraphContext extends ComponentContext<
     unlocked: new WeatherUnlockedHarness(this),
   };
 
-  protected componentType = TestComponent;
-
   constructor() {
-    super({ imports: [AppModule], declarations: [TestComponent] });
+    super(AppComponent, { imports: [AppModule] });
 
     this.mocks.browser.getCurrentLocation.and.callFake(
       async () => this.currentLocation,
@@ -63,20 +54,27 @@ export class WeatherGraphContext extends ComponentContext<
     this.mocks.browser.hasFocus.and.returnValue(true);
     TestBed.overrideProvider(BrowserService, { useValue: this.mocks.browser });
     this.harnesses.errors.install();
+    this.assignWrapperStyles({
+      width: '400px',
+      height: '600px',
+      position: 'relative',
+      margin: '20px auto',
+      border: '1px solid',
+    });
   }
 
-  cleanUpFreshInit(): void {
-    this.harnesses.init.cleanUpFreshInit();
+  async cleanUpFreshInit(): Promise<void> {
+    await this.harnesses.init.cleanUpFreshInit();
   }
 
-  protected init({ useInitialState = true }: Partial<InitOptions> = {}): void {
-    if (useInitialState) {
+  protected init(): void {
+    if (this.useInitialState) {
       localStorage.setItem('weather', JSON.stringify(this.initialState));
     } else {
       localStorage.removeItem('weather');
     }
 
-    super.init({});
+    super.init();
   }
 
   protected verifyPostTestConditions(): void {
@@ -94,14 +92,3 @@ export class WeatherGraphContext extends ComponentContext<
     this.tick(150); // material ripple effect
   }
 }
-
-@Component({
-  template: `
-    <div
-      style="width: 400px; height: 600px; position: relative; margin: 20px auto; border: 1px solid;"
-    >
-      <app-root></app-root>
-    </div>
-  `,
-})
-class TestComponent {}

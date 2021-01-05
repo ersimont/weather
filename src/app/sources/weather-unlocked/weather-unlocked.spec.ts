@@ -15,12 +15,12 @@ describe('WeatherUnlocked', () => {
 
   it('can cancel its request', () => {
     ctx.harnesses.state.setCustomLocation();
-    ctx.run(() => {
-      const sources = ctx.getHarness(SourceOptionsComponentHarness);
-      sources.toggle('Weather Unlocked');
+    ctx.run(async () => {
+      const sources = await ctx.getHarness(SourceOptionsComponentHarness);
+      await sources.toggle('Weather Unlocked');
       expect(unlocked.expectForecast().isCancelled()).toBe(true);
 
-      sources.toggle('Weather Unlocked');
+      await sources.toggle('Weather Unlocked');
       unlocked.flushDefault();
     });
   });

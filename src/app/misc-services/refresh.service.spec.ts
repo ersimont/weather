@@ -40,11 +40,14 @@ describe('RefreshService', () => {
 
   it('resets the refresh interval after any other refresh', () => {
     ctx.initialState.useCurrentLocation = true;
-    ctx.run(() => {
+    ctx.run(async () => {
       iq.expectReverse();
 
       ctx.tick(refreshInterval / 2);
-      ctx.getHarness(LocationOptionsComponentHarness).setCustomLocation('loc1');
+      const locationOptions = await ctx.getHarness(
+        LocationOptionsComponentHarness,
+      );
+      await locationOptions.setCustomLocation('loc1');
       iq.expectForward('loc1');
 
       ctx.tick(refreshInterval - 1);
@@ -67,11 +70,14 @@ describe('RefreshService', () => {
 
   it('allows a location refresh during cooldown', () => {
     ctx.initialState.useCurrentLocation = true;
-    ctx.run(() => {
+    ctx.run(async () => {
       iq.expectReverse();
 
       ctx.tick(refreshInterval / 2);
-      ctx.getHarness(LocationOptionsComponentHarness).setCustomLocation('loc1');
+      const locationOptions = await ctx.getHarness(
+        LocationOptionsComponentHarness,
+      );
+      await locationOptions.setCustomLocation('loc1');
       iq.expectForward('loc1');
     });
   });
@@ -105,10 +111,13 @@ describe('RefreshService', () => {
   it('only refreshes when the tab has focus', () => {
     ctx.mocks.browser.hasFocus.and.returnValue(false);
     ctx.initialState.useCurrentLocation = true;
-    ctx.run(() => {
+    ctx.run(async () => {
       ctx.tick(refreshInterval);
       dispatchFocus();
-      ctx.getHarness(LocationOptionsComponentHarness).setCustomLocation('loc1');
+      const locationOptions = await ctx.getHarness(
+        LocationOptionsComponentHarness,
+      );
+      await locationOptions.setCustomLocation('loc1');
       http.verify();
       expect().nothing();
     });

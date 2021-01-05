@@ -23,50 +23,54 @@ describe('UpgradeService', () => {
 
   // This is a sanity check that will not catch any change that should necessitate an upgrade. But it will catch some.
   it('defaults to a fresh, up-to-date state', () => {
-    ctx.run({ useInitialState: false }, () => {
+    ctx.useInitialState = false;
+    ctx.run(async () => {
       expect(store.getPersistedState())
         .withContext(
           'Default state changed. You need to handle it in the upgrade service.',
         )
         .toEqual(defaultState);
-      expect(ctx.getHarnessForOptional(WhatsNewComponentHarness)).toBe(null);
+      expect(await ctx.getAllHarnesses(WhatsNewComponentHarness)).toEqual([]);
 
-      ctx.cleanUpFreshInit();
+      await ctx.cleanUpFreshInit();
     });
   });
 
   it('upgrades from v8', () => {
     ctx.initialState = v8Default as any;
-    ctx.run(() => {
+    ctx.run(async () => {
       expect(store.getPersistedState()).toEqual(defaultState);
-      expect(ctx.getHarness(WhatsNewComponentHarness).getFeatures()).toEqual([
+      const whatsNew = await ctx.getHarness(WhatsNewComponentHarness);
+      expect(await whatsNew.getFeatures()).toEqual([
         'You can get your forecast from OpenWeather. Check it out in the Sources section of the settings.',
       ]);
 
-      ctx.cleanUpFreshInit();
+      await ctx.cleanUpFreshInit();
     });
   });
 
   it('upgrades from v7', () => {
     ctx.initialState = v7Default as any;
-    ctx.run(() => {
+    ctx.run(async () => {
       expect(store.getPersistedState()).toEqual(defaultState);
-      expect(ctx.getHarness(WhatsNewComponentHarness).getFeatures()).toEqual([
+      const whatsNew = await ctx.getHarness(WhatsNewComponentHarness);
+      expect(await whatsNew.getFeatures()).toEqual([
         'You can get your forecast from OpenWeather. Check it out in the Sources section of the settings.',
       ]);
 
-      ctx.cleanUpFreshInit();
+      await ctx.cleanUpFreshInit();
     });
   });
 
   it("upgrades from v6, showing what's new", () => {
     ctx.initialState = v6Default as any;
-    ctx.run(() => {
+    ctx.run(async () => {
       expect(store.getPersistedState()).toEqual({
         ...defaultState,
         useCurrentLocation: true,
       });
-      expect(ctx.getHarness(WhatsNewComponentHarness).getFeatures()).toEqual([
+      const whatsNew = await ctx.getHarness(WhatsNewComponentHarness);
+      expect(await whatsNew.getFeatures()).toEqual([
         'You can get your forecast from OpenWeather. Check it out in the Sources section of the settings.',
         'You can get your forecast from Climacell. Check it out in the Sources section of the settings.',
       ]);
@@ -77,12 +81,12 @@ describe('UpgradeService', () => {
 
   it('uses a fresh state from v5, logging an error', () => {
     ctx.initialState = v5Example as any;
-    ctx.run(() => {
+    ctx.run(async () => {
       expect(store.getPersistedState()).toEqual(defaultState);
-      expect(ctx.getHarnessForOptional(WhatsNewComponentHarness)).toBe(null);
+      expect(await ctx.getAllHarnesses(WhatsNewComponentHarness)).toEqual([]);
       errors.expectGeneric();
 
-      ctx.cleanUpFreshInit();
+      await ctx.cleanUpFreshInit();
     });
   });
 });

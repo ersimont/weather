@@ -12,19 +12,23 @@ describe('AbstractOptionDirective', () => {
   });
 
   it('fires a close event', () => {
-    ctx.run(() => {
-      ctx.cleanUpFreshInit();
+    ctx.run(async () => {
+      await ctx.cleanUpFreshInit();
 
-      ctx.getHarness(LocationOptionsComponentHarness).collapse();
+      const locationOptions = await ctx.getHarness(
+        LocationOptionsComponentHarness,
+      );
+      await locationOptions.collapse();
       expect(events.getEvents('close_location_options').length).toBe(1);
     });
   });
 
   it('fires an open event', () => {
-    ctx.run(() => {
-      ctx.cleanUpFreshInit();
+    ctx.run(async () => {
+      await ctx.cleanUpFreshInit();
 
-      ctx.getHarness(UnitOptionsComponentHarness).expand();
+      const locationOptions = await ctx.getHarness(UnitOptionsComponentHarness);
+      await locationOptions.expand();
       expect(events.getEvents('open_unit_options').length).toBe(1);
     });
   });

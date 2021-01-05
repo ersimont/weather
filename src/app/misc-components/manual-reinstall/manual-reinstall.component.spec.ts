@@ -10,13 +10,13 @@ describe('ManualReinstallComponent', () => {
   });
 
   it('can be dismissed with an OK button', () => {
-    ctx.run(() => {
-      ctx.cleanUpFreshInit();
-      const component = ctx.getHarness(ManualReinstallComponentHarness);
+    ctx.run(async () => {
+      await ctx.cleanUpFreshInit();
+      const component = await ctx.getHarness(ManualReinstallComponentHarness);
 
-      component.dismissWithOk();
+      await component.dismissWithOk();
 
-      expect(ctx.getHarnessForOptional(MatDialogHarness)).toBe(null);
+      expect(await ctx.getAllHarnesses(MatDialogHarness)).toEqual([]);
 
       ctx.tick(500); // material queued up some tasks to animate the dialog away
     });

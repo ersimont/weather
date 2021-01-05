@@ -3,9 +3,9 @@ import {
   HttpTestingController,
   TestRequest,
 } from '@angular/common/http/testing';
-import { isEqual } from '@s-libs/micro-dash';
 import { mapAsKeys } from '@s-libs/js-core';
-import { AngularContext } from '@s-libs/ng-dev';
+import { isEqual } from '@s-libs/micro-dash';
+import { AngularContextNext } from '@s-libs/ng-dev';
 
 export type MethodType = 'DELETE' | 'GET' | 'POST' | 'PUT';
 export type BodyType = Parameters<TestRequest['flush']>[0];
@@ -20,7 +20,7 @@ export class STestRequest<T> {
   constructor(
     method: MethodType,
     url: string,
-    private ctx: AngularContext<any>,
+    private ctx: AngularContextNext,
     { params = {}, body = null }: STestRequestOptions = {},
   ) {
     expect().nothing(); // convince jasmine we are expecting something

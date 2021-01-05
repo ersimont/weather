@@ -32,12 +32,12 @@ describe('OpenWeather', () => {
 
   it('can cancel its request', () => {
     state.setCustomLocation();
-    ctx.run(() => {
-      const sources = ctx.getHarness(SourceOptionsComponentHarness);
-      sources.toggle('OpenWeather');
+    ctx.run(async () => {
+      const sources = await ctx.getHarness(SourceOptionsComponentHarness);
+      await sources.toggle('OpenWeather');
       expect(openWeather.expectForecast().isCancelled()).toBe(true);
 
-      sources.toggle('OpenWeather');
+      await sources.toggle('OpenWeather');
       openWeather.flushDefault();
     });
   });

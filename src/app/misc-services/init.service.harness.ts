@@ -4,18 +4,18 @@ import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 export class InitServiceHarness {
   constructor(private ctx: WeatherGraphContext) {}
 
-  cleanUpFreshInit(): void {
+  async cleanUpFreshInit(): Promise<void> {
     this.ctx.tick(2000);
-    this.expectPrompt();
+    await this.expectPrompt();
   }
 
-  expectNoPrompt(): void {
-    expect(this.ctx.getHarnessForOptional(MatSnackBarHarness)).toBe(null);
+  async expectNoPrompt(): Promise<void> {
+    expect(await this.ctx.getAllHarnesses(MatSnackBarHarness)).toEqual([]);
   }
 
-  expectPrompt(): void {
-    const bar = this.ctx.getHarness(MatSnackBarHarness);
-    expect(bar.getMessage()).toBe('Choose a location');
-    bar.dismissWithAction();
+  async expectPrompt(): Promise<void> {
+    const bar = await this.ctx.getHarness(MatSnackBarHarness);
+    expect(await bar.getMessage()).toBe('Choose a location');
+    await bar.dismissWithAction();
   }
 }

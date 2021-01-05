@@ -29,11 +29,14 @@ describe('GraphComponent', () => {
     ctx.initialState.customLocation.timezone = 'Pacific/Auckland';
     ctx.startTime = new Date('2020-07-07'); // avoid daylight savings
     state.setShowing(SourceId.WEATHER_UNLOCKED);
-    ctx.run(() => {
+    ctx.run(async () => {
       unlocked.expectForecast([-44, 171]);
       expect(graph.getTimeZone()).toBe('NZST');
 
-      ctx.getHarness(LocationOptionsComponentHarness).select('Current');
+      const locationOptions = await ctx.getHarness(
+        LocationOptionsComponentHarness,
+      );
+      await locationOptions.select('Current');
       iq.expectReverse();
       expect(graph.getTimeZone()).toBe('');
     });
@@ -45,7 +48,7 @@ describe('GraphComponent', () => {
       state.setShowing(SourceId.WEATHER_UNLOCKED);
       ctx.initialState.units.temp = TempUnit.C;
       ctx.initialState.useCurrentLocation = true;
-      ctx.run(() => {
+      ctx.run(async () => {
         iq.flushReverse();
         unlocked
           .expectForecast()
@@ -54,7 +57,8 @@ describe('GraphComponent', () => {
         expect(
           graph.getTooltipLabel(SourceId.WEATHER_UNLOCKED, Condition.TEMP, 0),
         ).toBe('Temp: 22 °C');
-        ctx.getHarness(UnitOptionsComponentHarness).select('°F');
+        const unitOptions = await ctx.getHarness(UnitOptionsComponentHarness);
+        await unitOptions.select('°F');
         expect(
           graph.getTooltipLabel(SourceId.WEATHER_UNLOCKED, Condition.TEMP, 0),
         ).toBe('Temp: 71 °F');
@@ -64,7 +68,7 @@ describe('GraphComponent', () => {
     it('displays the source in its footer', () => {
       ctx.initialState.useCurrentLocation = true;
       state.setShowing(SourceId.WEATHER_GOV, SourceId.WEATHER_UNLOCKED);
-      ctx.run(() => {
+      ctx.run(async () => {
         iq.flushReverse();
         gov.flushFixture();
         unlocked.flushDefault();
@@ -72,7 +76,8 @@ describe('GraphComponent', () => {
         expect(graph.getTooltipFooter(SourceId.WEATHER_GOV)).toBe(
           'Source: Weather.gov',
         );
-        ctx.getHarness(UnitOptionsComponentHarness).select('°F');
+        const unitOptions = await ctx.getHarness(UnitOptionsComponentHarness);
+        await unitOptions.select('°F');
         expect(graph.getTooltipFooter(SourceId.WEATHER_UNLOCKED)).toBe(
           'Source: Weather Unlocked',
         );

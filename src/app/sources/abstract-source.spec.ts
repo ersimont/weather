@@ -25,16 +25,16 @@ describe('AbstractSource', () => {
 
   it('refreshes (only) when showing', () => {
     state.setCustomLocation();
-    ctx.run(() => {
-      const sources = ctx.getHarness(SourceOptionsComponentHarness);
+    ctx.run(async () => {
+      const sources = await ctx.getHarness(SourceOptionsComponentHarness);
 
       gov.flushFixture();
 
-      sources.toggle('Weather.gov');
+      await sources.toggle('Weather.gov');
       refresh.trigger();
       ctx.inject(HttpTestingController).verify();
 
-      sources.toggle('Weather.gov');
+      await sources.toggle('Weather.gov');
       gov.flushFixture();
 
       refresh.trigger();
@@ -66,10 +66,14 @@ describe('AbstractSource', () => {
 
   describe('fallback', () => {
     it('happens invisibly on first app load', () => {
-      ctx.run({ useInitialState: false }, () => {
-        ctx.cleanUpFreshInit();
+      ctx.useInitialState = false;
+      ctx.run(async () => {
+        await ctx.cleanUpFreshInit();
 
-        ctx.getHarness(LocationOptionsComponentHarness).select('Current');
+        const locationOptions = await ctx.getHarness(
+          LocationOptionsComponentHarness,
+        );
+        await locationOptions.select('Current');
         iq.flushReverse();
         gov.flushNotAvailable();
         unlocked.flushDefault();
@@ -78,10 +82,14 @@ describe('AbstractSource', () => {
     });
 
     it('does not happen on refresh', () => {
-      ctx.run({ useInitialState: false }, () => {
-        ctx.cleanUpFreshInit();
+      ctx.useInitialState = false;
+      ctx.run(async () => {
+        await ctx.cleanUpFreshInit();
 
-        ctx.getHarness(LocationOptionsComponentHarness).select('Current');
+        const locationOptions = await ctx.getHarness(
+          LocationOptionsComponentHarness,
+        );
+        await locationOptions.select('Current');
         iq.flushReverse();
         gov.flushFixture();
 

@@ -32,12 +32,12 @@ describe('Climacell', () => {
 
   it('can cancel its request', () => {
     state.setCustomLocation();
-    ctx.run(() => {
-      const sources = ctx.getHarness(SourceOptionsComponentHarness);
-      sources.toggle('Climacell');
+    ctx.run(async () => {
+      const sources = await ctx.getHarness(SourceOptionsComponentHarness);
+      await sources.toggle('Climacell');
       expect(climacell.expectHourly().isCancelled()).toBe(true);
 
-      sources.toggle('Climacell');
+      await sources.toggle('Climacell');
       climacell.flushDefault();
     });
   });

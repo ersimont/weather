@@ -26,7 +26,7 @@ export class AppComponentHarness extends ContentContainerComponentHarness {
   }
 
   async snapToRange(range: 'day' | 'three-days' | 'week'): Promise<void> {
-    (await this.getRangeButton(range)).click();
+    await (await this.getRangeButton(range)).click();
   }
 
   async openPrivacyPolicy(): Promise<void> {

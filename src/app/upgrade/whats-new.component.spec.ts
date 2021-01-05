@@ -8,10 +8,10 @@ describe('WhatsNewComponent', () => {
   });
 
   it('does not show when there is no upgrade', () => {
-    ctx.run(() => {
-      ctx.cleanUpFreshInit();
+    ctx.run(async () => {
+      await ctx.cleanUpFreshInit();
 
-      expect(ctx.getHarnessForOptional(WhatsNewComponentHarness)).toBeNull();
+      expect(await ctx.getAllHarnesses(WhatsNewComponentHarness)).toEqual([]);
     });
   });
 });

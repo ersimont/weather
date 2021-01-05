@@ -1,11 +1,11 @@
-import { SnackBarErrorService } from 'app/to-replace/snack-bar-error.service';
 import { assert } from '@s-libs/js-core';
-import { AngularContext, expectSingleCallAndReset } from '@s-libs/ng-dev';
+import { AngularContextNext, expectSingleCallAndReset } from '@s-libs/ng-dev';
+import { SnackBarErrorService } from 'app/to-replace/snack-bar-error.service';
 
 export class SnackBarErrorServiceHarness {
   private spy?: jasmine.Spy;
 
-  constructor(private ctx: AngularContext) {}
+  constructor(private ctx: AngularContextNext) {}
 
   install(): void {
     assert(!this.spy, 'already installed');
