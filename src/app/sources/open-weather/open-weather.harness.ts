@@ -1,5 +1,5 @@
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
-import { STestRequest } from 'app/to-replace/test-context/s-test-request';
+import { SlTestRequest } from 'app/to-replace/test-context/sl-test-request';
 import { createBuilder } from '@s-libs/js-core';
 import { ForecastResponse, Timeframe } from './open-weather';
 
@@ -22,7 +22,7 @@ export class OpenWeatherHarness {
 
   expectForecast(
     gpsCoords = this.ctx.currentLocation,
-  ): STestRequest<ForecastResponse> {
+  ): SlTestRequest<ForecastResponse> {
     const url =
       'https://us-central1-proxic.cloudfunctions.net/api/openweathermap/data/2.5/forecast';
     const params = {
@@ -30,6 +30,6 @@ export class OpenWeatherHarness {
       lon: gpsCoords[1].toString(),
       units: 'metric',
     };
-    return new STestRequest<ForecastResponse>('GET', url, this.ctx, { params });
+    return new SlTestRequest<ForecastResponse>('GET', url, this.ctx, { params });
   }
 }

@@ -6,7 +6,7 @@ import {
 } from 'app/misc-services/location-iq.service';
 import { GpsCoords } from 'app/state/location';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
-import { STestRequest } from 'app/to-replace/test-context/s-test-request';
+import { SlTestRequest } from 'app/to-replace/test-context/sl-test-request';
 import { isEmpty } from '@s-libs/micro-dash';
 import { createBuilder } from '@s-libs/js-core';
 
@@ -43,8 +43,8 @@ export class LocationIqServiceHarness {
     this.expectReverse(gpsCoords).flush(this.buildLocationResponse());
   }
 
-  expectForward(search: string): STestRequest<ForwardResponse> {
-    return new STestRequest<ForwardResponse>(
+  expectForward(search: string): SlTestRequest<ForwardResponse> {
+    return new SlTestRequest<ForwardResponse>(
       'GET',
       'https://us-central1-proxic.cloudfunctions.net/api/location-iq/v1/search.php',
       this.ctx,
@@ -63,8 +63,8 @@ export class LocationIqServiceHarness {
 
   expectReverse(
     gpsCoords = this.ctx.currentLocation,
-  ): STestRequest<LocationResponse> {
-    return new STestRequest<LocationResponse>(
+  ): SlTestRequest<LocationResponse> {
+    return new SlTestRequest<LocationResponse>(
       'GET',
       'https://us-central1-proxic.cloudfunctions.net/api/location-iq/v1/reverse.php',
       this.ctx,
@@ -81,8 +81,8 @@ export class LocationIqServiceHarness {
     );
   }
 
-  expectTimezone(gpsCoords: GpsCoords): STestRequest<TimezoneResponse> {
-    return new STestRequest<TimezoneResponse>(
+  expectTimezone(gpsCoords: GpsCoords): SlTestRequest<TimezoneResponse> {
+    return new SlTestRequest<TimezoneResponse>(
       'GET',
       'https://us-central1-proxic.cloudfunctions.net/api/location-iq/v1/timezone.php',
       this.ctx,

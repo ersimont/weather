@@ -8,7 +8,7 @@ import {
   pointResponse,
 } from 'app/sources/weather-gov/weather-gov.fixtures';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
-import { STestRequest } from 'app/to-replace/test-context/s-test-request';
+import { SlTestRequest } from 'app/to-replace/test-context/sl-test-request';
 
 export class WeatherGovHarness {
   constructor(private ctx: WeatherGraphContext) {}
@@ -25,8 +25,8 @@ export class WeatherGovHarness {
 
   expectPoints(
     gpsCoordinates = this.ctx.currentLocation,
-  ): STestRequest<PointResponse> {
-    return new STestRequest<PointResponse>(
+  ): SlTestRequest<PointResponse> {
+    return new SlTestRequest<PointResponse>(
       'GET',
       `https://api.weather.gov/points/${gpsCoordinates.join(',')}`,
       this.ctx,
@@ -35,8 +35,8 @@ export class WeatherGovHarness {
 
   expectGrid(
     url = pointResponse.properties.forecastGridData,
-  ): STestRequest<GridResponse> {
-    return new STestRequest<GridResponse>('GET', url, this.ctx);
+  ): SlTestRequest<GridResponse> {
+    return new SlTestRequest<GridResponse>('GET', url, this.ctx);
   }
 
   expectNotAvailableError(): void {

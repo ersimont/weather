@@ -1,6 +1,6 @@
 import { HourlyResponse, Timeframe } from 'app/sources/climacell/climacell';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
-import { STestRequest } from 'app/to-replace/test-context/s-test-request';
+import { SlTestRequest } from 'app/to-replace/test-context/sl-test-request';
 import { createBuilder } from '@s-libs/js-core';
 
 export class ClimacellHarness {
@@ -25,7 +25,7 @@ export class ClimacellHarness {
 
   expectHourly(
     gpsCoords = this.ctx.currentLocation,
-  ): STestRequest<HourlyResponse> {
+  ): SlTestRequest<HourlyResponse> {
     const url =
       'https://us-central1-proxic.cloudfunctions.net/api/climacell/v3/weather/forecast/hourly';
     const params = {
@@ -34,6 +34,6 @@ export class ClimacellHarness {
       fields:
         'cloud_cover,dewpoint,feels_like,precipitation,temp,wind_speed:knots',
     };
-    return new STestRequest<HourlyResponse>('GET', url, this.ctx, { params });
+    return new SlTestRequest<HourlyResponse>('GET', url, this.ctx, { params });
   }
 }

@@ -3,7 +3,7 @@ import {
   Timeframe,
 } from 'app/sources/weather-unlocked/weather-unlocked';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
-import { STestRequest } from 'app/to-replace/test-context/s-test-request';
+import { SlTestRequest } from 'app/to-replace/test-context/sl-test-request';
 import { createBuilder } from '@s-libs/js-core';
 
 export class WeatherUnlockedHarness {
@@ -31,10 +31,10 @@ export class WeatherUnlockedHarness {
 
   expectForecast(
     gpsCoords = this.ctx.currentLocation,
-  ): STestRequest<ForecastResponse> {
+  ): SlTestRequest<ForecastResponse> {
     const url =
       'https://us-central1-proxic.cloudfunctions.net/api/weather-unlocked/api/forecast/' +
       gpsCoords.join(',');
-    return new STestRequest<ForecastResponse>('GET', url, this.ctx);
+    return new SlTestRequest<ForecastResponse>('GET', url, this.ctx);
   }
 }

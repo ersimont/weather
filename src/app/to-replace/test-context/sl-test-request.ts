@@ -14,7 +14,7 @@ export interface STestRequestOptions {
   body?: BodyType;
 }
 
-export class STestRequest<T> {
+export class SlTestRequest<T> {
   protected req: TestRequest;
 
   constructor(
