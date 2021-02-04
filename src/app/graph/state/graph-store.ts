@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { RootStore } from '@s-libs/app-state';
+import { mapToObject } from '@s-libs/js-core';
 import { mapValues } from '@s-libs/micro-dash';
 import { mixInInjectableSuperclass } from '@s-libs/ng-core';
 import {
@@ -14,12 +15,12 @@ import {
 } from 'app/graph/chartjs-options';
 import { GraphState } from 'app/graph/state/graph-state';
 import { LocationService } from 'app/misc-services/location.service';
+import { Condition } from 'app/state/condition';
 import { GpsCoords } from 'app/state/location';
 import { ViewRange } from 'app/state/viewRange';
-import { WeatherState } from 'app/state/weather-state';
 import { WeatherStore } from 'app/state/weather-store';
 import { combineLatest, interval } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { filter, map, startWith, take } from 'rxjs/operators';
 
 @Injectable()
 export class GraphStore extends mixInInjectableSuperclass(
@@ -78,13 +79,25 @@ export class GraphStore extends mixInInjectableSuperclass(
   }
 
   private manageData(): void {
+    const colors$ = interval(100).pipe(
+      startWith(0),
+      map(getColors),
+      filter((colors) => !!colors[Condition.AMOUNT]),
+      take(1),
+    );
     this.subscribeTo(
-      this.weatherStore.$.pipe(delayOnMicrotaskQueue()),
-      this.updateData,
+      combineLatest([this.weatherStore.$, colors$]),
+      ([weatherState, colors]) => {
+        this('data').set(buildDatasets(weatherState, colors));
+      },
     );
   }
+}
 
-  private updateData(weatherState: WeatherState): void {
-    this('data').set(buildDatasets(weatherState));
-  }
+function getColors(): Record<Condition, string> {
+  const bodyStyles = getComputedStyle(document.body);
+  return mapToObject(Condition, (condition: Condition) => [
+    condition,
+    bodyStyles.getPropertyValue(`--${condition}`),
+  ]) as Record<Condition, string>;
 }

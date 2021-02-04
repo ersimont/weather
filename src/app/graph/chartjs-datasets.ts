@@ -19,10 +19,13 @@ const radii: { [id in SourceId]: number } = {
   [SourceId.WEATHER_UNLOCKED]: 6,
 };
 
-export function buildDatasets(state: WeatherState): Chart.ChartDataSets[] {
+export function buildDatasets(
+  state: WeatherState,
+  colors: Record<Condition, string>,
+): Chart.ChartDataSets[] {
   const dataSets: ChartDataSets[] = [];
   forEach(state.sources, (_, sourceId) => {
-    addDataSets(sourceId, dataSets, state);
+    addDataSets(sourceId, dataSets, state, colors);
   });
   return dataSets;
 }
@@ -31,32 +34,43 @@ function addDataSets(
   sourceId: SourceId,
   dataSets: ChartDataSets[],
   state: WeatherState,
+  colors: Record<Condition, string>,
 ): void {
   // the first ones added will be displayed on top of later ones
-  addDataSet(sourceId, dataSets, state, Condition.TEMP, 'dynamic');
-  addDataSet(sourceId, dataSets, state, Condition.FEEL, 'dynamic');
-  addDataSet(sourceId, dataSets, state, Condition.DEW, 'dynamic');
-  addDataSet(sourceId, dataSets, state, Condition.WIND, 'dynamic');
+  addDataSet(sourceId, dataSets, state, colors, Condition.TEMP, 'dynamic');
+  addDataSet(sourceId, dataSets, state, colors, Condition.FEEL, 'dynamic');
+  addDataSet(sourceId, dataSets, state, colors, Condition.DEW, 'dynamic');
+  addDataSet(sourceId, dataSets, state, colors, Condition.WIND, 'dynamic');
   addDataSet(
     sourceId,
     dataSets,
     state,
+    colors,
     Condition.AMOUNT,
     state.units.amount === AmountUnit.IN ? 'inches' : 'millimeters',
     '60',
   );
-  addDataSet(sourceId, dataSets, state, Condition.CLOUD, 'percentage', '20');
+  addDataSet(
+    sourceId,
+    dataSets,
+    state,
+    colors,
+    Condition.CLOUD,
+    'percentage',
+    '20',
+  );
 }
 
 function addDataSet(
   sourceId: SourceId,
-  dataSets: ChartDataSets[],
+  dataSets: Chart.ChartDataSets[],
   state: WeatherState,
+  colors: Record<Condition, string>,
   condition: Condition,
   yAxisID: string,
   fillAlpha = '00',
 ): void {
-  const color = conditionInfo[condition].getColor();
+  const color = colors[condition];
   dataSets.push({
     label: encodeLabelValues(sourceId, condition),
     data: getData(sourceId, condition, state),
