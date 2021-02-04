@@ -2,7 +2,10 @@ import { Injectable } from '@angular/core';
 import { RootStore } from '@s-libs/app-state';
 import { mapValues } from '@s-libs/micro-dash';
 import { mixInInjectableSuperclass } from '@s-libs/ng-core';
-import { delayOnMicrotaskQueue } from '@s-libs/rxjs-core';
+import {
+  delayOnMicrotaskQueue,
+  logToReduxDevtoolsExtension,
+} from '@s-libs/rxjs-core';
 import { buildDatasets } from 'app/graph/chartjs-datasets';
 import {
   buildBoundaries,
@@ -29,6 +32,11 @@ export class GraphStore extends mixInInjectableSuperclass(
     super(new GraphState());
     this.manageOptions();
     this.manageData();
+
+    logToReduxDevtoolsExtension(this.$, {
+      name: 'GraphStore',
+      autoPause: true,
+    });
   }
 
   private manageOptions(): void {

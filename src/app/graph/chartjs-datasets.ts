@@ -56,7 +56,7 @@ function addDataSet(
   yAxisID: string,
   fillAlpha = '00',
 ): void {
-  const color = conditionInfo[condition].color;
+  const color = conditionInfo[condition].getColor();
   dataSets.push({
     label: encodeLabelValues(sourceId, condition),
     data: getData(sourceId, condition, state),
