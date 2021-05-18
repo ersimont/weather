@@ -12,4 +12,4 @@ export const environment: Env = {
 enableProdMode();
 
 // slower
-// import 'zone.js/dist/zone-error';
+// import 'zone.js/plugins/zone-error';
