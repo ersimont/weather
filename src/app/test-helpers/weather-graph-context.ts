@@ -1,6 +1,6 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { TestBed } from '@angular/core/testing';
-import { ComponentContextNext, createSpyObject } from '@s-libs/ng-dev';
+import { ComponentContext, createSpyObject } from '@s-libs/ng-dev';
 import { AppComponent } from 'app/app.component';
 import { AppModule } from 'app/app.module';
 import { GraphComponentHarness } from 'app/graph/graph.component.harness';
@@ -21,7 +21,7 @@ import { eventCatalog } from 'app/test-helpers/event-catalog';
 import { EventTrackingServiceHarness } from 'app/to-replace/event-tracking/event-tracking.service.harness';
 import { SnackBarErrorServiceHarness } from 'app/to-replace/snack-bar-error.service.harness';
 
-export class WeatherGraphContext extends ComponentContextNext<AppComponent> {
+export class WeatherGraphContext extends ComponentContext<AppComponent> {
   initialState = new WeatherState();
   currentLocation: GpsCoords = [144, -122];
   useInitialState = true;

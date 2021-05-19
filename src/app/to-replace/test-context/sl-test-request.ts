@@ -5,7 +5,7 @@ import {
 } from '@angular/common/http/testing';
 import { mapAsKeys } from '@s-libs/js-core';
 import { isEqual } from '@s-libs/micro-dash';
-import { AngularContextNext } from '@s-libs/ng-dev';
+import { AngularContext } from '@s-libs/ng-dev';
 
 export type MethodType = 'DELETE' | 'GET' | 'POST' | 'PUT';
 export type BodyType = Parameters<TestRequest['flush']>[0];
@@ -20,7 +20,7 @@ export class SlTestRequest<T> {
   constructor(
     method: MethodType,
     url: string,
-    private ctx: AngularContextNext,
+    private ctx: AngularContext,
     { params = {}, body = null }: STestRequestOptions = {},
   ) {
     expect().nothing(); // convince jasmine we are expecting something

@@ -106,30 +106,31 @@ describe('SnackBarErrorService', () => {
 
   describe('.show()', () => {
     it('displays a snack bar for 5 seconds', () => {
-      ctx.run(() => {
+      ctx.run(async () => {
         service.show('hi');
-        expect(ctx.getHarnessForOptional(MatSnackBarHarness)).not.toBeNull();
+        expect((await ctx.getAllHarnesses(MatSnackBarHarness)).length).toBe(1);
         ctx.tick(4999);
-        expect(ctx.getHarnessForOptional(MatSnackBarHarness)).not.toBeNull();
+        expect((await ctx.getAllHarnesses(MatSnackBarHarness)).length).toBe(1);
         ctx.tick(1);
-        expect(ctx.getHarnessForOptional(MatSnackBarHarness)).toBeNull();
+        expect((await ctx.getAllHarnesses(MatSnackBarHarness)).length).toBe(0);
       });
     });
 
     it('shows the message', () => {
-      ctx.run(() => {
+      ctx.run(async () => {
         service.show('hi');
-        expect(ctx.getHarness(MatSnackBarHarness).getMessage()).toBe('hi');
+        const snackbar = await ctx.getHarness(MatSnackBarHarness);
+        expect(await snackbar.getMessage()).toBe('hi');
       });
     });
 
     it('is dismissible with "OK"', () => {
-      ctx.run(() => {
+      ctx.run(async () => {
         service.show('hi');
-        const snackBar = ctx.getHarness(MatSnackBarHarness);
-        expect(snackBar.getActionDescription()).toBe('OK');
-        snackBar.dismissWithAction();
-        expect(ctx.getHarnessForOptional(MatSnackBarHarness)).toBeNull();
+        const snackBar = await ctx.getHarness(MatSnackBarHarness);
+        expect(await snackBar.getActionDescription()).toBe('OK');
+        await snackBar.dismissWithAction();
+        expect((await ctx.getAllHarnesses(MatSnackBarHarness)).length).toBe(0);
       });
     });
   });
