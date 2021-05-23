@@ -30,6 +30,8 @@ export class OpenWeatherHarness {
       lon: gpsCoords[1].toString(),
       units: 'metric',
     };
-    return new SlTestRequest<ForecastResponse>('GET', url, this.ctx, { params });
+    return new SlTestRequest<ForecastResponse>('GET', url, this.ctx, {
+      params,
+    });
   }
 }

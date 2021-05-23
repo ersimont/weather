@@ -25,8 +25,7 @@ describe('GraphStore', () => {
         gov.expectPoints([144, -122]);
         const graphState = new GraphStateHarness(ctx);
         expect(graphState.getNightBoxes()[0]).toEqual([
-          342066821989,
-          342105060171,
+          342066821989, 342105060171,
         ]);
 
         ctx.currentLocation = [10, -20];
@@ -34,8 +33,7 @@ describe('GraphStore', () => {
         iq.flushReverse([10, -20]);
         gov.expectPoints([10, -20]);
         expect(graphState.getNightBoxes()[0]).toEqual([
-          342039449477,
-          342083544424,
+          342039449477, 342083544424,
         ]);
       });
     });
@@ -49,15 +47,13 @@ describe('GraphStore', () => {
         gov.expectPoints([144, -122]);
         const graphState = new GraphStateHarness(ctx);
         expect(graphState.getNightBoxes()[0]).toEqual([
-          342066821989,
-          342105060171,
+          342066821989, 342105060171,
         ]);
 
         jasmine.clock().mockDate(new Date('1980-11-05T15:00:00.000Z'));
         new GraphStoreHarness(ctx).triggerAnnotationUpdate();
         expect(graphState.getNightBoxes()[0]).toEqual([
-          342153281946,
-          342191404335,
+          342153281946, 342191404335,
         ]);
       });
     });
@@ -95,14 +91,12 @@ describe('GraphStore', () => {
       ctx.run(() => {
         const graphState = new GraphStateHarness(ctx);
         expect(graphState.getBoundaries()).toEqual([
-          342111600000,
-          342889200000,
+          342111600000, 342889200000,
         ]);
 
         ctx.tick(1, 'min');
         expect(graphState.getBoundaries()).toEqual([
-          342111660000,
-          342889260000,
+          342111660000, 342889260000,
         ]);
       });
     });

@@ -3,9 +3,8 @@ import { MatExpansionPanelHarness } from '@angular/material/expansion/testing';
 import { AppComponentHarness } from 'app/app.component.harness';
 
 export abstract class AbstractOptionDirectiveHarness extends ComponentHarness {
-  private getApp = this.documentRootLocatorFactory().locatorFor(
-    AppComponentHarness,
-  );
+  private getApp =
+    this.documentRootLocatorFactory().locatorFor(AppComponentHarness);
   private getExpansionPanel = this.locatorFor(MatExpansionPanelHarness);
 
   async ensureExpanded(): Promise<void> {

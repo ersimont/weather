@@ -17,7 +17,9 @@ export class LocationOptionsComponentHarness extends AbstractOptionDirectiveHarn
 
   async select(label: 'Current' | 'Custom'): Promise<void> {
     await this.ensureExpanded();
-    await (await this.getRadioGroup()).checkRadioButton({
+    await (
+      await this.getRadioGroup()
+    ).checkRadioButton({
       label: label === 'Custom' ? '' : label,
     });
   }

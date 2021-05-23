@@ -62,9 +62,10 @@ export const defaultChartOptions: ChartOptions = {
 // separate b/c the typing complains
 (defaultChartOptions as any).annotation = { drawTime: 'beforeDatasetsDraw' };
 
-export function buildBoundaries(
-  now: number,
-): { rangeMax: { x: number }; rangeMin: { x: number } } {
+export function buildBoundaries(now: number): {
+  rangeMax: { x: number };
+  rangeMin: { x: number };
+} {
   const { min, max } = getMinMax(now);
   return { rangeMin: { x: min }, rangeMax: { x: max } };
 }
