@@ -1,9 +1,1 @@
-/.idea/
-/coverage/
-/dist/
-/docs/
-/node_modules/
-
-*.js
-*.spec.ts
 *.fixtures.ts

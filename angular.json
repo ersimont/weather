@@ -2,8 +2,9 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "cli": {
-    "packageManager": "yarn",
-    "analytics": "a1a9bbd1-c91d-474f-8b85-55f897c617d3"
+    "analytics": "a1a9bbd1-c91d-474f-8b85-55f897c617d3",
+    "defaultCollection": "@angular-eslint/schematics",
+    "packageManager": "yarn"
   },
   "newProjectRoot": "projects",
   "projects": {
@@ -112,6 +113,12 @@
         "deploy": {
           "builder": "@angular/fire:deploy",
           "options": {}
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+          }
         }
       }
     }

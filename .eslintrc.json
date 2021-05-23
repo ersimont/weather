@@ -1,0 +1,18 @@
+{
+  "extends": "@s-libs/eslint-config-ng",
+  "overrides": [
+    {
+      "files": ["*.ts"],
+      "rules": {
+        "@angular-eslint/directive-selector": [
+          "error",
+          { "type": "attribute", "prefix": ["app", "s"], "style": "camelCase" }
+        ],
+        "@angular-eslint/component-selector": [
+          "error",
+          { "type": "element", "prefix": ["app", "s"], "style": "kebab-case" }
+        ]
+      }
+    }
+  ]
+}

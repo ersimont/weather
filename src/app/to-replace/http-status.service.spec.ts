@@ -3,6 +3,7 @@ import {
   HttpClientTestingModule,
   HttpTestingController,
 } from '@angular/common/http/testing';
+import { noop } from '@s-libs/micro-dash';
 import {
   HttpStatusService,
   provideHttpStatus,
@@ -58,7 +59,7 @@ describe('HttpStatusService', () => {
 
   it('handles errors', () => {
     ctx.run(() => {
-      http.get('url1').subscribe({ error(): void {} });
+      http.get('url1').subscribe({ error: noop });
       expectSingleCallAndReset(inFlight, true);
       httpController
         .expectOne('url1')
