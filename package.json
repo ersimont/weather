@@ -11,6 +11,8 @@
     "web-worker-start": "http-server -p 8080 -c-1 dist/weather",
     "prettier-all": "prettier --write \"**/*.{css,html,js,json,md,scss,ts,yml}\"",
     "deploy": "ng deploy",
+    "predeploy-staging": "ng build --configuration production",
+    "deploy-staging": "firebase hosting:channel:deploy staging",
     "source-map-explorer": "ng build --prod --sourceMap && source-map-explorer 'dist/weather/main.*.js'",
     "trim-moment-locales": "ts-node -O \"{\\\"module\\\": \\\"commonjs\\\"}\" src/scripts/trim-moment-locales.ts"
   },
