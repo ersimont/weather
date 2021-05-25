@@ -1,5 +1,3 @@
-import { enableProdMode } from '@angular/core';
-
 export const environment: Env = {
   pwa: false,
   logEvents: false,
@@ -9,7 +7,7 @@ export const environment: Env = {
 
 // faster
 (Error as any).stackTraceLimit = 0;
-enableProdMode();
+// enableProdMode();
 
 // slower
 // import 'zone.js/plugins/zone-error';
