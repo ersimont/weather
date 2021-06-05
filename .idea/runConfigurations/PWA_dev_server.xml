@@ -1,9 +1,9 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Serve using Web Worker" type="js.build_tools.npm">
+  <configuration default="false" name="PWA dev server" type="js.build_tools.npm">
     <package-json value="$PROJECT_DIR$/package.json" />
     <command value="run" />
     <scripts>
-      <script value="web-worker-start" />
+      <script value="pwa-dev-server" />
     </scripts>
     <node-interpreter value="project" />
     <envs />
