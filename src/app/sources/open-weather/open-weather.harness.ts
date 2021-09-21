@@ -1,4 +1,5 @@
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
+import { expectRequest } from 'app/to-replace/test-context/expect-request';
 import { SlTestRequest } from 'app/to-replace/test-context/sl-test-request';
 import { createBuilder } from '@s-libs/js-core';
 import { ForecastResponse, Timeframe } from './open-weather';
@@ -30,8 +31,9 @@ export class OpenWeatherHarness {
       lon: gpsCoords[1].toString(),
       units: 'metric',
     };
-    return new SlTestRequest<ForecastResponse>('GET', url, this.ctx, {
+    return expectRequest<ForecastResponse>('GET', url, {
       params,
+      ctx: this.ctx,
     });
   }
 }

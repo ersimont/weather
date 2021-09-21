@@ -1,7 +1,8 @@
+import { createBuilder } from '@s-libs/js-core';
 import { HourlyResponse, Timeframe } from 'app/sources/climacell/climacell';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
+import { expectRequest } from 'app/to-replace/test-context/expect-request';
 import { SlTestRequest } from 'app/to-replace/test-context/sl-test-request';
-import { createBuilder } from '@s-libs/js-core';
 
 export class ClimacellHarness {
   constructor(private ctx: WeatherGraphContext) {}
@@ -34,6 +35,6 @@ export class ClimacellHarness {
       fields:
         'cloud_cover,dewpoint,feels_like,precipitation,temp,wind_speed:knots',
     };
-    return new SlTestRequest<HourlyResponse>('GET', url, this.ctx, { params });
+    return expectRequest<HourlyResponse>('GET', url, { params, ctx: this.ctx });
   }
 }

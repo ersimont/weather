@@ -84,6 +84,9 @@ export class WeatherGraphContext extends ComponentContext<AppComponent> {
   }
 
   protected cleanUp(): void {
+    // chart.js needs time to advance to avoid an infinite animation loop in flush()
+    this.tick(1);
+
     super.cleanUp();
 
     // https://github.com/angular/components/blob/b612fc42895e47377b353e773d4ba3517c0991e1/src/material/dialog/dialog.spec.ts#L80

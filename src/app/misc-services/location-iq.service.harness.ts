@@ -6,6 +6,7 @@ import {
 } from 'app/misc-services/location-iq.service';
 import { GpsCoords } from 'app/state/location';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
+import { expectRequest } from 'app/to-replace/test-context/expect-request';
 import { SlTestRequest } from 'app/to-replace/test-context/sl-test-request';
 import { isEmpty } from '@s-libs/micro-dash';
 import { createBuilder } from '@s-libs/js-core';
@@ -44,10 +45,9 @@ export class LocationIqServiceHarness {
   }
 
   expectForward(search: string): SlTestRequest<ForwardResponse> {
-    return new SlTestRequest<ForwardResponse>(
+    return expectRequest<ForwardResponse>(
       'GET',
       'https://us-central1-proxic.cloudfunctions.net/api/location-iq/v1/search.php',
-      this.ctx,
       {
         params: {
           q: search,
@@ -57,6 +57,7 @@ export class LocationIqServiceHarness {
           normalizecity: '1',
           statecode: '1',
         },
+        ctx: this.ctx,
       },
     );
   }
@@ -64,10 +65,9 @@ export class LocationIqServiceHarness {
   expectReverse(
     gpsCoords = this.ctx.currentLocation,
   ): SlTestRequest<LocationResponse> {
-    return new SlTestRequest<LocationResponse>(
+    return expectRequest<LocationResponse>(
       'GET',
       'https://us-central1-proxic.cloudfunctions.net/api/location-iq/v1/reverse.php',
-      this.ctx,
       {
         params: {
           lat: gpsCoords[0].toString(),
@@ -77,17 +77,18 @@ export class LocationIqServiceHarness {
           normalizecity: '1',
           statecode: '1',
         },
+        ctx: this.ctx,
       },
     );
   }
 
   expectTimezone(gpsCoords: GpsCoords): SlTestRequest<TimezoneResponse> {
-    return new SlTestRequest<TimezoneResponse>(
+    return expectRequest<TimezoneResponse>(
       'GET',
       'https://us-central1-proxic.cloudfunctions.net/api/location-iq/v1/timezone.php',
-      this.ctx,
       {
         params: { lat: gpsCoords[0].toString(), lon: gpsCoords[1].toString() },
+        ctx: this.ctx,
       },
     );
   }
