@@ -9,7 +9,7 @@ import { BrowserService } from 'app/misc-services/browser.service';
 import { InitServiceHarness } from 'app/misc-services/init.service.harness';
 import { LocationIqServiceHarness } from 'app/misc-services/location-iq.service.harness';
 import { RefreshServiceHarness } from 'app/misc-services/refresh.service.harness';
-import { ClimacellHarness } from 'app/sources/climacell/climacell.harness';
+import { TomorrowIoHarness } from 'app/sources/tomorrow-io/tomorrow-io-harness';
 import { OpenWeatherHarness } from 'app/sources/open-weather/open-weather.harness';
 import { WeatherGovHarness } from 'app/sources/weather-gov/weather-gov.harness';
 import { WeatherUnlockedHarness } from 'app/sources/weather-unlocked/weather-unlocked.harness';
@@ -30,7 +30,7 @@ export class WeatherGraphContext extends ComponentContext<AppComponent> {
   mocks = { browser: createSpyObject(BrowserService) };
 
   harnesses = {
-    climacell: new ClimacellHarness(this),
+    tomorrowIo: new TomorrowIoHarness(this),
     events: new EventTrackingServiceHarness(eventCatalog),
     errors: new SnackBarErrorServiceHarness(this),
     gov: new WeatherGovHarness(this),

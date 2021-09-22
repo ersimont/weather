@@ -8,6 +8,7 @@ import {
   v6Default,
   v7Default,
   v8Default,
+  v9Default,
 } from 'app/upgrade/upgrade.service.fixutures';
 import { WhatsNewComponentHarness } from 'app/upgrade/whats-new.component.harness';
 
@@ -36,12 +37,26 @@ describe('UpgradeService', () => {
     });
   });
 
+  it('upgrades from v9', () => {
+    ctx.initialState = v9Default as any;
+    ctx.run(async () => {
+      expect(store.getPersistedState()).toEqual(defaultState);
+      const whatsNew = await ctx.getHarness(WhatsNewComponentHarness);
+      expect(await whatsNew.getFeatures()).toEqual([
+        'Climacell changed its name to Tomorrow.io',
+      ]);
+
+      await ctx.cleanUpFreshInit();
+    });
+  });
+
   it('upgrades from v8', () => {
     ctx.initialState = v8Default as any;
     ctx.run(async () => {
       expect(store.getPersistedState()).toEqual(defaultState);
       const whatsNew = await ctx.getHarness(WhatsNewComponentHarness);
       expect(await whatsNew.getFeatures()).toEqual([
+        'Climacell changed its name to Tomorrow.io',
         'You can get your forecast from OpenWeather. Check it out in the Sources section of the settings.',
       ]);
 
@@ -55,6 +70,7 @@ describe('UpgradeService', () => {
       expect(store.getPersistedState()).toEqual(defaultState);
       const whatsNew = await ctx.getHarness(WhatsNewComponentHarness);
       expect(await whatsNew.getFeatures()).toEqual([
+        'Climacell changed its name to Tomorrow.io',
         'You can get your forecast from OpenWeather. Check it out in the Sources section of the settings.',
       ]);
 
@@ -71,8 +87,9 @@ describe('UpgradeService', () => {
       });
       const whatsNew = await ctx.getHarness(WhatsNewComponentHarness);
       expect(await whatsNew.getFeatures()).toEqual([
+        'Climacell changed its name to Tomorrow.io',
         'You can get your forecast from OpenWeather. Check it out in the Sources section of the settings.',
-        'You can get your forecast from Climacell. Check it out in the Sources section of the settings.',
+        'You can get your forecast from Tomorrow.io. Check it out in the Sources section of the settings.',
       ]);
 
       iq.expectReverse();

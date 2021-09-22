@@ -78,6 +78,10 @@ export const unitInfo: Record<UnitEnum, UnitInfo> = {
   },
 };
 
+export function metersPerSecondToKnots(mps: number): number {
+  return mps * 1.944;
+}
+
 function round(
   value: number,
   precision: number,

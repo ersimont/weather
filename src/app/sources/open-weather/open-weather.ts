@@ -6,6 +6,7 @@ import { Condition } from 'app/state/condition';
 import { Forecast } from 'app/state/forecast';
 import { GpsCoords } from 'app/state/location';
 import { SourceId } from 'app/state/source';
+import { metersPerSecondToKnots } from 'app/state/units';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { convertTime } from '@s-libs/js-core';
@@ -76,7 +77,7 @@ function extractForecast(response: ForecastResponse): Forecast {
       [Condition.DEW]: extractDew(timeframe),
       [Condition.FEEL]: timeframe.main.feels_like,
       [Condition.TEMP]: timeframe.main.temp,
-      [Condition.WIND]: timeframe.wind.speed * 1.944,
+      [Condition.WIND]: metersPerSecondToKnots(timeframe.wind.speed),
     };
   }
   return forecast;

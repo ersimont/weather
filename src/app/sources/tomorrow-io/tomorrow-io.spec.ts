@@ -1,32 +1,32 @@
 import { RefreshServiceHarness } from 'app/misc-services/refresh.service.harness';
 import { SourceOptionsComponentHarness } from 'app/options/source-options/source-options.component.harness';
-import { ClimacellHarness } from 'app/sources/climacell/climacell.harness';
+import { TomorrowIoHarness } from 'app/sources/tomorrow-io/tomorrow-io-harness';
 import { SourceId } from 'app/state/source';
 import { WeatherStateHarness } from 'app/state/weather-state.harness';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 import { SnackBarErrorServiceHarness } from 'app/to-replace/snack-bar-error.service.harness';
 
-describe('Climacell', () => {
+describe('TomorrowIo', () => {
   let ctx: WeatherGraphContext;
-  let climacell: ClimacellHarness;
+  let tomorrowIo: TomorrowIoHarness;
   let errors: SnackBarErrorServiceHarness;
   let refresh: RefreshServiceHarness;
   let state: WeatherStateHarness;
   beforeEach(() => {
     ctx = new WeatherGraphContext();
-    ({ climacell, errors, refresh, state } = ctx.harnesses);
+    ({ tomorrowIo, errors, refresh, state } = ctx.harnesses);
 
-    ctx.harnesses.state.setShowing(SourceId.CLIMACELL);
+    ctx.harnesses.state.setShowing(SourceId.TOMORROW_IO);
   });
 
   it('handles errors', () => {
     state.setCustomLocation();
     ctx.run(() => {
-      climacell.expectHourly().flushError();
+      tomorrowIo.expectTimelines().flushError();
       errors.expectGeneric();
 
       refresh.trigger();
-      climacell.expectHourly();
+      tomorrowIo.expectTimelines();
     });
   });
 
@@ -34,11 +34,11 @@ describe('Climacell', () => {
     state.setCustomLocation();
     ctx.run(async () => {
       const sources = await ctx.getHarness(SourceOptionsComponentHarness);
-      await sources.toggle('Climacell');
-      expect(climacell.expectHourly().isCancelled()).toBe(true);
+      await sources.toggle('Tomorrow.io');
+      expect(tomorrowIo.expectTimelines().isCancelled()).toBe(true);
 
-      await sources.toggle('Climacell');
-      climacell.flushDefault();
+      await sources.toggle('Tomorrow.io');
+      tomorrowIo.flushDefault();
     });
   });
 });

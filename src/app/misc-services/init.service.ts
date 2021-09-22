@@ -5,7 +5,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { icons } from 'app/icons';
 import { ManualReinstallService } from 'app/misc-components/manual-reinstall/manual-reinstall.service';
 import { LocationService } from 'app/misc-services/location.service';
-import { Climacell } from 'app/sources/climacell/climacell';
+import { TomorrowIo } from 'app/sources/tomorrow-io/tomorrow-io';
 import { OpenWeather } from 'app/sources/open-weather/open-weather';
 import { WeatherGov } from 'app/sources/weather-gov/weather-gov';
 import { WeatherUnlocked } from 'app/sources/weather-unlocked/weather-unlocked';
@@ -15,21 +15,21 @@ import { WhatsNewService } from 'app/upgrade/whats-new.service';
 @Injectable({ providedIn: 'root' })
 export class InitService {
   constructor(
-    private climacell: Climacell,
     private domSanitizer: DomSanitizer,
     private locationService: LocationService,
     private manualReinstallService: ManualReinstallService,
     private matIconRegistry: MatIconRegistry,
     private matSnackBar: MatSnackBar,
     private openWeather: OpenWeather,
+    private tomorrowIo: TomorrowIo,
     private weatherGov: WeatherGov,
     private weatherUnlocked: WeatherUnlocked,
     private whatsNewService: WhatsNewService,
   ) {}
 
   initializeApp(): void {
-    this.climacell.initialize();
     this.openWeather.initialize();
+    this.tomorrowIo.initialize();
     this.weatherGov.initialize(SourceId.WEATHER_UNLOCKED);
     this.weatherUnlocked.initialize();
     this.matIconRegistry.addSvgIconSetLiteral(

@@ -6,14 +6,14 @@ import { ChartDataSets, ChartPoint, PointStyle } from 'chart.js';
 import { forEach, keys } from '@s-libs/micro-dash';
 
 const pointStyles: { [id in SourceId]: PointStyle } = {
-  [SourceId.CLIMACELL]: 'rect',
+  [SourceId.TOMORROW_IO]: 'rect',
   [SourceId.OPEN_WEATHER]: 'rectRot',
   [SourceId.WEATHER_GOV]: 'circle',
   [SourceId.WEATHER_UNLOCKED]: 'triangle',
 };
 
 const radii: { [id in SourceId]: number } = {
-  [SourceId.CLIMACELL]: 5,
+  [SourceId.TOMORROW_IO]: 5,
   [SourceId.OPEN_WEATHER]: 5,
   [SourceId.WEATHER_GOV]: 4,
   [SourceId.WEATHER_UNLOCKED]: 6,

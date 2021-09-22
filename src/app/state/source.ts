@@ -1,8 +1,8 @@
 import { Forecast } from './forecast';
 
 export enum SourceId {
-  CLIMACELL = 'climacell',
   OPEN_WEATHER = 'openWeather',
+  TOMORROW_IO = 'tomorrowIo',
   WEATHER_GOV = 'weatherGov',
   WEATHER_UNLOCKED = 'weatherUnlocked',
 }

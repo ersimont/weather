@@ -14,8 +14,8 @@ import * as moment from 'moment';
 import { DeepRequired } from 'utility-types';
 
 const sourceOrder = [
-  SourceId.CLIMACELL,
   SourceId.OPEN_WEATHER,
+  SourceId.TOMORROW_IO,
   SourceId.WEATHER_GOV,
   SourceId.WEATHER_UNLOCKED,
 ];
