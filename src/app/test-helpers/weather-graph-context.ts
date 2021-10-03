@@ -11,6 +11,7 @@ import { LocationIqServiceHarness } from 'app/misc-services/location-iq.service.
 import { RefreshServiceHarness } from 'app/misc-services/refresh.service.harness';
 import { TomorrowIoHarness } from 'app/sources/tomorrow-io/tomorrow-io-harness';
 import { OpenWeatherHarness } from 'app/sources/open-weather/open-weather.harness';
+import { VisualCrossingHarness } from 'app/sources/visual-crossing/visual-crossing.harness';
 import { WeatherGovHarness } from 'app/sources/weather-gov/weather-gov.harness';
 import { WeatherUnlockedHarness } from 'app/sources/weather-unlocked/weather-unlocked.harness';
 import { GpsCoords } from 'app/state/location';
@@ -30,9 +31,9 @@ export class WeatherGraphContext extends ComponentContext<AppComponent> {
   mocks = { browser: createSpyObject(BrowserService) };
 
   harnesses = {
-    tomorrowIo: new TomorrowIoHarness(this),
-    events: new EventTrackingServiceHarness(eventCatalog),
+    crossing: new VisualCrossingHarness(this),
     errors: new SnackBarErrorServiceHarness(this),
+    events: new EventTrackingServiceHarness(eventCatalog),
     gov: new WeatherGovHarness(this),
     graph: new GraphComponentHarness(this),
     init: new InitServiceHarness(this),
@@ -42,6 +43,7 @@ export class WeatherGraphContext extends ComponentContext<AppComponent> {
     refresh: new RefreshServiceHarness(this),
     state: new WeatherStateHarness(this),
     store: new WeatherStoreHarness(),
+    tomorrowIo: new TomorrowIoHarness(this),
     unlocked: new WeatherUnlockedHarness(this),
   };
 

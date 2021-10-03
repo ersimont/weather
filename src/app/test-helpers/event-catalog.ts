@@ -9,8 +9,9 @@ export const eventCatalog = {
   ],
   change_location: ['change_current_selection', 'change_custom_search'],
   change_source: [
-    'change_tomorrowIo',
     'change_openWeather',
+    'change_tomorrowIo',
+    'change_visualCrossing',
     'change_weatherGov',
     'change_weatherUnlocked',
   ],

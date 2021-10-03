@@ -12,6 +12,7 @@ export class UpgradeService extends MigrationManager<WeatherState> {
     private whatsNewService: WhatsNewService,
   ) {
     super();
+    this.registerMigration(10, this.upgradeFrom10);
     this.registerMigration(9, this.upgradeFrom9);
     this.registerMigration(8, this.upgradeFrom8);
     this.registerMigration(7, this.upgradeFrom7);
@@ -26,6 +27,20 @@ export class UpgradeService extends MigrationManager<WeatherState> {
     // test this once there is a way to activate it
     this.errorService.handleError(error);
     return defaultValue;
+  }
+
+  private upgradeFrom10(state: any): WeatherState {
+    this.whatsNewService.add(
+      'You can get your forecast from Visual Crossing. Check it out in the Sources section of the settings.',
+    );
+    return {
+      ...state,
+      _version: 11,
+      sources: {
+        ...state.sources,
+        visualCrossing: { label: 'Visual Crossing', show: false, forecast: {} },
+      },
+    };
   }
 
   private upgradeFrom9(state: any): WeatherState {

@@ -82,6 +82,10 @@ export function metersPerSecondToKnots(mps: number): number {
   return mps * 1.944;
 }
 
+export function kilometersPrHourToKnots(kps: number): number {
+  return kps / 1.852;
+}
+
 function round(
   value: number,
   precision: number,

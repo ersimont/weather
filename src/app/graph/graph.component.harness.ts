@@ -16,6 +16,7 @@ import { DeepRequired } from 'utility-types';
 const sourceOrder = [
   SourceId.OPEN_WEATHER,
   SourceId.TOMORROW_IO,
+  SourceId.VISUAL_CROSSING,
   SourceId.WEATHER_GOV,
   SourceId.WEATHER_UNLOCKED,
 ];

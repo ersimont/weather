@@ -54,14 +54,32 @@ $weather-dark-theme: mat.define-dark-theme(
   }
 }
 
+.openWeather .mat-slide-toggle-thumb {
+  border-radius: 0;
+  clip-path: polygon(0% 50%, 50% 0%, 100% 50%, 50% 100%);
+}
+
 .tomorrowIo .mat-slide-toggle-thumb {
   border-radius: 0;
   clip-path: polygon(10% 10%, 90% 10%, 90% 90%, 10% 90%);
 }
 
-.openWeather .mat-slide-toggle-thumb {
+.visualCrossing .mat-slide-toggle-thumb {
   border-radius: 0;
-  clip-path: polygon(0% 50%, 50% 0%, 100% 50%, 50% 100%);
+  clip-path: polygon(
+    0% 15%,
+    15% 0%,
+    50% 35%,
+    85% 0%,
+    100% 15%,
+    65% 50%,
+    100% 85%,
+    85% 100%,
+    50% 65%,
+    15% 100%,
+    0% 85%,
+    35% 50%
+  );
 }
 
 .weatherUnlocked .mat-slide-toggle-thumb {

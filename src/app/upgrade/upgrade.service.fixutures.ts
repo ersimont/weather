@@ -1,5 +1,32 @@
 import { WeatherState } from 'app/state/weather-state';
 
+export const v11Default = {
+  _version: 11,
+  useCurrentLocation: false,
+  currentLocation: { search: '' },
+  customLocation: { search: '' },
+  allowSourceFallback: true,
+  sources: {
+    openWeather: { label: 'OpenWeather', show: false, forecast: {} },
+    tomorrowIo: { label: 'Tomorrow.io', show: false, forecast: {} },
+    visualCrossing: { label: 'Visual Crossing', show: false, forecast: {} },
+    weatherGov: { label: 'Weather.gov', show: true, forecast: {} },
+    weatherUnlocked: { label: 'Weather Unlocked', show: false, forecast: {} },
+  },
+  units: { temp: '°F', amount: 'in', speed: 'mph' },
+  showConditions: {
+    temp: true,
+    feel: true,
+    dew: true,
+    amount: true,
+    cloud: true,
+    wind: true,
+  },
+  viewRange: { min: -5400000, max: 81000000 },
+};
+
+export const defaultState = v11Default as unknown as WeatherState;
+
 export const v10Default = {
   _version: 10,
   useCurrentLocation: false,
@@ -23,8 +50,6 @@ export const v10Default = {
   },
   viewRange: { min: -5400000, max: 81000000 },
 };
-
-export const defaultState = v10Default as unknown as WeatherState;
 
 export const v9Default = {
   _version: 9,
@@ -124,9 +149,7 @@ export const v5Example = {
     gpsCoords: [42.1716779, -85.5900794],
     city: 'Portage, MI',
   },
-  customLocation: {
-    search: '',
-  },
+  customLocation: { search: '' },
   sources: {
     weatherGov: {
       label: 'Weather.gov',
@@ -157,11 +180,7 @@ export const v5Example = {
       },
     },
   },
-  units: {
-    temp: '°C',
-    amount: 'mm',
-    speed: 'km/h',
-  },
+  units: { temp: '°C', amount: 'mm', speed: 'km/h' },
   showConditions: {
     temp: true,
     feel: false,

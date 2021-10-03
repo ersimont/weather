@@ -4,6 +4,7 @@ import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 import { SnackBarErrorServiceHarness } from 'app/to-replace/snack-bar-error.service.harness';
 import {
   defaultState,
+  v10Default,
   v5Example,
   v6Default,
   v7Default,
@@ -32,6 +33,20 @@ describe('UpgradeService', () => {
         )
         .toEqual(defaultState);
       expect(await ctx.getAllHarnesses(WhatsNewComponentHarness)).toEqual([]);
+      // console.log(store.getPersistedState());
+
+      await ctx.cleanUpFreshInit();
+    });
+  });
+
+  it('upgrades from v10', () => {
+    ctx.initialState = v10Default as any;
+    ctx.run(async () => {
+      expect(store.getPersistedState()).toEqual(defaultState);
+      const whatsNew = await ctx.getHarness(WhatsNewComponentHarness);
+      expect(await whatsNew.getFeatures()).toEqual([
+        'You can get your forecast from Visual Crossing. Check it out in the Sources section of the settings.',
+      ]);
 
       await ctx.cleanUpFreshInit();
     });
@@ -43,6 +58,7 @@ describe('UpgradeService', () => {
       expect(store.getPersistedState()).toEqual(defaultState);
       const whatsNew = await ctx.getHarness(WhatsNewComponentHarness);
       expect(await whatsNew.getFeatures()).toEqual([
+        'You can get your forecast from Visual Crossing. Check it out in the Sources section of the settings.',
         'Climacell changed its name to Tomorrow.io',
       ]);
 
@@ -56,6 +72,7 @@ describe('UpgradeService', () => {
       expect(store.getPersistedState()).toEqual(defaultState);
       const whatsNew = await ctx.getHarness(WhatsNewComponentHarness);
       expect(await whatsNew.getFeatures()).toEqual([
+        'You can get your forecast from Visual Crossing. Check it out in the Sources section of the settings.',
         'Climacell changed its name to Tomorrow.io',
         'You can get your forecast from OpenWeather. Check it out in the Sources section of the settings.',
       ]);
@@ -70,6 +87,7 @@ describe('UpgradeService', () => {
       expect(store.getPersistedState()).toEqual(defaultState);
       const whatsNew = await ctx.getHarness(WhatsNewComponentHarness);
       expect(await whatsNew.getFeatures()).toEqual([
+        'You can get your forecast from Visual Crossing. Check it out in the Sources section of the settings.',
         'Climacell changed its name to Tomorrow.io',
         'You can get your forecast from OpenWeather. Check it out in the Sources section of the settings.',
       ]);
@@ -87,6 +105,7 @@ describe('UpgradeService', () => {
       });
       const whatsNew = await ctx.getHarness(WhatsNewComponentHarness);
       expect(await whatsNew.getFeatures()).toEqual([
+        'You can get your forecast from Visual Crossing. Check it out in the Sources section of the settings.',
         'Climacell changed its name to Tomorrow.io',
         'You can get your forecast from OpenWeather. Check it out in the Sources section of the settings.',
         'You can get your forecast from Tomorrow.io. Check it out in the Sources section of the settings.',
