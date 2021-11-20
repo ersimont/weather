@@ -6,11 +6,11 @@
       "rules": {
         "@angular-eslint/directive-selector": [
           "error",
-          { "type": "attribute", "prefix": ["app", "s"], "style": "camelCase" }
+          { "type": "attribute", "prefix": ["app", "sl"], "style": "camelCase" }
         ],
         "@angular-eslint/component-selector": [
           "error",
-          { "type": "element", "prefix": ["app", "s"], "style": "kebab-case" }
+          { "type": "element", "prefix": ["app", "sl"], "style": "kebab-case" }
         ]
       }
     }

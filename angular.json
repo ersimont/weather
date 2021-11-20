@@ -15,9 +15,7 @@
           "changeDetection": "OnPush",
           "skipTests": true
         },
-        "@schematics/angular:application": {
-          "strict": true
-        }
+        "@schematics/angular:application": { "strict": true }
       },
       "root": "",
       "sourceRoot": "src",
@@ -78,20 +76,14 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
-            "production": {
-              "browserTarget": "weather:build:production"
-            },
-            "development": {
-              "browserTarget": "weather:build:development"
-            }
+            "production": { "browserTarget": "weather:build:production" },
+            "development": { "browserTarget": "weather:build:development" }
           },
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "browserTarget": "weather:build"
-          }
+          "options": { "browserTarget": "weather:build" }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
@@ -116,14 +108,18 @@
             ]
           }
         },
-        "deploy": {
-          "builder": "@angular/fire:deploy",
-          "options": {}
-        },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
+          "options": { "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"] }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
           "options": {
-            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+            "prerender": false,
+            "ssr": false,
+            "browserTarget": "the-project:build:production",
+            "firebaseProject": "simonton-weather",
+            "firebaseHostingSite": "simonton-weather"
           }
         }
       }
