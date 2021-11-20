@@ -30,7 +30,7 @@ export class GraphStateHarness {
   }
 
   getBoundaries(): number[] {
-    const pan = this.getState().options.plugins.zoom.pan;
+    const pan = this.getState().options.plugins['zoom'].pan;
     return [pan.rangeMin.x as number, pan.rangeMax.x as number];
   }
 

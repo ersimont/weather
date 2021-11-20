@@ -1,8 +1,7 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { EventTrackingConfig } from 'app/to-replace/event-tracking/event-tracking-config';
-import { STrackDirective } from 'app/to-replace/event-tracking/s-track.directive';
 
-@NgModule({ declarations: [STrackDirective], exports: [STrackDirective] })
+@NgModule({})
 export class EventTrackingModule {
   static forRoot(
     config: EventTrackingConfig = {},

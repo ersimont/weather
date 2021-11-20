@@ -25,7 +25,7 @@ class TestContext extends AngularContext {
     });
   }
 
-  protected cleanUp(): void {
+  protected override cleanUp(): void {
     this.inject(OverlayContainer).ngOnDestroy();
     this.tick(5000);
     super.cleanUp();
@@ -49,7 +49,7 @@ describe('SnackBarErrorService', () => {
       fakeAsync(() => Promise.reject(error))();
       throw new Error('should not get here');
     } catch (error) {
-      return error;
+      return error as Error;
     }
   }
 

@@ -19,7 +19,7 @@ export class UpgradeService extends MigrationManager<WeatherState> {
     this.registerMigration(undefined, this.upgradeFromLegacy);
   }
 
-  protected onError(
+  protected override onError(
     error: any,
     _object: unknown,
     defaultValue: WeatherState,

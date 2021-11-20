@@ -10,8 +10,7 @@ import { GpsCoords, Location } from 'app/state/location';
 import { WeatherStore } from 'app/state/weather-store';
 import { EventTrackingService } from 'app/to-replace/event-tracking/event-tracking.service';
 import { SnackBarErrorService } from 'app/to-replace/snack-bar-error.service';
-import { NEVER, Observable, of, Subject } from 'rxjs';
-import { fromPromise } from 'rxjs/internal-compatibility';
+import { from, NEVER, Observable, of, Subject } from 'rxjs';
 import {
   catchError,
   distinctUntilChanged,
@@ -93,7 +92,7 @@ export class LocationService extends InjectableSuperclass {
   }
 
   private refreshCurrentLocation(): Observable<unknown> {
-    return fromPromise(this.browserService.getCurrentLocation()).pipe(
+    return from(this.browserService.getCurrentLocation()).pipe(
       switchMap((gpsCoords: GpsCoords) =>
         this.locationIqService.reverse(gpsCoords).pipe(
           catchError((error) => {

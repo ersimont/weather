@@ -69,7 +69,7 @@ export class WeatherGraphContext extends ComponentContext<AppComponent> {
     await this.harnesses.init.cleanUpFreshInit();
   }
 
-  protected init(): void {
+  protected override init(): void {
     if (this.useInitialState) {
       localStorage.setItem('weather', JSON.stringify(this.initialState));
     } else {
@@ -79,13 +79,13 @@ export class WeatherGraphContext extends ComponentContext<AppComponent> {
     super.init();
   }
 
-  protected verifyPostTestConditions(): void {
+  protected override verifyPostTestConditions(): void {
     super.verifyPostTestConditions();
     this.harnesses.events.validateEvents();
     this.harnesses.errors.verify();
   }
 
-  protected cleanUp(): void {
+  protected override cleanUp(): void {
     // chart.js needs time to advance to avoid an infinite animation loop in flush()
     this.tick(1);
 
