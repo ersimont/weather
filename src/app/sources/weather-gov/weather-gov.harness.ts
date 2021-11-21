@@ -1,3 +1,4 @@
+import { expectRequest, SlTestRequest } from '@s-libs/ng-dev';
 import {
   GridResponse,
   PointResponse,
@@ -8,8 +9,6 @@ import {
   pointResponse,
 } from 'app/sources/weather-gov/weather-gov.fixtures';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
-import { expectRequest } from 'app/to-replace/test-context/expect-request';
-import { SlTestRequest } from 'app/to-replace/test-context/sl-test-request';
 
 export class WeatherGovHarness {
   constructor(private ctx: WeatherGraphContext) {}
@@ -30,14 +29,13 @@ export class WeatherGovHarness {
     return expectRequest<PointResponse>(
       'GET',
       `https://api.weather.gov/points/${gpsCoordinates.join(',')}`,
-      { ctx: this.ctx },
     );
   }
 
   expectGrid(
     url = pointResponse.properties.forecastGridData,
   ): SlTestRequest<GridResponse> {
-    return expectRequest<GridResponse>('GET', url, { ctx: this.ctx });
+    return expectRequest<GridResponse>('GET', url);
   }
 
   expectNotAvailableError(): void {

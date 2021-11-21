@@ -1944,58 +1944,58 @@
   resolved "https://registry.npmjs.org/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha1-p3c2C1s5oaLlEG+OhY8v0tBgxXA=
 
-"@s-libs/app-state@^13.0.0-next.0":
-  version "13.0.0-next.0"
-  resolved "https://registry.npmjs.org/@s-libs/app-state/-/app-state-13.0.0-next.0.tgz#a74b11ab6a60dfcd3aba323306750492c7026e74"
-  integrity sha512-IWykC1oyPrCxhBLjmNQYS+bpQzI6qydzPQivT4e6Jxjm39cQWfcQKXGrdgqnYGuWolRdaM8vkVEKEfvpOatSsw==
+"@s-libs/app-state@^13.0.0":
+  version "13.0.0"
+  resolved "https://registry.npmjs.org/@s-libs/app-state/-/app-state-13.0.0.tgz#aebd2e818087ecd3ab9720e08685be172caf52b4"
+  integrity sha512-/UGl/KBLVVvem/eXoyOPPWhAlh9RbjeXK7F66IHuDEQmi1cCDzUtjPF9kSmXcQUPV5HT720HWdv7Ku4zwFJMbQ==
   dependencies:
     tslib "^2.3.0"
 
-"@s-libs/eslint-config-ng@^13.0.0-next.0":
-  version "13.0.0-next.0"
-  resolved "https://registry.npmjs.org/@s-libs/eslint-config-ng/-/eslint-config-ng-13.0.0-next.0.tgz#c72507a04ed3cc66a9749a4284314d02ada4865c"
-  integrity sha512-cnF1Q9prhYRCcc943QFb6mSo3/1bO+7EHUmpy3Qx0P+C8XXWIAKCJo2QqOIzh1YQrDsl3Rt6CXJDvgiteDlBGg==
+"@s-libs/eslint-config-ng@^13.0.0":
+  version "13.0.0"
+  resolved "https://registry.npmjs.org/@s-libs/eslint-config-ng/-/eslint-config-ng-13.0.0.tgz#508f6da7534f51b19cc5ed6ec8306e77c4ef578b"
+  integrity sha512-jvfj7t1AWyxpthMnx6Exl0ze4zoxYAnG6ck/mgYN16ACuSt8jXjDafzt/w6SPbZIodFIORlKsQSq3dgxaBwdnA==
 
-"@s-libs/js-core@^13.0.0-next.0":
-  version "13.0.0-next.0"
-  resolved "https://registry.npmjs.org/@s-libs/js-core/-/js-core-13.0.0-next.0.tgz#2d149efe905bbd029b453f7a508eab1a288d22ae"
-  integrity sha512-2FQrBm8GphYjARJg+nUVqcrQbLsLbxcLB6EYxElvrZaywuxcWWALmVQF7wNskLPFWB9WHaY3rIOQHaRYOYPreQ==
+"@s-libs/js-core@^13.0.0":
+  version "13.0.0"
+  resolved "https://registry.npmjs.org/@s-libs/js-core/-/js-core-13.0.0.tgz#aef99293f0fe5a7f873496252f7fd70e6724ac44"
+  integrity sha512-aWqssXA+MSy7njHpy5JyU3MsdkunvTcYmX+llqi3K1dE554gMecuc79UFBUAKzJa82bDYH9yEGQNZD07XhPJcA==
   dependencies:
     tslib "^2.3.0"
 
-"@s-libs/micro-dash@^13.0.0-next.0":
-  version "13.0.0-next.0"
-  resolved "https://registry.npmjs.org/@s-libs/micro-dash/-/micro-dash-13.0.0-next.0.tgz#ad977f1467616156a913a8e883e2ddf9d163de63"
-  integrity sha512-cWu6l3NwlxBLLwai0EJmRI2bGZEa8Mhu4msJIPHOnqlkYMtpIQeCSYtiMDWZ+bnGGWIMHYI1/S/XT1nRmLdw4g==
+"@s-libs/micro-dash@^13.0.0":
+  version "13.0.0"
+  resolved "https://registry.npmjs.org/@s-libs/micro-dash/-/micro-dash-13.0.0.tgz#79db63b4831676c32ed71350e5ef335c40157876"
+  integrity sha512-omUargVpLEPESHcjH4de5zbOyPp51OhnmWpRxYgLw2vNfwd/r3QRgSiNMMXiMFZjwFLnzKD1TDFxERm2pKprcw==
   dependencies:
     tslib "^2.3.0"
     utility-types "^3.10.0"
 
-"@s-libs/ng-app-state@^13.0.0-next.0":
-  version "13.0.0-next.0"
-  resolved "https://registry.npmjs.org/@s-libs/ng-app-state/-/ng-app-state-13.0.0-next.0.tgz#f1f05d99d574966d9c1dfe32ba49aa0319007d0e"
-  integrity sha512-8pZoi790e99AbY3GIA9Ifij+JbfYg2f3I23XhIRfCFfIvKRr6P0vray+3W+4tvZnvF6nczEDKkEtosz8CrfgUQ==
+"@s-libs/ng-app-state@^13.0.0":
+  version "13.0.0"
+  resolved "https://registry.npmjs.org/@s-libs/ng-app-state/-/ng-app-state-13.0.0.tgz#881412263ca189d81b84f6171073861f65762a60"
+  integrity sha512-/jmzOLSqJyXvU0/p8V+8bV2jdI3/Gs0/scQVWz3qj9yvjzzPbw+6WKt6Q7V2Hh82sXWCOGoEMRUugsw9AoLO7w==
   dependencies:
     tslib "^2.3.0"
 
-"@s-libs/ng-core@^13.0.0-next.0":
-  version "13.0.0-next.0"
-  resolved "https://registry.npmjs.org/@s-libs/ng-core/-/ng-core-13.0.0-next.0.tgz#37d8143fcce9995675adc3764cd603c62a543ada"
-  integrity sha512-RQqDXMmSJBQVdGY4CzuNsEGPj3iGR00cC01s+8aes2m2SJpUvR95zUR3UUqv1RHnISeT7EdEwmk6Isnj7nHpVg==
+"@s-libs/ng-core@^13.0.0":
+  version "13.0.0"
+  resolved "https://registry.npmjs.org/@s-libs/ng-core/-/ng-core-13.0.0.tgz#835656db41f95285aab1e0514407687d521c9230"
+  integrity sha512-n6CiPasLSz/WZs39Phd6vjtGbFQ+A1SqmVhiG4SNrveK5ZGzU/DKsAWRTWym/n9LZLR9f1PVv6ts+77VrX74ew==
   dependencies:
     tslib "^2.3.0"
 
-"@s-libs/ng-dev@^13.0.0-next.0":
-  version "13.0.0-next.0"
-  resolved "https://registry.npmjs.org/@s-libs/ng-dev/-/ng-dev-13.0.0-next.0.tgz#a179f38b1d204e8ee664f027e0efae092567735c"
-  integrity sha512-BSA5Y4+YHBXj/ii63h+XRcYdr4Rf9VScsEiRj8a5caCZPmb4P1vNITDlt/+8YA+/Sm45xe+IfwXcNDouhuYafQ==
+"@s-libs/ng-dev@^13.0.0":
+  version "13.0.0"
+  resolved "https://registry.npmjs.org/@s-libs/ng-dev/-/ng-dev-13.0.0.tgz#980f29b3bf09ceb3805a47653f7f99f48a6337f0"
+  integrity sha512-Mjh9s5RpbcP0HALhHCB/iorXMAI8VX+CbhygjLISHiqFFJPuD4mDLYiHGnShP+H/q63RTG8zt7NHPkt3D4wU9Q==
   dependencies:
     tslib "^2.3.0"
 
-"@s-libs/rxjs-core@^13.0.0-next.0":
-  version "13.0.0-next.0"
-  resolved "https://registry.npmjs.org/@s-libs/rxjs-core/-/rxjs-core-13.0.0-next.0.tgz#25efd4efa581abb5e0f6bd25703547104f69f761"
-  integrity sha512-0BYrKdOEnB2sfnPwGswWpMFj+xg427l4h7D4yWzPk4oviLJ+vWGR3ER108MW17F4kAbwwAKYf9LWp6qCJMJiPg==
+"@s-libs/rxjs-core@^13.0.0":
+  version "13.0.0"
+  resolved "https://registry.npmjs.org/@s-libs/rxjs-core/-/rxjs-core-13.0.0.tgz#c366973bfe1461371f515398e18e2576bd65b027"
+  integrity sha512-Y7S2mVZgiLgFQYpoEjrk/rX/W431Y5puTZ3JBe/rvkiG6ipBVOSPTZSRj8WV2sq419j016+KeUVvnrLSP30ihg==
   dependencies:
     tslib "^2.3.0"
 

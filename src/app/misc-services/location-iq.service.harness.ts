@@ -1,3 +1,6 @@
+import { createBuilder } from '@s-libs/js-core';
+import { isEmpty } from '@s-libs/micro-dash';
+import { expectRequest, SlTestRequest } from '@s-libs/ng-dev';
 import {
   Address,
   ForwardResponse,
@@ -6,29 +9,24 @@ import {
 } from 'app/misc-services/location-iq.service';
 import { GpsCoords } from 'app/state/location';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
-import { expectRequest } from 'app/to-replace/test-context/expect-request';
-import { SlTestRequest } from 'app/to-replace/test-context/sl-test-request';
-import { isEmpty } from '@s-libs/micro-dash';
-import { createBuilder } from '@s-libs/js-core';
 
 export class LocationIqServiceHarness {
   buildForwardResponse = createBuilder<ForwardResponse>(() => [
     this.buildLocationResponse(),
   ]);
   buildLocationResponse = createBuilder<LocationResponse, Address>(
-    (_seq, options) => ({
-      lat: '42.180152',
-      lon: '-85.591104',
-      address: isEmpty(options)
-        ? {
-            road: 'Cedarview Drive',
-            city: 'Portage',
-            state: 'Michigan',
-            country_code: 'us',
-            state_code: 'mi',
-          }
-        : options,
-    }),
+    (_seq, options) => {
+      if (isEmpty(options)) {
+        options = {
+          road: 'Cedarview Drive',
+          city: 'Portage',
+          state: 'Michigan',
+          country_code: 'us',
+          state_code: 'mi',
+        };
+      }
+      return { lat: '42.180152', lon: '-85.591104', address: options };
+    },
   );
   buildTimezoneResponse = createBuilder<TimezoneResponse>(() => ({
     timezone: { name: 'America/Detroit' },
@@ -57,7 +55,6 @@ export class LocationIqServiceHarness {
           normalizecity: '1',
           statecode: '1',
         },
-        ctx: this.ctx,
       },
     );
   }
@@ -77,7 +74,6 @@ export class LocationIqServiceHarness {
           normalizecity: '1',
           statecode: '1',
         },
-        ctx: this.ctx,
       },
     );
   }
@@ -88,7 +84,6 @@ export class LocationIqServiceHarness {
       'https://us-central1-proxic.cloudfunctions.net/api/location-iq/v1/timezone.php',
       {
         params: { lat: gpsCoords[0].toString(), lon: gpsCoords[1].toString() },
-        ctx: this.ctx,
       },
     );
   }

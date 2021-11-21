@@ -1,11 +1,10 @@
 import { createBuilder } from '@s-libs/js-core';
+import { expectRequest, SlTestRequest } from '@s-libs/ng-dev';
 import {
   Hour,
   TimelineResponse,
 } from 'app/sources/visual-crossing/visual-crossing';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
-import { expectRequest } from 'app/to-replace/test-context/expect-request';
-import { SlTestRequest } from 'app/to-replace/test-context/sl-test-request';
 
 export class VisualCrossingHarness {
   constructor(private ctx: WeatherGraphContext) {}
@@ -37,7 +36,6 @@ export class VisualCrossingHarness {
       gpsCoords.join(',');
     return expectRequest('GET', url, {
       params: { unitGroup: 'metric', include: 'hours' },
-      ctx: this.ctx,
     });
   }
 }

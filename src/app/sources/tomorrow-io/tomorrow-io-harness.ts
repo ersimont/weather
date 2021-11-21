@@ -1,11 +1,10 @@
 import { createBuilder } from '@s-libs/js-core';
+import { expectRequest, SlTestRequest } from '@s-libs/ng-dev';
 import {
   IntervalValues,
   TimelinesResponse,
 } from 'app/sources/tomorrow-io/tomorrow-io';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
-import { expectRequest } from 'app/to-replace/test-context/expect-request';
-import { SlTestRequest } from 'app/to-replace/test-context/sl-test-request';
 
 export class TomorrowIoHarness {
   constructor(private ctx: WeatherGraphContext) {}
@@ -50,9 +49,6 @@ export class TomorrowIoHarness {
       fields:
         'cloudCover,dewPoint,precipitationIntensity,temperature,temperatureApparent,windSpeed',
     };
-    return expectRequest<TimelinesResponse>('GET', url, {
-      params,
-      ctx: this.ctx,
-    });
+    return expectRequest<TimelinesResponse>('GET', url, { params });
   }
 }

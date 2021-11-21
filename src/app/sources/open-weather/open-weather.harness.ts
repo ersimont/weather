@@ -1,7 +1,6 @@
-import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
-import { expectRequest } from 'app/to-replace/test-context/expect-request';
-import { SlTestRequest } from 'app/to-replace/test-context/sl-test-request';
 import { createBuilder } from '@s-libs/js-core';
+import { expectRequest, SlTestRequest } from '@s-libs/ng-dev';
+import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 import { ForecastResponse, Timeframe } from './open-weather';
 
 export class OpenWeatherHarness {
@@ -31,9 +30,6 @@ export class OpenWeatherHarness {
       lon: gpsCoords[1].toString(),
       units: 'metric',
     };
-    return expectRequest<ForecastResponse>('GET', url, {
-      params,
-      ctx: this.ctx,
-    });
+    return expectRequest<ForecastResponse>('GET', url, { params });
   }
 }
