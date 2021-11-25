@@ -5,10 +5,10 @@ import { Condition } from 'app/state/condition';
 import { SourceId } from 'app/state/source';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 import {
-  ChartDataSets,
+  ChartDataset,
   ChartOptions,
-  ChartPoint,
-  ChartTooltipItem,
+  ScatterDataPoint,
+  TooltipItem,
 } from 'chart.js';
 import * as moment from 'moment';
 import { DeepRequired } from 'utility-types';
@@ -41,33 +41,45 @@ export class GraphComponentHarness {
     condition: Condition,
     index: number,
   ): string {
-    const datasetIndex =
-      conditionOrder.length * sourceOrder.indexOf(sourceId) +
-      conditionOrder.indexOf(condition);
-    const chartPoints = this.getDataSets()[datasetIndex].data as ChartPoint[];
-    const value = chartPoints[index].y!.toString();
-    const item: ChartTooltipItem = { value, datasetIndex, index };
-    const getLabel = this.getOptions().tooltips.callbacks.label;
-    return getLabel(item, { datasets: this.getDataSets() }) as string;
+    const getLabel = this.getOptions().plugins.tooltip.callbacks.label as (
+      item: TooltipItem<'line'>,
+    ) => string;
+    return getLabel(this.getTooltipItem(sourceId, condition, index));
   }
 
   getTooltipFooter(sourceId: SourceId): string {
-    const datasetIndex = conditionOrder.length * sourceOrder.indexOf(sourceId);
-    const getFooter = this.getOptions().tooltips.callbacks.footer;
-    return getFooter([{ datasetIndex }], {
-      datasets: this.getDataSets(),
-    }) as string;
+    const getFooter = this.getOptions().plugins.tooltip.callbacks.footer as (
+      items: TooltipItem<'line'>[],
+    ) => string;
+    return getFooter([
+      this.getTooltipItem(sourceId, Condition.TEMP, 0),
+    ]) as string;
   }
 
   getTimeZone(): string {
     return moment().zoneName();
   }
 
-  private getOptions(): DeepRequired<ChartOptions> {
+  private getOptions(): DeepRequired<ChartOptions<'line'>> {
     return this.getGraphStore().state().options;
   }
 
-  private getDataSets(): ChartDataSets[] {
+  private getTooltipItem(
+    sourceId: SourceId,
+    condition: Condition,
+    index: number,
+  ): TooltipItem<'line'> {
+    // construct just the parts that our code actually uses
+    const datasetIndex =
+      conditionOrder.length * sourceOrder.indexOf(sourceId) +
+      conditionOrder.indexOf(condition);
+    const dataset = this.getDataSets()[datasetIndex];
+    const chartPoints = dataset.data as ScatterDataPoint[];
+    const value = chartPoints[index];
+    return { parsed: value, dataset } as TooltipItem<'line'>;
+  }
+
+  private getDataSets(): ChartDataset<'line'>[] {
     return this.getGraphStore().state().data;
   }
 

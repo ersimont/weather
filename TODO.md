@@ -1,4 +1,6 @@
-- Upgrade ChartJS
+- Use something other than moment.js
+- Theme chooser for light/dark/system
+- Make night boxes more obvious
 - Add link to issue tracker for user feedback
 - No focus change on installed mobile. Try adding the visibility API
 - Fix: Tooltips can have multiple data sources, but only cites one of them

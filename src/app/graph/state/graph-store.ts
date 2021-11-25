@@ -9,9 +9,9 @@ import {
 } from '@s-libs/rxjs-core';
 import { buildDatasets } from 'app/graph/chartjs-datasets';
 import {
-  buildBoundaries,
   buildNightBoxes,
   buildNowLine,
+  getMinMax,
 } from 'app/graph/chartjs-options';
 import { GraphState } from 'app/graph/state/graph-state';
 import { LocationService } from 'app/misc-services/location.service';
@@ -19,8 +19,10 @@ import { Condition } from 'app/state/condition';
 import { GpsCoords } from 'app/state/location';
 import { ViewRange } from 'app/state/viewRange';
 import { WeatherStore } from 'app/state/weather-store';
+import { AnnotationOptions } from 'chartjs-plugin-annotation';
 import { combineLatest, interval } from 'rxjs';
 import { filter, map, startWith, take } from 'rxjs/operators';
+import { DeepRequired } from 'utility-types';
 
 @Injectable()
 export class GraphStore extends mixInInjectableSuperclass(
@@ -64,17 +66,17 @@ export class GraphStore extends mixInInjectableSuperclass(
     gpsCoords: GpsCoords | undefined,
   ): void {
     const nightBoxes = gpsCoords ? buildNightBoxes(now, gpsCoords) : [];
-    const annotations = [...nightBoxes, buildNowLine(now)];
-    this('options')('annotation' as any).assign({ annotations });
+    const annotations = [...nightBoxes, buildNowLine(now)] as DeepRequired<
+      AnnotationOptions[]
+    >;
+    this('options')('plugins')('annotation').assign({ annotations });
   }
 
   private updateRange(now: number, range: ViewRange): void {
     range = mapValues(range, (value) => now + value);
-    const boundaries = buildBoundaries(now);
     this.batch(() => {
-      this('options')('scales')('xAxes')(0)('ticks').assign(range);
-      this('options')('plugins')('zoom')('pan').assign(boundaries);
-      this('options')('plugins')('zoom')('zoom').assign(boundaries);
+      this('options')('scales')('x').assign(range);
+      this('options')('plugins')('zoom')('limits')('x').assign(getMinMax(now));
     });
   }
 

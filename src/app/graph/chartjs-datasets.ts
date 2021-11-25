@@ -1,9 +1,14 @@
+import { forEach, keys } from '@s-libs/micro-dash';
 import { Condition, conditionInfo } from 'app/state/condition';
 import { SourceId } from 'app/state/source';
 import { AmountUnit } from 'app/state/units';
 import { WeatherState } from 'app/state/weather-state';
-import { ChartDataSets, ChartPoint, PointStyle } from 'chart.js';
-import { forEach, keys } from '@s-libs/micro-dash';
+import {
+  ChartDataset,
+  DefaultDataPoint,
+  PointStyle,
+  TooltipItem,
+} from 'chart.js';
 
 const pointStyles: { [id in SourceId]: PointStyle } = {
   [SourceId.TOMORROW_IO]: 'rect',
@@ -24,8 +29,8 @@ const radii: { [id in SourceId]: number } = {
 export function buildDatasets(
   state: WeatherState,
   colors: Record<Condition, string>,
-): Chart.ChartDataSets[] {
-  const dataSets: ChartDataSets[] = [];
+): ChartDataset<'line'>[] {
+  const dataSets: ChartDataset<'line'>[] = [];
   forEach(state.sources, (_, sourceId) => {
     addDataSets(sourceId, dataSets, state, colors);
   });
@@ -34,7 +39,7 @@ export function buildDatasets(
 
 function addDataSets(
   sourceId: SourceId,
-  dataSets: ChartDataSets[],
+  dataSets: ChartDataset<'line'>[],
   state: WeatherState,
   colors: Record<Condition, string>,
 ): void {
@@ -65,7 +70,7 @@ function addDataSets(
 
 function addDataSet(
   sourceId: SourceId,
-  dataSets: Chart.ChartDataSets[],
+  datasets: ChartDataset<'line'>[],
   state: WeatherState,
   colors: Record<Condition, string>,
   condition: Condition,
@@ -73,7 +78,7 @@ function addDataSet(
   fillAlpha = '00',
 ): void {
   const color = colors[condition];
-  dataSets.push({
+  datasets.push({
     label: encodeLabelValues(sourceId, condition),
     data: getData(sourceId, condition, state),
     yAxisID,
@@ -83,8 +88,10 @@ function addDataSet(
     pointHoverBorderColor: color,
     pointHoverBackgroundColor: color,
     pointStyle: pointStyles[sourceId],
-    radius: radii[sourceId],
+    pointRadius: radii[sourceId],
+    tension: 0.3,
     pointHitRadius: 25,
+    fill: { target: 'origin' },
   });
 }
 
@@ -92,15 +99,15 @@ function getData(
   sourceId: SourceId,
   condition: Condition,
   state: WeatherState,
-): Chart.ChartPoint[] {
-  const data: ChartPoint[] = [];
+): DefaultDataPoint<'line'> {
+  const data: DefaultDataPoint<'line'> = [];
   const source = state.sources[sourceId];
   const unitInf = conditionInfo[condition].getUnitInfo(state.units);
   if (source.show && state.showConditions[condition]) {
     for (const time of keys(source.forecast).sort()) {
       const value = source.forecast[time as any][condition];
       if (value !== undefined) {
-        data.push({ t: +time, y: unitInf.convert(value) });
+        data.push({ x: +time, y: unitInf.convert(value) });
       }
     }
   }
@@ -116,9 +123,6 @@ function encodeLabelValues(sourceId: SourceId, condition: Condition): string {
   return JSON.stringify({ sourceId, condition });
 }
 
-export function decodeLabelValues(
-  item: Chart.ChartTooltipItem,
-  data: Chart.ChartData,
-): LabelIds {
-  return JSON.parse(data.datasets![item.datasetIndex!].label!);
+export function decodeLabelValues(item: TooltipItem<'line'>): LabelIds {
+  return JSON.parse(item.dataset.label!);
 }

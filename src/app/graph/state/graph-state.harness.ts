@@ -12,8 +12,8 @@ export class GraphStateHarness {
   constructor(private ctx: WeatherGraphContext) {}
 
   getRange(): [number, number] {
-    const ticks = this.getState().options.scales.xAxes[0].ticks;
-    return [ticks.min, ticks.max];
+    const scale = this.getState().options.scales['x'];
+    return [scale.min, scale.max];
   }
 
   getNightBoxes(): number[][] {
@@ -26,16 +26,17 @@ export class GraphStateHarness {
 
   getNowLine(): number {
     const line = last(this.getAnnotations()) as LineAnnotationOptions;
-    return line.value as number;
+    return line.xMax as number;
   }
 
   getBoundaries(): number[] {
-    const pan = this.getState().options.plugins['zoom'].pan;
-    return [pan.rangeMin.x as number, pan.rangeMax.x as number];
+    const limit = this.getState().options.plugins.zoom.limits['x'];
+    return [limit.min as number, limit.max as number];
   }
 
   private getAnnotations(): AnnotationOptions[] {
-    return this.getState().options.annotation.annotations as any;
+    return this.getState().options.plugins.annotation
+      .annotations as AnnotationOptions[];
   }
 
   private getState(): GraphState {
