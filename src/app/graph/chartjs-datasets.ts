@@ -32,34 +32,34 @@ export function buildDatasets(
 ): ChartDataset<'line'>[] {
   const dataSets: ChartDataset<'line'>[] = [];
   forEach(state.sources, (_, sourceId) => {
-    addDataSets(sourceId, dataSets, state, colors);
+    addDatasets(sourceId, dataSets, state, colors);
   });
   return dataSets;
 }
 
-function addDataSets(
+function addDatasets(
   sourceId: SourceId,
-  dataSets: ChartDataset<'line'>[],
+  datasets: ChartDataset<'line'>[],
   state: WeatherState,
   colors: Record<Condition, string>,
 ): void {
   // the first ones added will be displayed on top of later ones
-  addDataSet(sourceId, dataSets, state, colors, Condition.TEMP, 'dynamic');
-  addDataSet(sourceId, dataSets, state, colors, Condition.FEEL, 'dynamic');
-  addDataSet(sourceId, dataSets, state, colors, Condition.DEW, 'dynamic');
-  addDataSet(sourceId, dataSets, state, colors, Condition.WIND, 'dynamic');
-  addDataSet(
+  addDataset(sourceId, datasets, state, colors, Condition.TEMP, 'dynamic');
+  addDataset(sourceId, datasets, state, colors, Condition.FEEL, 'dynamic');
+  addDataset(sourceId, datasets, state, colors, Condition.DEW, 'dynamic');
+  addDataset(sourceId, datasets, state, colors, Condition.WIND, 'dynamic');
+  addDataset(
     sourceId,
-    dataSets,
+    datasets,
     state,
     colors,
     Condition.AMOUNT,
     state.units.amount === AmountUnit.IN ? 'inches' : 'millimeters',
     '60',
   );
-  addDataSet(
+  addDataset(
     sourceId,
-    dataSets,
+    datasets,
     state,
     colors,
     Condition.CLOUD,
@@ -68,7 +68,7 @@ function addDataSets(
   );
 }
 
-function addDataSet(
+function addDataset(
   sourceId: SourceId,
   datasets: ChartDataset<'line'>[],
   state: WeatherState,

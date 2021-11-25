@@ -92,7 +92,7 @@ export class GraphComponent extends DirectiveSuperclass {
       this.subscribeTo(this.graphStore.$, (graphState) => {
         chart.options = graphState.options as ChartOptions<'line'>;
         chart.data.datasets = graphState.data.map(clone);
-        // This setTimeout was suddenly needed after upgrading to chart.js 3 for the setRange buttons to work properly. Otherwise it would lag 1 range behind what you clicked.
+        // This setTimeout was suddenly needed after upgrading to chart.js 3. The setRange buttons would lag 1 behind what you clicked.
         setTimeout(() => chart.update());
       });
     }
