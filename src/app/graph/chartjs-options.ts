@@ -10,7 +10,7 @@ const grid = { color: 'rgba(0, 0, 0, 0.05)' };
 export const defaultChartOptions: ChartOptions<'line'> = {
   responsive: true,
   maintainAspectRatio: false,
-  animation: { duration: 0 },
+  animation: false,
   scales: {
     x: {
       type: 'time',
