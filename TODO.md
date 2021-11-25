@@ -1,0 +1,7 @@
+- Upgrade ChartJS
+- Add link to issue tracker for user feedback
+- No focus change on installed mobile. Try adding the visibility API
+- Fix: Tooltips can have multiple data sources, but only cites one of them
+- Random fallback source when weather.gov doesn't work
+- Fix: privacy policy scrolls 1/2 way when opened
+- It gives weird errors when you are offline. - Kira
