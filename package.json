@@ -2,7 +2,6 @@
   "name": "weather",
   "version": "0.0.0",
   "scripts": {
-    "postinstall": "yarn trim-moment-locales",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
@@ -15,8 +14,7 @@
     "prettier-all": "prettier --write \"**/*.{css,html,js,json,md,scss,ts,yml}\"",
     "predeploy-staging": "ng build",
     "deploy-staging": "firebase hosting:channel:deploy staging",
-    "source-map-explorer": "ng build --source-map && source-map-explorer 'dist/weather/*.js'",
-    "trim-moment-locales": "ts-node -O \"{\\\"module\\\": \\\"commonjs\\\"}\" src/scripts/trim-moment-locales.ts"
+    "source-map-explorer": "ng build --source-map && source-map-explorer 'dist/weather/*.js'"
   },
   "private": true,
   "dependencies": {
@@ -40,12 +38,11 @@
     "@s-libs/rxjs-core": "^13.0.0",
     "@types/suncalc": "^1.8.0",
     "chart.js": "^3.6.0",
-    "chartjs-adapter-moment": "^1.0.0",
+    "chartjs-adapter-luxon": "^1.1.0",
     "chartjs-plugin-annotation": "^1.1.0",
     "chartjs-plugin-zoom": "^1.2.0",
     "firebase": "^9.4.0",
-    "moment": "^2.24.0",
-    "moment-timezone": "^0.5.29",
+    "luxon": "^2.1.1",
     "rxfire": "^6.0.0",
     "rxjs": "~7.4.0",
     "suncalc": "^1.8.0",
@@ -65,6 +62,7 @@
     "@s-libs/ng-dev": "^13.0.0",
     "@types/google.analytics": "^0.0.42",
     "@types/jasmine": "~3.10.0",
+    "@types/luxon": "^2.0.7",
     "@types/node": "^12.11.1",
     "@typescript-eslint/eslint-plugin": "5.3.0",
     "@typescript-eslint/parser": "5.3.0",

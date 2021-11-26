@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { RootStore } from '@s-libs/app-state';
+import { RootStore, Store } from '@s-libs/app-state';
 import { mapToObject } from '@s-libs/js-core';
 import { mapValues } from '@s-libs/micro-dash';
 import { mixInInjectableSuperclass } from '@s-libs/ng-core';
@@ -16,9 +16,10 @@ import {
 import { GraphState } from 'app/graph/state/graph-state';
 import { LocationService } from 'app/misc-services/location.service';
 import { Condition } from 'app/state/condition';
-import { GpsCoords } from 'app/state/location';
+import { GpsCoords, Location } from 'app/state/location';
 import { ViewRange } from 'app/state/viewRange';
 import { WeatherStore } from 'app/state/weather-store';
+import { TimeScaleOptions } from 'chart.js';
 import { AnnotationOptions } from 'chartjs-plugin-annotation';
 import { combineLatest, interval } from 'rxjs';
 import { filter, map, startWith, take } from 'rxjs/operators';
@@ -59,6 +60,7 @@ export class GraphStore extends mixInInjectableSuperclass(
         this.updateAnnotations(now, location.gpsCoords);
       },
     );
+    this.subscribeTo(this.locationService.$, this.updateTimezone);
   }
 
   private updateAnnotations(
@@ -78,6 +80,14 @@ export class GraphStore extends mixInInjectableSuperclass(
       this('options')('scales')('x').assign(range);
       this('options')('plugins')('zoom')('limits')('x').assign(getMinMax(now));
     });
+  }
+
+  private updateTimezone({ timezone }: Location): void {
+    const scaleStore = this('options')('scales')(
+      'x',
+    ) as Store<TimeScaleOptions>;
+    const adapterStore = scaleStore('adapters')('date') as Store<any>;
+    adapterStore('zone').set(timezone);
   }
 
   private manageData(): void {

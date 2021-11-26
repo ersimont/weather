@@ -6,9 +6,9 @@ import { Forecast } from 'app/state/forecast';
 import { GpsCoords } from 'app/state/location';
 import { SourceId } from 'app/state/source';
 import { get, round } from '@s-libs/micro-dash';
-import { duration } from 'moment';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
+import { Interval } from 'luxon';
 
 // API docs:
 // https://www.weather.gov/documentation/services-web-api
@@ -91,13 +91,12 @@ function addFromZone(
   zoneKey: keyof GridResponse['properties'],
 ): void {
   for (const v of zone.properties[zoneKey].values) {
-    const [startString, durationString] = v.validTime.split('/');
-    const length = duration(durationString);
-    const time = new Date(startString).getTime() + length.asMilliseconds() / 2;
+    const interval = Interval.fromISO(v.validTime);
+    const time = interval.divideEqually(2)[0].end.toMillis();
 
     let value = v.value;
     if (condition === Condition.AMOUNT) {
-      value /= length.asHours();
+      value /= interval.length('hours');
     }
     addCondition(forecast, time, condition, value);
   }

@@ -2,6 +2,7 @@ import { GraphStateHarness } from 'app/graph/state/graph-state.harness';
 import { GraphStoreHarness } from 'app/graph/state/graph-store.harness';
 import { LocationIqServiceHarness } from 'app/misc-services/location-iq.service.harness';
 import { RefreshServiceHarness } from 'app/misc-services/refresh.service.harness';
+import { LocationOptionsComponentHarness } from 'app/options/location-options/location-options.component.harness';
 import { WeatherGovHarness } from 'app/sources/weather-gov/weather-gov.harness';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 
@@ -13,6 +14,27 @@ describe('GraphStore', () => {
   beforeEach(() => {
     ctx = new WeatherGraphContext();
     ({ gov, iq, refresh } = ctx.harnesses);
+  });
+
+  it('sets the time zone according to the location', () => {
+    ctx.initialState.useCurrentLocation = false;
+    ctx.initialState.customLocation.search = 'New Zealand';
+    ctx.initialState.customLocation.gpsCoords = [-44, 171];
+    ctx.initialState.customLocation.timezone = 'Pacific/Auckland';
+    ctx.startTime = new Date('1980-11-04T15:00:00.000Z');
+    const { graph } = ctx.harnesses;
+    ctx.run(async () => {
+      gov.expectPoints([-44, 171]);
+      expect(graph.getTimeZone()).toBe('Pacific/Auckland');
+
+      const locationOptions = await ctx.getHarness(
+        LocationOptionsComponentHarness,
+      );
+      await locationOptions.select('Current');
+      iq.expectReverse();
+      expect(graph.getTimeZone()).toBe(undefined);
+    });
+    ctx.startTime = new Date('1980-11-04T15:00:00.000Z');
   });
 
   describe('night boxing', () => {

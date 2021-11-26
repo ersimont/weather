@@ -1,6 +1,5 @@
 import { GraphComponentHarness } from 'app/graph/graph.component.harness';
 import { LocationIqServiceHarness } from 'app/misc-services/location-iq.service.harness';
-import { LocationOptionsComponentHarness } from 'app/options/location-options/location-options.component.harness';
 import { UnitOptionsComponentHarness } from 'app/options/unit-options/unit-options.component.harness';
 import { WeatherGovHarness } from 'app/sources/weather-gov/weather-gov.harness';
 import { WeatherUnlockedHarness } from 'app/sources/weather-unlocked/weather-unlocked.harness';
@@ -20,26 +19,6 @@ describe('GraphComponent', () => {
   beforeEach(() => {
     ctx = new WeatherGraphContext();
     ({ graph, gov, iq, state, unlocked } = ctx.harnesses);
-  });
-
-  it('sets the time zone according to the location', () => {
-    ctx.initialState.useCurrentLocation = false;
-    ctx.initialState.customLocation.search = 'New Zealand';
-    ctx.initialState.customLocation.gpsCoords = [-44, 171];
-    ctx.initialState.customLocation.timezone = 'Pacific/Auckland';
-    ctx.startTime = new Date('2020-07-07'); // avoid daylight savings
-    state.setShowing(SourceId.WEATHER_UNLOCKED);
-    ctx.run(async () => {
-      unlocked.expectForecast([-44, 171]);
-      expect(graph.getTimeZone()).toBe('NZST');
-
-      const locationOptions = await ctx.getHarness(
-        LocationOptionsComponentHarness,
-      );
-      await locationOptions.select('Current');
-      iq.expectReverse();
-      expect(graph.getTimeZone()).toBe('');
-    });
   });
 
   describe('tooltip', () => {

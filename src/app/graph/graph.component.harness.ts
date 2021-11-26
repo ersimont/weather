@@ -8,9 +8,9 @@ import {
   ChartDataset,
   ChartOptions,
   ScatterDataPoint,
+  TimeScaleOptions,
   TooltipItem,
 } from 'chart.js';
-import * as moment from 'moment';
 import { DeepRequired } from 'utility-types';
 
 const sourceOrder = [
@@ -56,8 +56,10 @@ export class GraphComponentHarness {
     ]) as string;
   }
 
-  getTimeZone(): string {
-    return moment().zoneName();
+  getTimeZone(): string | undefined {
+    const scale = this.getOptions().scales['x'] as TimeScaleOptions;
+    const date: any = scale.adapters.date;
+    return date.zone;
   }
 
   private getOptions(): DeepRequired<ChartOptions<'line'>> {

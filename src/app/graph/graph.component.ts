@@ -11,7 +11,6 @@ import { DirectiveSuperclass } from '@s-libs/ng-core';
 import { decodeLabelValues } from 'app/graph/chartjs-datasets';
 import { defaultChartOptions } from 'app/graph/chartjs-options';
 import { GraphStore } from 'app/graph/state/graph-store';
-import { LocationService } from 'app/misc-services/location.service';
 import { conditionInfo } from 'app/state/condition';
 import { WeatherStore } from 'app/state/weather-store';
 import { EventTrackingService } from 'app/to-replace/event-tracking/event-tracking.service';
@@ -28,11 +27,9 @@ import {
   Tooltip,
   TooltipItem,
 } from 'chart.js';
-import 'chartjs-adapter-moment';
+import 'chartjs-adapter-luxon';
 import Annotation from 'chartjs-plugin-annotation';
 import Zoom from 'chartjs-plugin-zoom';
-import * as moment from 'moment';
-import 'moment-timezone';
 import { environment } from '../../environments/environment';
 
 Chart.register(
@@ -67,18 +64,10 @@ export class GraphComponent extends DirectiveSuperclass {
     private eventTrackingService: EventTrackingService,
     private graphStore: GraphStore,
     injector: Injector,
-    locationService: LocationService,
     private weatherStore: WeatherStore,
   ) {
     super(injector);
     this.addCallbacks();
-    this.subscribeTo(locationService.$, (location) => {
-      if (location.timezone) {
-        moment.tz.setDefault(location.timezone);
-      } else {
-        moment.tz.setDefault();
-      }
-    });
   }
 
   @ViewChild('canvas')
