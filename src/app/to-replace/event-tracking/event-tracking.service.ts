@@ -25,10 +25,6 @@ export class EventTrackingService {
     });
   }
 
-  sendError(message: string): void {
-    this.send({ hitType: 'exception', exDescription: message });
-  }
-
   private send(fields: UniversalAnalytics.FieldsObject): void {
     if (this.config.log) {
       console.log('[analytics]', fields);

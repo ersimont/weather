@@ -1,7 +1,9 @@
+import { Env } from './env';
+
 export const environment: Env = {
-  pwa: false,
   logEvents: false,
   paintGraph: false,
+  pwa: false,
   storeDevtools: false,
 };
 

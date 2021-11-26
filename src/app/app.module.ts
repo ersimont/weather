@@ -15,6 +15,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { AppComponent } from 'app/app.component';
 import { GraphModule } from 'app/graph/graph.module';
 import { OptionsModule } from 'app/options/options.module';
+import { BugsnagModule } from 'app/to-replace/bugsnag/bugsnag.module';
 import { EventTrackingModule } from 'app/to-replace/event-tracking/event-tracking.module';
 import { provideHttpStatus } from 'app/to-replace/http-status.service';
 import { provideErrorHandler } from 'app/to-replace/snack-bar-error.service';
@@ -35,6 +36,9 @@ import { PrivacyPolicyComponent } from './misc-components/privacy-policy/privacy
   imports: [
     BrowserAnimationsModule,
     BrowserModule,
+    environment.bugsnagConfig
+      ? BugsnagModule.forRoot(environment.bugsnagConfig)
+      : [],
     CommonModule,
     EventTrackingModule.forRoot({
       gaProperty: environment.gaProperty,

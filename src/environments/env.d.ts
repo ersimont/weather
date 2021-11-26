@@ -1,7 +1,10 @@
+import { BugsnagConfig } from 'app/to-replace/bugsnag/bugsnag.module';
+
 interface Env {
-  pwa: boolean;
+  bugsnagConfig?: BugsnagConfig;
   gaProperty?: string;
   logEvents: boolean;
   paintGraph: boolean;
+  pwa: boolean;
   storeDevtools: boolean;
 }

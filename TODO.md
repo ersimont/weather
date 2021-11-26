@@ -1,3 +1,4 @@
+- Add bugsnag
 - Theme chooser for light/dark/system
 - Make night boxes more obvious
 - Add link to issue tracker for user feedback

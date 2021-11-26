@@ -1,6 +1,13 @@
-import { Injectable, ErrorHandler, Provider } from '@angular/core';
+import {
+  ErrorHandler,
+  Inject,
+  Injectable,
+  Optional,
+  Provider,
+} from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { EventTrackingService } from 'app/to-replace/event-tracking/event-tracking.service';
+import { BugsnagErrorHandler } from '@bugsnag/plugin-angular';
+import { bugsnagToken } from 'app/to-replace/bugsnag/bugsnag.module';
 
 export function provideErrorHandler(): Provider {
   return { provide: ErrorHandler, useExisting: SnackBarErrorService };
@@ -9,7 +16,9 @@ export function provideErrorHandler(): Provider {
 @Injectable({ providedIn: 'root' })
 export class SnackBarErrorService implements ErrorHandler {
   constructor(
-    private eventTrackingService: EventTrackingService,
+    @Inject(bugsnagToken)
+    @Optional()
+    private bugsnag: BugsnagErrorHandler | undefined,
     private matSnackBar: MatSnackBar,
   ) {}
 
@@ -18,16 +27,14 @@ export class SnackBarErrorService implements ErrorHandler {
       error = error.rejection;
     }
 
-    let message;
-    if (error instanceof PresentableError) {
-      message = error.message;
-    } else {
-      if (logUnexpected) {
+    if (logUnexpected) {
+      if (this.bugsnag) {
+        this.bugsnag?.handleError(error.message ?? error);
+      } else {
         console.error(error);
-        this.eventTrackingService.sendError(error.message || error);
       }
-      message = 'There was an unexpected error';
     }
+    const message = 'There was an unexpected error';
     this.show(message);
   }
 
@@ -35,5 +42,3 @@ export class SnackBarErrorService implements ErrorHandler {
     this.matSnackBar.open(message, 'OK', { duration: 5000 });
   }
 }
-
-export class PresentableError extends Error {}

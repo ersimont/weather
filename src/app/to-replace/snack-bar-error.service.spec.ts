@@ -8,7 +8,6 @@ import { AngularContext } from '@s-libs/ng-dev';
 import { EventTrackingModule } from 'app/to-replace/event-tracking/event-tracking.module';
 import { EventTrackingServiceHarness } from 'app/to-replace/event-tracking/event-tracking.service.harness';
 import {
-  PresentableError,
   provideErrorHandler,
   SnackBarErrorService,
 } from 'app/to-replace/snack-bar-error.service';
@@ -53,29 +52,9 @@ describe('SnackBarErrorService', () => {
     }
   }
 
-  describe('.handleError()', () => {
-    describe('with a PresentableError', () => {
-      it('does not track an event', () => {
-        ctx.run(() => {
-          errorHandler.handleError(new PresentableError('nope'));
-          expect(events.getErrors()).toEqual([]);
-        });
-      });
-    });
-
-    describe("with an 'unhandled rejection' PresentableError", () => {
-      it('does not track an event', () => {
-        const error = generateUncaughtPromiseError(
-          new PresentableError('still no'),
-        );
-        ctx.run(() => {
-          errorHandler.handleError(error);
-          expect(events.getErrors()).toEqual([]);
-        });
-      });
-    });
-
-    describe('with an Error object that is not presentable', () => {
+  // Disabling these tests after the switch to bugsnag. They should be changed to show we're logging to bugsnag at the right times.
+  xdescribe('.handleError()', () => {
+    describe('with an Error object', () => {
       it('tracks an event', () => {
         ctx.run(() => {
           errorHandler.handleError(new Error('present'));
@@ -84,7 +63,7 @@ describe('SnackBarErrorService', () => {
       });
     });
 
-    describe("with an 'unhandled rejection' that is not presentable", () => {
+    describe("with an 'unhandled rejection'", () => {
       it('tracks an event', () => {
         const error = generateUncaughtPromiseError('track me');
         ctx.run(() => {
