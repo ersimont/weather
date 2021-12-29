@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-import { RootStore } from '@s-libs/app-state';
-import { Persistence } from '@s-libs/js-core';
-import { bindKey } from '@s-libs/micro-dash';
+import { PersistentStore } from '@s-libs/app-state';
 import { mixInInjectableSuperclass } from '@s-libs/ng-core';
 import { logToReduxDevtoolsExtension } from '@s-libs/rxjs-core';
 import { EventTrackingService } from 'app/to-replace/event-tracking/event-tracking.service';
@@ -10,18 +8,16 @@ import { WeatherState } from './weather-state';
 
 @Injectable({ providedIn: 'root' })
 export class WeatherStore extends mixInInjectableSuperclass(
-  RootStore,
+  PersistentStore,
 )<WeatherState> {
   constructor(
     eventTrackingService: EventTrackingService,
     upgradeService: UpgradeService,
   ) {
-    const persistence = new Persistence<WeatherState>('weather');
     const freshState = new WeatherState();
-    const initialState = upgradeService.run(persistence, freshState);
-    super(initialState);
+    super('weather', freshState, { migrator: upgradeService });
 
-    if (initialState === freshState) {
+    if (this.state() === freshState) {
       eventTrackingService.track(
         'initialize_fresh_state',
         'initialization',
@@ -29,7 +25,6 @@ export class WeatherStore extends mixInInjectableSuperclass(
       );
     }
 
-    this.subscribeTo(this.$, bindKey(persistence, 'put'));
     logToReduxDevtoolsExtension(this.$, {
       name: 'WeatherStore',
       autoPause: true,
