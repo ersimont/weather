@@ -13,7 +13,7 @@ export class GraphStateHarness {
 
   getRange(): [number, number] {
     const scale = this.getState().options.scales['x'];
-    return [scale.min, scale.max];
+    return [+scale.min, +scale.max];
   }
 
   getNightBoxes(): number[][] {
