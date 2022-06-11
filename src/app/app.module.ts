@@ -57,7 +57,7 @@ import { PrivacyPolicyComponent } from './misc-components/privacy-policy/privacy
     OptionsModule,
     environment.pwa
       ? ServiceWorkerModule.register('ngsw-worker.js', {
-          // Register the ServiceWorker as soon as the app is stable
+          // Register the ServiceWorker as soon as the application is stable
           // or after 30 seconds (whichever comes first).
           registrationStrategy: 'registerWhenStable:30000',
         })
