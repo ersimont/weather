@@ -3,8 +3,10 @@
   "version": 1,
   "cli": {
     "analytics": "a1a9bbd1-c91d-474f-8b85-55f897c617d3",
-    "defaultCollection": "@angular-eslint/schematics",
-    "packageManager": "yarn"
+    "packageManager": "yarn",
+    "schematicCollections": [
+      "@angular-eslint/schematics"
+    ]
   },
   "newProjectRoot": "projects",
   "projects": {
@@ -145,6 +147,5 @@
         }
       }
     }
-  },
-  "defaultProject": "weather"
+  }
 }
