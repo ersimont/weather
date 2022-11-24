@@ -25,6 +25,12 @@
     //
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+
+    // temp
+    "skipLibCheck": true,
+
+    // app specific
+    "paths": { "app/*": ["./src/app/*"] }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
