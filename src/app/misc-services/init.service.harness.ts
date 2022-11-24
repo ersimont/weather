@@ -1,4 +1,4 @@
-import { MatSnackBarHarness } from '@angular/material/snack-bar/testing';
+import { MatLegacySnackBarHarness as MatSnackBarHarness } from '@angular/material/legacy-snack-bar/testing';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 
 export class InitServiceHarness {

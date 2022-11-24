@@ -1,6 +1,6 @@
 import { ContentContainerComponentHarness } from '@angular/cdk/testing';
-import { MatButtonHarness } from '@angular/material/button/testing';
-import { MatActionListItemHarness } from '@angular/material/list/testing';
+import { MatLegacyButtonHarness as MatButtonHarness } from '@angular/material/legacy-button/testing';
+import { MatLegacyActionListItemHarness as MatActionListItemHarness } from '@angular/material/legacy-list/testing';
 import { MatSidenavHarness } from '@angular/material/sidenav/testing';
 import { MatToolbarHarness } from '@angular/material/toolbar/testing';
 

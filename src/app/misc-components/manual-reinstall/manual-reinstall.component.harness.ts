@@ -1,5 +1,5 @@
 import { ComponentHarness } from '@angular/cdk/testing';
-import { MatButtonHarness } from '@angular/material/button/testing';
+import { MatLegacyButtonHarness as MatButtonHarness } from '@angular/material/legacy-button/testing';
 
 export class ManualReinstallComponentHarness extends ComponentHarness {
   static hostSelector = 'app-manual-reinstall';

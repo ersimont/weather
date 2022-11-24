@@ -1,8 +1,8 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ErrorHandler } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatSnackBarHarness } from '@angular/material/snack-bar/testing';
+import { MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/legacy-snack-bar';
+import { MatLegacySnackBarHarness as MatSnackBarHarness } from '@angular/material/legacy-snack-bar/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AngularContext } from '@s-libs/ng-dev';
 import { EventTrackingModule } from 'app/to-replace/event-tracking/event-tracking.module';

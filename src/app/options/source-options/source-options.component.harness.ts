@@ -1,4 +1,4 @@
-import { MatSlideToggleHarness } from '@angular/material/slide-toggle/testing';
+import { MatLegacySlideToggleHarness as MatSlideToggleHarness } from '@angular/material/legacy-slide-toggle/testing';
 import { AbstractOptionDirectiveHarness } from 'app/options/abstract-option-directive/abstract-option.directive.harness';
 
 export class SourceOptionsComponentHarness extends AbstractOptionDirectiveHarness {

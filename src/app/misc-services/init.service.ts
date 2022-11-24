@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { DomSanitizer } from '@angular/platform-browser';
 import { icons } from 'app/icons';
 import { ManualReinstallService } from 'app/misc-components/manual-reinstall/manual-reinstall.service';

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { EventTrackingService } from 'app/to-replace/event-tracking/event-tracking.service';
 import { WhatsNewComponent } from 'app/upgrade/whats-new.component';
 

@@ -5,7 +5,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { MatExpansionPanel } from '@angular/material/expansion';
-import { MatRadioChange } from '@angular/material/radio';
+import { MatLegacyRadioChange as MatRadioChange } from '@angular/material/legacy-radio';
 import { LocationService } from 'app/misc-services/location.service';
 import { AbstractOptionDirective } from 'app/options/abstract-option-directive/abstract-option.directive';
 
