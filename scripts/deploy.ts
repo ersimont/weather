@@ -20,7 +20,7 @@ program
   .command('staging [channelId]')
   .description('deploy to staging')
   .action(async (channelId = 'staging') => {
-    // compileStaging();
+    compileStaging();
     await uploadSourcemaps();
     deployStaging(channelId);
   });
