@@ -9,7 +9,6 @@ export const environment: Env = {
 
 // faster
 // (Error as any).stackTraceLimit = 0;
-// enableProdMode();
 
 // slower
 // import 'zone.js/plugins/zone-error';

@@ -16,27 +16,15 @@
     "moduleResolution": "node",
     "importHelpers": true,
     "target": "ES2022",
-    "module": "es2020",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "lib": [
-      "es2020",
-      "dom"
-    ],
+    "module": "ES2022",
     "useDefineForClassFields": false,
+    "lib": ["ES2020", "dom"],
 
     //
     // Simonton Software additions
     //
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-
-    // temp
-    "skipLibCheck": true,
-
-    // app specific
-    "paths": { "app/*": ["./src/app/*"] }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

@@ -1,4 +1,3 @@
-import { enableProdMode } from '@angular/core';
 import { Env } from './env';
 
 export const environment: Env = {
@@ -12,5 +11,3 @@ export const environment: Env = {
   pwa: true,
   storeDevtools: false,
 };
-
-enableProdMode();
