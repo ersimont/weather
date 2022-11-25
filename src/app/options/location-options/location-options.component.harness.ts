@@ -1,5 +1,5 @@
-import { MatLegacyInputHarness as MatInputHarness } from '@angular/material/legacy-input/testing';
-import { MatLegacyRadioGroupHarness as MatRadioGroupHarness } from '@angular/material/legacy-radio/testing';
+import { MatInputHarness } from '@angular/material/input/testing';
+import { MatRadioGroupHarness } from '@angular/material/radio/testing';
 import { AbstractOptionDirectiveHarness } from 'app/options/abstract-option-directive/abstract-option.directive.harness';
 import { assert } from '@s-libs/js-core';
 

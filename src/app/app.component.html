@@ -2,7 +2,7 @@
   <button mat-icon-button (click)="sidenav.toggle()">
     <mat-icon>menu</mat-icon>
   </button>
-  <h1>{{ title$ | async }}</h1>
+  <span class="title">{{ title$ | async }}</span>
 
   <button mat-icon-button class="day" (click)="setRange(1, 'click_day')">
     <mat-icon svgIcon="day"></mat-icon>
@@ -21,6 +21,7 @@
   <mat-progress-bar
     *ngIf="httpStatusService.hasInFlightRequest$ | async"
     mode="indeterminate"
+    color="accent"
   ></mat-progress-bar>
 </mat-toolbar>
 

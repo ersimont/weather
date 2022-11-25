@@ -1,109 +1,116 @@
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
-// Plus imports for other components in your app.
 @use "@angular/material" as mat;
+// Plus imports for other components in your app.
 @import "conditions";
 
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
 // Be sure that you only ever include this mixin once!
-// TODO(v15): As of v15 mat.legacy-core no longer includes default typography styles.
-//  The following line adds:
-//    1. Default typography styles for all components
-//    2. Styles for typography hierarchy classes (e.g. .mat-headline-1)
-//  If you specify typography styles for the components you use elsewhere, you should delete this line.
-//  If you don't need the default component typographies but still want the hierarchy styles,
-//  you can delete this line and instead use:
-//    `@include mat.legacy-typography-hierarchy(mat.define-legacy-typography-config());`
-@include mat.all-legacy-component-typographies();
-@include mat.legacy-core();
+@include mat.core();
 
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
 $weather-primary: mat.define-palette(mat.$indigo-palette, 400);
 $weather-accent: mat.define-palette(mat.$blue-grey-palette, A400, A100, A700);
+$weather-typography: mat.define-typography-config();
 
 // The warn palette is optional (defaults to red).
 $weather-warn: mat.define-palette(mat.$red-palette);
 
-// Create the theme object (a Sass map containing all of the palettes).
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
 $weather-light-theme: mat.define-light-theme(
-  $weather-primary,
-  $weather-accent,
-  $weather-warn
+  (
+    color: (
+      primary: $weather-primary,
+      accent: $weather-accent,
+      warn: $weather-warn,
+    ),
+    typography: $weather-typography,
+  )
 );
 $weather-dark-theme: mat.define-dark-theme(
-  $weather-primary,
-  $weather-accent,
-  $weather-warn
+  (
+    color: (
+      primary: $weather-primary,
+      accent: $weather-accent,
+      warn: $weather-warn,
+    ),
+    typography: $weather-typography,
+  )
 );
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
-@include mat.all-legacy-component-themes($weather-light-theme);
+@include mat.all-component-themes($weather-light-theme);
 @media (prefers-color-scheme: dark) {
-  @include mat.all-legacy-component-themes($weather-dark-theme);
+  @include mat.all-component-colors($weather-dark-theme);
 }
 
 @each $condition, $palette in $condition-palettes {
   $theme: mat.define-light-theme($weather-primary, $palette);
   .#{$condition} {
-    @include mat.legacy-core-theme($theme);
-    @include mat.legacy-slide-toggle-theme($theme);
+    @include mat.core-color($theme);
+    @include mat.slide-toggle-color($theme);
   }
 
   @media (prefers-color-scheme: dark) {
     $theme: mat.define-dark-theme($weather-primary, $palette);
     .#{$condition} {
-      @include mat.legacy-core-theme($theme);
-      @include mat.legacy-slide-toggle-theme($theme);
+      @include mat.core-color($theme);
+      @include mat.slide-toggle-color($theme);
     }
   }
 }
 
-.openWeather .mat-slide-toggle-thumb {
-  border-radius: 0;
-  clip-path: polygon(0% 50%, 50% 0%, 100% 50%, 50% 100%);
+@mixin shaped-toggle($clip-path) {
+  --mdc-switch-handle-shape: 0;
+
+  .mdc-switch__handle {
+    clip-path: $clip-path;
+
+    & > * {
+      display: none;
+    }
+  }
 }
 
-.tomorrowIo .mat-slide-toggle-thumb {
-  border-radius: 0;
-  clip-path: polygon(10% 10%, 90% 10%, 90% 90%, 10% 90%);
+.openWeather {
+  @include shaped-toggle(polygon(0% 50%, 50% 0%, 100% 50%, 50% 100%));
 }
 
-.visualCrossing .mat-slide-toggle-thumb {
-  border-radius: 0;
-  clip-path: polygon(
-    0% 15%,
-    15% 0%,
-    50% 35%,
-    85% 0%,
-    100% 15%,
-    65% 50%,
-    100% 85%,
-    85% 100%,
-    50% 65%,
-    15% 100%,
-    0% 85%,
-    35% 50%
+.tomorrowIo {
+  @include shaped-toggle(polygon(10% 10%, 90% 10%, 90% 90%, 10% 90%));
+}
+
+.visualCrossing {
+  @include shaped-toggle(
+    polygon(
+      0% 15%,
+      15% 0%,
+      50% 35%,
+      85% 0%,
+      100% 15%,
+      65% 50%,
+      100% 85%,
+      85% 100%,
+      50% 65%,
+      15% 100%,
+      0% 85%,
+      35% 50%
+    )
   );
 }
 
-.weatherUnlocked .mat-slide-toggle-thumb {
-  border-radius: 0;
-  clip-path: polygon(0% 90%, 50% 0%, 100% 90%);
+.weatherGov {
+  @include shaped-toggle(circle(50%));
 }
 
-.mat-slide-toggle-thumb-container {
-  filter: drop-shadow(0px 2px 1px rgba(0, 0, 0, 0.2))
-    drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.14))
-    drop-shadow(0px 1px 3px rgba(0, 0, 0, 0.12));
-
-  & > .mat-slide-toggle-thumb {
-    box-shadow: none;
-  }
+.weatherUnlocked {
+  @include shaped-toggle(polygon(0% 90%, 50% 0%, 100% 90%));
 }
 
 a {

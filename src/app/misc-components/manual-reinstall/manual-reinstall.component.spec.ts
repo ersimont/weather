@@ -1,4 +1,4 @@
-import { MatLegacyDialogHarness as MatDialogHarness } from '@angular/material/legacy-dialog/testing';
+import { MatDialogHarness } from '@angular/material/dialog/testing';
 import { ManualReinstallComponentHarness } from 'app/misc-components/manual-reinstall/manual-reinstall.component.harness';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 
