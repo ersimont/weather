@@ -4,12 +4,8 @@
     [value]="store('useCurrentLocation').$ | async"
     (change)="setUseCurrentLocation($event)"
   >
-    <div class="radio-container">
-      <mat-radio-button class="current-radio" [value]="true">
-        Current
-      </mat-radio-button>
-    </div>
-    <div class="radio-container">
+    <mat-radio-button [value]="true"> Current </mat-radio-button>
+    <div>
       <mat-radio-button [value]="false"></mat-radio-button>
       <mat-form-field>
         <input
