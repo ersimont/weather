@@ -1,9 +1,10 @@
-import { DecimalPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  Inject,
   Injector,
+  LOCALE_ID,
   ViewChild,
 } from '@angular/core';
 import { clone, debounce } from '@s-libs/micro-dash';
@@ -48,26 +49,25 @@ Chart.register(
   selector: 'app-graph',
   templateUrl: './graph.component.html',
   styleUrls: ['./graph.component.css'],
-  providers: [DecimalPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GraphComponent extends DirectiveSuperclass {
-  private trackPan = debounce(() => {
+  #trackPan = debounce(() => {
     this.eventTrackingService.track('change_pan', 'zoom_and_pan');
   }, 3000);
-  private trackZoom = debounce(() => {
+  #trackZoom = debounce(() => {
     this.eventTrackingService.track('change_zoom', 'zoom_and_pan');
   }, 3000);
 
   constructor(
-    private demicalPipe: DecimalPipe,
     private eventTrackingService: EventTrackingService,
     private graphStore: GraphStore,
     injector: Injector,
+    @Inject(LOCALE_ID) private locale: string,
     private weatherStore: WeatherStore,
   ) {
     super(injector);
-    this.addCallbacks();
+    this.#addCallbacks();
   }
 
   @ViewChild('canvas')
@@ -87,37 +87,37 @@ export class GraphComponent extends DirectiveSuperclass {
     }
   }
 
-  private addCallbacks(): void {
+  #addCallbacks(): void {
     const optionStore = this.graphStore('options');
     const zoomStore = optionStore('plugins')('zoom');
 
     optionStore('plugins')('tooltip')('callbacks').assign({
-      label: this.getTooltipLabel.bind(this),
-      footer: this.getTooltipFooter.bind(this),
+      label: this.#getTooltipLabel.bind(this),
+      footer: this.#getTooltipFooter.bind(this),
     });
     zoomStore('pan')('onPanComplete').set((evt) => {
-      this.updateRange(evt);
-      this.trackPan();
+      this.#updateRange(evt);
+      this.#trackPan();
     });
     zoomStore('zoom')('onZoomComplete').set((evt) => {
-      this.updateRange(evt);
-      this.trackZoom();
+      this.#updateRange(evt);
+      this.#trackZoom();
     });
   }
 
-  private getTooltipLabel(item: TooltipItem<'line'>): string {
+  #getTooltipLabel(item: TooltipItem<'line'>): string {
     const conditionInf = conditionInfo[decodeLabelValues(item).condition];
     const unitInf = conditionInf.getUnitInfo(this.weatherStore.state().units);
-    const display = unitInf.getDisplay(item.parsed.y, this.demicalPipe);
+    const display = unitInf.getDisplay(item.parsed.y, this.locale);
     return `${conditionInf.label}: ${display}`;
   }
 
-  private getTooltipFooter(items: TooltipItem<'line'>[]): string {
+  #getTooltipFooter(items: TooltipItem<'line'>[]): string {
     const sourceId = decodeLabelValues(items[0]).sourceId;
     return `Source: ${this.weatherStore.state().sources[sourceId].label}`;
   }
 
-  private updateRange(evt: { chart: Chart }): void {
+  #updateRange(evt: { chart: Chart }): void {
     const scales = evt.chart.options.scales![
       'x'
     ] as ScaleOptionsByType<'linear'>;

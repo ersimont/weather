@@ -5,7 +5,7 @@ import { Condition } from 'app/state/condition';
 import { Forecast } from 'app/state/forecast';
 import { GpsCoords } from 'app/state/location';
 import { SourceId } from 'app/state/source';
-import { kilometersPrHourToKnots } from 'app/state/units';
+import { kilometersPerHourToKnots } from 'app/state/units';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -65,6 +65,6 @@ function addConditions(forecast: Forecast, hour: Hour): void {
     [Condition.DEW]: hour.dew,
     [Condition.FEEL]: hour.feelslike,
     [Condition.TEMP]: hour.temp,
-    [Condition.WIND]: kilometersPrHourToKnots(hour.windspeed),
+    [Condition.WIND]: kilometersPerHourToKnots(hour.windspeed),
   };
 }

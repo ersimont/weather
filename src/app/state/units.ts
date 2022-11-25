@@ -1,7 +1,6 @@
-import { DecimalPipe } from '@angular/common';
+import { formatNumber } from '@angular/common';
 import { identity } from '@s-libs/micro-dash';
 
-export type UnitType = 'temp' | 'amount' | 'speed' | 'percentage';
 export type UnitEnum = TempUnit | AmountUnit | SpeedUnit | PercentageUnit;
 
 export enum TempUnit {
@@ -32,49 +31,49 @@ export class Units {
 
 export interface UnitInfo {
   convert(value: number): number;
-  getDisplay(value: number, decimalPipe: DecimalPipe): string;
+  getDisplay(value: number, locale: string): string;
 }
 
 export const unitInfo: Record<UnitEnum, UnitInfo> = {
   [TempUnit.F]: {
     convert: (value: number) => value * 1.8 + 32,
-    getDisplay: (value: number, decimalPipe: DecimalPipe) =>
-      `${round(value, 0, decimalPipe)} ${TempUnit.F}`,
+    getDisplay: (value: number, locale: string) =>
+      `${round(value, 0, locale)} ${TempUnit.F}`,
   },
   [TempUnit.C]: {
     convert: identity,
-    getDisplay: (value: number, decimalPipe: DecimalPipe) =>
-      `${round(value, 0, decimalPipe)} ${TempUnit.C}`,
+    getDisplay: (value: number, locale: string) =>
+      `${round(value, 0, locale)} ${TempUnit.C}`,
   },
   [AmountUnit.IN]: {
     convert: (value: number) => value / 25.4,
-    getDisplay: (value: number, decimalPipe: DecimalPipe) =>
-      `${round(value, 2, decimalPipe)} ${AmountUnit.IN}`,
+    getDisplay: (value: number, locale: string) =>
+      `${round(value, 2, locale)} ${AmountUnit.IN}`,
   },
   [AmountUnit.MM]: {
     convert: identity,
-    getDisplay: (value: number, decimalPipe: DecimalPipe) =>
-      `${round(value, 1, decimalPipe)} ${AmountUnit.MM}`,
+    getDisplay: (value: number, locale: string) =>
+      `${round(value, 1, locale)} ${AmountUnit.MM}`,
   },
   [SpeedUnit.MPH]: {
     convert: (value: number) => value * 1.151,
-    getDisplay: (value: number, decimalPipe: DecimalPipe) =>
-      `${round(value, 0, decimalPipe)} ${SpeedUnit.MPH}`,
+    getDisplay: (value: number, locale: string) =>
+      `${round(value, 0, locale)} ${SpeedUnit.MPH}`,
   },
   [SpeedUnit.KTS]: {
     convert: identity,
-    getDisplay: (value: number, decimalPipe: DecimalPipe) =>
-      `${round(value, 0, decimalPipe)} ${SpeedUnit.KTS}`,
+    getDisplay: (value: number, locale: string) =>
+      `${round(value, 0, locale)} ${SpeedUnit.KTS}`,
   },
   [SpeedUnit.KPH]: {
     convert: (value: number) => value * 1.852,
-    getDisplay: (value: number, decimalPipe: DecimalPipe) =>
-      `${round(value, 0, decimalPipe)} ${SpeedUnit.KPH}`,
+    getDisplay: (value: number, locale: string) =>
+      `${round(value, 0, locale)} ${SpeedUnit.KPH}`,
   },
   [PercentageUnit.PCT]: {
     convert: identity,
-    getDisplay: (value: number, decimalPipe: DecimalPipe) =>
-      `${round(value, 0, decimalPipe)}%`,
+    getDisplay: (value: number, locale: string) =>
+      `${round(value, 0, locale)}%`,
   },
 };
 
@@ -82,14 +81,10 @@ export function metersPerSecondToKnots(mps: number): number {
   return mps * 1.944;
 }
 
-export function kilometersPrHourToKnots(kps: number): number {
+export function kilometersPerHourToKnots(kps: number): number {
   return kps / 1.852;
 }
 
-function round(
-  value: number,
-  precision: number,
-  decimalPipe: DecimalPipe,
-): string {
-  return decimalPipe.transform(value, `1.${precision}-${precision}`)!;
+function round(value: number, precision: number, locale: string): string {
+  return formatNumber(value, locale, `1.${precision}-${precision}`);
 }
