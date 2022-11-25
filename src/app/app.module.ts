@@ -2,7 +2,10 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule } from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DEFAULT_OPTIONS,
+  MatDialogModule,
+} from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -62,7 +65,11 @@ import { PrivacyPolicyComponent } from './misc-components/privacy-policy/privacy
       registrationStrategy: 'registerWhenStable:30000',
     }),
   ],
-  providers: [provideErrorHandler(), provideHttpStatus()],
+  providers: [
+    provideErrorHandler(),
+    provideHttpStatus(),
+    { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { autoFocus: 'dialog' } },
+  ],
   bootstrap: [AppComponent],
   exports: [AppComponent],
 })

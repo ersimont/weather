@@ -5,6 +5,7 @@
     <scripts>
       <script value="test" />
     </scripts>
+    <arguments value="--no-browsers" />
     <node-interpreter value="project" />
     <envs />
     <method v="2" />
