@@ -5,7 +5,6 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { icons } from 'app/icons';
 import { ManualReinstallService } from 'app/misc-components/manual-reinstall/manual-reinstall.service';
 import { LocationService } from 'app/misc-services/location.service';
-import { TomorrowIo } from 'app/sources/tomorrow-io/tomorrow-io';
 import { OpenWeather } from 'app/sources/open-weather/open-weather';
 import { VisualCrossing } from 'app/sources/visual-crossing/visual-crossing';
 import { WeatherGov } from 'app/sources/weather-gov/weather-gov';
@@ -22,7 +21,6 @@ export class InitService {
     private matIconRegistry: MatIconRegistry,
     private matSnackBar: MatSnackBar,
     private openWeather: OpenWeather,
-    private tomorrowIo: TomorrowIo,
     private visualCrossing: VisualCrossing,
     private weatherGov: WeatherGov,
     private weatherUnlocked: WeatherUnlocked,
@@ -31,7 +29,6 @@ export class InitService {
 
   initializeApp(): void {
     this.openWeather.initialize();
-    this.tomorrowIo.initialize();
     this.visualCrossing.initialize();
     this.weatherGov.initialize(SourceId.WEATHER_UNLOCKED);
     this.weatherUnlocked.initialize();

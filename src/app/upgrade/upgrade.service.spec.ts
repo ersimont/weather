@@ -1,3 +1,4 @@
+import { isEqual } from '@s-libs/micro-dash';
 import { LocationIqServiceHarness } from 'app/misc-services/location-iq.service.harness';
 import { WeatherStoreHarness } from 'app/state/weather-store.harness';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
@@ -5,6 +6,7 @@ import { SnackBarErrorServiceHarness } from 'app/to-replace/snack-bar-error.serv
 import {
   defaultState,
   v10Default,
+  v11Default,
   v5Example,
   v6Default,
   v7Default,
@@ -27,13 +29,30 @@ describe('UpgradeService', () => {
   it('defaults to a fresh, up-to-date state', () => {
     ctx.useInitialState = false;
     ctx.run(async () => {
-      expect(store.getPersistedState())
+      const actual = store.getPersistedState();
+
+      expect(actual)
         .withContext(
-          'Default state changed. You need to handle it in the upgrade service.',
+          'Default state changed. You need to handle it in the upgrade service. Check the console for what was in the store.',
         )
         .toEqual(defaultState);
+      if (!isEqual(actual, defaultState)) {
+        console.log(actual);
+      }
       expect(await ctx.getAllHarnesses(WhatsNewComponentHarness)).toEqual([]);
-      // console.log(store.getPersistedState());
+
+      await ctx.cleanUpFreshInit();
+    });
+  });
+
+  it('upgrades from v11', () => {
+    ctx.initialState = v11Default as any;
+    ctx.run(async () => {
+      expect(store.getPersistedState()).toEqual(defaultState);
+      const whatsNew = await ctx.getHarness(WhatsNewComponentHarness);
+      expect(await whatsNew.getFeatures()).toEqual([
+        'Tomorrow.io is no longer available.',
+      ]);
 
       await ctx.cleanUpFreshInit();
     });
@@ -45,6 +64,7 @@ describe('UpgradeService', () => {
       expect(store.getPersistedState()).toEqual(defaultState);
       const whatsNew = await ctx.getHarness(WhatsNewComponentHarness);
       expect(await whatsNew.getFeatures()).toEqual([
+        'Tomorrow.io is no longer available.',
         'You can get your forecast from Visual Crossing. Check it out in the Sources section of the settings.',
       ]);
 
@@ -58,8 +78,8 @@ describe('UpgradeService', () => {
       expect(store.getPersistedState()).toEqual(defaultState);
       const whatsNew = await ctx.getHarness(WhatsNewComponentHarness);
       expect(await whatsNew.getFeatures()).toEqual([
+        'Tomorrow.io is no longer available.',
         'You can get your forecast from Visual Crossing. Check it out in the Sources section of the settings.',
-        'Climacell changed its name to Tomorrow.io',
       ]);
 
       await ctx.cleanUpFreshInit();
@@ -72,8 +92,8 @@ describe('UpgradeService', () => {
       expect(store.getPersistedState()).toEqual(defaultState);
       const whatsNew = await ctx.getHarness(WhatsNewComponentHarness);
       expect(await whatsNew.getFeatures()).toEqual([
+        'Tomorrow.io is no longer available.',
         'You can get your forecast from Visual Crossing. Check it out in the Sources section of the settings.',
-        'Climacell changed its name to Tomorrow.io',
         'You can get your forecast from OpenWeather. Check it out in the Sources section of the settings.',
       ]);
 
@@ -87,8 +107,8 @@ describe('UpgradeService', () => {
       expect(store.getPersistedState()).toEqual(defaultState);
       const whatsNew = await ctx.getHarness(WhatsNewComponentHarness);
       expect(await whatsNew.getFeatures()).toEqual([
+        'Tomorrow.io is no longer available.',
         'You can get your forecast from Visual Crossing. Check it out in the Sources section of the settings.',
-        'Climacell changed its name to Tomorrow.io',
         'You can get your forecast from OpenWeather. Check it out in the Sources section of the settings.',
       ]);
 
@@ -105,10 +125,9 @@ describe('UpgradeService', () => {
       });
       const whatsNew = await ctx.getHarness(WhatsNewComponentHarness);
       expect(await whatsNew.getFeatures()).toEqual([
+        'Tomorrow.io is no longer available.',
         'You can get your forecast from Visual Crossing. Check it out in the Sources section of the settings.',
-        'Climacell changed its name to Tomorrow.io',
         'You can get your forecast from OpenWeather. Check it out in the Sources section of the settings.',
-        'You can get your forecast from Tomorrow.io. Check it out in the Sources section of the settings.',
       ]);
 
       iq.expectReverse();

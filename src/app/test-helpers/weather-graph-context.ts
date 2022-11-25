@@ -9,7 +9,6 @@ import { BrowserService } from 'app/misc-services/browser.service';
 import { InitServiceHarness } from 'app/misc-services/init.service.harness';
 import { LocationIqServiceHarness } from 'app/misc-services/location-iq.service.harness';
 import { RefreshServiceHarness } from 'app/misc-services/refresh.service.harness';
-import { TomorrowIoHarness } from 'app/sources/tomorrow-io/tomorrow-io-harness';
 import { OpenWeatherHarness } from 'app/sources/open-weather/open-weather.harness';
 import { VisualCrossingHarness } from 'app/sources/visual-crossing/visual-crossing.harness';
 import { WeatherGovHarness } from 'app/sources/weather-gov/weather-gov.harness';
@@ -43,7 +42,6 @@ export class WeatherGraphContext extends ComponentContext<AppComponent> {
     refresh: new RefreshServiceHarness(this),
     state: new WeatherStateHarness(this),
     store: new WeatherStoreHarness(),
-    tomorrowIo: new TomorrowIoHarness(this),
     unlocked: new WeatherUnlockedHarness(this),
   };
 

@@ -6,7 +6,7 @@ import { ViewRange } from 'app/state/viewRange';
 import { mapToObject } from '@s-libs/js-core';
 
 export class WeatherState {
-  _version = 11;
+  _version = 12;
 
   useCurrentLocation = false;
   currentLocation = new Location();
@@ -15,7 +15,6 @@ export class WeatherState {
   allowSourceFallback = true;
   sources: { [source in SourceId]: Source } = {
     openWeather: new Source('OpenWeather', false),
-    tomorrowIo: new Source('Tomorrow.io', false),
     visualCrossing: new Source('Visual Crossing', false),
     weatherGov: new Source('Weather.gov', true),
     weatherUnlocked: new Source('Weather Unlocked', false),

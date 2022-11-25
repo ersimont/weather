@@ -11,7 +11,6 @@ import {
 } from 'chart.js';
 
 const pointStyles: { [id in SourceId]: PointStyle } = {
-  [SourceId.TOMORROW_IO]: 'rect',
   [SourceId.OPEN_WEATHER]: 'rectRot',
   [SourceId.VISUAL_CROSSING]: 'crossRot',
   [SourceId.WEATHER_GOV]: 'circle',
@@ -20,7 +19,6 @@ const pointStyles: { [id in SourceId]: PointStyle } = {
 
 const radii: { [id in SourceId]: number } = {
   [SourceId.OPEN_WEATHER]: 5,
-  [SourceId.TOMORROW_IO]: 5,
   [SourceId.VISUAL_CROSSING]: 7,
   [SourceId.WEATHER_GOV]: 4,
   [SourceId.WEATHER_UNLOCKED]: 6,

@@ -12,11 +12,12 @@ export class UpgradeService extends MigrationManager<WeatherState> {
     private whatsNewService: WhatsNewService,
   ) {
     super();
-    this.registerMigration(10, this.upgradeFrom10);
-    this.registerMigration(9, this.upgradeFrom9);
-    this.registerMigration(8, this.upgradeFrom8);
-    this.registerMigration(7, this.upgradeFrom7);
-    this.registerMigration(undefined, this.upgradeFromLegacy);
+    this.registerMigration(11, this.#upgradeFrom11);
+    this.registerMigration(10, this.#upgradeFrom10);
+    this.registerMigration(9, this.#upgradeFrom9);
+    this.registerMigration(8, this.#upgradeFrom8);
+    this.registerMigration(7, this.#upgradeFrom7);
+    this.registerMigration(undefined, this.#upgradeFromLegacy);
   }
 
   protected override onError(
@@ -29,7 +30,16 @@ export class UpgradeService extends MigrationManager<WeatherState> {
     return defaultValue;
   }
 
-  private upgradeFrom10(state: any): WeatherState {
+  #upgradeFrom11(state: any): WeatherState {
+    this.whatsNewService.add('Tomorrow.io is no longer available.');
+    return {
+      ...state,
+      _version: 12,
+      sources: omit(state.sources, 'tomorrowIo'),
+    };
+  }
+
+  #upgradeFrom10(state: any): WeatherState {
     this.whatsNewService.add(
       'You can get your forecast from Visual Crossing. Check it out in the Sources section of the settings.',
     );
@@ -43,22 +53,15 @@ export class UpgradeService extends MigrationManager<WeatherState> {
     };
   }
 
-  private upgradeFrom9(state: any): WeatherState {
-    this.whatsNewService.add('Climacell changed its name to Tomorrow.io');
+  #upgradeFrom9(state: any): WeatherState {
     return {
       ...state,
       _version: 10,
-      sources: {
-        ...omit(state.sources, 'climacell'),
-        tomorrowIo: {
-          ...state.sources.climacell,
-          label: 'Tomorrow.io',
-        },
-      },
+      sources: { ...omit(state.sources, 'climacell') },
     };
   }
 
-  private upgradeFrom8(state: WeatherState): WeatherState {
+  #upgradeFrom8(state: WeatherState): WeatherState {
     state = cloneDeep(state);
     state.sources = {
       ...state.sources,
@@ -72,7 +75,7 @@ export class UpgradeService extends MigrationManager<WeatherState> {
     return state;
   }
 
-  private upgradeFrom7(state: WeatherState): WeatherState {
+  #upgradeFrom7(state: WeatherState): WeatherState {
     return {
       ...state,
       _version: 8,
@@ -80,21 +83,13 @@ export class UpgradeService extends MigrationManager<WeatherState> {
     };
   }
 
-  private upgradeFromLegacy(state: any): WeatherState {
+  #upgradeFromLegacy(state: any): WeatherState {
     const oldVersion = (state as any).version;
     assert(oldVersion === 6, 'Unable to upgrade from version ' + oldVersion);
 
     state = cloneDeep(state);
-    state.sources = {
-      ...state.sources,
-      climacell: { label: 'Climacell', show: false, forecast: {} },
-    };
     delete (state as any).version;
     state._version = 7;
-
-    this.whatsNewService.add(
-      'You can get your forecast from Tomorrow.io. Check it out in the Sources section of the settings.',
-    );
     return state;
   }
 }

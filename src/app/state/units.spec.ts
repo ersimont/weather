@@ -1,5 +1,5 @@
 import { GraphComponentHarness } from 'app/graph/graph.component.harness';
-import { TomorrowIoHarness } from 'app/sources/tomorrow-io/tomorrow-io-harness';
+import { VisualCrossingHarness } from 'app/sources/visual-crossing/visual-crossing.harness';
 import { Condition } from 'app/state/condition';
 import { SourceId } from 'app/state/source';
 import { AmountUnit } from 'app/state/units';
@@ -8,30 +8,30 @@ import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 
 describe('unitInfo', () => {
   let ctx: WeatherGraphContext;
-  let tomorrowIo: TomorrowIoHarness;
+  let crossing: VisualCrossingHarness;
   let graph: GraphComponentHarness;
   let state: WeatherStateHarness;
   beforeEach(() => {
     ctx = new WeatherGraphContext();
-    ({ tomorrowIo, graph, state } = ctx.harnesses);
+    ({ crossing, graph, state } = ctx.harnesses);
   });
 
   it('rounds MM precipitation to 1 decimal place', () => {
     state.setCustomLocation();
-    state.setShowing(SourceId.TOMORROW_IO);
+    state.setShowing(SourceId.VISUAL_CROSSING);
     ctx.initialState.units.amount = AmountUnit.MM;
     ctx.run(() => {
-      tomorrowIo
-        .expectTimelines()
+      crossing
+        .expectForecast()
         .flush(
-          tomorrowIo.buildTimelinesResponse(
+          crossing.buildResponse(
             {},
-            { precipitationIntensity: 0.06 },
+            { hour: crossing.buildHour({ precip: 0.06 }) },
           ),
         );
 
       expect(
-        graph.getTooltipLabel(SourceId.TOMORROW_IO, Condition.AMOUNT, 0),
+        graph.getTooltipLabel(SourceId.VISUAL_CROSSING, Condition.AMOUNT, 0),
       ).toContain('0.1 mm');
     });
   });

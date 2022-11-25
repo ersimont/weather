@@ -1,6 +1,32 @@
-import { WeatherState } from 'app/state/weather-state';
+// 2022-11-25
+export const v12Default: any = {
+  _version: 12,
+  useCurrentLocation: false,
+  currentLocation: { search: '' },
+  customLocation: { search: '' },
+  allowSourceFallback: true,
+  sources: {
+    openWeather: { label: 'OpenWeather', show: false, forecast: {} },
+    visualCrossing: { label: 'Visual Crossing', show: false, forecast: {} },
+    weatherGov: { label: 'Weather.gov', show: true, forecast: {} },
+    weatherUnlocked: { label: 'Weather Unlocked', show: false, forecast: {} },
+  },
+  units: { temp: '°F', amount: 'in', speed: 'mph' },
+  showConditions: {
+    temp: true,
+    feel: true,
+    dew: true,
+    amount: true,
+    cloud: true,
+    wind: true,
+  },
+  viewRange: { min: -5400000, max: 81000000 },
+};
 
-export const v11Default = {
+export const defaultState = v12Default;
+
+// 2021-10-03
+export const v11Default: any = {
   _version: 11,
   useCurrentLocation: false,
   currentLocation: { search: '' },
@@ -25,9 +51,8 @@ export const v11Default = {
   viewRange: { min: -5400000, max: 81000000 },
 };
 
-export const defaultState = v11Default as unknown as WeatherState;
-
-export const v10Default = {
+// 2021-09-22
+export const v10Default: any = {
   _version: 10,
   useCurrentLocation: false,
   currentLocation: { search: '' },
@@ -51,7 +76,8 @@ export const v10Default = {
   viewRange: { min: -5400000, max: 81000000 },
 };
 
-export const v9Default = {
+// 2020-05-28
+export const v9Default: any = {
   _version: 9,
   useCurrentLocation: false,
   currentLocation: { search: '' },
@@ -75,7 +101,8 @@ export const v9Default = {
   viewRange: { min: -5400000, max: 81000000 },
 };
 
-export const v8Default = {
+// 2020-05-22
+export const v8Default: any = {
   _version: 8,
   useCurrentLocation: false,
   currentLocation: { search: '' },
@@ -98,7 +125,8 @@ export const v8Default = {
   viewRange: { min: -5400000, max: 81000000 },
 };
 
-export const v7Default = {
+// 2020-05-12
+export const v7Default: any = {
   _version: 7,
   allowSourceFallback: true,
   useCurrentLocation: false,
@@ -120,7 +148,7 @@ export const v7Default = {
   },
 } as const;
 
-export const v6Default = {
+export const v6Default: any = {
   version: 6,
   allowSourceFallback: true,
   useCurrentLocation: true,
