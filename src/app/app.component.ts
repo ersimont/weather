@@ -5,7 +5,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSidenav } from '@angular/material/sidenav';
+import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import { AboutComponent } from 'app/misc-components/about/about.component';
 import { PrivacyPolicyComponent } from 'app/misc-components/privacy-policy/privacy-policy.component';
 import { InitService } from 'app/misc-services/init.service';
@@ -17,12 +17,33 @@ import { HttpStatusService } from 'app/to-replace/http-status.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DirectiveSuperclass } from '@s-libs/ng-core';
+import { GraphComponent } from './graph/graph.component';
+import { MatListModule } from '@angular/material/list';
+import { OptionsComponent } from './options/options.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { NgIf, AsyncPipe } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        MatToolbarModule,
+        MatButtonModule,
+        MatIconModule,
+        NgIf,
+        MatProgressBarModule,
+        MatSidenavModule,
+        OptionsComponent,
+        MatListModule,
+        GraphComponent,
+        AsyncPipe,
+    ],
 })
 export class AppComponent extends DirectiveSuperclass {
   title$: Observable<string>;

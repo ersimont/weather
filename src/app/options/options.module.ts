@@ -15,24 +15,22 @@ import { SourceOptionsComponent } from './source-options/source-options.componen
 import { UnitOptionsComponent } from './unit-options/unit-options.component';
 
 @NgModule({
-  declarations: [
-    OptionsComponent,
-    LocationOptionsComponent,
-    SourceOptionsComponent,
-    UnitOptionsComponent,
-    ConditionOptionsComponent,
-  ],
-  imports: [
-    CommonModule,
-    EventTrackingModule,
-    MatButtonToggleModule,
-    MatExpansionModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatRadioModule,
-    MatSlideToggleModule,
-    NasModelModule,
-  ],
-  exports: [OptionsComponent],
+    imports: [
+        CommonModule,
+        EventTrackingModule,
+        MatButtonToggleModule,
+        MatExpansionModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatRadioModule,
+        MatSlideToggleModule,
+        NasModelModule,
+        OptionsComponent,
+        LocationOptionsComponent,
+        SourceOptionsComponent,
+        UnitOptionsComponent,
+        ConditionOptionsComponent,
+    ],
+    exports: [OptionsComponent],
 })
 export class OptionsModule {}

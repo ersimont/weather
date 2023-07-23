@@ -2,7 +2,7 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { TestBed } from '@angular/core/testing';
 import { ComponentContext, createSpyObject } from '@s-libs/ng-dev';
 import { AppComponent } from 'app/app.component';
-import { AppModule } from 'app/app.module';
+import { appConfig } from 'app/app.config';
 import { GraphComponentHarness } from 'app/graph/graph.component.harness';
 import { ManualReinstallServiceHarness } from 'app/misc-components/manual-reinstall/manual-reinstall.service.harness';
 import { BrowserService } from 'app/misc-services/browser.service';
@@ -46,7 +46,7 @@ export class WeatherGraphContext extends ComponentContext<AppComponent> {
   };
 
   constructor() {
-    super(AppComponent, { imports: [AppModule] });
+    super(AppComponent, appConfig);
 
     this.mocks.browser.getCurrentLocation.and.callFake(
       async () => this.currentLocation,

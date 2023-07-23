@@ -46,10 +46,11 @@ Chart.register(
 );
 
 @Component({
-  selector: 'app-graph',
-  templateUrl: './graph.component.html',
-  styleUrls: ['./graph.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-graph',
+    templateUrl: './graph.component.html',
+    styleUrls: ['./graph.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
 })
 export class GraphComponent extends DirectiveSuperclass {
   #trackPan = debounce(() => {

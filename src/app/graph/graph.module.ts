@@ -3,8 +3,8 @@ import { GraphComponent } from 'app/graph/graph.component';
 import { GraphStore } from 'app/graph/state/graph-store';
 
 @NgModule({
-  exports: [GraphComponent],
-  declarations: [GraphComponent],
-  providers: [GraphStore],
+    imports: [GraphComponent],
+    exports: [GraphComponent],
+    providers: [GraphStore],
 })
 export class GraphModule {}
