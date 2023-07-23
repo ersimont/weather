@@ -32,7 +32,10 @@ export interface Timeframe {
 
 @Injectable({ providedIn: 'root' })
 export class WeatherUnlocked extends AbstractSource {
-  constructor(private httpClient: HttpClient, injector: Injector) {
+  constructor(
+    private httpClient: HttpClient,
+    injector: Injector,
+  ) {
     super(SourceId.WEATHER_UNLOCKED, injector);
   }
 

@@ -24,7 +24,10 @@ export class LocationOptionsComponent extends AbstractOptionDirective {
   @ViewChild(MatExpansionPanel)
   private panel!: MatExpansionPanel;
 
-  constructor(injector: Injector, public locationService: LocationService) {
+  constructor(
+    injector: Injector,
+    public locationService: LocationService,
+  ) {
     super(injector);
     this.useCurrentLocation = this.store.state().useCurrentLocation;
     this.customSearch = this.store.state().customLocation.search;

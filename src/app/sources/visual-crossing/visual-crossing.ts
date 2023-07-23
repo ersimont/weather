@@ -32,7 +32,10 @@ export interface Hour {
 
 @Injectable({ providedIn: 'root' })
 export class VisualCrossing extends AbstractSource {
-  constructor(private httpClient: HttpClient, injector: Injector) {
+  constructor(
+    private httpClient: HttpClient,
+    injector: Injector,
+  ) {
     super(SourceId.VISUAL_CROSSING, injector);
   }
 

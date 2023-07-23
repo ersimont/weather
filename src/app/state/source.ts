@@ -10,5 +10,8 @@ export enum SourceId {
 export class Source {
   forecast: Forecast = {};
 
-  constructor(public label: string, public show: boolean) {}
+  constructor(
+    public label: string,
+    public show: boolean,
+  ) {}
 }

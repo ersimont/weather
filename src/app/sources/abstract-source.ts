@@ -21,7 +21,10 @@ export abstract class AbstractSource extends InjectableSuperclass {
   private store: WeatherStore;
   private sourceStore: Store<Source>;
 
-  constructor(private key: SourceId, injector: Injector) {
+  constructor(
+    private key: SourceId,
+    injector: Injector,
+  ) {
     super();
     this.errorService = injector.get(SnackBarErrorService);
     this.locationService = injector.get(LocationService);

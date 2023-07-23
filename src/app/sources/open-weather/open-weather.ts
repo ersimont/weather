@@ -45,7 +45,10 @@ export interface Timeframe {
 
 @Injectable({ providedIn: 'root' })
 export class OpenWeather extends AbstractSource {
-  constructor(private httpClient: HttpClient, injector: Injector) {
+  constructor(
+    private httpClient: HttpClient,
+    injector: Injector,
+  ) {
     super(SourceId.OPEN_WEATHER, injector);
   }
 

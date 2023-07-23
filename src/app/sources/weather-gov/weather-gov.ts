@@ -34,7 +34,10 @@ interface GridConditionInfo {
 
 @Injectable({ providedIn: 'root' })
 export class WeatherGov extends AbstractSource {
-  constructor(private httpClient: HttpClient, injector: Injector) {
+  constructor(
+    private httpClient: HttpClient,
+    injector: Injector,
+  ) {
     super(SourceId.WEATHER_GOV, injector);
   }
 
