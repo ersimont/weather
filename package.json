@@ -13,7 +13,8 @@
     "prepwa-dev-server": "ng build",
     "pwa-dev-server": "http-server -p 8080 -c-1 dist/weather",
     "prettier-all": "prettier --write \"**/*.{css,html,js,json,md,scss,ts,yml}\"",
-    "source-map-explorer": "ng build --source-map && source-map-explorer 'dist/weather/*.js'"
+    "presource-map-explorer": "ng build --source-map",
+    "source-map-explorer": "source-map-explorer 'dist/weather/*.js'"
   },
   "private": true,
   "dependencies": {
