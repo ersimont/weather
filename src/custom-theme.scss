@@ -1,86 +1,39 @@
-// Custom Theming for Angular Material
-// For more information: https://material.angular.io/guide/theming
 @use "@angular/material" as mat;
-// Plus imports for other components in your app.
+@use "../node_modules/@s-libs/ng-mat-core/theming";
 @use "sass:map" as map;
 @import "conditions";
 
-// Include the common styles for Angular Material. We include this here so that you only
-// have to load a single css file for Angular Material in your app.
-// Be sure that you only ever include this mixin once!
-@include mat.core();
+$primary-palette: mat.define-palette(mat.$indigo-palette, 400);
+$accent-palette: mat.define-palette(mat.$blue-grey-palette, A400, A100, A700);
 
-// Define the palettes for your theme using the Material Design palettes available in palette.scss
-// (imported above). For each palette, you can optionally specify a default, lighter, and darker
-// hue. Available color palettes: https://material.io/design/color/
-$weather-primary: mat.define-palette(mat.$indigo-palette, 400);
-$weather-accent: mat.define-palette(mat.$blue-grey-palette, A400, A100, A700);
-$weather-typography: mat.define-typography-config();
-
-// The warn palette is optional (defaults to red).
-$weather-warn: mat.define-palette(mat.$red-palette);
-
-// Create the theme object. A theme consists of configurations for individual
-// theming systems such as "color" or "typography".
-$weather-light-theme-map: (
-  color: (
-    primary: $weather-primary,
-    accent: $weather-accent,
-    warn: $weather-warn,
-  ),
-  typography: $weather-typography,
-  density: 0,
+$main-palettes: (
+  primary: $primary-palette,
+  accent: $accent-palette,
 );
-$weather-light-theme: mat.define-light-theme($weather-light-theme-map);
-$weather-dark-theme-map: (
-  color: (
-    primary: $weather-primary,
-    accent: $weather-accent,
-    warn: $weather-warn,
-  ),
-  typography: $weather-typography,
-  density: 0,
-);
-$weather-dark-theme: mat.define-dark-theme($weather-dark-theme-map);
 
-// Include theme styles for core and each component used in your app.
-// Alternatively, you can import and @include the theme mixins for each component
-// that you are using.
-@include mat.all-component-themes($weather-light-theme);
-@media (prefers-color-scheme: dark) {
-  @include mat.all-component-colors($weather-dark-theme);
-}
+@include theming.full-theming(
+  $dark-palettes: $main-palettes,
+  $light-palettes: $main-palettes
+);
 
 @each $condition, $palette in $condition-palettes {
-  $theme: mat.define-light-theme(
-    map.deep-merge(
-      $weather-light-theme-map,
-      (
-        color: (
-          accent: $palette,
-        ),
-      )
-    )
+  $cur-palettes: (
+    primary: $primary-palette,
+    accent: $palette,
   );
-  .#{$condition} {
-    @include mat.core-color($theme);
-    @include mat.slide-toggle-color($theme);
-  }
+  $cur-config: (
+    dark-palettes: $cur-palettes,
+    light-palettes: $cur-palettes,
+    modules: (
+      "core",
+      "slide-toggle",
+    ),
+  );
 
-  @media (prefers-color-scheme: dark) {
-    $theme: mat.define-dark-theme(
-      map.deep-merge(
-        $weather-dark-theme-map,
-        (
-          color: (
-            accent: $palette,
-          ),
-        )
-      )
-    );
-    .#{$condition} {
-      @include mat.core-color($theme);
-      @include mat.slide-toggle-color($theme);
+  .#{$condition} {
+    @include theming.dark-theme-colors($cur-config);
+    @media (prefers-color-scheme: light) {
+      @include theming.light-theme-colors($cur-config);
     }
   }
 }
@@ -129,5 +82,5 @@ $weather-dark-theme: mat.define-dark-theme($weather-dark-theme-map);
 }
 
 a {
-  color: mat.get-color-from-palette($weather-accent);
+  color: mat.get-color-from-palette($accent-palette);
 }

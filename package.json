@@ -37,6 +37,7 @@
     "@s-libs/micro-dash": "^16.0.0",
     "@s-libs/ng-app-state": "^16.0.0",
     "@s-libs/ng-core": "^16.0.0",
+    "@s-libs/ng-mat-core": "^16.0.0",
     "@s-libs/rxjs-core": "^16.0.0",
     "@types/suncalc": "^1.8.0",
     "chart.js": "^3.6.0",
