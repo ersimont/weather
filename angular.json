@@ -1,28 +1,21 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
-  "cli": {
-    "analytics": "a1a9bbd1-c91d-474f-8b85-55f897c617d3",
-    "packageManager": "yarn",
-    "schematicCollections": ["@angular-eslint/schematics"]
-  },
   "newProjectRoot": "projects",
-  "schematics": {
-    "@angular-eslint/schematics:application": {
-      "setParserOptionsProject": true
-    },
-    "@angular-eslint/schematics:library": {
-      "setParserOptionsProject": true
-    }
-  },
   "projects": {
     "weather": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
           "changeDetection": "OnPush",
-          "skipTests": true,
-          "style": "scss"
+          "style": "scss",
+          "standalone": true
+        },
+        "@schematics/angular:directive": {
+          "standalone": true
+        },
+        "@schematics/angular:pipe": {
+          "standalone": true
         }
       },
       "root": "",
@@ -142,14 +135,23 @@
         "deploy": {
           "builder": "@angular/fire:deploy",
           "options": {
-            "prerender": false,
-            "ssr": false,
-            "browserTarget": "the-project:build:production",
-            "firebaseProject": "simonton-weather",
-            "firebaseHostingSite": "simonton-weather"
+            "version": 2,
+            "browserTarget": "the-project:build:production"
           }
         }
       }
     }
+  },
+  "schematics": {
+    "@angular-eslint/schematics:application": {
+      "setParserOptionsProject": true
+    },
+    "@angular-eslint/schematics:library": {
+      "setParserOptionsProject": true
+    }
+  },
+  "cli": {
+    "analytics": "a1a9bbd1-c91d-474f-8b85-55f897c617d3",
+    "schematicCollections": ["@angular-eslint/schematics"]
   }
 }
