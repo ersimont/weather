@@ -10,7 +10,7 @@ import { Source, SourceId } from 'app/state/source';
 import { WeatherStore } from 'app/state/weather-store';
 import { SnackBarErrorService } from 'app/to-replace/snack-bar-error.service';
 import { NEVER, Observable } from 'rxjs';
-import { catchError, switchMap, switchMapTo } from 'rxjs/operators';
+import { catchError, switchMap } from 'rxjs/operators';
 
 export const notAvailableHere = Symbol();
 
@@ -37,7 +37,7 @@ export abstract class AbstractSource extends InjectableSuperclass {
   initialize(fallback?: SourceId): void {
     this.subscribeTo(
       this.refreshService.refresh$.pipe(
-        switchMapTo(this.sourceStore('show').$),
+        switchMap(() => this.sourceStore('show').$),
         switchMap((show) => this.refresh(show, fallback)),
       ),
       this.setForecast,

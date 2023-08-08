@@ -19,6 +19,7 @@ import { WeatherStateHarness } from 'app/state/weather-state.harness';
 import { WeatherStoreHarness } from 'app/state/weather-store.harness';
 import { eventCatalog } from 'app/test-helpers/event-catalog';
 import { EventTrackingServiceHarness } from 'app/to-replace/event-tracking/event-tracking.service.harness';
+import { IsPageVisibleHarness } from 'app/to-replace/ng-dev/is-page-visible.harness';
 import { SnackBarErrorServiceHarness } from 'app/to-replace/snack-bar-error.service.harness';
 
 export class WeatherGraphContext extends ComponentContext<AppComponent> {
@@ -29,6 +30,8 @@ export class WeatherGraphContext extends ComponentContext<AppComponent> {
   // TODO: move to harness
   mocks = { browser: createSpyObject(BrowserService) };
 
+  isPageVisibleHarness = new IsPageVisibleHarness();
+  // TODO: move to create in individual tests?
   harnesses = {
     crossing: new VisualCrossingHarness(this),
     errors: new SnackBarErrorServiceHarness(this),
@@ -51,7 +54,6 @@ export class WeatherGraphContext extends ComponentContext<AppComponent> {
     this.mocks.browser.getCurrentLocation.and.callFake(
       async () => this.currentLocation,
     );
-    this.mocks.browser.hasFocus.and.returnValue(true);
     TestBed.overrideProvider(BrowserService, { useValue: this.mocks.browser });
     this.harnesses.errors.install();
     this.assignWrapperStyles({

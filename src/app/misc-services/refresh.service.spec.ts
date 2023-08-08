@@ -18,11 +18,6 @@ describe('RefreshService', () => {
     ({ events, iq } = ctx.harnesses);
   });
 
-  function dispatchFocus(): void {
-    window.dispatchEvent(new Event('focus'));
-    ctx.tick();
-  }
-
   it('refreshes after 30 minutes, with an event', () => {
     ctx.initialState.useCurrentLocation = true;
     ctx.run(() => {
@@ -55,10 +50,9 @@ describe('RefreshService', () => {
       ctx.tick(1);
       iq.expectForward('loc1');
 
-      ctx.mocks.browser.hasFocus.and.returnValue(false);
+      ctx.isPageVisibleHarness.setVisible(false);
       ctx.tick(1.3 * refreshInterval);
-      ctx.mocks.browser.hasFocus.and.returnValue(true);
-      dispatchFocus();
+      ctx.isPageVisibleHarness.setVisible(true);
       iq.expectForward('loc1');
 
       ctx.tick(refreshInterval - 1);
@@ -88,32 +82,31 @@ describe('RefreshService', () => {
       iq.expectReverse();
 
       ctx.tick(refreshInterval / 2);
-      dispatchFocus();
+      ctx.isPageVisibleHarness.setVisible(false);
+      ctx.isPageVisibleHarness.setVisible(true);
       http.verify();
       expect().nothing();
     });
   });
 
-  it('refreshes when the tab gains focus, with an event', () => {
-    ctx.mocks.browser.hasFocus.and.returnValue(false);
+  it('refreshes when the tab becomes visible, with an event', () => {
+    ctx.isPageVisibleHarness.setVisible(false);
     ctx.initialState.useCurrentLocation = true;
     ctx.run(() => {
       http.verify();
       expect(events.getEvents('focus_refresh').length).toBe(0);
 
-      ctx.mocks.browser.hasFocus.and.returnValue(true);
-      dispatchFocus();
+      ctx.isPageVisibleHarness.setVisible(true);
       iq.expectReverse();
       expect(events.getEvents('focus_refresh').length).toBe(1);
     });
   });
 
-  it('only refreshes when the tab has focus', () => {
-    ctx.mocks.browser.hasFocus.and.returnValue(false);
+  it('only refreshes when the tab is visible', () => {
+    ctx.isPageVisibleHarness.setVisible(false);
     ctx.initialState.useCurrentLocation = true;
     ctx.run(async () => {
       ctx.tick(refreshInterval);
-      dispatchFocus();
       const locationOptions = await ctx.getHarness(
         LocationOptionsComponentHarness,
       );

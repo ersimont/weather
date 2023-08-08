@@ -22,8 +22,4 @@ export class BrowserService {
       );
     });
   }
-
-  hasFocus(): boolean {
-    return document.hasFocus();
-  }
 }

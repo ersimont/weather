@@ -1,18 +1,18 @@
-import { Injectable } from '@angular/core';
-import { BrowserService } from 'app/misc-services/browser.service';
-import { LocationService } from 'app/misc-services/location.service';
-import { EventTrackingService } from 'app/to-replace/event-tracking/event-tracking.service';
-import { fromEvent, interval, merge, Observable, of } from 'rxjs';
-import {
-  filter,
-  mapTo,
-  startWith,
-  switchMap,
-  tap,
-  throttleTime,
-} from 'rxjs/operators';
+import { inject, Injectable } from '@angular/core';
 import { convertTime } from '@s-libs/js-core';
 import { cache } from '@s-libs/rxjs-core';
+import { LocationService } from 'app/misc-services/location.service';
+import { EventTrackingService } from 'app/to-replace/event-tracking/event-tracking.service';
+import { isPageVisible$ } from 'app/to-replace/rxjs-core/is-page-visible';
+import { interval, Observable } from 'rxjs';
+import {
+  filter,
+  map,
+  skip,
+  startWith,
+  switchMap,
+  throttleTime,
+} from 'rxjs/operators';
 
 export const refreshMillis = convertTime(30, 'min', 'ms');
 
@@ -20,32 +20,34 @@ export const refreshMillis = convertTime(30, 'min', 'ms');
 export class RefreshService {
   refresh$: Observable<unknown>;
 
-  constructor(
-    private browserService: BrowserService,
-    private eventTrackingService: EventTrackingService,
-    private locationService: LocationService,
-  ) {
-    this.refresh$ = this.buildRefresh$();
+  #eventTrackingService = inject(EventTrackingService);
+  #locationService = inject(LocationService);
+
+  constructor() {
+    this.refresh$ = this.#buildRefresh$();
   }
 
-  private buildRefresh$(): Observable<unknown> {
-    const interval$ = interval(refreshMillis).pipe(mapTo('interval_refresh'));
-    const focus$ = fromEvent(window, 'focus').pipe(mapTo('focus_refresh'));
-    return this.locationService.refreshableChange$.pipe(
+  #buildRefresh$(): Observable<unknown> {
+    const focus$ = isPageVisible$().pipe(skip(1), startWith(undefined));
+    const interval$ = interval(refreshMillis).pipe(
+      map(() => 'interval_refresh'),
+      startWith('focus_refresh'),
+    );
+    return this.#locationService.refreshableChange$.pipe(
       startWith(undefined),
-      switchMap((source1) =>
-        merge(of(source1), focus$).pipe(
-          switchMap((source2) => merge(of(source2), interval$)),
-          filter(() => this.browserService.hasFocus()),
+      switchMap(() =>
+        focus$.pipe(
+          switchMap(() => interval$),
+          filter(() => document.visibilityState === 'visible'),
           throttleTime(refreshMillis),
         ),
       ),
-      tap((source) => {
+      switchMap((source) => {
         if (source) {
-          this.eventTrackingService.track(source, 'refresh');
+          this.#eventTrackingService.track(source, 'refresh');
         }
+        return this.#locationService.refresh();
       }),
-      switchMap(() => this.locationService.refresh()),
       cache(),
     );
   }

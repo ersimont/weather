@@ -15,7 +15,6 @@ import {
   catchError,
   distinctUntilChanged,
   map,
-  mapTo,
   skip,
   switchMap,
   tap,
@@ -30,7 +29,7 @@ export class LocationService extends InjectableSuperclass {
     map((state) => [state.useCurrentLocation, state.customLocation.search]),
     distinctUntilChanged(isEqual),
     skip(1),
-    mapTo(undefined),
+    map(() => undefined),
   );
   askForLocation$ = new Subject<void>();
 
