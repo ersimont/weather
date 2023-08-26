@@ -1,6 +1,5 @@
 import { HttpEvent, HttpHandlerFn, HttpRequest } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { logValues } from '@s-libs/rxjs-core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { distinctUntilChanged, map, tap } from 'rxjs/operators';
 
@@ -27,7 +26,6 @@ export class HttpStatusService {
     this.hasInFlightRequest$ = this.#count$.pipe(
       map(Boolean),
       distinctUntilChanged(),
-      logValues(),
     );
   }
 
