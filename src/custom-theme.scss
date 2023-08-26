@@ -13,7 +13,24 @@ $main-palettes: (
 
 @include theming.full-theming(
   $dark-palettes: $main-palettes,
-  $light-palettes: $main-palettes
+  $light-palettes: $main-palettes,
+  $modules: (
+    "button",
+    "button-toggle",
+    "core",
+    "dialog",
+    "expansion",
+    "form-field",
+    "icon",
+    "input",
+    "list",
+    "progress-bar",
+    "radio",
+    "sidenav",
+    "slide-toggle",
+    "snack-bar",
+    "toolbar",
+  )
 );
 
 @each $condition, $palette in $condition-palettes {
