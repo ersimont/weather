@@ -1,48 +1,37 @@
-import {
-  HTTP_INTERCEPTORS,
-  HttpEvent,
-  HttpHandler,
-  HttpInterceptor,
-  HttpRequest,
-} from '@angular/common/http';
-import { Injectable, Provider } from '@angular/core';
-import { noop, once } from '@s-libs/micro-dash';
+import { HttpEvent, HttpHandlerFn, HttpRequest } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { logValues } from '@s-libs/rxjs-core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { distinctUntilChanged, map, tap } from 'rxjs/operators';
 
-export function provideHttpStatus(): Provider {
-  return {
-    provide: HTTP_INTERCEPTORS,
-    useExisting: HttpStatusService,
-    multi: true,
+export function trackHttpStatus(
+  req: HttpRequest<unknown>,
+  next: HttpHandlerFn,
+): Observable<HttpEvent<unknown>> {
+  const service = inject(HttpStatusService);
+  service.changeInFlight(1);
+  const finish = () => {
+    service.changeInFlight(-1);
   };
+  return next(req).pipe(
+    tap({ error: finish, complete: finish, unsubscribe: finish }),
+  );
 }
 
 @Injectable({ providedIn: 'root' })
-export class HttpStatusService implements HttpInterceptor {
+export class HttpStatusService {
   hasInFlightRequest$: Observable<boolean>;
-  private count$ = new BehaviorSubject(0);
+  #count$ = new BehaviorSubject(0);
 
   constructor() {
-    this.hasInFlightRequest$ = this.count$.pipe(
+    this.hasInFlightRequest$ = this.#count$.pipe(
       map(Boolean),
       distinctUntilChanged(),
+      logValues(),
     );
   }
 
-  intercept(
-    req: HttpRequest<any>,
-    next: HttpHandler,
-  ): Observable<HttpEvent<any>> {
-    this.count$.next(this.count$.getValue() + 1);
-    const finish = once(() => {
-      this.count$.next(this.count$.getValue() - 1);
-      clearInterval(timeoutId);
-    });
-    // would love not to have the timeout workaround :(. Using an interval to
-    // avoid "pending timeout" errors in tests.
-    // https://github.com/angular/angular/issues/22324
-    const timeoutId = setInterval(finish, 10000);
-    return next.handle(req).pipe(tap(noop, finish, finish));
+  changeInFlight(delta: number): void {
+    this.#count$.next(this.#count$.getValue() + delta);
   }
 }

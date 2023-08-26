@@ -1,20 +1,26 @@
-import { HttpClient } from '@angular/common/http';
 import {
-  HttpClientTestingModule,
+  HttpClient,
+  provideHttpClient,
+  withInterceptors,
+} from '@angular/common/http';
+import {
   HttpTestingController,
+  provideHttpClientTesting,
 } from '@angular/common/http/testing';
 import { noop } from '@s-libs/micro-dash';
+import { AngularContext, expectSingleCallAndReset } from '@s-libs/ng-dev';
 import {
   HttpStatusService,
-  provideHttpStatus,
+  trackHttpStatus,
 } from 'app/to-replace/http-status.service';
-import { AngularContext, expectSingleCallAndReset } from '@s-libs/ng-dev';
 
 class TestContext extends AngularContext {
   constructor() {
     super({
-      imports: [HttpClientTestingModule],
-      providers: [provideHttpStatus()],
+      providers: [
+        provideHttpClient(withInterceptors([trackHttpStatus])),
+        provideHttpClientTesting(),
+      ],
     });
   }
 }
@@ -59,23 +65,24 @@ describe('HttpStatusService', () => {
 
   it('handles errors', () => {
     ctx.run(() => {
-      http.get('url1').subscribe({ error: noop });
+      const unsub = http.get('url1').subscribe({ error: noop });
       expectSingleCallAndReset(inFlight, true);
       httpController
         .expectOne('url1')
         .flush('', { status: 500, statusText: '' });
       expectSingleCallAndReset(inFlight, false);
+
+      unsub.unsubscribe();
+      expect(inFlight).not.toHaveBeenCalled();
     });
   });
 
-  it('handles cancelled requests (with a timeout workaround :( )', () => {
+  it('handles cancelled requests', () => {
     ctx.run(() => {
       const subscription = http.get('url1').subscribe();
       expectSingleCallAndReset(inFlight, true);
       subscription.unsubscribe();
       expect(httpController.expectOne('url1').cancelled).toBe(true);
-
-      ctx.tick(10000); // boooo workaround
 
       expectSingleCallAndReset(inFlight, false);
     });

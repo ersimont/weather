@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import {
   MAT_DIALOG_DEFAULT_OPTIONS,
@@ -11,13 +11,14 @@ import { GraphModule } from 'app/graph/graph.module';
 import { OptionsModule } from 'app/options/options.module';
 import { BugsnagModule } from 'app/to-replace/bugsnag/bugsnag.module';
 import { EventTrackingModule } from 'app/to-replace/event-tracking/event-tracking.module';
+import { trackHttpStatus } from 'app/to-replace/http-status.service';
 import { provideErrorHandler } from 'app/to-replace/snack-bar-error.service';
 import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideAnimations(),
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([trackHttpStatus])),
     provideServiceWorker('ngsw-worker.js', {
       enabled: environment.pwa,
       registrationStrategy: 'registerWhenStable:30000',

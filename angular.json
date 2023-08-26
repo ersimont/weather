@@ -136,7 +136,7 @@
           "builder": "@angular/fire:deploy",
           "options": {
             "version": 2,
-            "browserTarget": "the-project:build:production"
+            "browserTarget": "weather:build:production"
           }
         }
       }
