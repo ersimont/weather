@@ -1,9 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { convertTime } from '@s-libs/js-core';
-import { cache } from '@s-libs/rxjs-core';
+import { cache, isPageVisible$ } from '@s-libs/rxjs-core';
 import { LocationService } from 'app/misc-services/location.service';
 import { EventTrackingService } from 'app/to-replace/event-tracking/event-tracking.service';
-import { isPageVisible$ } from 'app/to-replace/rxjs-core/is-page-visible';
 import { interval, Observable } from 'rxjs';
 import {
   filter,
