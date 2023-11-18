@@ -98,14 +98,20 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
-            "production": { "browserTarget": "weather:build:production" },
-            "development": { "browserTarget": "weather:build:development" }
+            "production": {
+              "buildTarget": "weather:build:production"
+            },
+            "development": {
+              "buildTarget": "weather:build:development"
+            }
           },
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": { "browserTarget": "weather:build" }
+          "options": {
+            "buildTarget": "weather:build"
+          }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
