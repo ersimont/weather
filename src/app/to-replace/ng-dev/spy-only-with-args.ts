@@ -11,8 +11,8 @@ export function spyOnlyWithArgs<T extends object, K extends keyof T>(
   T[K] extends jasmine.Func
     ? T[K]
     : T[K] extends { new (...args: infer A): infer V }
-    ? (...args: A) => V
-    : never
+      ? (...args: A) => V
+      : never
 > {
   return ensureSpiedOn(object, method)
     .and.callThrough()
