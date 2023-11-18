@@ -34,7 +34,7 @@ export const defaultChartOptions: ChartOptions<'line'> = {
     millimeters: { display: false, position: 'left', min: 0, max: 10 },
   },
   plugins: {
-    annotation: { drawTime: 'beforeDatasetsDraw' },
+    annotation: {},
     tooltip: { footerFont: { style: 'italic' }, callbacks: {} },
     zoom: {
       pan: { enabled: true, mode: 'x' },
@@ -60,11 +60,18 @@ export function buildNightBoxes(
     xMax: +sunTimes[i + 1].sunrise,
     borderWidth: 0,
     backgroundColor: 'rgba(0, 0, 0, 0.05)',
+    drawTime: 'beforeDatasetsDraw',
   }));
 }
 
 export function buildNowLine(now: number): AnnotationOptions<'line'> {
-  return { type: 'line', xMin: now, xMax: now, borderColor: 'indianred' };
+  return {
+    type: 'line',
+    xMin: now,
+    xMax: now,
+    borderColor: 'indianred',
+    drawTime: 'beforeDatasetsDraw',
+  };
 }
 
 export function getMinMax(now: number): { min: number; max: number } {

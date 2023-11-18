@@ -95,7 +95,7 @@ function addFromZone(
 ): void {
   for (const v of zone.properties[zoneKey].values) {
     const interval = Interval.fromISO(v.validTime);
-    const time = interval.divideEqually(2)[0].end.toMillis();
+    const time = interval.divideEqually(2)[0].end!.toMillis();
 
     let value = v.value;
     if (condition === Condition.AMOUNT) {
