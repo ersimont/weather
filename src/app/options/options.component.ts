@@ -7,18 +7,18 @@ import { LocationOptionsComponent } from './location-options/location-options.co
 import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
-    selector: 'app-options',
-    templateUrl: './options.component.html',
-    styleUrls: ['./options.component.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
-    imports: [
-        MatExpansionModule,
-        LocationOptionsComponent,
-        SourceOptionsComponent,
-        UnitOptionsComponent,
-        ConditionOptionsComponent,
-    ],
+  selector: 'app-options',
+  templateUrl: './options.component.html',
+  styleUrl: './options.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    MatExpansionModule,
+    LocationOptionsComponent,
+    SourceOptionsComponent,
+    UnitOptionsComponent,
+    ConditionOptionsComponent,
+  ],
 })
 export class OptionsComponent {
   constructor(public store: WeatherStore) {}

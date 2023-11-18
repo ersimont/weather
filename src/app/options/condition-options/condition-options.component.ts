@@ -8,18 +8,18 @@ import { NgFor, NgClass } from '@angular/common';
 import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
-    selector: 'app-condition-options',
-    templateUrl: './condition-options.component.html',
-    styleUrls: ['./condition-options.component.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
-    imports: [
-        MatExpansionModule,
-        NgFor,
-        NgClass,
-        MatSlideToggleModule,
-        NasModelModule,
-    ],
+  selector: 'app-condition-options',
+  templateUrl: './condition-options.component.html',
+  styleUrl: './condition-options.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    MatExpansionModule,
+    NgFor,
+    NgClass,
+    MatSlideToggleModule,
+    NasModelModule,
+  ],
 })
 export class ConditionOptionsComponent extends AbstractOptionDirective {
   conditions = values(Condition);

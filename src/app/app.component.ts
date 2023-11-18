@@ -27,23 +27,23 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
-    imports: [
-        MatToolbarModule,
-        MatButtonModule,
-        MatIconModule,
-        NgIf,
-        MatProgressBarModule,
-        MatSidenavModule,
-        OptionsComponent,
-        MatListModule,
-        GraphComponent,
-        AsyncPipe,
-    ],
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    MatToolbarModule,
+    MatButtonModule,
+    MatIconModule,
+    NgIf,
+    MatProgressBarModule,
+    MatSidenavModule,
+    OptionsComponent,
+    MatListModule,
+    GraphComponent,
+    AsyncPipe,
+  ],
 })
 export class AppComponent extends DirectiveSuperclass {
   title$: Observable<string>;
