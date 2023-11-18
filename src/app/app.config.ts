@@ -9,7 +9,7 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideServiceWorker } from '@angular/service-worker';
 import { GraphModule } from 'app/graph/graph.module';
 import { OptionsModule } from 'app/options/options.module';
-import { BugsnagModule } from 'app/to-replace/bugsnag/bugsnag.module';
+import { provideBugsnag } from 'app/to-replace/bugsnag/provide-bugsnag';
 import { EventTrackingModule } from 'app/to-replace/event-tracking/event-tracking.module';
 import { trackHttpStatus } from 'app/to-replace/http-status.service';
 import { provideErrorHandler } from 'app/to-replace/snack-bar-error.service';
@@ -25,10 +25,10 @@ export const appConfig: ApplicationConfig = {
     }),
     provideErrorHandler(),
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { autoFocus: 'dialog' } },
+    environment.bugsnagConfig
+      ? provideBugsnag(environment.bugsnagConfig)
+      : [],
     importProvidersFrom(
-      environment.bugsnagConfig
-        ? BugsnagModule.forRoot(environment.bugsnagConfig)
-        : [],
       EventTrackingModule.forRoot({
         gaProperty: environment.gaProperty,
         log: environment.logEvents,
