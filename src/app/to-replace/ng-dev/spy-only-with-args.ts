@@ -1,15 +1,20 @@
 import { ensureSpiedOn } from 'app/to-replace/ng-dev/ensure-spied-on';
-import { FunctionKeys } from 'utility-types';
 
 /**
  *
  */
-export function spyOnlyWithArgs<T extends object, K extends FunctionKeys<T>>(
+export function spyOnlyWithArgs<T extends object, K extends keyof T>(
   object: T,
-  method: K,
+  method: T[K] extends Function ? K : never,
   args: jasmine.MatchableArgs<T[K]>,
-): jasmine.SpyAnd<T[K]> {
+): jasmine.SpyAnd<
+  T[K] extends jasmine.Func
+    ? T[K]
+    : T[K] extends { new (...args: infer A): infer V }
+    ? (...args: A) => V
+    : never
+> {
   return ensureSpiedOn(object, method)
     .and.callThrough()
-    .withArgs(...args).and;
+    .withArgs(...(args as any)).and;
 }

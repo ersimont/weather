@@ -2,7 +2,8 @@
   "hosting": [
     {
       "target": "weather",
-      "source": ".",
+      //      "source": ".",
+      "public": "dist/weather/browser",
       "frameworksBackend": {}
     }
   ]
