@@ -1,4 +1,4 @@
-import { BugsnagConfig } from 'app/to-replace/bugsnag/bugsnag.module';
+import { BugsnagConfig } from 'app/to-replace/bugsnag/lazy-bugsnag';
 
 interface Env {
   bugsnagConfig?: BugsnagConfig;

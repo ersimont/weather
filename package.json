@@ -31,7 +31,6 @@
     "@angular/router": "^17.0.0",
     "@angular/service-worker": "^17.0.0",
     "@bugsnag/js": "^7.21.0",
-    "@bugsnag/plugin-angular": "^7.22.1",
     "@s-libs/app-state": "^17.0.0-next.2",
     "@s-libs/js-core": "^17.0.0-next.2",
     "@s-libs/micro-dash": "^17.0.0-next.2",

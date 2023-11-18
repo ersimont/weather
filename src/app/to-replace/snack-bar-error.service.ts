@@ -1,13 +1,6 @@
-import {
-  ErrorHandler,
-  Inject,
-  Injectable,
-  Optional,
-  Provider,
-} from '@angular/core';
+import { ErrorHandler, Injectable, Provider } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { BugsnagErrorHandler } from '@bugsnag/plugin-angular';
-import { bugsnagToken } from 'app/to-replace/bugsnag/bugsnag.module';
+import { LazyBugsnag } from 'app/to-replace/bugsnag/lazy-bugsnag';
 
 export function provideErrorHandler(): Provider {
   return { provide: ErrorHandler, useExisting: SnackBarErrorService };
@@ -15,12 +8,7 @@ export function provideErrorHandler(): Provider {
 
 @Injectable({ providedIn: 'root' })
 export class SnackBarErrorService implements ErrorHandler {
-  constructor(
-    @Inject(bugsnagToken)
-    @Optional()
-    private bugsnag: BugsnagErrorHandler | undefined,
-    private matSnackBar: MatSnackBar,
-  ) {}
+  constructor(private matSnackBar: MatSnackBar) {}
 
   handleError(error: any, { logUnexpected = true } = {}): void {
     if (error.rejection) {
@@ -28,11 +16,13 @@ export class SnackBarErrorService implements ErrorHandler {
     }
 
     if (logUnexpected) {
-      if (this.bugsnag) {
-        this.bugsnag?.handleError(error.message ?? error);
-      } else {
-        console.error(error);
-      }
+      LazyBugsnag.isStarted().then((isStarted) => {
+        if (isStarted) {
+          LazyBugsnag.notify(error);
+        } else {
+          console.error(error);
+        }
+      });
     }
     const message = 'There was an unexpected error';
     this.show(message);
