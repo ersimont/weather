@@ -9,6 +9,3 @@ export const environment: Env = {
 
 // faster
 // (Error as any).stackTraceLimit = 0;
-
-// slower
-// import 'zone.js/plugins/zone-error';
