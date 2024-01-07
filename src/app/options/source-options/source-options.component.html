@@ -2,10 +2,10 @@
   <mat-expansion-panel-header>Sources</mat-expansion-panel-header>
   <div *ngFor="let sourceId of sourceIds" [class]="sourceId">
     <mat-slide-toggle
-      [nasModel]="store('sources')(sourceId)('show')"
+      [(ngModel)]="store('sources')(sourceId)('show').state"
       (change)="trackChange(sourceId)"
     >
-      {{ store("sources")(sourceId)("label").$ | async }}
+      {{ store("sources")(sourceId)("label").state }}
     </mat-slide-toggle>
   </div>
 </mat-expansion-panel>

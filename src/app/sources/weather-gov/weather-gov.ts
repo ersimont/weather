@@ -1,14 +1,14 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, Injector } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { get, round } from '@s-libs/micro-dash';
 import { AbstractSource, notAvailableHere } from 'app/sources/abstract-source';
 import { Condition, Conditions } from 'app/state/condition';
 import { Forecast } from 'app/state/forecast';
 import { GpsCoords } from 'app/state/location';
 import { SourceId } from 'app/state/source';
-import { get, round } from '@s-libs/micro-dash';
+import { Interval } from 'luxon';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
-import { Interval } from 'luxon';
 
 // API docs:
 // https://www.weather.gov/documentation/services-web-api
@@ -34,11 +34,10 @@ interface GridConditionInfo {
 
 @Injectable({ providedIn: 'root' })
 export class WeatherGov extends AbstractSource {
-  constructor(
-    private httpClient: HttpClient,
-    injector: Injector,
-  ) {
-    super(SourceId.WEATHER_GOV, injector);
+  #httpClient = inject(HttpClient);
+
+  constructor() {
+    super(SourceId.WEATHER_GOV);
   }
 
   fetch(gpsCoords: [number, number]): Observable<Forecast> {
@@ -60,14 +59,16 @@ export class WeatherGov extends AbstractSource {
 
   private fetchPoint(gpsCoords: GpsCoords): Observable<PointResponse> {
     const endpoint = `https://api.weather.gov/points`;
-    return this.httpClient.get<PointResponse>(
+    return this.#httpClient.get<PointResponse>(
       // weather.gov seems to redirect to a URL w/ GPS rounded to 4 decimal places. So we'll save the extra request.
       `${endpoint}/${gpsCoords.map((coord) => round(coord, 4)).join(',')}`,
     );
   }
 
   private fetchZone(point: PointResponse): Observable<GridResponse> {
-    return this.httpClient.get<GridResponse>(point.properties.forecastGridData);
+    return this.#httpClient.get<GridResponse>(
+      point.properties.forecastGridData,
+    );
   }
 }
 

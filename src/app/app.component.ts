@@ -68,7 +68,7 @@ export class AppComponent extends DirectiveSuperclass {
   }
 
   setRange(days: number, action: string): void {
-    this.store('viewRange').set(new ViewRange(days));
+    this.store('viewRange').state = new ViewRange(days);
     this.eventTrackingService.track(action, 'set_range');
   }
 

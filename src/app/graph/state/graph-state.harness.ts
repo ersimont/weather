@@ -40,6 +40,6 @@ export class GraphStateHarness {
   }
 
   private getState(): GraphState {
-    return this.ctx.inject(GraphStore).state();
+    return this.ctx.inject(GraphStore).state;
   }
 }

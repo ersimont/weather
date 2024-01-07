@@ -1,7 +1,7 @@
 <mat-expansion-panel>
   <mat-expansion-panel-header>Location</mat-expansion-panel-header>
   <mat-radio-group
-    [value]="store('useCurrentLocation').$ | async"
+    [value]="store('useCurrentLocation').state"
     (change)="setUseCurrentLocation($event)"
   >
     <mat-radio-button [value]="true"> Current </mat-radio-button>
@@ -13,7 +13,7 @@
           matInput
           name="custom"
           placeholder="Custom"
-          [value]="store('customLocation')('search').$ | async"
+          [value]="store('customLocation')('search').state"
           (change)="locationService.setCustomSearch(customInput.value)"
         />
       </mat-form-field>

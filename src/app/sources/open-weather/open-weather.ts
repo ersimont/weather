@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, Injector } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { convertTime } from '@s-libs/js-core';
 import { calcDewPoint } from 'app/misc-utils/calc-dew-point';
 import { AbstractSource } from 'app/sources/abstract-source';
 import { Condition } from 'app/state/condition';
@@ -9,7 +10,6 @@ import { SourceId } from 'app/state/source';
 import { metersPerSecondToKnots } from 'app/state/units';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { convertTime } from '@s-libs/js-core';
 
 // API docs:
 // https://openweathermap.org/forecast5
@@ -45,11 +45,10 @@ export interface Timeframe {
 
 @Injectable({ providedIn: 'root' })
 export class OpenWeather extends AbstractSource {
-  constructor(
-    private httpClient: HttpClient,
-    injector: Injector,
-  ) {
-    super(SourceId.OPEN_WEATHER, injector);
+  #httpClient = inject(HttpClient);
+
+  constructor() {
+    super(SourceId.OPEN_WEATHER);
   }
 
   protected fetch(gpsCoords: GpsCoords): Observable<Forecast> {
@@ -57,7 +56,7 @@ export class OpenWeather extends AbstractSource {
   }
 
   private fetchForecast(gpsCoords: GpsCoords): Observable<ForecastResponse> {
-    return this.httpClient.get<ForecastResponse>(endpoint, {
+    return this.#httpClient.get<ForecastResponse>(endpoint, {
       params: {
         lat: gpsCoords[0].toString(),
         lon: gpsCoords[1].toString(),

@@ -62,7 +62,7 @@ export class GraphComponentHarness {
   }
 
   private getOptions(): DeepRequired<ChartOptions<'line'>> {
-    return this.getGraphStore().state().options;
+    return this.getGraphStore()('options').state;
   }
 
   private getTooltipItem(
@@ -81,7 +81,7 @@ export class GraphComponentHarness {
   }
 
   private getDataSets(): ChartDataset<'line'>[] {
-    return this.getGraphStore().state().data;
+    return this.getGraphStore()('data').state;
   }
 
   private getGraphStore(): GraphStore {

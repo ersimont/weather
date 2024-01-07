@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { AbstractOptionDirective } from 'app/options/abstract-option-directive/abstract-option.directive';
 import { Condition, conditionInfo } from 'app/state/condition';
 import { values } from '@s-libs/micro-dash';
-import { NasModelModule } from '@s-libs/ng-app-state';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { NgFor, NgClass } from '@angular/common';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -14,11 +14,11 @@ import { MatExpansionModule } from '@angular/material/expansion';
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
+    FormsModule,
     MatExpansionModule,
-    NgFor,
-    NgClass,
     MatSlideToggleModule,
-    NasModelModule,
+    NgClass,
+    NgFor,
   ],
 })
 export class ConditionOptionsComponent extends AbstractOptionDirective {

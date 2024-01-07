@@ -1,11 +1,11 @@
+import { NgFor, UpperCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { values } from '@s-libs/micro-dash';
 import { AbstractOptionDirective } from 'app/options/abstract-option-directive/abstract-option.directive';
 import { AmountUnit, SpeedUnit, TempUnit } from 'app/state/units';
-import { NasModelModule } from '@s-libs/ng-app-state';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { NgFor, UpperCasePipe } from '@angular/common';
-import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
   selector: 'app-unit-options',
@@ -14,10 +14,10 @@ import { MatExpansionModule } from '@angular/material/expansion';
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
+    FormsModule,
+    MatButtonToggleModule,
     MatExpansionModule,
     NgFor,
-    MatButtonToggleModule,
-    NasModelModule,
     UpperCasePipe,
   ],
 })

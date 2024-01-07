@@ -1,11 +1,11 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, Injector } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { round } from '@s-libs/micro-dash';
 import { AbstractSource } from 'app/sources/abstract-source';
 import { Condition } from 'app/state/condition';
 import { Forecast } from 'app/state/forecast';
 import { GpsCoords } from 'app/state/location';
 import { SourceId } from 'app/state/source';
-import { round } from '@s-libs/micro-dash';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -32,11 +32,10 @@ export interface Timeframe {
 
 @Injectable({ providedIn: 'root' })
 export class WeatherUnlocked extends AbstractSource {
-  constructor(
-    private httpClient: HttpClient,
-    injector: Injector,
-  ) {
-    super(SourceId.WEATHER_UNLOCKED, injector);
+  #httpClient = inject(HttpClient);
+
+  constructor() {
+    super(SourceId.WEATHER_UNLOCKED);
   }
 
   fetch(gpsCoords: GpsCoords): Observable<Forecast> {
@@ -54,7 +53,7 @@ export class WeatherUnlocked extends AbstractSource {
   }
 
   private fetchForecast(gpsCoords: GpsCoords): Observable<ForecastResponse> {
-    return this.httpClient.get<ForecastResponse>(
+    return this.#httpClient.get<ForecastResponse>(
       // weather unlocked docs say to use 3 decimal places
       `${endpoint}/${gpsCoords.map((coord) => round(coord, 3)).join(',')}`,
     );

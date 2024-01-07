@@ -2,7 +2,7 @@
   <mat-expansion-panel-header>Conditions</mat-expansion-panel-header>
   <div *ngFor="let condition of conditions" [ngClass]="condition">
     <mat-slide-toggle
-      [nasModel]="store('showConditions')(condition)"
+      [(ngModel)]="store('showConditions')(condition).state"
       (change)="trackChange(condition)"
     >
       {{ conditionInfo[condition].label }}

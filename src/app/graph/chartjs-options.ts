@@ -1,4 +1,5 @@
 import { convertTime } from '@s-libs/js-core';
+import { cloneDeep } from '@s-libs/micro-dash';
 import { GpsCoords } from 'app/state/location';
 import { AmountUnit, unitInfo } from 'app/state/units';
 import { ChartOptions } from 'chart.js';
@@ -7,7 +8,7 @@ import { getTimes, GetTimesResult } from 'suncalc';
 
 const grid = { color: 'rgba(0, 0, 0, 0.05)' };
 
-export const defaultChartOptions: ChartOptions<'line'> = {
+const defaultChartOptions: ChartOptions<'line'> = {
   responsive: true,
   maintainAspectRatio: false,
   animation: false,
@@ -43,6 +44,15 @@ export const defaultChartOptions: ChartOptions<'line'> = {
     },
   },
 };
+
+/**
+ * Something messed with things inside the options object to make part of it return `false` for `instanceof Object` in tests - only if it's not the first test. Perhaps something in a date adapter? That's one place that was affected. It caused a test failure that was VERY hard to track down.
+ *
+ * This ensures every test run starts with a fresh copy of the options.
+ */
+export function getDefaultChartOptions() {
+  return cloneDeep(defaultChartOptions);
+}
 
 export function buildNightBoxes(
   now: number,

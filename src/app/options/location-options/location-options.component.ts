@@ -43,8 +43,8 @@ export class LocationOptionsComponent extends AbstractOptionDirective {
     public locationService: LocationService,
   ) {
     super(injector);
-    this.useCurrentLocation = this.store.state().useCurrentLocation;
-    this.customSearch = this.store.state().customLocation.search;
+    this.useCurrentLocation = this.store('useCurrentLocation').state;
+    this.customSearch = this.store('customLocation')('search').state;
 
     this.subscribeTo(this.locationService.askForLocation$, () => {
       this.panel.open();

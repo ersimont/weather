@@ -1,12 +1,9 @@
-import { Injectable } from '@angular/core';
-import { RootStore, Store } from '@s-libs/app-state';
+import { inject, Injectable } from '@angular/core';
 import { mapToObject } from '@s-libs/js-core';
 import { mapValues } from '@s-libs/micro-dash';
 import { mixInInjectableSuperclass } from '@s-libs/ng-core';
-import {
-  delayOnMicrotaskQueue,
-  logToReduxDevtoolsExtension,
-} from '@s-libs/rxjs-core';
+import { delayOnMicrotaskQueue } from '@s-libs/rxjs-core';
+import { RootStore, Store } from '@s-libs/signal-store';
 import { buildDatasets } from 'app/graph/chartjs-datasets';
 import {
   buildNightBoxes,
@@ -19,6 +16,8 @@ import { Condition } from 'app/state/condition';
 import { GpsCoords, Location } from 'app/state/location';
 import { ViewRange } from 'app/state/viewRange';
 import { WeatherStore } from 'app/state/weather-store';
+import { logToReduxDevtoolsExtension } from 'app/to-replace/js-core/redux/log-to-redux-devtools-extension';
+import { toState$ } from 'app/to-replace/signal-store/to-state';
 import { TimeScaleOptions } from 'chart.js';
 import { AnnotationOptions } from 'chartjs-plugin-annotation';
 import { combineLatest, interval } from 'rxjs';
@@ -29,44 +28,44 @@ import { DeepRequired } from 'utility-types';
 export class GraphStore extends mixInInjectableSuperclass(
   RootStore,
 )<GraphState> {
-  constructor(
-    private locationService: LocationService,
-    private weatherStore: WeatherStore,
-  ) {
-    super(new GraphState());
-    this.manageOptions();
-    this.manageData();
+  #locationService = inject(LocationService);
+  private weatherStore = inject(WeatherStore);
 
-    logToReduxDevtoolsExtension(this.$, {
+  constructor() {
+    super(new GraphState());
+    this.#manageOptions();
+    this.#manageData();
+
+    logToReduxDevtoolsExtension(() => this.state, {
       name: 'GraphStore',
       autoPause: true,
     });
   }
 
-  private manageOptions(): void {
-    const now$ = interval(60000).pipe(
-      startWith(0),
-      map(() => Date.now()),
-    );
-    const viewRange$ = this.weatherStore('viewRange').$.pipe(
-      delayOnMicrotaskQueue(),
-    );
-    this.subscribeTo(combineLatest([now$, viewRange$]), ([now, range]) => {
-      this.updateRange(now, range);
-    });
+  #manageOptions(): void {
+    const now$ = interval(60_000).pipe(startWith(0), map(Date.now));
+    const viewRange$ = toState$(this.weatherStore('viewRange'));
     this.subscribeTo(
-      combineLatest([now$, this.locationService.$]),
-      ([now, location]) => {
-        this.updateAnnotations(now, location.gpsCoords);
+      combineLatest([now$, viewRange$]).pipe(delayOnMicrotaskQueue()),
+      ([now, range]) => {
+        this.#updateRange(now, range);
       },
     );
-    this.subscribeTo(this.locationService.$, this.updateTimezone);
+    this.subscribeTo(
+      combineLatest([now$, this.#locationService.$]).pipe(
+        delayOnMicrotaskQueue(),
+      ),
+      ([now, location]) => {
+        this.#updateAnnotations(now, location.gpsCoords);
+      },
+    );
+    this.subscribeTo(
+      this.#locationService.$.pipe(delayOnMicrotaskQueue()),
+      this.#updateTimezone,
+    );
   }
 
-  private updateAnnotations(
-    now: number,
-    gpsCoords: GpsCoords | undefined,
-  ): void {
+  #updateAnnotations(now: number, gpsCoords: GpsCoords | undefined): void {
     const nightBoxes = gpsCoords ? buildNightBoxes(now, gpsCoords) : [];
     const annotations = [...nightBoxes, buildNowLine(now)] as DeepRequired<
       AnnotationOptions[]
@@ -74,23 +73,21 @@ export class GraphStore extends mixInInjectableSuperclass(
     this('options')('plugins')('annotation').assign({ annotations });
   }
 
-  private updateRange(now: number, range: ViewRange): void {
+  #updateRange(now: number, range: ViewRange): void {
     range = mapValues(range, (value) => now + value);
-    this.batch(() => {
-      this('options')('scales')('x').assign(range);
-      this('options')('plugins')('zoom')('limits')('x').assign(getMinMax(now));
-    });
+    this('options')('scales')('x').assign(range);
+    this('options')('plugins')('zoom')('limits')('x').assign(getMinMax(now));
   }
 
-  private updateTimezone({ timezone }: Location): void {
+  #updateTimezone({ timezone }: Location): void {
     const scaleStore = this('options')('scales')(
       'x',
     ) as Store<TimeScaleOptions>;
     const adapterStore = scaleStore('adapters')('date') as Store<any>;
-    adapterStore('zone').set(timezone);
+    adapterStore('zone').state = timezone;
   }
 
-  private manageData(): void {
+  #manageData(): void {
     const colors$ = interval(100).pipe(
       startWith(0),
       map(getColors),
@@ -98,9 +95,11 @@ export class GraphStore extends mixInInjectableSuperclass(
       take(1),
     );
     this.subscribeTo(
-      combineLatest([this.weatherStore.$, colors$]),
+      combineLatest([toState$(this.weatherStore), colors$]).pipe(
+        delayOnMicrotaskQueue(),
+      ),
       ([weatherState, colors]) => {
-        this('data').set(buildDatasets(weatherState, colors));
+        this('data').state = buildDatasets(weatherState, colors);
       },
     );
   }

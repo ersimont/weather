@@ -34,7 +34,6 @@ describe('GraphStore', () => {
       iq.expectReverse();
       expect(graph.getTimeZone()).toBe(undefined);
     });
-    ctx.startTime = new Date('1980-11-04T15:00:00.000Z');
   });
 
   describe('night boxing', () => {

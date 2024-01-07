@@ -39,11 +39,13 @@ export interface Address {
   country_code?: string;
 }
 
+export type LocationPatch = Pick<Location, 'gpsCoords' | 'city'>;
+
 @Injectable({ providedIn: 'root' })
 export class LocationIqService {
   constructor(private httpClient: HttpClient) {}
 
-  forward(search: string): Observable<Partial<Location>> {
+  forward(search: string): Observable<LocationPatch> {
     return this.httpClient
       .get<ForwardResponse>(`${baseUrl}/search.php`, {
         params: { ...commonParams, q: search, limit: '1' },
@@ -51,7 +53,7 @@ export class LocationIqService {
       .pipe(map((response) => parseLocation(response[0])));
   }
 
-  reverse(gpsCoords: GpsCoords): Observable<Partial<Location>> {
+  reverse(gpsCoords: GpsCoords): Observable<LocationPatch> {
     return this.httpClient
       .get<LocationResponse>(`${baseUrl}/reverse.php`, {
         params: {
@@ -75,7 +77,7 @@ export class LocationIqService {
   }
 }
 
-function parseLocation(response: LocationResponse): Partial<Location> {
+function parseLocation(response: LocationResponse): LocationPatch {
   return {
     gpsCoords: [+response.lat, +response.lon],
     city: parseCity(response.address),

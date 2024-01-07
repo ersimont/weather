@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, Injector } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { AbstractSource } from 'app/sources/abstract-source';
 import { Condition } from 'app/state/condition';
 import { Forecast } from 'app/state/forecast';
@@ -32,11 +32,10 @@ export interface Hour {
 
 @Injectable({ providedIn: 'root' })
 export class VisualCrossing extends AbstractSource {
-  constructor(
-    private httpClient: HttpClient,
-    injector: Injector,
-  ) {
-    super(SourceId.VISUAL_CROSSING, injector);
+  #httpClient = inject(HttpClient);
+
+  constructor() {
+    super(SourceId.VISUAL_CROSSING);
   }
 
   fetch(gpsCoords: GpsCoords): Observable<Forecast> {
@@ -54,7 +53,7 @@ export class VisualCrossing extends AbstractSource {
   }
 
   private fetchTimeline(gpsCoords: GpsCoords): Observable<TimelineResponse> {
-    return this.httpClient.get<TimelineResponse>(
+    return this.#httpClient.get<TimelineResponse>(
       `${endpoint}/${gpsCoords.join(',')}`,
       { params: { unitGroup: 'metric', include: 'hours' } },
     );

@@ -1,8 +1,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  effect,
   ElementRef,
-  Inject,
+  inject,
   Injector,
   LOCALE_ID,
   ViewChild,
@@ -10,7 +11,7 @@ import {
 import { clone, debounce } from '@s-libs/micro-dash';
 import { DirectiveSuperclass } from '@s-libs/ng-core';
 import { decodeLabelValues } from 'app/graph/chartjs-datasets';
-import { defaultChartOptions } from 'app/graph/chartjs-options';
+import { getDefaultChartOptions } from 'app/graph/chartjs-options';
 import { GraphStore } from 'app/graph/state/graph-store';
 import { conditionInfo } from 'app/state/condition';
 import { WeatherStore } from 'app/state/weather-store';
@@ -54,20 +55,20 @@ Chart.register(
 })
 export class GraphComponent extends DirectiveSuperclass {
   #trackPan = debounce(() => {
-    this.eventTrackingService.track('change_pan', 'zoom_and_pan');
+    this.#eventTrackingService.track('change_pan', 'zoom_and_pan');
   }, 3000);
   #trackZoom = debounce(() => {
-    this.eventTrackingService.track('change_zoom', 'zoom_and_pan');
+    this.#eventTrackingService.track('change_zoom', 'zoom_and_pan');
   }, 3000);
 
-  constructor(
-    private eventTrackingService: EventTrackingService,
-    private graphStore: GraphStore,
-    injector: Injector,
-    @Inject(LOCALE_ID) private locale: string,
-    private weatherStore: WeatherStore,
-  ) {
-    super(injector);
+  #eventTrackingService = inject(EventTrackingService);
+  private graphStore = inject(GraphStore);
+  #injector = inject(Injector);
+  #locale = inject(LOCALE_ID);
+  private weatherStore = inject(WeatherStore);
+
+  constructor() {
+    super();
     this.#addCallbacks();
   }
 
@@ -75,16 +76,20 @@ export class GraphComponent extends DirectiveSuperclass {
   set canvas(canvas: ElementRef<HTMLCanvasElement>) {
     const chart = new Chart(canvas.nativeElement, {
       type: 'line',
-      options: defaultChartOptions,
+      options: getDefaultChartOptions(),
       data: { datasets: [] },
     });
     if (environment.paintGraph) {
-      this.subscribeTo(this.graphStore.$, (graphState) => {
-        chart.options = graphState.options as ChartOptions<'line'>;
-        chart.data.datasets = graphState.data.map(clone);
-        // This setTimeout was suddenly needed after upgrading to chart.js 3. The setRange buttons would lag 1 behind what you clicked.
-        setTimeout(() => chart.update());
-      });
+      effect(
+        () => {
+          chart.options = this.graphStore('options')
+            .state as ChartOptions<'line'>;
+          chart.data.datasets = this.graphStore('data').state.map(clone);
+          // This setTimeout was suddenly needed after upgrading to chart.js 3. The setRange buttons would lag 1 behind what you clicked.
+          setTimeout(() => chart.update());
+        },
+        { injector: this.#injector },
+      );
     }
   }
 
@@ -96,26 +101,26 @@ export class GraphComponent extends DirectiveSuperclass {
       label: this.#getTooltipLabel.bind(this),
       footer: this.#getTooltipFooter.bind(this),
     });
-    zoomStore('pan')('onPanComplete').set((evt) => {
+    zoomStore('pan')('onPanComplete').state = (evt) => {
       this.#updateRange(evt);
       this.#trackPan();
-    });
-    zoomStore('zoom')('onZoomComplete').set((evt) => {
+    };
+    zoomStore('zoom')('onZoomComplete').state = (evt) => {
       this.#updateRange(evt);
       this.#trackZoom();
-    });
+    };
   }
 
   #getTooltipLabel(item: TooltipItem<'line'>): string {
     const conditionInf = conditionInfo[decodeLabelValues(item).condition];
-    const unitInf = conditionInf.getUnitInfo(this.weatherStore.state().units);
-    const display = unitInf.getDisplay(item.parsed.y, this.locale);
+    const unitInf = conditionInf.getUnitInfo(this.weatherStore('units').state);
+    const display = unitInf.getDisplay(item.parsed.y, this.#locale);
     return `${conditionInf.label}: ${display}`;
   }
 
   #getTooltipFooter(items: TooltipItem<'line'>[]): string {
     const sourceId = decodeLabelValues(items[0]).sourceId;
-    return `Source: ${this.weatherStore.state().sources[sourceId].label}`;
+    return `Source: ${this.weatherStore('sources')(sourceId)('label').state}`;
   }
 
   #updateRange(evt: { chart: Chart }): void {
@@ -124,6 +129,6 @@ export class GraphComponent extends DirectiveSuperclass {
     ] as ScaleOptionsByType<'linear'>;
     const { min, max } = scales;
     const now = Date.now();
-    this.weatherStore('viewRange').set({ min: min - now, max: max - now });
+    this.weatherStore('viewRange').state = { min: min - now, max: max - now };
   }
 }
