@@ -1,6 +1,6 @@
 import { DestroyRef, effect, inject, Injector, untracked } from '@angular/core';
 import { bindKey } from '@s-libs/micro-dash';
-import { Store } from '@s-libs/signal-store';
+import { Store } from 'app/to-replace/signal-store/store';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 export function toState$<T>(

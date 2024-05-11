@@ -36,7 +36,6 @@
     "@s-libs/ng-core": "^17.1.0",
     "@s-libs/ng-mat-core": "^17.1.0",
     "@s-libs/rxjs-core": "^17.1.0",
-    "@s-libs/signal-store": "^17.1.0",
     "chart.js": "^4.4.0",
     "chartjs-adapter-luxon": "^1.1.0",
     "chartjs-plugin-annotation": "^3.0.1",

@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { assert } from '@s-libs/js-core';
 import { InjectableSuperclass } from '@s-libs/ng-core';
-import { Store } from '@s-libs/signal-store';
+import { Store } from 'app/to-replace/signal-store/store';
 import { LocationService } from 'app/misc-services/location.service';
 import { RefreshService } from 'app/misc-services/refresh.service';
 import { Forecast } from 'app/state/forecast';

@@ -3,7 +3,6 @@ import { mapToObject } from '@s-libs/js-core';
 import { mapValues } from '@s-libs/micro-dash';
 import { mixInInjectableSuperclass } from '@s-libs/ng-core';
 import { delayOnMicrotaskQueue } from '@s-libs/rxjs-core';
-import { RootStore, Store } from '@s-libs/signal-store';
 import { buildDatasets } from 'app/graph/chartjs-datasets';
 import {
   buildNightBoxes,
@@ -17,8 +16,9 @@ import { GpsCoords, Location } from 'app/state/location';
 import { ViewRange } from 'app/state/viewRange';
 import { WeatherStore } from 'app/state/weather-store';
 import { logToReduxDevtoolsExtension } from 'app/to-replace/js-core/redux/log-to-redux-devtools-extension';
+import { RootStore } from 'app/to-replace/signal-store/root-store';
+import { Store } from 'app/to-replace/signal-store/store';
 import { toState$ } from 'app/to-replace/signal-store/to-state';
-import { TimeScaleOptions } from 'chart.js';
 import { AnnotationOptions } from 'chartjs-plugin-annotation';
 import { combineLatest, interval } from 'rxjs';
 import { filter, map, startWith, take } from 'rxjs/operators';
@@ -80,11 +80,9 @@ export class GraphStore extends mixInInjectableSuperclass(
   }
 
   #updateTimezone({ timezone }: Location): void {
-    const scaleStore = this('options')('scales')(
-      'x',
-    ) as Store<TimeScaleOptions>;
-    const adapterStore = scaleStore('adapters')('date') as Store<any>;
-    adapterStore('zone').state = timezone;
+    const scaleStore = this('options')('scales')('x') as Store<any>;
+    const adapterStore = scaleStore('adapters')('date');
+    adapterStore('zone').nonNull.state = timezone;
   }
 
   #manageData(): void {
