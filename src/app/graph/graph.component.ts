@@ -18,7 +18,6 @@ import { WeatherStore } from 'app/state/weather-store';
 import { EventTrackingService } from 'app/to-replace/event-tracking/event-tracking.service';
 import {
   Chart,
-  ChartOptions,
   Filler,
   LinearScale,
   LineController,
@@ -82,11 +81,10 @@ export class GraphComponent extends DirectiveSuperclass {
     if (environment.paintGraph) {
       effect(
         () => {
-          chart.options = this.graphStore('options')
-            .state as ChartOptions<'line'>;
-          chart.data.datasets = this.graphStore('data').state.map(clone);
-          // This setTimeout was suddenly needed after upgrading to chart.js 3. The setRange buttons would lag 1 behind what you clicked.
-          setTimeout(() => chart.update());
+          // chartjs mutates the stuff you give it, so give it clones
+          chart.options = clone(this.graphStore('options').state);
+          chart.data.datasets = clone(this.graphStore('data').state);
+          chart.update();
         },
         { injector: this.#injector },
       );
