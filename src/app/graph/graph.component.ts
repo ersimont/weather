@@ -95,15 +95,15 @@ export class GraphComponent extends DirectiveSuperclass {
     const optionStore = this.graphStore('options');
     const zoomStore = optionStore('plugins')('zoom');
 
-    optionStore('plugins')('tooltip')('callbacks').assign({
+    optionStore('plugins')('tooltip')('callbacks').nonNull.assign({
       label: this.#getTooltipLabel.bind(this),
       footer: this.#getTooltipFooter.bind(this),
     });
-    zoomStore('pan')('onPanComplete').state = (evt) => {
+    zoomStore('pan')('onPanComplete').nonNull.state = (evt): void => {
       this.#updateRange(evt);
       this.#trackPan();
     };
-    zoomStore('zoom')('onZoomComplete').state = (evt) => {
+    zoomStore('zoom')('onZoomComplete').nonNull.state = (evt): void => {
       this.#updateRange(evt);
       this.#trackZoom();
     };
@@ -116,7 +116,7 @@ export class GraphComponent extends DirectiveSuperclass {
     return `${conditionInf.label}: ${display}`;
   }
 
-  #getTooltipFooter(items: TooltipItem<'line'>[]): string {
+  #getTooltipFooter(items: Array<TooltipItem<'line'>>): string {
     const sourceId = decodeLabelValues(items[0]).sourceId;
     return `Source: ${this.weatherStore('sources')(sourceId)('label').state}`;
   }

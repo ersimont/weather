@@ -19,10 +19,8 @@ import { logToReduxDevtoolsExtension } from 'app/to-replace/js-core/redux/log-to
 import { RootStore } from 'app/to-replace/signal-store/root-store';
 import { Store } from 'app/to-replace/signal-store/store';
 import { toState$ } from 'app/to-replace/signal-store/to-state';
-import { AnnotationOptions } from 'chartjs-plugin-annotation';
 import { combineLatest, interval } from 'rxjs';
 import { filter, map, startWith, take } from 'rxjs/operators';
-import { DeepRequired } from 'utility-types';
 
 @Injectable()
 export class GraphStore extends mixInInjectableSuperclass(
@@ -67,16 +65,16 @@ export class GraphStore extends mixInInjectableSuperclass(
 
   #updateAnnotations(now: number, gpsCoords: GpsCoords | undefined): void {
     const nightBoxes = gpsCoords ? buildNightBoxes(now, gpsCoords) : [];
-    const annotations = [...nightBoxes, buildNowLine(now)] as DeepRequired<
-      AnnotationOptions[]
-    >;
-    this('options')('plugins')('annotation').assign({ annotations });
+    const annotations = [...nightBoxes, buildNowLine(now)];
+    this('options')('plugins')('annotation').nonNull.assign({ annotations });
   }
 
   #updateRange(now: number, range: ViewRange): void {
     range = mapValues(range, (value) => now + value);
-    this('options')('scales')('x').assign(range);
-    this('options')('plugins')('zoom')('limits')('x').assign(getMinMax(now));
+    this('options')('scales')('x').nonNull.assign(range);
+    this('options')('plugins')('zoom')('limits')('x').nonNull.assign(
+      getMinMax(now),
+    );
   }
 
   #updateTimezone({ timezone }: Location): void {

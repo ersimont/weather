@@ -50,7 +50,7 @@ const defaultChartOptions: ChartOptions<'line'> = {
  *
  * This ensures every test run starts with a fresh copy of the options.
  */
-export function getDefaultChartOptions() {
+export function getDefaultChartOptions(): ChartOptions<'line'> {
   return cloneDeep(defaultChartOptions);
 }
 

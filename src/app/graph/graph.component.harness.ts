@@ -32,7 +32,7 @@ export class GraphComponentHarness {
   constructor(private ctx: WeatherGraphContext) {}
 
   showsData(): boolean {
-    return this.getDataSets().some((dataSet) => dataSet.data?.length);
+    return this.#getDataSets().some((dataSet) => dataSet.data.length);
   }
 
   getTooltipLabel(
@@ -40,32 +40,32 @@ export class GraphComponentHarness {
     condition: Condition,
     index: number,
   ): string {
-    const getLabel = this.getOptions().plugins.tooltip.callbacks.label as (
+    const getLabel = this.#getOptions().plugins.tooltip.callbacks.label as (
       item: TooltipItem<'line'>,
     ) => string;
-    return getLabel(this.getTooltipItem(sourceId, condition, index));
+    return getLabel(this.#getTooltipItem(sourceId, condition, index));
   }
 
   getTooltipFooter(sourceId: SourceId): string {
-    const getFooter = this.getOptions().plugins.tooltip.callbacks.footer as (
-      items: TooltipItem<'line'>[],
+    const getFooter = this.#getOptions().plugins.tooltip.callbacks.footer as (
+      items: Array<TooltipItem<'line'>>,
     ) => string;
-    return getFooter([
-      this.getTooltipItem(sourceId, Condition.TEMP, 0),
-    ]) as string;
+    return getFooter([this.#getTooltipItem(sourceId, Condition.TEMP, 0)]);
   }
 
   getTimeZone(): string | undefined {
-    const scale = this.getOptions().scales['x'] as TimeScaleOptions;
+    const scale = this.#getOptions().scales['x'] as TimeScaleOptions;
     const date: any = scale.adapters.date;
     return date.zone;
   }
 
-  private getOptions(): DeepRequired<ChartOptions<'line'>> {
-    return this.getGraphStore()('options').state;
+  #getOptions(): DeepRequired<ChartOptions<'line'>> {
+    return this.#getGraphStore()('options').state as DeepRequired<
+      ChartOptions<'line'>
+    >;
   }
 
-  private getTooltipItem(
+  #getTooltipItem(
     sourceId: SourceId,
     condition: Condition,
     index: number,
@@ -74,17 +74,17 @@ export class GraphComponentHarness {
     const datasetIndex =
       conditionOrder.length * sourceOrder.indexOf(sourceId) +
       conditionOrder.indexOf(condition);
-    const dataset = this.getDataSets()[datasetIndex];
+    const dataset = this.#getDataSets()[datasetIndex];
     const chartPoints = dataset.data as ScatterDataPoint[];
     const value = chartPoints[index];
     return { parsed: value, dataset } as TooltipItem<'line'>;
   }
 
-  private getDataSets(): ChartDataset<'line'>[] {
-    return this.getGraphStore()('data').state;
+  #getDataSets(): Array<ChartDataset<'line'>> {
+    return this.#getGraphStore()('data').state;
   }
 
-  private getGraphStore(): GraphStore {
+  #getGraphStore(): GraphStore {
     return this.ctx.fixture.debugElement
       .query(By.directive(GraphComponent))
       .injector.get(GraphStore);
