@@ -1,8 +1,11 @@
 {
-  "extends": "@s-libs/eslint-config-ng",
+  "extends": "@s-libs/eslint-config-ng/strict",
   "overrides": [
     {
       "files": ["*.ts"],
+      "parserOptions": {
+        "project": ["tsconfig.(app|spec).json"]
+      },
       "rules": {
         "@angular-eslint/directive-selector": [
           "error",
