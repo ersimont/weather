@@ -1,14 +1,14 @@
 import { inject } from '@angular/core';
 import { assert } from '@s-libs/js-core';
 import { InjectableSuperclass } from '@s-libs/ng-core';
-import { Store } from 'app/to-replace/signal-store/store';
+import { Store } from '@s-libs/signal-store';
 import { LocationService } from 'app/misc-services/location.service';
 import { RefreshService } from 'app/misc-services/refresh.service';
 import { Forecast } from 'app/state/forecast';
 import { GpsCoords } from 'app/state/location';
 import { Source, SourceId } from 'app/state/source';
 import { WeatherStore } from 'app/state/weather-store';
-import { toState$ } from 'app/to-replace/signal-store/to-state';
+import { observeStore } from 'app/to-replace/signal-store/observe-store';
 import { SnackBarErrorService } from 'app/to-replace/snack-bar-error.service';
 import { NEVER, Observable } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
@@ -27,7 +27,7 @@ export abstract class AbstractSource extends InjectableSuperclass {
   constructor(key: SourceId) {
     super();
     this.sourceStore = this.store('sources')(key);
-    this.#show$ = toState$(this.sourceStore('show'));
+    this.#show$ = observeStore(this.sourceStore('show'));
   }
 
   initialize(fallback?: SourceId): void {

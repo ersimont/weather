@@ -3,6 +3,7 @@ import { mapToObject } from '@s-libs/js-core';
 import { mapValues } from '@s-libs/micro-dash';
 import { mixInInjectableSuperclass } from '@s-libs/ng-core';
 import { delayOnMicrotaskQueue } from '@s-libs/rxjs-core';
+import { RootStore, Store } from '@s-libs/signal-store';
 import { buildDatasets } from 'app/graph/chartjs-datasets';
 import {
   buildNightBoxes,
@@ -16,9 +17,7 @@ import { GpsCoords, Location } from 'app/state/location';
 import { ViewRange } from 'app/state/viewRange';
 import { WeatherStore } from 'app/state/weather-store';
 import { logToReduxDevtoolsExtension } from 'app/to-replace/js-core/redux/log-to-redux-devtools-extension';
-import { RootStore } from 'app/to-replace/signal-store/root-store';
-import { Store } from 'app/to-replace/signal-store/store';
-import { toState$ } from 'app/to-replace/signal-store/to-state';
+import { observeStore } from 'app/to-replace/signal-store/observe-store';
 import { combineLatest, interval } from 'rxjs';
 import { filter, map, startWith, take } from 'rxjs/operators';
 
@@ -42,7 +41,7 @@ export class GraphStore extends mixInInjectableSuperclass(
 
   #manageOptions(): void {
     const now$ = interval(60_000).pipe(startWith(0), map(Date.now));
-    const viewRange$ = toState$(this.weatherStore('viewRange'));
+    const viewRange$ = observeStore(this.weatherStore('viewRange'));
     this.subscribeTo(
       combineLatest([now$, viewRange$]).pipe(delayOnMicrotaskQueue()),
       ([now, range]) => {
@@ -91,7 +90,7 @@ export class GraphStore extends mixInInjectableSuperclass(
       take(1),
     );
     this.subscribeTo(
-      combineLatest([toState$(this.weatherStore), colors$]).pipe(
+      combineLatest([observeStore(this.weatherStore), colors$]).pipe(
         delayOnMicrotaskQueue(),
       ),
       ([weatherState, colors]) => {

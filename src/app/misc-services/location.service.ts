@@ -3,13 +3,13 @@ import { inject, Injectable } from '@angular/core';
 import { assert } from '@s-libs/js-core';
 import { isEqual, mapValues, omit } from '@s-libs/micro-dash';
 import { InjectableSuperclass } from '@s-libs/ng-core';
+import { Store } from '@s-libs/signal-store';
 import { BrowserService } from 'app/misc-services/browser.service';
 import { LocationIqService } from 'app/misc-services/location-iq.service';
 import { GpsCoords, Location } from 'app/state/location';
 import { WeatherStore } from 'app/state/weather-store';
 import { EventTrackingService } from 'app/to-replace/event-tracking/event-tracking.service';
-import { Store } from 'app/to-replace/signal-store/store';
-import { toState$ } from 'app/to-replace/signal-store/to-state';
+import { observeStore } from 'app/to-replace/signal-store/observe-store';
 import { SnackBarErrorService } from 'app/to-replace/snack-bar-error.service';
 import { from, NEVER, Observable, of, Subject } from 'rxjs';
 import {
@@ -30,7 +30,7 @@ export class LocationService extends InjectableSuperclass {
   private store = inject(WeatherStore);
 
   $ = this.#buildObservable();
-  refreshableChange$ = toState$(this.store).pipe(
+  refreshableChange$ = observeStore(this.store).pipe(
     map((state) => [state.useCurrentLocation, state.customLocation.search]),
     distinctUntilChanged(isEqual),
     skip(1),
@@ -148,9 +148,9 @@ export class LocationService extends InjectableSuperclass {
   }
 
   #buildObservable(): Observable<Location> {
-    const current$ = toState$(this.store('currentLocation'));
-    const custom$ = toState$(this.store('customLocation'));
-    return toState$(this.store('useCurrentLocation')).pipe(
+    const current$ = observeStore(this.store('currentLocation'));
+    const custom$ = observeStore(this.store('customLocation'));
+    return observeStore(this.store('useCurrentLocation')).pipe(
       switchMap((useCurrent) => (useCurrent ? current$ : custom$)),
     );
   }
