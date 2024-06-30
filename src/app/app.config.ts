@@ -1,11 +1,15 @@
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { ApplicationConfig, importProvidersFrom } from '@angular/core';
+import {
+  ApplicationConfig,
+  importProvidersFrom,
+  provideZoneChangeDetection,
+} from '@angular/core';
 import {
   MAT_DIALOG_DEFAULT_OPTIONS,
   MatDialogModule,
 } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideServiceWorker } from '@angular/service-worker';
 import { GraphModule } from 'app/graph/graph.module';
 import { OptionsModule } from 'app/options/options.module';
@@ -17,7 +21,8 @@ import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideAnimations(),
+    provideAnimationsAsync(),
+    provideZoneChangeDetection({ eventCoalescing: true }),
     provideHttpClient(withInterceptors([trackHttpStatus])),
     provideServiceWorker('ngsw-worker.js', {
       enabled: environment.pwa,
@@ -25,9 +30,7 @@ export const appConfig: ApplicationConfig = {
     }),
     provideErrorHandler(),
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { autoFocus: 'dialog' } },
-    environment.bugsnagConfig
-      ? provideBugsnag(environment.bugsnagConfig)
-      : [],
+    environment.bugsnagConfig ? provideBugsnag(environment.bugsnagConfig) : [],
     importProvidersFrom(
       EventTrackingModule.forRoot({
         gaProperty: environment.gaProperty,
