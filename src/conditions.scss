@@ -1,12 +1,12 @@
 @use "@angular/material" as mat;
 
 $condition-palettes: (
-  amount: mat.define-palette(mat.$blue-palette, A400, A100, A700),
-  cloud: mat.define-palette(mat.$gray-palette),
-  dew: mat.define-palette(mat.$cyan-palette),
-  feel: mat.define-palette(mat.$pink-palette, 100, 50, 200),
-  temp: mat.define-palette(mat.$red-palette),
-  wind: mat.define-palette(mat.$yellow-palette),
+  amount: mat.m2-define-palette(mat.$m2-blue-palette, A400, A100, A700),
+  cloud: mat.m2-define-palette(mat.$m2-gray-palette),
+  dew: mat.m2-define-palette(mat.$m2-cyan-palette),
+  feel: mat.m2-define-palette(mat.$m2-pink-palette, 100, 50, 200),
+  temp: mat.m2-define-palette(mat.$m2-red-palette),
+  wind: mat.m2-define-palette(mat.$m2-yellow-palette),
 );
 
 @mixin define-custom-property($name, $value) {
@@ -17,7 +17,7 @@ body {
   @each $condition, $palette in $condition-palettes {
     @include define-custom-property(
       $condition,
-      mat.get-color-from-palette($palette)
+      mat.m2-get-color-from-palette($palette)
     );
   }
 }

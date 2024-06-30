@@ -3,8 +3,8 @@
 @use "sass:map" as map;
 @import "conditions";
 
-$primary-palette: mat.define-palette(mat.$indigo-palette, 400);
-$accent-palette: mat.define-palette(mat.$blue-grey-palette, A400, A100, A700);
+$primary-palette: mat.m2-define-palette(mat.$m2-indigo-palette, 400);
+$accent-palette: mat.m2-define-palette(mat.$m2-blue-grey-palette, A400, A100, A700);
 
 $main-palettes: (
   primary: $primary-palette,
@@ -99,5 +99,5 @@ $main-palettes: (
 }
 
 a {
-  color: mat.get-color-from-palette($accent-palette);
+  color: mat.m2-get-color-from-palette($accent-palette);
 }
