@@ -3,6 +3,7 @@
   <div class="button-toggle-list">
     @for (unitOption of unitOptions; track unitOption) {
       <mat-button-toggle-group
+        hideSingleSelectionIndicator
         [(ngModel)]="store('units')(unitOption.type).state"
       >
         @for (option of unitOption.options; track option) {
