@@ -1,4 +1,4 @@
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -41,7 +41,6 @@ import { OptionsComponent } from './options/options.component';
     MatProgressBarModule,
     MatSidenavModule,
     MatToolbarModule,
-    NgIf,
     OptionsComponent,
   ],
 })

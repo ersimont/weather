@@ -1,11 +1,13 @@
 <mat-expansion-panel>
   <mat-expansion-panel-header>Sources</mat-expansion-panel-header>
-  <div *ngFor="let sourceId of sourceIds" [class]="sourceId">
-    <mat-slide-toggle
-      [(ngModel)]="store('sources')(sourceId)('show').state"
-      (change)="trackChange(sourceId)"
-    >
-      {{ store("sources")(sourceId)("label").state }}
-    </mat-slide-toggle>
-  </div>
+  @for (sourceId of sourceIds; track sourceId) {
+    <div [class]="sourceId">
+      <mat-slide-toggle
+        [(ngModel)]="store('sources')(sourceId)('show').state"
+        (change)="trackChange(sourceId)"
+      >
+        {{ store("sources")(sourceId)("label").state }}
+      </mat-slide-toggle>
+    </div>
+  }
 </mat-expansion-panel>

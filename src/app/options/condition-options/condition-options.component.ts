@@ -4,7 +4,7 @@ import { AbstractOptionDirective } from 'app/options/abstract-option-directive/a
 import { Condition, conditionInfo } from 'app/state/condition';
 import { values } from '@s-libs/micro-dash';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { NgFor, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
@@ -13,13 +13,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
   styleUrl: './condition-options.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [
-    FormsModule,
-    MatExpansionModule,
-    MatSlideToggleModule,
-    NgClass,
-    NgFor,
-  ],
+  imports: [FormsModule, MatExpansionModule, MatSlideToggleModule, NgClass],
 })
 export class ConditionOptionsComponent extends AbstractOptionDirective {
   conditions = values(Condition);

@@ -1,4 +1,4 @@
-import { NgFor, UpperCasePipe } from '@angular/common';
+import { UpperCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -17,7 +17,6 @@ import { AmountUnit, SpeedUnit, TempUnit } from 'app/state/units';
     FormsModule,
     MatButtonToggleModule,
     MatExpansionModule,
-    NgFor,
     UpperCasePipe,
   ],
 })

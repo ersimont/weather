@@ -4,7 +4,7 @@ import { AbstractOptionDirective } from 'app/options/abstract-option-directive/a
 import { SourceId } from 'app/state/source';
 import { values } from '@s-libs/micro-dash';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { NgFor, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
@@ -13,13 +13,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
   styleUrl: './source-options.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [
-    AsyncPipe,
-    FormsModule,
-    MatExpansionModule,
-    MatSlideToggleModule,
-    NgFor,
-  ],
+  imports: [AsyncPipe, FormsModule, MatExpansionModule, MatSlideToggleModule],
 })
 export class SourceOptionsComponent extends AbstractOptionDirective {
   sourceIds = values(SourceId);

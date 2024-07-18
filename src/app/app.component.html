@@ -18,11 +18,9 @@
     <mat-icon svgIcon="week"></mat-icon>
   </button>
 
-  <mat-progress-bar
-    *ngIf="httpStatusService.hasInFlightRequest$ | async"
-    mode="indeterminate"
-    color="accent"
-  ></mat-progress-bar>
+  @if (httpStatusService.hasInFlightRequest$ | async) {
+    <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
+  }
 </mat-toolbar>
 
 <mat-sidenav-container>

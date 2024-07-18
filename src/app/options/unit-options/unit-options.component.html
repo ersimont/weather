@@ -1,17 +1,19 @@
 <mat-expansion-panel>
   <mat-expansion-panel-header>Units</mat-expansion-panel-header>
   <div class="button-toggle-list">
-    <mat-button-toggle-group
-      *ngFor="let unitOption of unitOptions"
-      [(ngModel)]="store('units')(unitOption.type).state"
-    >
-      <mat-button-toggle
-        *ngFor="let option of unitOption.options"
-        [value]="option"
-        (change)="trackChange(unitOption.type)"
+    @for (unitOption of unitOptions; track unitOption) {
+      <mat-button-toggle-group
+        [(ngModel)]="store('units')(unitOption.type).state"
       >
-        {{ option | uppercase }}
-      </mat-button-toggle>
-    </mat-button-toggle-group>
+        @for (option of unitOption.options; track option) {
+          <mat-button-toggle
+            [value]="option"
+            (change)="trackChange(unitOption.type)"
+          >
+            {{ option | uppercase }}
+          </mat-button-toggle>
+        }
+      </mat-button-toggle-group>
+    }
   </div>
 </mat-expansion-panel>
