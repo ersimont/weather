@@ -1,18 +1,17 @@
 import { LocationOptionsComponentHarness } from 'app/options/location-options/location-options.component.harness';
 import { UnitOptionsComponentHarness } from 'app/options/unit-options/unit-options.component.harness';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
-import { EventTrackingServiceHarness } from 'app/to-replace/event-tracking/event-tracking.service.harness';
+import { EventTrackingServiceHarness } from 'app/to-replace/mixpanel-core/event-tracking.service.harness';
 
 describe('AbstractOptionDirective', () => {
   let ctx: WeatherGraphContext;
-  let events: EventTrackingServiceHarness;
   beforeEach(() => {
     ctx = new WeatherGraphContext();
-    ({ events } = ctx.harnesses);
   });
 
   it('fires a close event', () => {
     ctx.run(async () => {
+      const events = new EventTrackingServiceHarness();
       await ctx.cleanUpFreshInit();
 
       const locationOptions = await ctx.getHarness(
@@ -25,6 +24,7 @@ describe('AbstractOptionDirective', () => {
 
   it('fires an open event', () => {
     ctx.run(async () => {
+      const events = new EventTrackingServiceHarness();
       await ctx.cleanUpFreshInit();
 
       const locationOptions = await ctx.getHarness(UnitOptionsComponentHarness);

@@ -5,23 +5,23 @@ import { LocationOptionsComponentHarness } from 'app/options/location-options/lo
 import { WeatherGovHarness } from 'app/sources/weather-gov/weather-gov.harness';
 import { WeatherStateHarness } from 'app/state/weather-state.harness';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
-import { EventTrackingServiceHarness } from 'app/to-replace/event-tracking/event-tracking.service.harness';
+import { EventTrackingServiceHarness } from 'app/to-replace/mixpanel-core/event-tracking.service.harness';
 import { SnackBarErrorServiceHarness } from 'app/to-replace/snack-bar-error.service.harness';
 
 describe('AppComponent', () => {
   let ctx: WeatherGraphContext;
-  let events: EventTrackingServiceHarness;
   let errors: SnackBarErrorServiceHarness;
   let gov: WeatherGovHarness;
   let iq: LocationIqServiceHarness;
   let state: WeatherStateHarness;
   beforeEach(() => {
     ctx = new WeatherGraphContext();
-    ({ events, errors, gov, iq, state } = ctx.harnesses);
+    ({ errors, gov, iq, state } = ctx.harnesses);
   });
 
   it('tracks an event when opening the about popup', () => {
     ctx.run(async () => {
+      const events = new EventTrackingServiceHarness();
       await ctx.cleanUpFreshInit();
 
       const app = await ctx.getHarness(AppComponentHarness);
@@ -32,6 +32,7 @@ describe('AppComponent', () => {
 
   it('tracks an event when opening the privacy policy', () => {
     ctx.run(async () => {
+      const events = new EventTrackingServiceHarness();
       await ctx.cleanUpFreshInit();
 
       const app = await ctx.getHarness(AppComponentHarness);

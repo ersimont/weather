@@ -1,26 +1,26 @@
 import { HttpTestingController } from '@angular/common/http/testing';
+import { convertTime } from '@s-libs/js-core';
 import { LocationIqServiceHarness } from 'app/misc-services/location-iq.service.harness';
 import { LocationOptionsComponentHarness } from 'app/options/location-options/location-options.component.harness';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
-import { EventTrackingServiceHarness } from 'app/to-replace/event-tracking/event-tracking.service.harness';
-import { convertTime } from '@s-libs/js-core';
+import { EventTrackingServiceHarness } from 'app/to-replace/mixpanel-core/event-tracking.service.harness';
 
 const refreshInterval = convertTime(30, 'min', 'ms');
 
 describe('RefreshService', () => {
   let ctx: WeatherGraphContext;
   let http: HttpTestingController;
-  let events: EventTrackingServiceHarness;
   let iq: LocationIqServiceHarness;
   beforeEach(() => {
     ctx = new WeatherGraphContext();
     http = ctx.inject(HttpTestingController);
-    ({ events, iq } = ctx.harnesses);
+    ({ iq } = ctx.harnesses);
   });
 
   it('refreshes after 30 minutes, with an event', () => {
     ctx.initialState.useCurrentLocation = true;
     ctx.run(() => {
+      const events = new EventTrackingServiceHarness();
       iq.expectReverse();
 
       ctx.tick(refreshInterval - 1);
@@ -93,6 +93,7 @@ describe('RefreshService', () => {
     ctx.isPageVisibleHarness.setVisible(false);
     ctx.initialState.useCurrentLocation = true;
     ctx.run(() => {
+      const events = new EventTrackingServiceHarness();
       http.verify();
       expect(events.getEvents('focus_refresh').length).toBe(0);
 

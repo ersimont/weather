@@ -8,7 +8,7 @@ import { BrowserService } from 'app/misc-services/browser.service';
 import { LocationIqService } from 'app/misc-services/location-iq.service';
 import { GpsCoords, Location } from 'app/state/location';
 import { WeatherStore } from 'app/state/weather-store';
-import { EventTrackingService } from 'app/to-replace/event-tracking/event-tracking.service';
+import { EventTrackingService } from 'app/to-replace/mixpanel-core/event-tracking.service';
 import { observeStore } from 'app/to-replace/signal-store/observe-store';
 import { SnackBarErrorService } from 'app/to-replace/snack-bar-error.service';
 import { from, NEVER, Observable, of, Subject } from 'rxjs';
@@ -50,7 +50,9 @@ export class LocationService extends InjectableSuperclass {
     this.#clearForecasts();
     this.store('useCurrentLocation').state = false;
     this.store('customLocation').state = new Location(search);
-    this.#eventTrackingService.track('change_custom_search', 'change_location');
+    this.#eventTrackingService.track('change_custom_search', {
+      category: 'change_location',
+    });
   }
 
   getLocation(): Location {

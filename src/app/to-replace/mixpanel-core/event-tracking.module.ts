@@ -1,5 +1,5 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
-import { EventTrackingConfig } from 'app/to-replace/event-tracking/event-tracking-config';
+import { EventTrackingConfig } from './event-tracking-config';
 
 @NgModule({})
 export class EventTrackingModule {

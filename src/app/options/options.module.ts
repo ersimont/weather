@@ -6,7 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { EventTrackingModule } from 'app/to-replace/event-tracking/event-tracking.module';
+import { EventTrackingModule } from 'app/to-replace/mixpanel-core/event-tracking.module';
 import { ConditionOptionsComponent } from './condition-options/condition-options.component';
 import { LocationOptionsComponent } from './location-options/location-options.component';
 import { OptionsComponent } from './options.component';

@@ -17,8 +17,7 @@ import { GpsCoords } from 'app/state/location';
 import { WeatherState } from 'app/state/weather-state';
 import { WeatherStateHarness } from 'app/state/weather-state.harness';
 import { WeatherStoreHarness } from 'app/state/weather-store.harness';
-import { eventCatalog } from 'app/test-helpers/event-catalog';
-import { EventTrackingServiceHarness } from 'app/to-replace/event-tracking/event-tracking.service.harness';
+import { eventTrackingTestProviders } from 'app/to-replace/mixpanel-core/event-tracking.service.harness';
 import { IsPageVisibleHarness } from 'app/to-replace/ng-dev/is-page-visible.harness';
 import { SnackBarErrorServiceHarness } from 'app/to-replace/snack-bar-error.service.harness';
 
@@ -35,7 +34,6 @@ export class WeatherGraphContext extends ComponentContext<AppComponent> {
   harnesses = {
     crossing: new VisualCrossingHarness(this),
     errors: new SnackBarErrorServiceHarness(this),
-    events: new EventTrackingServiceHarness(eventCatalog),
     gov: new WeatherGovHarness(this),
     graph: new GraphComponentHarness(this),
     init: new InitServiceHarness(this),
@@ -49,7 +47,9 @@ export class WeatherGraphContext extends ComponentContext<AppComponent> {
   };
 
   constructor() {
-    super(AppComponent, appConfig);
+    super(AppComponent, {
+      providers: [appConfig.providers, eventTrackingTestProviders],
+    });
 
     this.mocks.browser.getCurrentLocation.and.callFake(
       async () => this.currentLocation,
@@ -81,7 +81,6 @@ export class WeatherGraphContext extends ComponentContext<AppComponent> {
 
   protected override verifyPostTestConditions(): void {
     super.verifyPostTestConditions();
-    this.harnesses.events.validateEvents();
     this.harnesses.errors.verify();
   }
 

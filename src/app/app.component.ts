@@ -19,8 +19,8 @@ import { InitService } from 'app/misc-services/init.service';
 import { LocationService } from 'app/misc-services/location.service';
 import { ViewRange } from 'app/state/viewRange';
 import { WeatherStore } from 'app/state/weather-store';
-import { EventTrackingService } from 'app/to-replace/event-tracking/event-tracking.service';
 import { HttpStatusService } from 'app/to-replace/http-status.service';
+import { EventTrackingService } from 'app/to-replace/mixpanel-core/event-tracking.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { GraphComponent } from './graph/graph.component';
@@ -67,17 +67,19 @@ export class AppComponent extends DirectiveSuperclass {
 
   setRange(days: number, action: string): void {
     this.store('viewRange').state = new ViewRange(days);
-    this.#eventTrackingService.track(action, 'set_range');
+    this.#eventTrackingService.track(action, { category: 'set_range' });
   }
 
   showAbout(): void {
     this.#matDialog.open(AboutComponent);
-    this.#eventTrackingService.track('click_about', 'navigate');
+    this.#eventTrackingService.track('click_about', { category: 'navigate' });
   }
 
   showPrivacyPolicy(): void {
     this.#matDialog.open(PrivacyPolicyComponent);
-    this.#eventTrackingService.track('click_privacy_policy', 'navigate');
+    this.#eventTrackingService.track('click_privacy_policy', {
+      category: 'navigate',
+    });
   }
 
   #openSideNavWhenAsked(): void {

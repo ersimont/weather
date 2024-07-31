@@ -2,8 +2,7 @@ import { BugsnagConfig } from 'app/to-replace/bugsnag/lazy-bugsnag';
 
 interface Env {
   bugsnagConfig?: BugsnagConfig;
-  gaProperty?: string;
-  logEvents: boolean;
+  eventTrackingConfig: EventTrackingConfig;
   paintGraph: boolean;
   pwa: boolean;
   storeDevtools: boolean;

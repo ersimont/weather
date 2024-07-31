@@ -1,12 +1,9 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { ErrorHandler } from '@angular/core';
-import { fakeAsync } from '@angular/core/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSnackBarHarness } from '@angular/material/snack-bar/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AngularContext } from '@s-libs/ng-dev';
-import { EventTrackingModule } from 'app/to-replace/event-tracking/event-tracking.module';
-import { EventTrackingServiceHarness } from 'app/to-replace/event-tracking/event-tracking.service.harness';
+import { EventTrackingModule } from 'app/to-replace/mixpanel-core/event-tracking.module';
 import {
   provideErrorHandler,
   SnackBarErrorService,
@@ -33,55 +30,51 @@ class TestContext extends AngularContext {
 
 describe('SnackBarErrorService', () => {
   let ctx: TestContext;
-  let errorHandler: ErrorHandler;
   let service: SnackBarErrorService;
-  let events: EventTrackingServiceHarness;
   beforeEach(() => {
     ctx = new TestContext();
-    errorHandler = ctx.inject(ErrorHandler);
     service = ctx.inject(SnackBarErrorService);
-    events = new EventTrackingServiceHarness({});
   });
 
-  function generateUncaughtPromiseError(error: any): Error {
-    try {
-      fakeAsync(() => Promise.reject(error))();
-      throw new Error('should not get here');
-    } catch (error) {
-      return error as Error;
-    }
-  }
+  // function generateUncaughtPromiseError(error: any): Error {
+  //   try {
+  //     fakeAsync(() => Promise.reject(error))();
+  //     throw new Error('should not get here');
+  //   } catch (error) {
+  //     return error as Error;
+  //   }
+  // }
 
   // Disabling these tests after the switch to bugsnag. They should be changed to show we're logging to bugsnag at the right times.
-  xdescribe('.handleError()', () => {
-    describe('with an Error object', () => {
-      it('tracks an event', () => {
-        ctx.run(() => {
-          errorHandler.handleError(new Error('present'));
-          expect(events.getErrors()).toEqual(['present']);
-        });
-      });
-    });
-
-    describe("with an 'unhandled rejection'", () => {
-      it('tracks an event', () => {
-        const error = generateUncaughtPromiseError('track me');
-        ctx.run(() => {
-          errorHandler.handleError(error);
-          expect(events.getErrors()).toEqual(['track me']);
-        });
-      });
-    });
-
-    describe('with a string', () => {
-      it('tracks an event', () => {
-        ctx.run(() => {
-          errorHandler.handleError("I'm a string");
-          expect(events.getErrors()).toEqual(["I'm a string"]);
-        });
-      });
-    });
-  });
+  // xdescribe('.handleError()', () => {
+  //   describe('with an Error object', () => {
+  //     it('tracks an event', () => {
+  //       ctx.run(() => {
+  //         errorHandler.handleError(new Error('present'));
+  //         expect(events.getErrors()).toEqual(['present']);
+  //       });
+  //     });
+  //   });
+  //
+  //   describe("with an 'unhandled rejection'", () => {
+  //     it('tracks an event', () => {
+  //       const error = generateUncaughtPromiseError('track me');
+  //       ctx.run(() => {
+  //         errorHandler.handleError(error);
+  //         expect(events.getErrors()).toEqual(['track me']);
+  //       });
+  //     });
+  //   });
+  //
+  //   describe('with a string', () => {
+  //     it('tracks an event', () => {
+  //       ctx.run(() => {
+  //         errorHandler.handleError("I'm a string");
+  //         expect(events.getErrors()).toEqual(["I'm a string"]);
+  //       });
+  //     });
+  //   });
+  // });
 
   describe('.show()', () => {
     it('displays a snack bar for 5 seconds', () => {

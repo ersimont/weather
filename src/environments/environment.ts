@@ -5,8 +5,7 @@ import { Env } from './env';
 // The list of file replacements can be found in `angular.json`.
 
 export const environment: Env = {
-  gaProperty: 'UA-148865234-2',
-  logEvents: true,
+  eventTrackingConfig: { log: true },
   paintGraph: true,
   pwa: false,
   storeDevtools: true,

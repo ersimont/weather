@@ -1,7 +1,9 @@
 import { Env } from './env';
 
 export const environment: Env = {
-  logEvents: false,
+  eventTrackingConfig: {
+    mixpanelToken: 'dummy token so it sends events to the mock backend',
+  },
   paintGraph: false,
   pwa: false,
   storeDevtools: false,

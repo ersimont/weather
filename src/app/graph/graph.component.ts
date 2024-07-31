@@ -15,7 +15,7 @@ import { getDefaultChartOptions } from 'app/graph/chartjs-options';
 import { GraphStore } from 'app/graph/state/graph-store';
 import { conditionInfo } from 'app/state/condition';
 import { WeatherStore } from 'app/state/weather-store';
-import { EventTrackingService } from 'app/to-replace/event-tracking/event-tracking.service';
+import { EventTrackingService } from 'app/to-replace/mixpanel-core/event-tracking.service';
 import {
   Chart,
   Filler,
@@ -54,10 +54,14 @@ Chart.register(
 })
 export class GraphComponent extends DirectiveSuperclass {
   #trackPan = debounce(() => {
-    this.#eventTrackingService.track('change_pan', 'zoom_and_pan');
+    this.#eventTrackingService.track('change_pan', {
+      category: 'zoom_and_pan',
+    });
   }, 3000);
   #trackZoom = debounce(() => {
-    this.#eventTrackingService.track('change_zoom', 'zoom_and_pan');
+    this.#eventTrackingService.track('change_zoom', {
+      category: 'zoom_and_pan',
+    });
   }, 3000);
 
   #eventTrackingService = inject(EventTrackingService);

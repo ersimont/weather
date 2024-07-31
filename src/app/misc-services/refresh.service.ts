@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { convertTime } from '@s-libs/js-core';
 import { cache, isPageVisible$ } from '@s-libs/rxjs-core';
 import { LocationService } from 'app/misc-services/location.service';
-import { EventTrackingService } from 'app/to-replace/event-tracking/event-tracking.service';
+import { EventTrackingService } from 'app/to-replace/mixpanel-core/event-tracking.service';
 import { interval, Observable } from 'rxjs';
 import {
   filter,
@@ -43,7 +43,7 @@ export class RefreshService {
       ),
       switchMap((source) => {
         if (source) {
-          this.#eventTrackingService.track(source, 'refresh');
+          this.#eventTrackingService.track(source, { category: 'refresh' });
         }
         return this.#locationService.refresh();
       }),
