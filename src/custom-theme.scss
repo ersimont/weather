@@ -1,20 +1,14 @@
-@use "@angular/material" as mat;
-@use "../node_modules/@s-libs/ng-mat-core/theming";
 @use "sass:map" as map;
-@import "conditions";
-
-$primary-palette: mat.m2-define-palette(mat.$m2-indigo-palette, 400);
-$accent-palette: mat.m2-define-palette(mat.$m2-blue-grey-palette, A400, A100, A700);
+@use "@angular/material" as mat;
+@use "app/to-replace/ng-mat-core/theming";
 
 $main-palettes: (
-  primary: $primary-palette,
-  accent: $accent-palette,
+  primary: mat.$blue-palette,
 );
-
-@include theming.full-theming(
-  $dark-palettes: $main-palettes,
-  $light-palettes: $main-palettes,
-  $modules: (
+$config: (
+  dark-palettes: $main-palettes,
+  light-palettes: $main-palettes,
+  modules: (
     "button",
     "button-toggle",
     "core",
@@ -22,6 +16,7 @@ $main-palettes: (
     "expansion",
     "form-field",
     "icon",
+    "icon-button",
     "input",
     "list",
     "progress-bar",
@@ -30,29 +25,15 @@ $main-palettes: (
     "slide-toggle",
     "snack-bar",
     "toolbar",
-  )
+  ),
 );
+$theme: theming.define-m3-theme($config, "dark-palettes");
 
-@each $condition, $palette in $condition-palettes {
-  $cur-palettes: (
-    primary: $primary-palette,
-    accent: $palette,
-  );
-  $cur-config: (
-    dark-palettes: $cur-palettes,
-    light-palettes: $cur-palettes,
-    modules: (
-      "core",
-      "slide-toggle",
-    ),
-  );
+@include theming.full-m3-theming($config...);
+@import "conditions";
 
-  .#{$condition} {
-    @include theming.dark-theme-colors($cur-config);
-    @media (prefers-color-scheme: light) {
-      @include theming.light-theme-colors($cur-config);
-    }
-  }
+a {
+  color: mat.get-theme-color($theme, secondary, 60);
 }
 
 @mixin shaped-toggle($clip-path) {
@@ -96,8 +77,4 @@ $main-palettes: (
 
 .weatherUnlocked {
   @include shaped-toggle(polygon(0% 90%, 50% 0%, 100% 90%));
-}
-
-a {
-  color: mat.m2-get-color-from-palette($accent-palette);
 }

@@ -1,0 +1,18 @@
+@use "sass:map";
+@use "@angular/material" as mat;
+
+@function define-m3-theme($config, $palette-key) {
+  @if not map.has-key($config, $palette-key) {
+    @error "The palette key `#{$palette-key}` is not defined in the config.";
+  }
+
+  @return mat.define-theme(
+    (
+      color: map.get($config, $palette-key),
+      typography: map.get($config, "typography"),
+      density: (
+        scale: map.get($config, "density") or 0,
+      ),
+    )
+  );
+}

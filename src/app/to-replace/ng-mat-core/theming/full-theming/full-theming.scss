@@ -1,0 +1,81 @@
+@use "sass:map";
+@use "sass:meta";
+@use "@angular/material" as mat;
+@use "../colors/colors";
+@use "../themes/themes";
+
+/// **Deprecated** - migrate to `full-m3-theming()`.
+@mixin full-theming($args...) {
+  @warn "Deprecated - migrate to full-m3-theming()";
+
+  $config: meta.keywords($args);
+  @include mat.core();
+  @include themes.dark-theme($config);
+  @media (prefers-color-scheme: light) {
+    @include colors.light-theme-colors($config);
+  }
+}
+
+/// A convenience mixin to set up all Angular Material theming for your app, including separate light and dark themes that respect `prefers-color-scheme`.
+///
+/// **Important:** This even does `@include mat.core()` for you, so do not include it yourself.
+///
+/// @param {Map} $config - The config object used for multiple mixins in this library. See the example for a description of all its options.
+///
+/// @example
+/// $config: (
+///   // A `color` value in the map passed to `mat.define-theme()`. Required for
+///   // `full-m3-theming()`, but in that case you do not need to include
+///   // `theme-type`.
+///   dark-palettes: (
+///     primary: mat.$cyan-palette,
+///   ),
+///
+///   // A `color` value in the map passed to `mat.define-theme()`. Required for
+///   // `full-m3-theming()`, but in that case you do not need to include
+///   // `theme-type`.
+///   light-palettes: (
+///     primary: mat.$blue-palette,
+///   ),
+///
+///   // The `typography` value in the map passed to `mat.define-theme()`. This
+///   // value is never required.
+///   typography: (
+///     plain-family: serif
+///   ),
+///
+///   // The value for `density.scale` in the map passed to
+///   // `mat.define-theme()`. Defaults to `0`.
+///   density: -1,
+///
+///   // The Angular Material modules to include themes/colors for. Defaults
+///   // to all modules.
+///   modules: (
+///     "core",
+///     "button",
+///     "card",
+///     "checkbox",
+///     "form-field",
+///     "input",
+///     "list",
+///   ),
+/// );
+@mixin full-m3-theming($args...) {
+  $defaults: (
+    dark-palettes: (
+      theme-type: "dark",
+    ),
+    light-palettes: (
+      theme-type: "light",
+    ),
+  );
+  $config: map.deep-merge($defaults, meta.keywords($args));
+
+  @include mat.core();
+  :root {
+    @include themes.m3-theme($config, "dark-palettes");
+    @media (prefers-color-scheme: light) {
+      @include colors.m3-colors($config, "light-palettes");
+    }
+  }
+}

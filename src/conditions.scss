@@ -1,23 +1,64 @@
+@use "sass:map";
+@use "sass:meta";
 @use "@angular/material" as mat;
+@use "app/to-replace/ng-mat-core/theming";
 
-$condition-palettes: (
-  amount: mat.m2-define-palette(mat.$m2-blue-palette, A400, A100, A700),
-  cloud: mat.m2-define-palette(mat.$m2-gray-palette),
-  dew: mat.m2-define-palette(mat.$m2-cyan-palette),
-  feel: mat.m2-define-palette(mat.$m2-pink-palette, 100, 50, 200),
-  temp: mat.m2-define-palette(mat.$m2-red-palette),
-  wind: mat.m2-define-palette(mat.$m2-yellow-palette),
+$condition-specs: (
+  amount: (
+    palette: mat.$azure-palette,
+    hue: 60,
+  ),
+  cloud: (
+    palette: mat.$blue-palette,
+    variant: secondary,
+    hue: 70,
+  ),
+  dew: (
+    palette: mat.$cyan-palette,
+    hue: 70,
+  ),
+  feel: (
+    palette: mat.$rose-palette,
+    hue: 80,
+  ),
+  temp: (
+    palette: mat.$red-palette,
+    hue: 60,
+  ),
+  wind: (
+    palette: mat.$yellow-palette,
+    hue: 95,
+  ),
 );
 
 @mixin define-custom-property($name, $value) {
   #{'--' + $name}: $value;
 }
 
-body {
-  @each $condition, $palette in $condition-palettes {
+@mixin condition-colors($condition, $spec, $type) {
+  $theme: mat.define-theme(
+    (
+      color: (
+        theme-type: $type,
+        primary: map.get($spec, palette),
+      ),
+    )
+  );
+  $variant: map.get($spec, variant) or primary;
+  :root {
     @include define-custom-property(
       $condition,
-      mat.m2-get-color-from-palette($palette)
+      mat.get-theme-color($theme, $variant, map.get($spec, hue))
     );
+  }
+  .#{$condition} {
+    @include mat.slide-toggle-color($theme, $color-variant: $variant);
+  }
+}
+
+@each $condition, $spec in $condition-specs {
+  @include condition-colors($condition, $spec, "dark");
+  @media (prefers-color-scheme: light) {
+    @include condition-colors($condition, $spec, "light");
   }
 }
