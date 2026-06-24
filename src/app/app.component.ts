@@ -27,22 +27,21 @@ import { GraphComponent } from './graph/graph.component';
 import { OptionsComponent } from './options/options.component';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
-  imports: [
-    AsyncPipe,
-    GraphComponent,
-    MatButtonModule,
-    MatIconModule,
-    MatListModule,
-    MatProgressBarModule,
-    MatSidenavModule,
-    MatToolbarModule,
-    OptionsComponent,
-  ],
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        AsyncPipe,
+        GraphComponent,
+        MatButtonModule,
+        MatIconModule,
+        MatListModule,
+        MatProgressBarModule,
+        MatSidenavModule,
+        MatToolbarModule,
+        OptionsComponent,
+    ]
 })
 export class AppComponent extends DirectiveSuperclass {
   protected httpStatusService = inject(HttpStatusService);

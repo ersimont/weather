@@ -9,7 +9,8 @@
   @warn "Deprecated - migrate to full-m3-theming()";
 
   $config: meta.keywords($args);
-  @include mat.core();
+  @include mat.elevation-classes();
+  @include mat.app-background();
   @include themes.dark-theme($config);
   @media (prefers-color-scheme: light) {
     @include colors.light-theme-colors($config);
@@ -71,7 +72,8 @@
   );
   $config: map.deep-merge($defaults, meta.keywords($args));
 
-  @include mat.core();
+  @include mat.elevation-classes();
+  @include mat.app-background();
   :root {
     @include themes.m3-theme($config, "dark-palettes");
     @media (prefers-color-scheme: light) {

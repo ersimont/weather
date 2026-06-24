@@ -7,11 +7,10 @@ interface WhatsNewDialogData {
 }
 
 @Component({
-  selector: 'app-whats-new',
-  templateUrl: './whats-new.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
-  imports: [MatDialogModule, MatButtonModule],
+    selector: 'app-whats-new',
+    templateUrl: './whats-new.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [MatDialogModule, MatButtonModule]
 })
 export class WhatsNewComponent {
   features: string[];

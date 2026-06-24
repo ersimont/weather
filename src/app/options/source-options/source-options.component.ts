@@ -8,12 +8,11 @@ import { AsyncPipe } from '@angular/common';
 import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
-  selector: 'app-source-options',
-  templateUrl: './source-options.component.html',
-  styleUrl: './source-options.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
-  imports: [AsyncPipe, FormsModule, MatExpansionModule, MatSlideToggleModule],
+    selector: 'app-source-options',
+    templateUrl: './source-options.component.html',
+    styleUrl: './source-options.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [AsyncPipe, FormsModule, MatExpansionModule, MatSlideToggleModule]
 })
 export class SourceOptionsComponent extends AbstractOptionDirective {
   sourceIds = values(SourceId);
