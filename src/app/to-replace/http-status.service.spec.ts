@@ -2,6 +2,7 @@ import {
   HttpClient,
   provideHttpClient,
   withInterceptors,
+  withXhr,
 } from '@angular/common/http';
 import {
   HttpTestingController,
@@ -18,7 +19,7 @@ class TestContext extends AngularContext {
   constructor() {
     super({
       providers: [
-        provideHttpClient(withInterceptors([trackHttpStatus])),
+        provideHttpClient(withXhr(), withInterceptors([trackHttpStatus])),
         provideHttpClientTesting(),
       ],
     });

@@ -1,4 +1,8 @@
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import {
+  provideHttpClient,
+  withInterceptors,
+  withXhr,
+} from '@angular/common/http';
 import {
   ApplicationConfig,
   importProvidersFrom,
@@ -23,7 +27,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideAnimationsAsync(),
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideHttpClient(withInterceptors([trackHttpStatus])),
+    provideHttpClient(withXhr(), withInterceptors([trackHttpStatus])),
     provideServiceWorker('ngsw-worker.js', {
       enabled: environment.pwa,
       registrationStrategy: 'registerWhenStable:30000',
