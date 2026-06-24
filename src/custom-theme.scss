@@ -37,7 +37,7 @@ a {
 }
 
 @mixin shaped-toggle($clip-path) {
-  --mdc-switch-handle-shape: 0;
+  --mat-slide-toggle-handle-shape: 0;
 
   .mdc-switch__handle {
     clip-path: $clip-path;
