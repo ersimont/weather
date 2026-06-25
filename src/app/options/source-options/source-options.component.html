@@ -6,7 +6,7 @@
         [(ngModel)]="store('sources')(sourceId)('show').state"
         (change)="trackChange(sourceId)"
       >
-        {{ store("sources")(sourceId)("label").state }}
+        {{ store('sources')(sourceId)('label').state }}
       </mat-slide-toggle>
     </div>
   }

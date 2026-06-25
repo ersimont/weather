@@ -1,8 +1,8 @@
-@use "sass:map";
-@use "sass:meta";
-@use "@angular/material" as mat;
-@use "../colors/colors";
-@use "../themes/themes";
+@use 'sass:map';
+@use 'sass:meta';
+@use '@angular/material' as mat;
+@use '../colors/colors';
+@use '../themes/themes';
 
 /// **Deprecated** - migrate to `full-m3-theming()`.
 @mixin full-theming($args...) {
@@ -64,10 +64,10 @@
 @mixin full-m3-theming($args...) {
   $defaults: (
     dark-palettes: (
-      theme-type: "dark",
+      theme-type: 'dark',
     ),
     light-palettes: (
-      theme-type: "light",
+      theme-type: 'light',
     ),
   );
   $config: map.deep-merge($defaults, meta.keywords($args));
@@ -75,9 +75,9 @@
   @include mat.elevation-classes();
   @include mat.app-background();
   :root {
-    @include themes.m3-theme($config, "dark-palettes");
+    @include themes.m3-theme($config, 'dark-palettes');
     @media (prefers-color-scheme: light) {
-      @include colors.m3-colors($config, "light-palettes");
+      @include colors.m3-colors($config, 'light-palettes');
     }
   }
 }

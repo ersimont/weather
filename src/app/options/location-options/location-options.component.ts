@@ -16,17 +16,17 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
-    selector: 'app-location-options',
-    templateUrl: './location-options.component.html',
-    styleUrl: './location-options.component.css',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        MatExpansionModule,
-        MatRadioModule,
-        MatFormFieldModule,
-        MatInputModule,
-        AsyncPipe,
-    ]
+  selector: 'app-location-options',
+  templateUrl: './location-options.component.html',
+  styleUrl: './location-options.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    MatExpansionModule,
+    MatRadioModule,
+    MatFormFieldModule,
+    MatInputModule,
+    AsyncPipe,
+  ],
 })
 export class LocationOptionsComponent extends AbstractOptionDirective {
   useCurrentLocation: boolean;
