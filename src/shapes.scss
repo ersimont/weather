@@ -1,0 +1,42 @@
+@mixin shaped-toggle($clip-path) {
+  --mat-slide-toggle-handle-shape: 0;
+
+  .mdc-switch__handle {
+    clip-path: $clip-path;
+
+    & > * {
+      display: none;
+    }
+  }
+}
+
+.openWeather {
+  @include shaped-toggle(polygon(0% 50%, 50% 0%, 100% 50%, 50% 100%));
+}
+
+.visualCrossing {
+  @include shaped-toggle(
+    polygon(
+      0% 15%,
+      15% 0%,
+      50% 35%,
+      85% 0%,
+      100% 15%,
+      65% 50%,
+      100% 85%,
+      85% 100%,
+      50% 65%,
+      15% 100%,
+      0% 85%,
+      35% 50%
+    )
+  );
+}
+
+.weatherGov {
+  @include shaped-toggle(circle(50%));
+}
+
+.weatherUnlocked {
+  @include shaped-toggle(polygon(0% 90%, 50% 0%, 100% 90%));
+}

@@ -1,13 +1,4 @@
 {
-  "targets": {
-    "simonton-weather": {
-      "hosting": {
-        "weather": [
-          "simonton-weather"
-        ]
-      }
-    }
-  },
   "projects": {
     "default": "simonton-weather"
   }

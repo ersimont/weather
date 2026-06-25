@@ -6,6 +6,7 @@ import {
 import {
   ApplicationConfig,
   importProvidersFrom,
+  provideBrowserGlobalErrorListeners,
   provideZoneChangeDetection,
 } from '@angular/core';
 import {
@@ -13,7 +14,6 @@ import {
   MatDialogModule,
 } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideServiceWorker } from '@angular/service-worker';
 import { GraphModule } from 'app/graph/graph.module';
 import { OptionsModule } from 'app/options/options.module';
@@ -25,13 +25,16 @@ import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideAnimationsAsync(),
+    // from scaffolding
+    provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideHttpClient(withXhr(), withInterceptors([trackHttpStatus])),
     provideServiceWorker('ngsw-worker.js', {
       enabled: environment.pwa,
       registrationStrategy: 'registerWhenStable:30000',
     }),
+
+    // additions
+    provideHttpClient(withXhr(), withInterceptors([trackHttpStatus])),
     provideErrorHandler(),
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { autoFocus: 'dialog' } },
     environment.bugsnagConfig ? provideBugsnag(environment.bugsnagConfig) : [],
