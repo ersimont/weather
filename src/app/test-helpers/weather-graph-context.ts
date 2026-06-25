@@ -1,6 +1,6 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { TestBed } from '@angular/core/testing';
-import { ComponentContext, createSpyObject } from '@s-libs/ng-dev';
+import { ComponentContext, createSpyObject } from '@s-libs/ng-jasmine';
 import { AppComponent } from 'app/app.component';
 import { appConfig } from 'app/app.config';
 import { GraphComponentHarness } from 'app/graph/graph.component.harness';

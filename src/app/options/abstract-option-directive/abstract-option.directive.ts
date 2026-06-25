@@ -1,12 +1,12 @@
 import { Directive, ElementRef, inject, ViewChild } from '@angular/core';
 import { MatExpansionPanelHeader } from '@angular/material/expansion';
-import { DirectiveSuperclass } from '@s-libs/ng-core';
+import { InjectableSuperclass } from '@s-libs/ng-core';
 import { WeatherStore } from 'app/state/weather-store';
 import { EventTrackingService } from 'app/to-replace/mixpanel-core/event-tracking.service';
 import { fromEvent } from 'rxjs';
 
 @Directive()
-export abstract class AbstractOptionDirective extends DirectiveSuperclass {
+export abstract class AbstractOptionDirective extends InjectableSuperclass {
   @ViewChild(MatExpansionPanelHeader)
   private header!: MatExpansionPanelHeader;
 

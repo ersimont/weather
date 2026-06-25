@@ -1,18 +1,17 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { values } from '@s-libs/micro-dash';
 import { AbstractOptionDirective } from 'app/options/abstract-option-directive/abstract-option.directive';
 import { SourceId } from 'app/state/source';
-import { values } from '@s-libs/micro-dash';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { AsyncPipe } from '@angular/common';
-import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
   selector: 'app-source-options',
+  imports: [FormsModule, MatExpansionModule, MatSlideToggleModule],
   templateUrl: './source-options.component.html',
   styleUrl: './source-options.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [AsyncPipe, FormsModule, MatExpansionModule, MatSlideToggleModule],
 })
 export class SourceOptionsComponent extends AbstractOptionDirective {
   sourceIds = values(SourceId);

@@ -5,28 +5,26 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
-  MatExpansionPanel,
   MatExpansionModule,
+  MatExpansionPanel,
 } from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 import { LocationService } from 'app/misc-services/location.service';
 import { AbstractOptionDirective } from 'app/options/abstract-option-directive/abstract-option.directive';
-import { AsyncPipe } from '@angular/common';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-location-options',
-  templateUrl: './location-options.component.html',
-  styleUrl: './location-options.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     MatExpansionModule,
     MatRadioModule,
     MatFormFieldModule,
     MatInputModule,
-    AsyncPipe,
   ],
+  templateUrl: './location-options.component.html',
+  styleUrl: './location-options.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LocationOptionsComponent extends AbstractOptionDirective {
   useCurrentLocation: boolean;

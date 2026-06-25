@@ -9,7 +9,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { clone, debounce } from '@s-libs/micro-dash';
-import { DirectiveSuperclass } from '@s-libs/ng-core';
+import { InjectableSuperclass } from '@s-libs/ng-core';
 import { decodeLabelValues } from 'app/graph/chartjs-datasets';
 import { getDefaultChartOptions } from 'app/graph/chartjs-options';
 import { GraphStore } from 'app/graph/state/graph-store';
@@ -52,7 +52,7 @@ Chart.register(
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
 })
-export class GraphComponent extends DirectiveSuperclass {
+export class GraphComponent extends InjectableSuperclass {
   #trackPan = debounce(() => {
     this.#eventTrackingService.track('change_pan', {
       category: 'zoom_and_pan',
@@ -116,7 +116,7 @@ export class GraphComponent extends DirectiveSuperclass {
   #getTooltipLabel(item: TooltipItem<'line'>): string {
     const conditionInf = conditionInfo[decodeLabelValues(item).condition];
     const unitInf = conditionInf.getUnitInfo(this.weatherStore('units').state);
-    const display = unitInf.getDisplay(item.parsed.y, this.#locale);
+    const display = unitInf.getDisplay(item.parsed.y!, this.#locale);
     return `${conditionInf.label}: ${display}`;
   }
 

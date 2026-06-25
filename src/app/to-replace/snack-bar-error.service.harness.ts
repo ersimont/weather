@@ -1,5 +1,5 @@
 import { assert } from '@s-libs/js-core';
-import { AngularContext, expectSingleCallAndReset } from '@s-libs/ng-dev';
+import { AngularContext, expectSingleCallAndReset } from '@s-libs/ng-jasmine';
 import { SnackBarErrorService } from 'app/to-replace/snack-bar-error.service';
 
 export class SnackBarErrorServiceHarness {

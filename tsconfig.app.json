@@ -7,5 +7,12 @@
     "types": []
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["src/**/*.spec.ts"]
+  "exclude": [
+    "src/**/*.spec.ts",
+
+    // additions
+    "src/app/test-helpers",
+    "src/**/*.harness.ts",
+    "src/app/to-replace/ng-dev"
+  ]
 }

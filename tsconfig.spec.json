@@ -6,5 +6,13 @@
     "outDir": "./out-tsc/spec",
     "types": ["jasmine"]
   },
-  "include": ["src/**/*.d.ts", "src/**/*.spec.ts"]
+  "include": [
+    "src/**/*.d.ts",
+    "src/**/*.spec.ts",
+
+    // additions
+    "src/app/test-helpers",
+    "src/**/*.harness.ts",
+    "src/app/to-replace/ng-dev"
+  ]
 }

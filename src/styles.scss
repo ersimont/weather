@@ -5,6 +5,9 @@
 // custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
 
+@use 'conditions';
+@use 'shapes';
+
 html {
   height: 100%;
   @include mat.theme(
@@ -38,11 +41,8 @@ body {
 }
 /* You can add global styles to this file, and also import other style files */
 
-@import 'conditions';
-@import 'shapes';
-
 a {
-  color: mat.get-theme-color($theme, secondary, 60);
+  color: var(--mat-sys-secondary);
 }
 
 .cdk-global-scrollblock {

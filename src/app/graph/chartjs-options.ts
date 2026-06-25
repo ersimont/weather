@@ -4,7 +4,7 @@ import { GpsCoords } from 'app/state/location';
 import { AmountUnit, unitInfo } from 'app/state/units';
 import { ChartOptions } from 'chart.js';
 import { AnnotationOptions } from 'chartjs-plugin-annotation';
-import { getTimes, GetTimesResult } from 'suncalc';
+import { getTimes, SunTimes } from 'suncalc';
 
 const grid = { color: 'rgba(0, 0, 0, 0.05)' };
 
@@ -58,7 +58,7 @@ export function buildNightBoxes(
   now: number,
   gpsCoords: GpsCoords,
 ): AnnotationOptions[] {
-  const sunTimes: GetTimesResult[] = [];
+  const sunTimes: SunTimes[] = [];
   const { min, max } = getMinMax(now);
   const oneDay = convertTime(1, 'd', 'ms');
   for (let time = min - oneDay; time < max + oneDay; time += oneDay) {
@@ -66,8 +66,8 @@ export function buildNightBoxes(
   }
   return sunTimes.slice(0, -1).map(({ sunset }, i) => ({
     type: 'box',
-    xMin: +sunset,
-    xMax: +sunTimes[i + 1].sunrise,
+    xMin: +sunset!,
+    xMax: +sunTimes[i + 1].sunrise!,
     borderWidth: 0,
     backgroundColor: 'rgba(0, 0, 0, 0.05)',
     drawTime: 'beforeDatasetsDraw',

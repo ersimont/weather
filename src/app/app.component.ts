@@ -12,7 +12,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { DirectiveSuperclass } from '@s-libs/ng-core';
+import { InjectableSuperclass } from '@s-libs/ng-core';
 import { AboutComponent } from 'app/misc-components/about/about.component';
 import { PrivacyPolicyComponent } from 'app/misc-components/privacy-policy/privacy-policy.component';
 import { InitService } from 'app/misc-services/init.service';
@@ -43,7 +43,7 @@ import { OptionsComponent } from './options/options.component';
     OptionsComponent,
   ],
 })
-export class AppComponent extends DirectiveSuperclass {
+export class AppComponent extends InjectableSuperclass {
   protected httpStatusService = inject(HttpStatusService);
   protected title$: Observable<string>;
 
