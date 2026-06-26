@@ -60,7 +60,6 @@
     "@types/luxon": "^3.7.2",
     "@types/mixpanel-browser": "^2.60.0",
     "@types/node": "^26.0.1",
-    "@types/suncalc": "^1.9.2",
     "angular-eslint": "22.0.0",
     "eslint": "^10.3.0",
     "commander": "^15.0.0",

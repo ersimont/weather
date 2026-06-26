@@ -1,5 +1,5 @@
 import { noop } from '@s-libs/micro-dash';
-import { staticTest } from '@s-libs/ng-dev';
+import { staticTest } from '@s-libs/ng-jasmine';
 import { ensureSpiedOn } from 'app/to-replace/ng-dev/ensure-spied-on';
 import { expectTypeOf } from 'expect-type';
 

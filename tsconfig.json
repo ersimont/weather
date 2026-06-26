@@ -21,7 +21,10 @@
     "noUnusedParameters": true,
 
     // app specific
-    "paths": { "app/*": ["./src/app/*"] }
+    "paths": {
+      "@env": ["./src/environments/environment.ts"],
+      "app/*": ["./src/app/*"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

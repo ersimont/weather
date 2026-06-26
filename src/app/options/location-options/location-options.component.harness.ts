@@ -1,7 +1,7 @@
 import { MatInputHarness } from '@angular/material/input/testing';
 import { MatRadioGroupHarness } from '@angular/material/radio/testing';
 import { assert } from '@s-libs/js-core';
-import { AngularContext } from '@s-libs/ng-dev';
+import { AngularContext } from '@s-libs/ng-jasmine';
 import { AbstractOptionDirectiveHarness } from 'app/options/abstract-option-directive/abstract-option.directive.harness';
 
 export class LocationOptionsComponentHarness extends AbstractOptionDirectiveHarness {

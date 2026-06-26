@@ -116,13 +116,7 @@
         "test": {
           "builder": "@angular/build:unit-test",
           "options": {
-            "runner": "karma",
-            "fileReplacements": [
-              {
-                "replace": "src/environments/environment.ts",
-                "with": "src/environments/environment.test.ts"
-              }
-            ]
+            "runner": "karma"
           }
         },
         "lint": {

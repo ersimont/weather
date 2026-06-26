@@ -1,5 +1,5 @@
 import { createBuilder } from '@s-libs/js-core';
-import { expectRequest, SlTestRequest } from '@s-libs/ng-dev';
+import { expectRequest, SlTestRequest } from '@s-libs/ng-jasmine';
 import {
   Hour,
   TimelineResponse,

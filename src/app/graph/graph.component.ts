@@ -31,7 +31,7 @@ import {
 import 'chartjs-adapter-luxon';
 import Annotation from 'chartjs-plugin-annotation';
 import Zoom from 'chartjs-plugin-zoom';
-import { environment } from '../../environments/environment';
+import { environment } from '@env';
 
 Chart.register(
   LineElement,

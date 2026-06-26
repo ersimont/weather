@@ -1,4 +1,4 @@
-import { expectSingleCallAndReset } from '@s-libs/ng-dev';
+import { expectSingleCallAndReset } from '@s-libs/ng-jasmine';
 import { spyOnlyWithArgs } from 'app/to-replace/ng-dev/spy-only-with-args';
 
 describe('spyOnlyWithArgs()', () => {

@@ -1,6 +1,6 @@
 import { createBuilder } from '@s-libs/js-core';
 import { isEmpty } from '@s-libs/micro-dash';
-import { expectRequest, SlTestRequest } from '@s-libs/ng-dev';
+import { expectRequest, SlTestRequest } from '@s-libs/ng-jasmine';
 import {
   Address,
   ForwardResponse,

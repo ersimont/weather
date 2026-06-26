@@ -1,4 +1,4 @@
-import { AngularContext } from '@s-libs/ng-dev';
+import { AngularContext } from '@s-libs/ng-jasmine';
 import { spyOnlyWithArgs } from 'app/to-replace/ng-dev/spy-only-with-args';
 
 /**

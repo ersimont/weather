@@ -21,7 +21,7 @@ import { provideBugsnag } from 'app/to-replace/bugsnag/provide-bugsnag';
 import { trackHttpStatus } from 'app/to-replace/http-status.service';
 import { EventTrackingModule } from 'app/to-replace/mixpanel-core/event-tracking.module';
 import { provideErrorHandler } from 'app/to-replace/snack-bar-error.service';
-import { environment } from '../environments/environment';
+import { environment } from '@env';
 
 export const appConfig: ApplicationConfig = {
   providers: [

@@ -4,7 +4,7 @@ import { GpsCoords } from 'app/state/location';
 import { AmountUnit, unitInfo } from 'app/state/units';
 import { ChartOptions } from 'chart.js';
 import { AnnotationOptions } from 'chartjs-plugin-annotation';
-import { getTimes, SunTimes } from 'suncalc';
+import { getTimes, type SunTimes } from 'suncalc';
 
 const grid = { color: 'rgba(0, 0, 0, 0.05)' };
 
