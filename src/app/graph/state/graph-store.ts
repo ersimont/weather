@@ -6,7 +6,7 @@ import { delayOnMicrotaskQueue } from '@s-libs/rxjs-core';
 import { RootStore, Store } from '@s-libs/signal-store';
 import { buildDatasets } from 'app/graph/chartjs-datasets';
 import {
-  buildNightBoxes,
+  buildLightBoxes,
   buildNowLine,
   getMinMax,
 } from 'app/graph/chartjs-options';
@@ -63,7 +63,7 @@ export class GraphStore extends mixInInjectableSuperclass(
   }
 
   #updateAnnotations(now: number, gpsCoords: GpsCoords | undefined): void {
-    const nightBoxes = gpsCoords ? buildNightBoxes(now, gpsCoords) : [];
+    const nightBoxes = gpsCoords ? buildLightBoxes(now, gpsCoords) : [];
     const annotations = [...nightBoxes, buildNowLine(now)];
     this('options')('plugins')('annotation').nonNull.assign({ annotations });
   }

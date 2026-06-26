@@ -36,7 +36,7 @@ describe('GraphStore', () => {
     });
   });
 
-  describe('night boxing', () => {
+  describe('light boxing', () => {
     it('updates with location', () => {
       ctx.startTime = new Date('1980-11-04T15:00:00.000Z');
       ctx.currentLocation = [144, -122];
@@ -46,7 +46,7 @@ describe('GraphStore', () => {
         gov.expectPoints([144, -122]);
         const graphState = new GraphStateHarness(ctx);
         expect(graphState.getNightBoxes()[0]).toEqual([
-          342066743247, 342105021125,
+          342018680094, 342066743247,
         ]);
 
         ctx.currentLocation = [10, -20];
@@ -54,7 +54,7 @@ describe('GraphStore', () => {
         iq.flushReverse([10, -20]);
         gov.expectPoints([10, -20]);
         expect(graphState.getNightBoxes()[0]).toEqual([
-          342039376657, 342083460823,
+          341997047135, 342039376657,
         ]);
       });
     });
@@ -68,13 +68,13 @@ describe('GraphStore', () => {
         gov.expectPoints([144, -122]);
         const graphState = new GraphStateHarness(ctx);
         expect(graphState.getNightBoxes()[0]).toEqual([
-          342066743247, 342105021125,
+          342018680094, 342066743247,
         ]);
 
         jasmine.clock().mockDate(new Date('1980-11-05T15:00:00.000Z'));
         new GraphStoreHarness(ctx).triggerAnnotationUpdate();
         expect(graphState.getNightBoxes()[0]).toEqual([
-          342153202383, 342191363546,
+          342105021125, 342153202383,
         ]);
       });
     });

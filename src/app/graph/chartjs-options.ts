@@ -54,7 +54,7 @@ export function getDefaultChartOptions(): ChartOptions<'line'> {
   return cloneDeep(defaultChartOptions);
 }
 
-export function buildNightBoxes(
+export function buildLightBoxes(
   now: number,
   gpsCoords: GpsCoords,
 ): AnnotationOptions[] {
@@ -64,14 +64,27 @@ export function buildNightBoxes(
   for (let time = min - oneDay; time < max + oneDay; time += oneDay) {
     sunTimes.push(getTimes(new Date(time), ...gpsCoords));
   }
-  return sunTimes.slice(0, -1).map(({ sunset }, i) => ({
+  return sunTimes
+    .slice(0, -1)
+    .flatMap((today, i) => [
+      buildLightBox(today.sunrise!, today.sunset!, 255),
+      buildLightBox(today.sunset!, sunTimes[i + 1].sunrise!, 0),
+    ]);
+}
+
+function buildLightBox(
+  start: Date,
+  end: Date,
+  bright: number,
+): AnnotationOptions {
+  return {
     type: 'box',
-    xMin: +sunset!,
-    xMax: +sunTimes[i + 1].sunrise!,
+    xMin: +start,
+    xMax: +end,
     borderWidth: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.05)',
+    backgroundColor: `rgba(${bright}, ${bright}, ${bright}, 0.1)`,
     drawTime: 'beforeDatasetsDraw',
-  }));
+  };
 }
 
 export function buildNowLine(now: number): AnnotationOptions<'line'> {
