@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { convertTime } from '@s-libs/js-core';
 import { calcDewPoint } from 'app/misc-utils/calc-dew-point';
 import { AbstractSource } from 'app/sources/abstract-source';
@@ -43,7 +43,7 @@ export interface Timeframe {
   };
 }
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class OpenWeather extends AbstractSource {
   #httpClient = inject(HttpClient);
 

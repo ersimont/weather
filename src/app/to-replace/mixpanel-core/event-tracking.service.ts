@@ -1,11 +1,11 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { mapKeys, snakeCase } from '@s-libs/micro-dash';
 import { EventTrackingConfig } from './event-tracking-config';
 import { MixpanelBackendService } from './mixpanel-backend.service';
 
 /* eslint-disable camelcase */
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class EventTrackingService {
   #backend?: MixpanelBackendService;
   #config = inject(EventTrackingConfig);

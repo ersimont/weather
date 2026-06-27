@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import mixpanel, { Config, Dict } from 'mixpanel-browser';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class MixpanelBackendService {
   init(token: string, config: Partial<Config>): void {
     mixpanel.init(token, config);

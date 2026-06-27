@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { computed, inject, Service, Signal } from '@angular/core';
 import { assert } from '@s-libs/js-core';
 import { isEqual, mapValues, omit } from '@s-libs/micro-dash';
 import { InjectableSuperclass } from '@s-libs/ng-core';
@@ -21,46 +21,47 @@ import {
   tap,
 } from 'rxjs/operators';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class LocationService extends InjectableSuperclass {
-  #browserService = inject(BrowserService);
-  #errorService = inject(SnackBarErrorService);
-  #eventTrackingService = inject(EventTrackingService);
-  #locationIqService = inject(LocationIqService);
-  private store = inject(WeatherStore);
+  readonly #browserService = inject(BrowserService);
+  readonly #errorService = inject(SnackBarErrorService);
+  readonly #eventTrackingService = inject(EventTrackingService);
+  readonly #locationIqService = inject(LocationIqService);
+  readonly #store = inject(WeatherStore);
 
-  $ = this.#buildObservable();
-  refreshableChange$ = observeStore(this.store).pipe(
+  readonly location = this.#computeLocation();
+  readonly refreshableChange$ = observeStore(this.#store).pipe(
     map((state) => [state.useCurrentLocation, state.customLocation.search]),
     distinctUntilChanged(isEqual),
     skip(1),
     map(() => undefined),
   );
-  askForLocation$ = new Subject<void>();
+  readonly askForLocation$ = new Subject<void>();
 
   setUseCurrentLocation(value: boolean): void {
     this.#clearForecasts();
-    this.store('useCurrentLocation').state = value;
+    this.#store('useCurrentLocation').state = value;
     if (value) {
-      this.store('currentLocation').update(omit, 'city' as const);
+      this.#store('currentLocation').update(omit, 'city' as const);
     }
   }
 
   setCustomSearch(search: string): void {
     this.#clearForecasts();
-    this.store('useCurrentLocation').state = false;
-    this.store('customLocation').state = new Location(search);
+    this.#store('useCurrentLocation').state = false;
+    this.#store('customLocation').state = new Location(search);
     this.#eventTrackingService.track('change_custom_search', {
       category: 'change_location',
     });
   }
 
   getLocation(): Location {
-    return this.#getLocationStore(this.store('useCurrentLocation').state).state;
+    return this.#getLocationStore(this.#store('useCurrentLocation').state)
+      .state;
   }
 
   refresh(): Observable<unknown> {
-    const { state } = this.store;
+    const { state } = this.#store;
     if (state.useCurrentLocation) {
       return this.#refreshCurrentLocation();
     } else if (state.customLocation.timezone) {
@@ -75,12 +76,12 @@ export class LocationService extends InjectableSuperclass {
   }
 
   isBlank(): boolean {
-    const { state } = this.store;
+    const { state } = this.#store;
     return !(state.useCurrentLocation || state.customLocation.search);
   }
 
   #getLocationStore(useCurrent: boolean): Store<Location> {
-    return this.store(useCurrent ? 'currentLocation' : 'customLocation');
+    return this.#store(useCurrent ? 'currentLocation' : 'customLocation');
   }
 
   #refreshCurrentLocation(): Observable<unknown> {
@@ -88,17 +89,20 @@ export class LocationService extends InjectableSuperclass {
       switchMap((gpsCoords: GpsCoords) =>
         this.#locationIqService.reverse(gpsCoords).pipe(
           catchError((error) => {
-            this.store('currentLocation').update(omit, 'city' as const);
+            this.#store('currentLocation').update(omit, 'city' as const);
             this.#errorService.handleError(error, { logUnexpected: false });
             return NEVER;
           }),
           tap((res) => {
-            this.store('currentLocation').assign({ gpsCoords, city: res.city });
+            this.#store('currentLocation').assign({
+              gpsCoords,
+              city: res.city,
+            });
           }),
         ),
       ),
       catchError((error) => {
-        this.store('currentLocation').update(omit, 'city' as const);
+        this.#store('currentLocation').update(omit, 'city' as const);
         this.#handleNotFound(error);
         return NEVER;
       }),
@@ -106,7 +110,7 @@ export class LocationService extends InjectableSuperclass {
   }
 
   #refreshCustomLocation(): Observable<string> {
-    const search = this.store('customLocation')('search').state;
+    const search = this.#store('customLocation')('search').state;
     return this.#locationIqService.forward(search).pipe(
       catchError((error) => {
         if (error instanceof HttpErrorResponse && error.status === 404) {
@@ -117,14 +121,14 @@ export class LocationService extends InjectableSuperclass {
         return NEVER;
       }),
       tap((locationPatch) => {
-        this.store('customLocation').assign(locationPatch);
+        this.#store('customLocation').assign(locationPatch);
       }),
       switchMap(() => this.#refreshTimezone()),
     );
   }
 
   #refreshTimezone(): Observable<string> {
-    const gpsCoords = this.store('customLocation')('gpsCoords').state;
+    const gpsCoords = this.#store('customLocation')('gpsCoords').state;
     assert(gpsCoords, 'should have gps before timezone');
     return this.#locationIqService.timezone(gpsCoords).pipe(
       catchError((error) => {
@@ -132,7 +136,7 @@ export class LocationService extends InjectableSuperclass {
         return NEVER;
       }),
       tap((timezone) => {
-        this.store('customLocation')('timezone').state = timezone;
+        this.#store('customLocation')('timezone').state = timezone;
       }),
     );
   }
@@ -144,16 +148,18 @@ export class LocationService extends InjectableSuperclass {
   }
 
   #clearForecasts(): void {
-    this.store('sources').update((sources) =>
+    this.#store('sources').update((sources) =>
       mapValues(sources, (source) => ({ ...source, forecast: {} })),
     );
   }
 
-  #buildObservable(): Observable<Location> {
-    const current$ = observeStore(this.store('currentLocation'));
-    const custom$ = observeStore(this.store('customLocation'));
-    return observeStore(this.store('useCurrentLocation')).pipe(
-      switchMap((useCurrent) => (useCurrent ? current$ : custom$)),
-    );
+  #computeLocation(): Signal<Location> {
+    return computed(() => {
+      if (this.#store('useCurrentLocation').state) {
+        return this.#store('currentLocation').state;
+      } else {
+        return this.#store('customLocation').state;
+      }
+    });
   }
 }

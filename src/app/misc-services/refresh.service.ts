@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { convertTime } from '@s-libs/js-core';
 import { cache, isPageVisible$ } from '@s-libs/rxjs-core';
 import { LocationService } from 'app/misc-services/location.service';
@@ -15,7 +15,7 @@ import {
 
 export const refreshMillis = convertTime(30, 'min', 'ms');
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class RefreshService {
   refresh$: Observable<unknown>;
 

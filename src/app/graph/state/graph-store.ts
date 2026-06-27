@@ -1,4 +1,5 @@
 import { inject, Service } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { mapToObject } from '@s-libs/js-core';
 import { mapValues } from '@s-libs/micro-dash';
 import { mixInInjectableSuperclass } from '@s-libs/ng-core';
@@ -48,16 +49,15 @@ export class GraphStore extends mixInInjectableSuperclass(
         this.#updateRange(now, range);
       },
     );
+    const location$ = toObservable(this.#locationService.location);
     this.subscribeTo(
-      combineLatest([now$, this.#locationService.$]).pipe(
-        delayOnMicrotaskQueue(),
-      ),
+      combineLatest([now$, location$]).pipe(delayOnMicrotaskQueue()),
       ([now, location]) => {
         this.#updateAnnotations(now, location.gpsCoords);
       },
     );
     this.subscribeTo(
-      this.#locationService.$.pipe(delayOnMicrotaskQueue()),
+      location$.pipe(delayOnMicrotaskQueue()),
       this.#updateTimezone,
     );
   }

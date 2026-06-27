@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { AbstractSource } from 'app/sources/abstract-source';
 import { Condition } from 'app/state/condition';
 import { Forecast } from 'app/state/forecast';
@@ -30,7 +30,7 @@ export interface Hour {
   cloudcover: number;
 }
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class VisualCrossing extends AbstractSource {
   #httpClient = inject(HttpClient);
 

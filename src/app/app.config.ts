@@ -2,7 +2,6 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import {
   ApplicationConfig,
   provideBrowserGlobalErrorListeners,
-  provideZoneChangeDetection,
 } from '@angular/core';
 import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { provideServiceWorker } from '@angular/service-worker';
@@ -16,7 +15,6 @@ export const appConfig: ApplicationConfig = {
   providers: [
     // from scaffolding
     provideBrowserGlobalErrorListeners(),
-    provideZoneChangeDetection({ eventCoalescing: true }),
     provideServiceWorker('ngsw-worker.js', {
       enabled: environment.pwa,
       registrationStrategy: 'registerWhenStable:30000',

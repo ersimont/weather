@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { round } from '@s-libs/micro-dash';
 import { AbstractSource } from 'app/sources/abstract-source';
 import { Condition } from 'app/state/condition';
@@ -30,7 +30,7 @@ export interface Timeframe {
   windspd_kts: number;
 }
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class WeatherUnlocked extends AbstractSource {
   #httpClient = inject(HttpClient);
 

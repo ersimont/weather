@@ -1,5 +1,4 @@
-import { AsyncPipe } from '@angular/common';
-import { Component, inject, viewChild } from '@angular/core';
+import { Component, computed, inject, viewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -16,15 +15,12 @@ import { ViewRange } from 'app/state/viewRange';
 import { WeatherStore } from 'app/state/weather-store';
 import { HttpStatusService } from 'app/to-replace/http-status.service';
 import { EventTrackingService } from 'app/to-replace/mixpanel-core/event-tracking.service';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { GraphComponent } from './graph/graph.component';
 import { OptionsComponent } from './options/options.component';
 
 @Component({
   selector: 'app-root',
   imports: [
-    AsyncPipe,
     GraphComponent,
     MatButtonModule,
     MatIconModule,
@@ -38,30 +34,27 @@ import { OptionsComponent } from './options/options.component';
   styleUrl: './app.component.css',
 })
 export class AppComponent extends InjectableSuperclass {
-  protected httpStatusService = inject(HttpStatusService);
-  protected title$: Observable<string>;
+  protected readonly httpStatusService = inject(HttpStatusService);
+  protected readonly title = computed(
+    () => this.#locationService.location().city ?? 'Weather Graph',
+  );
 
-  private readonly sidenav = viewChild.required('sidenav', {
-    read: MatSidenav,
-  });
-  private store = inject(WeatherStore);
+  private readonly sidenav = viewChild.required(MatSidenav);
 
-  #eventTrackingService = inject(EventTrackingService);
-  #locationService = inject(LocationService);
-  #matDialog = inject(MatDialog);
+  readonly #eventTrackingService = inject(EventTrackingService);
+  readonly #locationService = inject(LocationService);
+  readonly #matDialog = inject(MatDialog);
+  readonly #store = inject(WeatherStore);
 
   constructor() {
     super();
     inject(InitService).initializeApp();
 
-    this.title$ = this.#locationService.$.pipe(
-      map((location) => location.city || 'Weather Graph'),
-    );
     this.#openSideNavWhenAsked();
   }
 
   setRange(days: number, action: string): void {
-    this.store('viewRange').state = new ViewRange(days);
+    this.#store('viewRange').state = new ViewRange(days);
     this.#eventTrackingService.track(action, { category: 'set_range' });
   }
 

@@ -1,7 +1,7 @@
 import { HttpEvent, HttpHandlerFn, HttpRequest } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { distinctUntilChanged, map, tap } from 'rxjs/operators';
+import { computed, inject, Service, signal } from '@angular/core';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 export function trackHttpStatus(
   req: HttpRequest<unknown>,
@@ -9,7 +9,7 @@ export function trackHttpStatus(
 ): Observable<HttpEvent<unknown>> {
   const service = inject(HttpStatusService);
   service.changeInFlight(1);
-  const finish = () => {
+  const finish = (): void => {
     service.changeInFlight(-1);
   };
   return next(req).pipe(
@@ -17,19 +17,12 @@ export function trackHttpStatus(
   );
 }
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class HttpStatusService {
-  hasInFlightRequest$: Observable<boolean>;
-  #count$ = new BehaviorSubject(0);
-
-  constructor() {
-    this.hasInFlightRequest$ = this.#count$.pipe(
-      map(Boolean),
-      distinctUntilChanged(),
-    );
-  }
+  readonly hasInFlightRequest = computed(() => this.#count() > 0);
+  readonly #count = signal(0);
 
   changeInFlight(delta: number): void {
-    this.#count$.next(this.#count$.getValue() + delta);
+    this.#count.update((count) => count + delta);
   }
 }

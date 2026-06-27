@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { get, round } from '@s-libs/micro-dash';
 import { AbstractSource, notAvailableHere } from 'app/sources/abstract-source';
 import { Condition, Conditions } from 'app/state/condition';
@@ -32,7 +32,7 @@ interface GridConditionInfo {
   values: Array<{ validTime: string; value: number }>;
 }
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class WeatherGov extends AbstractSource {
   #httpClient = inject(HttpClient);
 
