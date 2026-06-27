@@ -50,7 +50,7 @@ export class AppComponentHarness extends ContentContainerComponentHarness {
   }
 
   async getTitle(): Promise<any> {
-    const loader = await this.locatorFor('.title');
+    const loader = this.locatorFor('.title');
     return (await loader()).text();
   }
 

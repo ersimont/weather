@@ -13,7 +13,7 @@ export class WeatherState {
   customLocation = new Location();
 
   allowSourceFallback = true;
-  sources: { [source in SourceId]: Source } = {
+  sources: Record<SourceId, Source> = {
     openWeather: new Source('OpenWeather', false),
     visualCrossing: new Source('Visual Crossing', false),
     weatherGov: new Source('Weather.gov', true),

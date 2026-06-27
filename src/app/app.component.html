@@ -5,28 +5,28 @@
   <span class="title">{{ title$ | async }}</span>
 
   <button mat-icon-button class="day" (click)="setRange(1, 'click_day')">
-    <mat-icon svgIcon="day"></mat-icon>
+    <mat-icon svgIcon="day" />
   </button>
   <button
     mat-icon-button
     class="three-days"
     (click)="setRange(3, 'click_three_days')"
   >
-    <mat-icon svgIcon="three-days"></mat-icon>
+    <mat-icon svgIcon="three-days" />
   </button>
   <button mat-icon-button class="week" (click)="setRange(7, 'click_week')">
-    <mat-icon svgIcon="week"></mat-icon>
+    <mat-icon svgIcon="week" />
   </button>
 
   @if (httpStatusService.hasInFlightRequest$ | async) {
-    <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
+    <mat-progress-bar mode="indeterminate" color="accent" />
   }
 </mat-toolbar>
 
 <mat-sidenav-container>
   <mat-sidenav #sidenav>
     <div class="sidenav-content">
-      <app-options></app-options>
+      <app-options />
       <mat-action-list>
         <button mat-list-item (click)="showAbout()">About</button>
         <button mat-list-item (click)="showPrivacyPolicy()">
@@ -36,6 +36,6 @@
     </div>
   </mat-sidenav>
   <mat-sidenav-content>
-    <app-graph></app-graph>
+    <app-graph />
   </mat-sidenav-content>
 </mat-sidenav-container>

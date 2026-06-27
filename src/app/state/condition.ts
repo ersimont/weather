@@ -19,7 +19,7 @@ export type Conditions = Partial<Record<Condition, number>>;
 
 export interface ConditionInfo {
   label: string;
-  getUnitInfo(units: Units): UnitInfo;
+  getUnitInfo: (units: Units) => UnitInfo;
 }
 
 export const conditionInfo: Record<Condition, ConditionInfo> = {

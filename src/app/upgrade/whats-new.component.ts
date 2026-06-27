@@ -1,21 +1,16 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-
-interface WhatsNewDialogData {
-  features: string[];
-}
+import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-whats-new',
-  templateUrl: './whats-new.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatDialogModule, MatButtonModule],
+  templateUrl: './whats-new.component.html',
 })
 export class WhatsNewComponent {
   features: string[];
 
-  constructor(@Inject(MAT_DIALOG_DATA) data: WhatsNewDialogData) {
-    this.features = data.features;
+  constructor() {
+    this.features = inject(MAT_DIALOG_DATA).features;
   }
 }

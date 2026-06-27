@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -12,20 +12,18 @@ import { WeatherUnlocked } from 'app/sources/weather-unlocked/weather-unlocked';
 import { SourceId } from 'app/state/source';
 import { WhatsNewService } from 'app/upgrade/whats-new.service';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class InitService {
-  constructor(
-    private domSanitizer: DomSanitizer,
-    private locationService: LocationService,
-    private manualReinstallService: ManualReinstallService,
-    private matIconRegistry: MatIconRegistry,
-    private matSnackBar: MatSnackBar,
-    private openWeather: OpenWeather,
-    private visualCrossing: VisualCrossing,
-    private weatherGov: WeatherGov,
-    private weatherUnlocked: WeatherUnlocked,
-    private whatsNewService: WhatsNewService,
-  ) {}
+  private domSanitizer = inject(DomSanitizer);
+  private locationService = inject(LocationService);
+  private manualReinstallService = inject(ManualReinstallService);
+  private matIconRegistry = inject(MatIconRegistry);
+  private matSnackBar = inject(MatSnackBar);
+  private openWeather = inject(OpenWeather);
+  private visualCrossing = inject(VisualCrossing);
+  private weatherGov = inject(WeatherGov);
+  private weatherUnlocked = inject(WeatherUnlocked);
+  private whatsNewService = inject(WhatsNewService);
 
   initializeApp(): void {
     this.openWeather.initialize();

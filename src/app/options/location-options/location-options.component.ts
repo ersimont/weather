@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Injector,
-  ViewChild,
-} from '@angular/core';
+import { Component, inject, viewChild } from '@angular/core';
 import {
   MatExpansionModule,
   MatExpansionPanel,
@@ -24,31 +19,27 @@ import { AbstractOptionDirective } from 'app/options/abstract-option-directive/a
   ],
   templateUrl: './location-options.component.html',
   styleUrl: './location-options.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LocationOptionsComponent extends AbstractOptionDirective {
-  useCurrentLocation: boolean;
-  customSearch: string;
+  protected useCurrentLocation: boolean;
+  protected customSearch: string;
 
-  protected optionType = 'location';
+  protected readonly optionType = 'location';
+  protected readonly locationService = inject(LocationService);
 
-  @ViewChild(MatExpansionPanel)
-  private panel!: MatExpansionPanel;
+  private readonly panel = viewChild.required(MatExpansionPanel);
 
-  constructor(
-    injector: Injector,
-    public locationService: LocationService,
-  ) {
-    super(injector);
+  constructor() {
+    super();
     this.useCurrentLocation = this.store('useCurrentLocation').state;
     this.customSearch = this.store('customLocation')('search').state;
 
     this.subscribeTo(this.locationService.askForLocation$, () => {
-      this.panel.open();
+      this.panel().open();
     });
   }
 
-  setUseCurrentLocation(event: MatRadioChange | Event): void {
+  protected setUseCurrentLocation(event: MatRadioChange | Event): void {
     if (event instanceof MatRadioChange) {
       this.locationService.setUseCurrentLocation(event.value);
       this.trackChange('current_selection');

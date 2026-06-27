@@ -1,9 +1,7 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSnackBarHarness } from '@angular/material/snack-bar/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AngularContext } from '@s-libs/ng-jasmine';
-import { EventTrackingModule } from 'app/to-replace/mixpanel-core/event-tracking.module';
 import {
   provideErrorHandler,
   SnackBarErrorService,
@@ -12,11 +10,7 @@ import {
 class TestContext extends AngularContext {
   constructor() {
     super({
-      imports: [
-        EventTrackingModule.forRoot(),
-        MatSnackBarModule,
-        NoopAnimationsModule,
-      ],
+      imports: [MatSnackBarModule],
       providers: [provideErrorHandler()],
     });
   }

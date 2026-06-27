@@ -10,14 +10,14 @@ import {
   TooltipItem,
 } from 'chart.js';
 
-const pointStyles: { [id in SourceId]: PointStyle } = {
+const pointStyles: Record<SourceId, PointStyle> = {
   [SourceId.OPEN_WEATHER]: 'rectRot',
   [SourceId.VISUAL_CROSSING]: 'crossRot',
   [SourceId.WEATHER_GOV]: 'circle',
   [SourceId.WEATHER_UNLOCKED]: 'triangle',
 };
 
-const radii: { [id in SourceId]: number } = {
+const radii: Record<SourceId, number> = {
   [SourceId.OPEN_WEATHER]: 5,
   [SourceId.VISUAL_CROSSING]: 7,
   [SourceId.WEATHER_GOV]: 4,
@@ -27,8 +27,8 @@ const radii: { [id in SourceId]: number } = {
 export function buildDatasets(
   state: WeatherState,
   colors: Record<Condition, string>,
-): ChartDataset<'line'>[] {
-  const dataSets: ChartDataset<'line'>[] = [];
+): Array<ChartDataset<'line'>> {
+  const dataSets: Array<ChartDataset<'line'>> = [];
   forEach(state.sources, (_, sourceId) => {
     addDatasets(sourceId, dataSets, state, colors);
   });
@@ -37,7 +37,7 @@ export function buildDatasets(
 
 function addDatasets(
   sourceId: SourceId,
-  datasets: ChartDataset<'line'>[],
+  datasets: Array<ChartDataset<'line'>>,
   state: WeatherState,
   colors: Record<Condition, string>,
 ): void {
@@ -68,7 +68,7 @@ function addDatasets(
 
 function addDataset(
   sourceId: SourceId,
-  datasets: ChartDataset<'line'>[],
+  datasets: Array<ChartDataset<'line'>>,
   state: WeatherState,
   colors: Record<Condition, string>,
   condition: Condition,

@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { GpsCoords, Location } from 'app/state/location';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -41,9 +41,9 @@ export interface Address {
 
 export type LocationPatch = Pick<Location, 'gpsCoords' | 'city'>;
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class LocationIqService {
-  constructor(private httpClient: HttpClient) {}
+  private httpClient = inject(HttpClient);
 
   forward(search: string): Observable<LocationPatch> {
     return this.httpClient

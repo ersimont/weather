@@ -75,9 +75,9 @@ describe('AppComponent', () => {
 
   describe('when location access is denied', () => {
     beforeEach(() => {
-      ctx.mocks.browser.getCurrentLocation.and.callFake(() =>
-        Promise.reject('User says no!'),
-      );
+      ctx.mocks.browser.getCurrentLocation.and.callFake(async () => {
+        throw new Error('User says no!');
+      });
     });
 
     it('does not show an error until Current is selected', () => {

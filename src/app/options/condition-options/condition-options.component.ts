@@ -1,18 +1,16 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { values } from '@s-libs/micro-dash';
 import { AbstractOptionDirective } from 'app/options/abstract-option-directive/abstract-option.directive';
 import { Condition, conditionInfo } from 'app/state/condition';
-import { values } from '@s-libs/micro-dash';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { NgClass } from '@angular/common';
-import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
   selector: 'app-condition-options',
+  imports: [FormsModule, MatExpansionModule, MatSlideToggleModule],
   templateUrl: './condition-options.component.html',
   styleUrl: './condition-options.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, MatExpansionModule, MatSlideToggleModule, NgClass],
 })
 export class ConditionOptionsComponent extends AbstractOptionDirective {
   conditions = values(Condition);

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
@@ -11,7 +11,6 @@ import { SourceId } from 'app/state/source';
   imports: [FormsModule, MatExpansionModule, MatSlideToggleModule],
   templateUrl: './source-options.component.html',
   styleUrl: './source-options.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SourceOptionsComponent extends AbstractOptionDirective {
   sourceIds = values(SourceId);

@@ -58,12 +58,12 @@ export class SpyController<F extends jasmine.Func> {
     if (this.#calls.length) {
       this.#syncCalls();
       let message =
-        buildErrorMessage({
+        `${buildErrorMessage({
           matchType: 'no open',
           itemType: 'call',
           stringifiedUserInput: undefined,
           matches: this.#calls,
-        }) + ':';
+        })  }:`;
       for (const call of this.#calls) {
         message += `\n  ${stringifyArgs(call.args)}`;
       }
@@ -86,9 +86,9 @@ export class SpyController<F extends jasmine.Func> {
   #stringifyUserInput(matcher: CallMatcher<F>, description?: string): string {
     if (isUndefined(description)) {
       if (Array.isArray(matcher)) {
-        description = 'Match by arguments: ' + stringifyArgs(matcher);
+        description = `Match by arguments: ${  stringifyArgs(matcher)}`;
       } else {
-        description = 'Match by function: ' + matcher.name;
+        description = `Match by function: ${  matcher.name}`;
       }
     }
     return description;

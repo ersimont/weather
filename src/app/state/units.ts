@@ -30,8 +30,8 @@ export class Units {
 }
 
 export interface UnitInfo {
-  convert(value: number): number;
-  getDisplay(value: number, locale: string): string;
+  convert: (value: number) => number;
+  getDisplay: (value: number, locale: string) => string;
 }
 
 export const unitInfo: Record<UnitEnum, UnitInfo> = {

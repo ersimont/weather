@@ -1,16 +1,13 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { WeatherStore } from 'app/state/weather-store';
 import { ConditionOptionsComponent } from './condition-options/condition-options.component';
-import { UnitOptionsComponent } from './unit-options/unit-options.component';
-import { SourceOptionsComponent } from './source-options/source-options.component';
 import { LocationOptionsComponent } from './location-options/location-options.component';
-import { MatExpansionModule } from '@angular/material/expansion';
+import { SourceOptionsComponent } from './source-options/source-options.component';
+import { UnitOptionsComponent } from './unit-options/unit-options.component';
 
 @Component({
   selector: 'app-options',
-  templateUrl: './options.component.html',
-  styleUrl: './options.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     MatExpansionModule,
     LocationOptionsComponent,
@@ -18,7 +15,9 @@ import { MatExpansionModule } from '@angular/material/expansion';
     UnitOptionsComponent,
     ConditionOptionsComponent,
   ],
+  templateUrl: './options.component.html',
+  styleUrl: './options.component.css',
 })
 export class OptionsComponent {
-  constructor(public store: WeatherStore) {}
+  store = inject(WeatherStore);
 }

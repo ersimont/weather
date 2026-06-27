@@ -1,4 +1,4 @@
-import { ErrorHandler, Injectable, Provider } from '@angular/core';
+import { ErrorHandler, Service, Provider, inject } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { LazyBugsnag } from 'app/to-replace/bugsnag/lazy-bugsnag';
 
@@ -6,9 +6,9 @@ export function provideErrorHandler(): Provider {
   return { provide: ErrorHandler, useExisting: SnackBarErrorService };
 }
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class SnackBarErrorService implements ErrorHandler {
-  constructor(private matSnackBar: MatSnackBar) {}
+  private matSnackBar = inject(MatSnackBar);
 
   handleError(error: any, { logUnexpected = true } = {}): void {
     if (error.rejection) {

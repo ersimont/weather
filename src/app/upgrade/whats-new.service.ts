@@ -1,16 +1,14 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { EventTrackingService } from 'app/to-replace/mixpanel-core/event-tracking.service';
 import { WhatsNewComponent } from 'app/upgrade/whats-new.component';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class WhatsNewService {
-  private features: string[] = [];
+  private eventTrackingService = inject(EventTrackingService);
+  private matDialog = inject(MatDialog);
 
-  constructor(
-    private eventTrackingService: EventTrackingService,
-    private matDialog: MatDialog,
-  ) {}
+  private features: string[] = [];
 
   add(feature: string): void {
     this.features.unshift(feature);

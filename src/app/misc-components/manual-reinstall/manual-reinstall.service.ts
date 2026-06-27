@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ManualReinstallComponent } from 'app/misc-components/manual-reinstall/manual-reinstall.component';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class ManualReinstallService {
-  constructor(private matDialog: MatDialog) {}
+  private readonly matDialog = inject(MatDialog);
 
   promptIfAppropriate(): void {
     if (

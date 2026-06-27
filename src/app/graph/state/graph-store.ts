@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { mapToObject } from '@s-libs/js-core';
 import { mapValues } from '@s-libs/micro-dash';
 import { mixInInjectableSuperclass } from '@s-libs/ng-core';
@@ -21,12 +21,12 @@ import { observeStore } from 'app/to-replace/signal-store/observe-store';
 import { combineLatest, interval } from 'rxjs';
 import { filter, map, startWith, take } from 'rxjs/operators';
 
-@Injectable()
+@Service()
 export class GraphStore extends mixInInjectableSuperclass(
   RootStore,
 )<GraphState> {
   #locationService = inject(LocationService);
-  private weatherStore = inject(WeatherStore);
+  #weatherStore = inject(WeatherStore);
 
   constructor() {
     super(new GraphState());
@@ -41,7 +41,7 @@ export class GraphStore extends mixInInjectableSuperclass(
 
   #manageOptions(): void {
     const now$ = interval(60_000).pipe(startWith(0), map(Date.now));
-    const viewRange$ = observeStore(this.weatherStore('viewRange'));
+    const viewRange$ = observeStore(this.#weatherStore('viewRange'));
     this.subscribeTo(
       combineLatest([now$, viewRange$]).pipe(delayOnMicrotaskQueue()),
       ([now, range]) => {
@@ -77,6 +77,7 @@ export class GraphStore extends mixInInjectableSuperclass(
   }
 
   #updateTimezone({ timezone }: Location): void {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
     const scaleStore = this('options')('scales')('x') as Store<any>;
     const adapterStore = scaleStore('adapters')('date');
     adapterStore('zone').nonNull.state = timezone;
@@ -90,7 +91,7 @@ export class GraphStore extends mixInInjectableSuperclass(
       take(1),
     );
     this.subscribeTo(
-      combineLatest([observeStore(this.weatherStore), colors$]).pipe(
+      combineLatest([observeStore(this.#weatherStore), colors$]).pipe(
         delayOnMicrotaskQueue(),
       ),
       ([weatherState, colors]) => {
@@ -102,6 +103,7 @@ export class GraphStore extends mixInInjectableSuperclass(
 
 function getColors(): Record<Condition, string> {
   const bodyStyles = getComputedStyle(document.body);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
   return mapToObject(Condition, (condition: Condition) => [
     condition,
     bodyStyles.getPropertyValue(`--${condition}`),

@@ -14,5 +14,8 @@ module.exports = tseslint.config(...slibs, {
       'error',
       { type: 'element', prefix: 'app', style: 'kebab-case' },
     ],
+
+    // This causes a stack overflow bug inside eslint. Try again after upgrades.
+    '@typescript-eslint/no-unnecessary-type-assertion': 'off',
   },
 });

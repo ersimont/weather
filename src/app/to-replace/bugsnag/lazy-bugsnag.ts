@@ -30,9 +30,7 @@ export const LazyBugsnag = {
     });
   },
 
-  isStarted(): Promise<boolean> {
-    return bugsnagPromise.then((Bugsnag) => {
-      return Bugsnag.isStarted();
-    });
+  async isStarted(): Promise<boolean> {
+    return bugsnagPromise.then((Bugsnag) => Bugsnag.isStarted());
   },
 };

@@ -7,6 +7,6 @@ export class WhatsNewComponentHarness extends ComponentHarness {
 
   async getFeatures(): Promise<string[]> {
     const items = await this.getItems();
-    return Promise.all(items.map((li) => li.text()));
+    return Promise.all(items.map(async (li) => li.text()));
   }
 }

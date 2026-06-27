@@ -9,7 +9,7 @@ export class UnitOptionsComponentHarness extends AbstractOptionDirectiveHarness 
     await (await this.getButton(unitLabel)).check();
   }
 
-  private getButton(text: string): Promise<MatButtonToggleHarness> {
+  private async getButton(text: string): Promise<MatButtonToggleHarness> {
     const locator = this.locatorFor(MatButtonToggleHarness.with({ text }));
     return locator();
   }

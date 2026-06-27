@@ -1,5 +1,5 @@
 import { UpperCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -9,15 +9,14 @@ import { AmountUnit, SpeedUnit, TempUnit } from 'app/state/units';
 
 @Component({
   selector: 'app-unit-options',
-  templateUrl: './unit-options.component.html',
-  styleUrl: './unit-options.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormsModule,
     MatButtonToggleModule,
     MatExpansionModule,
     UpperCasePipe,
   ],
+  templateUrl: './unit-options.component.html',
+  styleUrl: './unit-options.component.css',
 })
 export class UnitOptionsComponent extends AbstractOptionDirective {
   // ngFor was not dealing well with this when using `as const`. maybe try again in a future angular version

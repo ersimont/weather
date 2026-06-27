@@ -5,7 +5,7 @@ export function ensureSpiedOn<T extends object, K extends keyof T>(
 ): jasmine.Spy<
   T[K] extends jasmine.Func
     ? T[K]
-    : T[K] extends { new (...args: infer A): infer V }
+    : T[K] extends new (...args: infer A) => infer V
       ? (...args: A) => V
       : never
 > {

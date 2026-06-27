@@ -1,10 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  ViewChild,
-} from '@angular/core';
+import { Component, inject, viewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -28,9 +23,6 @@ import { OptionsComponent } from './options/options.component';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AsyncPipe,
     GraphComponent,
@@ -42,21 +34,25 @@ import { OptionsComponent } from './options/options.component';
     MatToolbarModule,
     OptionsComponent,
   ],
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.css',
 })
 export class AppComponent extends InjectableSuperclass {
   protected httpStatusService = inject(HttpStatusService);
   protected title$: Observable<string>;
 
-  @ViewChild('sidenav', { read: MatSidenav }) private sidenav!: MatSidenav;
+  private readonly sidenav = viewChild.required('sidenav', {
+    read: MatSidenav,
+  });
   private store = inject(WeatherStore);
 
   #eventTrackingService = inject(EventTrackingService);
   #locationService = inject(LocationService);
   #matDialog = inject(MatDialog);
 
-  constructor(initService: InitService) {
+  constructor() {
     super();
-    initService.initializeApp();
+    inject(InitService).initializeApp();
 
     this.title$ = this.#locationService.$.pipe(
       map((location) => location.city || 'Weather Graph'),
@@ -83,7 +79,7 @@ export class AppComponent extends InjectableSuperclass {
 
   #openSideNavWhenAsked(): void {
     this.subscribeTo(this.#locationService.askForLocation$, () => {
-      this.sidenav.open();
+      this.sidenav().open();
     });
   }
 }

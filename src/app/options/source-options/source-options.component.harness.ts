@@ -9,7 +9,7 @@ export class SourceOptionsComponentHarness extends AbstractOptionDirectiveHarnes
     await (await this.getToggle(label)).toggle();
   }
 
-  private getToggle(label: string): Promise<MatSlideToggleHarness> {
+  private async getToggle(label: string): Promise<MatSlideToggleHarness> {
     const locator = this.locatorFor(MatSlideToggleHarness.with({ label }));
     return locator();
   }

@@ -1,16 +1,16 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { WeatherState } from 'app/state/weather-state';
 import { SnackBarErrorService } from 'app/to-replace/snack-bar-error.service';
 import { WhatsNewService } from 'app/upgrade/whats-new.service';
 import { cloneDeep, omit } from '@s-libs/micro-dash';
 import { assert, MigrationManager } from '@s-libs/js-core';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class UpgradeService extends MigrationManager<WeatherState> {
-  constructor(
-    private errorService: SnackBarErrorService,
-    private whatsNewService: WhatsNewService,
-  ) {
+  private errorService = inject(SnackBarErrorService);
+  private whatsNewService = inject(WhatsNewService);
+
+  constructor() {
     super();
     this.registerMigration(11, this.#upgradeFrom11);
     this.registerMigration(10, this.#upgradeFrom10);
@@ -85,7 +85,7 @@ export class UpgradeService extends MigrationManager<WeatherState> {
 
   #upgradeFromLegacy(state: any): WeatherState {
     const oldVersion = (state as any).version;
-    assert(oldVersion === 6, 'Unable to upgrade from version ' + oldVersion);
+    assert(oldVersion === 6, `Unable to upgrade from version ${oldVersion}`);
 
     state = cloneDeep(state);
     delete (state as any).version;
