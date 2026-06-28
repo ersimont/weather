@@ -4,7 +4,7 @@ import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 export class RefreshServiceHarness {
   constructor(private ctx: WeatherGraphContext) {}
 
-  trigger(): void {
-    this.ctx.tick(refreshMillis);
+  async trigger(): Promise<void> {
+    await this.ctx.tick(refreshMillis);
   }
 }

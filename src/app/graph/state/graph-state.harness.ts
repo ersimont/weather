@@ -17,7 +17,7 @@ export class GraphStateHarness {
     return [+scale.min, +scale.max];
   }
 
-  getNightBoxes(): number[][] {
+  getLightBoxes(): number[][] {
     const boxes = this.#getAnnotations().slice(0, -1) as BoxAnnotationOptions[];
     return boxes.map((box: BoxAnnotationOptions) => [
       box.xMin as number,

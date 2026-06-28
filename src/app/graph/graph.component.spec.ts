@@ -22,14 +22,14 @@ describe('GraphComponent', () => {
   });
 
   describe('tooltip', () => {
-    it('displays the condition and value in its label', () => {
+    it('displays the condition and value in its label', async () => {
       const timeframe = unlocked.buildTimeframe({ temp_c: 21.6 });
       state.setShowing(SourceId.WEATHER_UNLOCKED);
       ctx.initialState.units.temp = TempUnit.C;
       ctx.initialState.useCurrentLocation = true;
-      ctx.run(async () => {
-        iq.flushReverse();
-        unlocked
+      await ctx.run(async () => {
+        await iq.flushReverse();
+        await unlocked
           .expectForecast()
           .flush(unlocked.buildResponse({}, { timeframe }));
 
@@ -44,11 +44,11 @@ describe('GraphComponent', () => {
       });
     });
 
-    it('displays the source in its footer', () => {
+    it('displays the source in its footer', async () => {
       ctx.initialState.useCurrentLocation = true;
       state.setShowing(SourceId.WEATHER_GOV, SourceId.WEATHER_UNLOCKED);
-      ctx.run(async () => {
-        iq.flushReverse();
+      await ctx.run(async () => {
+        await iq.flushReverse();
         gov.flushFixture();
         unlocked.flushDefault();
 

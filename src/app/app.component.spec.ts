@@ -19,8 +19,8 @@ describe('AppComponent', () => {
     ({ errors, gov, iq, state } = ctx.harnesses);
   });
 
-  it('tracks an event when opening the about popup', () => {
-    ctx.run(async () => {
+  it('tracks an event when opening the about popup', async () => {
+    await ctx.run(async () => {
       const events = new EventTrackingServiceHarness();
       await ctx.cleanUpFreshInit();
 
@@ -30,8 +30,8 @@ describe('AppComponent', () => {
     });
   });
 
-  it('tracks an event when opening the privacy policy', () => {
-    ctx.run(async () => {
+  it('tracks an event when opening the privacy policy', async () => {
+    await ctx.run(async () => {
       const events = new EventTrackingServiceHarness();
       await ctx.cleanUpFreshInit();
 
@@ -41,9 +41,9 @@ describe('AppComponent', () => {
     });
   });
 
-  it('has buttons to snap to date ranges', () => {
+  it('has buttons to snap to date ranges', async () => {
     ctx.startTime = new Date(2020, 5, 21);
-    ctx.run(async () => {
+    await ctx.run(async () => {
       const app = await ctx.getHarness(AppComponentHarness);
       const graphState = new GraphStateHarness(ctx);
       await ctx.cleanUpFreshInit();
@@ -51,21 +51,21 @@ describe('AppComponent', () => {
       await app.snapToRange('three-days');
       expect(graphState.getRange()).toEqual([1592706600000, 1592965800000]);
 
-      ctx.tick(1, 'min');
+      await ctx.tick(1, 'min');
       await app.snapToRange('day');
       expect(graphState.getRange()).toEqual([1592706660000, 1592793060000]);
 
-      ctx.tick(2, 'min');
+      await ctx.tick(2, 'min');
       await app.snapToRange('week');
       expect(graphState.getRange()).toEqual([1592706780000, 1593311580000]);
     });
   });
 
-  it('matches the width of the parent even when the city name is long', () => {
+  it('matches the width of the parent even when the city name is long', async () => {
     ctx.initialState.useCurrentLocation = true;
     ctx.initialState.currentLocation.city =
       'Llanfair­pwllgwyngyll­gogery­chwyrn­drobwll­llan­tysilio­gogo­goch';
-    ctx.run(async () => {
+    await ctx.run(async () => {
       iq.expectReverse();
 
       const app = await ctx.getHarness(AppComponentHarness);
@@ -75,14 +75,14 @@ describe('AppComponent', () => {
 
   describe('when location access is denied', () => {
     beforeEach(() => {
-      ctx.mocks.browser.getCurrentLocation.and.callFake(async () => {
+      ctx.mocks.browser.getCurrentLocation.mockImplementation(async () => {
         throw new Error('User says no!');
       });
     });
 
-    it('does not show an error until Current is selected', () => {
+    it('does not show an error until Current is selected', async () => {
       state.setCustomLocation([0, 0]);
-      ctx.run(async () => {
+      await ctx.run(async () => {
         gov.expectPoints([0, 0]);
 
         errors.verify();
@@ -95,10 +95,10 @@ describe('AppComponent', () => {
     });
 
     describe('when no current location has been determined before', () => {
-      it('shows an error and opens location settings', () => {
+      it('shows an error and opens location settings', async () => {
         // when the app opens
         ctx.initialState.useCurrentLocation = true;
-        ctx.run(async () => {
+        await ctx.run(async () => {
           const app = await ctx.getHarness(AppComponentHarness);
           const location = await ctx.getHarness(
             LocationOptionsComponentHarness,
@@ -119,11 +119,11 @@ describe('AppComponent', () => {
     });
 
     describe('when a current location has been determined before', () => {
-      it('shows an error and opens location settings', () => {
+      it('shows an error and opens location settings', async () => {
         // when the app opens
         state.setCustomLocation([0, 0]);
         ctx.initialState.useCurrentLocation = true;
-        ctx.run(async () => {
+        await ctx.run(async () => {
           const app = await ctx.getHarness(AppComponentHarness);
           const location = await ctx.getHarness(
             LocationOptionsComponentHarness,

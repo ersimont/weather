@@ -5,15 +5,15 @@ export class InitServiceHarness {
   constructor(private ctx: WeatherGraphContext) {}
 
   async cleanUpFreshInit(): Promise<void> {
-    this.ctx.tick(2000);
-    await this.expectPrompt();
+    await this.ctx.tick(2000);
+    await this.expectChooseLocationPrompt();
   }
 
   async expectNoPrompt(): Promise<void> {
     expect(await this.ctx.getAllHarnesses(MatSnackBarHarness)).toEqual([]);
   }
 
-  async expectPrompt(): Promise<void> {
+  async expectChooseLocationPrompt(): Promise<void> {
     const bar = await this.ctx.getHarness(MatSnackBarHarness);
     expect(await bar.getMessage()).toBe('Choose a location');
     await bar.dismissWithAction();

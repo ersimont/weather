@@ -1,5 +1,5 @@
 import { noop } from '@s-libs/micro-dash';
-import { staticTest } from '@s-libs/ng-jasmine';
+import { staticTest } from '@s-libs/ng-vitest';
 import { ensureSpiedOn } from 'app/to-replace/ng-dev/ensure-spied-on';
 import { expectTypeOf } from 'expect-type';
 
@@ -7,7 +7,7 @@ describe('ensureSpiedOn()', () => {
   it('has fancy typing', () => {
     staticTest(() => {
       expectTypeOf(ensureSpiedOn(location, 'reload')).toEqualTypeOf(
-        spyOn(location, 'reload'),
+        vi.spyOn(location, 'reload').mockReturnValue(undefined),
       );
     });
   });

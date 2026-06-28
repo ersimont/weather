@@ -1,5 +1,5 @@
 import { createBuilder } from '@s-libs/js-core';
-import { expectRequest, SlTestRequest } from '@s-libs/ng-jasmine';
+import { expectRequest, SlTestRequest } from '@s-libs/ng-vitest';
 import {
   ForecastResponse,
   Timeframe,
@@ -32,9 +32,9 @@ export class WeatherUnlockedHarness {
   expectForecast(
     gpsCoords = this.ctx.currentLocation,
   ): SlTestRequest<ForecastResponse> {
-    const url =
-      `https://us-central1-proxic.cloudfunctions.net/api/weather-unlocked/api/forecast/${ 
-      gpsCoords.join(',')}`;
+    const url = `https://us-central1-proxic.cloudfunctions.net/api/weather-unlocked/api/forecast/${gpsCoords.join(
+      ',',
+    )}`;
     return expectRequest('GET', url);
   }
 }

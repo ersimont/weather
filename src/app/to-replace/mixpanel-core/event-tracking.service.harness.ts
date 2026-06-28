@@ -1,8 +1,8 @@
 import { isEqual } from '@s-libs/micro-dash';
+import { TestCall } from '@s-libs/ng-vitest';
 import { Dict } from 'mixpanel-browser';
 import { ServiceHarnessSuperclass } from '../ng-dev/service-harness-superclass';
 import { MockBackendKit } from '../ng-dev/spies/build-mock-backend-kit';
-import { CallMatcher } from '../ng-dev/spies/spy-controller';
 import { MixpanelBackendService } from './mixpanel-backend.service';
 
 type TrackFn = MixpanelBackendService['track'];
@@ -15,16 +15,12 @@ export class EventTrackingServiceHarness extends ServiceHarnessSuperclass {
   #backend = this.getCtx().inject(mockBackendKit.token);
 
   expectOne(name: string, params: Params = {}): void {
-    expect().nothing();
-    getParams(
-      this.#backend.track.controller.expectOne(
-        (call) => call.args[0] === name && isEqual(getParams(call), params),
-      ),
+    this.#backend.track.controller.expectOne(
+      (call) => call.getArgs()[0] === name && isEqual(getParams(call), params),
     );
   }
 
   expectNone(name: string): void {
-    expect().nothing();
     this.#backend.track.controller.expectNone(matchName(name));
   }
 
@@ -33,10 +29,10 @@ export class EventTrackingServiceHarness extends ServiceHarnessSuperclass {
   }
 }
 
-function matchName(name: string): CallMatcher<TrackFn> {
-  return ({ args }) => args[0] === name;
+function matchName(name: string): (call: TestCall<TrackFn>) => boolean {
+  return (call) => call.getArgs()[0] === name;
 }
 
-function getParams(call: jasmine.CallInfo<TrackFn>): Params {
-  return call.args[1];
+function getParams(call: TestCall<TrackFn>): Params {
+  return call.getArgs()[1];
 }

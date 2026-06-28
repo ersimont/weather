@@ -1,10 +1,10 @@
-import { OverlayContainer } from '@angular/cdk/overlay';
 import { TestBed } from '@angular/core/testing';
-import { ComponentContext, createSpyObject } from '@s-libs/ng-jasmine';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ComponentContext, createMockObject } from '@s-libs/ng-vitest';
 import { AppComponent } from 'app/app.component';
 import { appConfig } from 'app/app.config';
 import { GraphComponentHarness } from 'app/graph/graph.component.harness';
-import { ManualReinstallServiceHarness } from 'app/misc-components/manual-reinstall/manual-reinstall.service.harness';
 import { BrowserService } from 'app/misc-services/browser.service';
 import { InitServiceHarness } from 'app/misc-services/init.service.harness';
 import { LocationIqServiceHarness } from 'app/misc-services/location-iq.service.harness';
@@ -27,7 +27,7 @@ export class WeatherGraphContext extends ComponentContext<AppComponent> {
   useInitialState = true;
 
   // TODO: move to harness
-  mocks = { browser: createSpyObject(BrowserService) };
+  mocks = { browser: createMockObject(BrowserService) };
 
   isPageVisibleHarness = new IsPageVisibleHarness();
   // TODO: move to create in individual tests?
@@ -38,7 +38,6 @@ export class WeatherGraphContext extends ComponentContext<AppComponent> {
     graph: new GraphComponentHarness(this),
     init: new InitServiceHarness(this),
     iq: new LocationIqServiceHarness(this),
-    manualReinstall: new ManualReinstallServiceHarness(),
     openWeather: new OpenWeatherHarness(this),
     refresh: new RefreshServiceHarness(this),
     state: new WeatherStateHarness(this),
@@ -51,7 +50,7 @@ export class WeatherGraphContext extends ComponentContext<AppComponent> {
       providers: [appConfig.providers, eventTrackingTestProviders],
     });
 
-    this.mocks.browser.getCurrentLocation.and.callFake(
+    this.mocks.browser.getCurrentLocation.mockImplementation(
       async () => this.currentLocation,
     );
     TestBed.overrideProvider(BrowserService, { useValue: this.mocks.browser });
@@ -69,14 +68,14 @@ export class WeatherGraphContext extends ComponentContext<AppComponent> {
     await this.harnesses.init.cleanUpFreshInit();
   }
 
-  protected override init(): void {
+  protected override async init(): Promise<void> {
     if (this.useInitialState) {
       localStorage.setItem('weather', JSON.stringify(this.initialState));
     } else {
       localStorage.removeItem('weather');
     }
 
-    super.init();
+    await super.init();
   }
 
   protected override verifyPostTestConditions(): void {
@@ -84,15 +83,19 @@ export class WeatherGraphContext extends ComponentContext<AppComponent> {
     this.harnesses.errors.verify();
   }
 
-  protected override cleanUp(): void {
+  protected override async cleanUp(): Promise<void> {
     // chart.js needs time to advance to avoid an infinite animation loop in flush()
-    this.tick(1);
+    await this.tick(1);
 
-    super.cleanUp();
+    this.inject(MatSnackBar).dismiss();
+    this.inject(MatDialog).closeAll();
+    await this.tick(0);
 
-    // https://github.com/angular/components/blob/b612fc42895e47377b353e773d4ba3517c0991e1/src/material/dialog/dialog.spec.ts#L80
-    this.inject(OverlayContainer).ngOnDestroy();
-    this.tick(1); // the CDK queues this up for its FocusManager
-    this.tick(150); // material ripple effect
+    await super.cleanUp();
+
+    // // https://github.com/angular/components/blob/b612fc42895e47377b353e773d4ba3517c0991e1/src/material/dialog/dialog.spec.ts#L80
+    // this.inject(OverlayContainer).ngOnDestroy();
+    // await this.tick(1); // the CDK queues this up for its FocusManager
+    // await this.tick(150); // material ripple effect
   }
 }

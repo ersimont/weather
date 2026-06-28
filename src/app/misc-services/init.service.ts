@@ -1,9 +1,8 @@
-import { inject, Service } from '@angular/core';
+import { afterNextRender, inject, Service } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DomSanitizer } from '@angular/platform-browser';
 import { icons } from 'app/icons';
-import { ManualReinstallService } from 'app/misc-components/manual-reinstall/manual-reinstall.service';
 import { LocationService } from 'app/misc-services/location.service';
 import { OpenWeather } from 'app/sources/open-weather/open-weather';
 import { VisualCrossing } from 'app/sources/visual-crossing/visual-crossing';
@@ -16,7 +15,6 @@ import { WhatsNewService } from 'app/upgrade/whats-new.service';
 export class InitService {
   private domSanitizer = inject(DomSanitizer);
   private locationService = inject(LocationService);
-  private manualReinstallService = inject(ManualReinstallService);
   private matIconRegistry = inject(MatIconRegistry);
   private matSnackBar = inject(MatSnackBar);
   private openWeather = inject(OpenWeather);
@@ -35,9 +33,9 @@ export class InitService {
     );
 
     this.whatsNewService.showNewFeatures();
-    this.manualReinstallService.promptIfAppropriate();
     if (this.locationService.isBlank()) {
-      setTimeout(() => {
+      afterNextRender(() => {
+        // wait until the sidenav renders before asking it to open
         this.locationService.askForLocation$.next();
       });
       setTimeout(() => {

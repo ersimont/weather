@@ -1,7 +1,6 @@
-import { OverlayContainer } from '@angular/cdk/overlay';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSnackBarHarness } from '@angular/material/snack-bar/testing';
-import { AngularContext } from '@s-libs/ng-jasmine';
+import { AngularContext } from '@s-libs/ng-vitest';
 import {
   provideErrorHandler,
   SnackBarErrorService,
@@ -15,10 +14,10 @@ class TestContext extends AngularContext {
     });
   }
 
-  protected override cleanUp(): void {
-    this.inject(OverlayContainer).ngOnDestroy();
-    this.tick(5000);
-    super.cleanUp();
+  protected override async cleanUp(): Promise<void> {
+    this.inject(MatSnackBar).dismiss();
+    await this.tick(0);
+    await super.cleanUp();
   }
 }
 
@@ -71,27 +70,26 @@ describe('SnackBarErrorService', () => {
   // });
 
   describe('.show()', () => {
-    it('displays a snack bar for 5 seconds', () => {
-      ctx.run(async () => {
+    it('displays a snack bar for 5 seconds', async () => {
+      await ctx.run(async () => {
         service.show('hi');
+        await ctx.tick(4999);
         expect((await ctx.getAllHarnesses(MatSnackBarHarness)).length).toBe(1);
-        ctx.tick(4999);
-        expect((await ctx.getAllHarnesses(MatSnackBarHarness)).length).toBe(1);
-        ctx.tick(1);
+        await ctx.tick(1);
         expect((await ctx.getAllHarnesses(MatSnackBarHarness)).length).toBe(0);
       });
     });
 
-    it('shows the message', () => {
-      ctx.run(async () => {
+    it('shows the message', async () => {
+      await ctx.run(async () => {
         service.show('hi');
         const snackbar = await ctx.getHarness(MatSnackBarHarness);
         expect(await snackbar.getMessage()).toBe('hi');
       });
     });
 
-    it('is dismissible with "OK"', () => {
-      ctx.run(async () => {
+    it('is dismissible with "OK"', async () => {
+      await ctx.run(async () => {
         service.show('hi');
         const snackBar = await ctx.getHarness(MatSnackBarHarness);
         expect(await snackBar.getActionDescription()).toBe('OK');

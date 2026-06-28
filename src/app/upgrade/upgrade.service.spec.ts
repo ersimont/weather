@@ -31,11 +31,10 @@ describe('UpgradeService', () => {
     ctx.run(async () => {
       const actual = store.getPersistedState();
 
-      expect(actual)
-        .withContext(
-          'Default state changed. You need to handle it in the upgrade service. Check the console for what was in the store.',
-        )
-        .toEqual(defaultState);
+      expect(
+        actual,
+        'Default state changed. You need to handle it in the upgrade service. Check the console for what was in the store.',
+      ).toEqual(defaultState);
       if (!isEqual(actual, defaultState)) {
         console.log(actual);
       }

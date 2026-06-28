@@ -9,20 +9,18 @@ export class AppComponentHarness extends ContentContainerComponentHarness {
 
   defaultTitle = 'Weather Graph';
 
-  private getMenuButton = this.locatorFor(
-    MatButtonHarness.with({ text: 'menu' }),
-  );
-  private getAboutItem = this.locatorFor(
+  #getMenuButton = this.locatorFor(MatButtonHarness.with({ text: 'menu' }));
+  #getAboutItem = this.locatorFor(
     MatActionListItemHarness.with({ text: 'About' }),
   );
-  private getPrivacyPolicyItem = this.locatorFor(
+  #getPrivacyPolicyItem = this.locatorFor(
     MatActionListItemHarness.with({ text: 'Privacy Policy' }),
   );
-  private getSidenav = this.locatorFor(MatSidenavHarness);
+  #getSidenav = this.locatorFor(MatSidenavHarness);
 
   async openAbout(): Promise<void> {
     await this.ensureSidenavOpen();
-    await (await this.getAboutItem()).click();
+    await (await this.#getAboutItem()).click();
   }
 
   async snapToRange(range: 'day' | 'three-days' | 'week'): Promise<void> {
@@ -31,17 +29,17 @@ export class AppComponentHarness extends ContentContainerComponentHarness {
 
   async openPrivacyPolicy(): Promise<void> {
     await this.ensureSidenavOpen();
-    await (await this.getPrivacyPolicyItem()).click();
+    await (await this.#getPrivacyPolicyItem()).click();
   }
 
   async ensureSidenavOpen(): Promise<void> {
     if (!(await this.isSidenavOpen())) {
-      await (await this.getMenuButton()).click();
+      await (await this.#getMenuButton()).click();
     }
   }
 
   async isSidenavOpen(): Promise<boolean> {
-    return (await this.getSidenav()).isOpen();
+    return (await this.#getSidenav()).isOpen();
   }
 
   async getHeaderWidth(): Promise<string> {

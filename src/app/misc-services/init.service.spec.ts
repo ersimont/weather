@@ -13,9 +13,9 @@ describe('InitService', () => {
     ({ init, iq } = ctx.harnesses);
   });
 
-  it('asks for location when none is selected', () => {
+  it('asks for location when none is selected', async () => {
     ctx.useInitialState = false;
-    ctx.run(async () => {
+    await ctx.run(async () => {
       const app = await ctx.getHarness(AppComponentHarness);
       const locationOptions = await ctx.getHarness(
         LocationOptionsComponentHarness,
@@ -23,17 +23,17 @@ describe('InitService', () => {
       expect(await app.isSidenavOpen()).toBe(true);
       expect(await locationOptions.isExpanded()).toBe(true);
 
-      ctx.tick(1999);
+      await ctx.tick(1999);
       await init.expectNoPrompt();
-      ctx.tick(1);
-      await init.expectPrompt();
+      await ctx.tick(1);
+      await init.expectChooseLocationPrompt();
     });
   });
 
-  it('does not ask for location when current is selected', () => {
+  it('does not ask for location when current is selected', async () => {
     ctx.useInitialState = true;
     ctx.initialState.useCurrentLocation = true;
-    ctx.run(async () => {
+    await ctx.run(async () => {
       iq.expectReverse();
 
       const app = await ctx.getHarness(AppComponentHarness);
@@ -43,16 +43,16 @@ describe('InitService', () => {
       expect(await app.isSidenavOpen()).toBe(false);
       expect(await locationOptions.isExpanded()).toBe(false);
 
-      ctx.tick(2000);
+      await ctx.tick(2000);
       await init.expectNoPrompt();
     });
   });
 
-  it('does not ask for location when a custom one has been entered', () => {
+  it('does not ask for location when a custom one has been entered', async () => {
     ctx.useInitialState = true;
     ctx.initialState.useCurrentLocation = false;
     ctx.initialState.customLocation.search = 'Entered';
-    ctx.run(async () => {
+    await ctx.run(async () => {
       iq.expectForward('Entered');
 
       const app = await ctx.getHarness(AppComponentHarness);
@@ -62,7 +62,7 @@ describe('InitService', () => {
       expect(await app.isSidenavOpen()).toBe(false);
       expect(await locationOptions.isExpanded()).toBe(false);
 
-      ctx.tick(2000);
+      await ctx.tick(2000);
       await init.expectNoPrompt();
     });
   });

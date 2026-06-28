@@ -24,7 +24,15 @@ export class EventTrackingService {
       // Find everything with a checkmark for "Javascript" and remove any that
       // could factor into identifying a user.
       property_blacklist: [
+        '$browser',
+        '$browser_version',
+        '$current_url',
         '$device',
+        '$device_id',
+        '$initial_referrer',
+        '$initial_referring_domain',
+        '$lib_version',
+        '$os',
         '$referrer',
         '$referring_domain',
         '$screen_height',

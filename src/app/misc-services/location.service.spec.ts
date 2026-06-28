@@ -119,7 +119,7 @@ describe('LocationService', () => {
 
     it('clears city after an error fetching current location, and allows refreshing', () => {
       const locationStub = ctx.mocks.browser.getCurrentLocation;
-      locationStub.and.rejectWith('not allowed');
+      locationStub.mockRejectedValue('not allowed');
       ctx.initialState.useCurrentLocation = true;
       ctx.initialState.currentLocation.city = 'A previous value';
       ctx.run(async () => {
@@ -127,7 +127,7 @@ describe('LocationService', () => {
         const app = await ctx.getHarness(AppComponentHarness);
         expect(await app.getTitle()).toBe(app.defaultTitle);
 
-        locationStub.and.resolveTo(ctx.currentLocation);
+        locationStub.mockResolvedValue(ctx.currentLocation);
         refresh.trigger();
         iq.expectReverse().flush(
           iq.buildLocationResponse({ address: { city: 'restored' } }),

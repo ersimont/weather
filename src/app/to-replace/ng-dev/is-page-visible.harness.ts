@@ -1,5 +1,5 @@
-import { AngularContext } from '@s-libs/ng-jasmine';
-import { spyOnlyWithArgs } from 'app/to-replace/ng-dev/spy-only-with-args';
+import { AngularContext } from '@s-libs/ng-vitest';
+import { Mock, onTestFinished } from 'vitest';
 
 /**
  * Use to control {@link isPageVisible$()} in tests. Create only one per test, before anything calls `isPageVisible$()`.
@@ -26,34 +26,40 @@ import { spyOnlyWithArgs } from 'app/to-replace/ng-dev/spy-only-with-args';
  * ```
  */
 export class IsPageVisibleHarness {
-  #visibilityState: jasmine.Spy;
-  #notifyVisibilityChange: VoidFunction | undefined;
+  #visibilityState: Mock<() => DocumentVisibilityState>;
+  #listeners: VoidFunction[] = [];
 
   constructor() {
-    this.#visibilityState = spyOnProperty(
-      document,
-      'visibilityState',
-    ).and.returnValue('visible');
+    this.#visibilityState = vi
+      .spyOn(document, 'visibilityState', 'get')
+      .mockReturnValue('visible');
 
-    spyOnlyWithArgs(document, 'addEventListener', [
-      'visibilitychange',
-      jasmine.anything(),
-      undefined,
-    ]).callFake((_: string, handler: EventListenerOrEventListenerObject) => {
-      this.#notifyVisibilityChange = handler as VoidFunction;
+    const { addEventListener } = document;
+    const addSpy = vi
+      .spyOn(document, 'addEventListener')
+      .mockImplementation((type, listener, options) => {
+        if (type === 'visibilitychange') {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- we know that `isPageVisible$()` will only call this with a function
+          this.#listeners.push(listener as VoidFunction);
+        } else {
+          addEventListener.call(document, type, listener, options);
+        }
+      });
+
+    onTestFinished(() => {
+      this.#visibilityState.mockRestore();
+      addSpy.mockRestore();
     });
   }
 
   /**
    * Sets the page's visibility state, and triggers any subscriptions to `isPageVisible$()`. Automatically triggers change detection if running with an {@linkcode AngularContext}.
    */
-  setVisible(visible: boolean): void {
-    this.#visibilityState.and.returnValue(visible ? 'visible' : 'hidden');
-    this.#notifyVisibilityChange?.();
-
-    // TODO: fix and test
-    if ((window as any).Zone.current.get('FakeAsyncTestZoneSpec')) {
-      AngularContext.getCurrent()?.tick();
+  async setVisible(visible: boolean): Promise<void> {
+    this.#visibilityState.mockReturnValue(visible ? 'visible' : 'hidden');
+    for (const listener of this.#listeners) {
+      listener();
     }
+    await AngularContext.getCurrent()?.tick();
   }
 }

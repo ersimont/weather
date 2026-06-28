@@ -1,7 +1,7 @@
 import { MatInputHarness } from '@angular/material/input/testing';
 import { MatRadioGroupHarness } from '@angular/material/radio/testing';
 import { assert } from '@s-libs/js-core';
-import { AngularContext } from '@s-libs/ng-jasmine';
+import { AngularContext } from '@s-libs/ng-vitest';
 import { AbstractOptionDirectiveHarness } from 'app/options/abstract-option-directive/abstract-option.directive.harness';
 
 export class LocationOptionsComponentHarness extends AbstractOptionDirectiveHarness {
@@ -15,7 +15,7 @@ export class LocationOptionsComponentHarness extends AbstractOptionDirectiveHarn
     const input = await this.getInput();
     await input.setValue(search);
     this.getNativeInput().dispatchEvent(new Event('change', { bubbles: true }));
-    AngularContext.getCurrent()!.tick();
+    await AngularContext.getCurrent()!.tick();
   }
 
   async select(label: 'Current' | 'Custom'): Promise<void> {

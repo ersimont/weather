@@ -1,15 +1,16 @@
 import { assert } from '@s-libs/js-core';
-import { AngularContext, expectSingleCallAndReset } from '@s-libs/ng-jasmine';
+import { AngularContext, expectSingleCallAndReset } from '@s-libs/ng-vitest';
 import { SnackBarErrorService } from 'app/to-replace/snack-bar-error.service';
+import { Mock } from 'vitest';
 
 export class SnackBarErrorServiceHarness {
-  private spy?: jasmine.Spy;
+  private spy?: Mock;
 
   constructor(private ctx: AngularContext) {}
 
   install(): void {
     assert(!this.spy, 'already installed');
-    this.spy = spyOn(this.ctx.inject(SnackBarErrorService), 'show');
+    this.spy = vi.spyOn(this.ctx.inject(SnackBarErrorService), 'show');
   }
 
   expectGeneric(): void {

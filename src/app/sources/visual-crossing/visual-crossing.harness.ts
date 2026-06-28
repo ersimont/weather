@@ -1,5 +1,5 @@
 import { createBuilder } from '@s-libs/js-core';
-import { expectRequest, SlTestRequest } from '@s-libs/ng-jasmine';
+import { expectRequest, SlTestRequest } from '@s-libs/ng-vitest';
 import {
   Hour,
   TimelineResponse,
@@ -31,9 +31,9 @@ export class VisualCrossingHarness {
   expectForecast(
     gpsCoords = this.ctx.currentLocation,
   ): SlTestRequest<TimelineResponse> {
-    const url =
-      `https://us-central1-proxic.cloudfunctions.net/api/visual-crossing/VisualCrossingWebServices/rest/services/timeline/${ 
-      gpsCoords.join(',')}`;
+    const url = `https://us-central1-proxic.cloudfunctions.net/api/visual-crossing/VisualCrossingWebServices/rest/services/timeline/${gpsCoords.join(
+      ',',
+    )}`;
     return expectRequest('GET', url, {
       params: { unitGroup: 'metric', include: 'hours' },
     });

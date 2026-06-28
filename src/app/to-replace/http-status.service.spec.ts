@@ -5,7 +5,7 @@ import {
 } from '@angular/common/http';
 import { HttpTestingController } from '@angular/common/http/testing';
 import { noop } from '@s-libs/micro-dash';
-import { AngularContext } from '@s-libs/ng-jasmine';
+import { AngularContext } from '@s-libs/ng-vitest';
 import {
   HttpStatusService,
   trackHttpStatus,

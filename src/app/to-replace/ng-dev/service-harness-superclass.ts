@@ -1,5 +1,5 @@
 import { assert } from '@s-libs/js-core';
-import { AngularContext } from '@s-libs/ng-jasmine';
+import { AngularContext } from '@s-libs/ng-vitest';
 
 export abstract class ServiceHarnessSuperclass {
   protected getCtx(): AngularContext {

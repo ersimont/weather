@@ -1,18 +1,15 @@
-// copied most of the typing from jasmine.SpyOn
+import { Mock } from 'vitest';
+
+type Func = (...args: any[]) => any;
+
 export function ensureSpiedOn<T extends object, K extends keyof T>(
   object: T,
-  method: T[K] extends Function ? K : never,
-): jasmine.Spy<
-  T[K] extends jasmine.Func
-    ? T[K]
-    : T[K] extends new (...args: infer A) => infer V
-      ? (...args: A) => V
-      : never
-> {
+  method: T[K] extends Func ? K : never,
+): T[K] extends Mock ? T[K] : T[K] extends Func ? Mock<T[K]> : never {
   const obj: any = object;
   if ('and' in obj[method]) {
     return obj[method];
   } else {
-    return spyOn(object, method as any);
+    return vitest.spyOn(object, method as any) as any;
   }
 }

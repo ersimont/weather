@@ -85,7 +85,6 @@ describe('RefreshService', () => {
       ctx.isPageVisibleHarness.setVisible(false);
       ctx.isPageVisibleHarness.setVisible(true);
       http.verify();
-      expect().nothing();
     });
   });
 
@@ -113,7 +112,6 @@ describe('RefreshService', () => {
       );
       await locationOptions.setCustomLocation('loc1');
       http.verify();
-      expect().nothing();
     });
   });
 });

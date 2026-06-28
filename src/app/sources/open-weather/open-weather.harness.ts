@@ -1,5 +1,5 @@
 import { createBuilder } from '@s-libs/js-core';
-import { expectRequest, SlTestRequest } from '@s-libs/ng-jasmine';
+import { expectRequest, SlTestRequest } from '@s-libs/ng-vitest';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 import { ForecastResponse, Timeframe } from './open-weather';
 

@@ -1,6 +1,6 @@
 import { createBuilder } from '@s-libs/js-core';
 import { isEmpty } from '@s-libs/micro-dash';
-import { expectRequest, SlTestRequest } from '@s-libs/ng-jasmine';
+import { expectRequest, SlTestRequest } from '@s-libs/ng-vitest';
 import {
   Address,
   ForwardResponse,
@@ -34,12 +34,12 @@ export class LocationIqServiceHarness {
 
   constructor(private ctx: WeatherGraphContext) {}
 
-  flushTimezone(gpsCoords: GpsCoords): void {
-    this.expectTimezone(gpsCoords).flush(this.buildTimezoneResponse());
+  async flushTimezone(gpsCoords: GpsCoords): Promise<void> {
+    await this.expectTimezone(gpsCoords).flush(this.buildTimezoneResponse());
   }
 
-  flushReverse(gpsCoords = this.ctx.currentLocation): void {
-    this.expectReverse(gpsCoords).flush(this.buildLocationResponse());
+  async flushReverse(gpsCoords = this.ctx.currentLocation): Promise<void> {
+    await this.expectReverse(gpsCoords).flush(this.buildLocationResponse());
   }
 
   expectForward(search: string): SlTestRequest<ForwardResponse> {

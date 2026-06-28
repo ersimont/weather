@@ -8,12 +8,6 @@
   },
   "newProjectRoot": "projects",
   "schematics": {
-    "@schematics/angular:application": {
-      "testRunner": "karma"
-    },
-    "@schematics/angular:library": {
-      "testRunner": "karma"
-    },
     "angular-eslint:application": {
       "setParserOptionsProject": true
     },
@@ -114,9 +108,7 @@
         },
         "test": {
           "builder": "@angular/build:unit-test",
-          "options": {
-            "runner": "karma"
-          }
+          "options": { "browsers": ["chromium"] }
         },
         "lint": {
           "builder": "@angular-eslint/builder:lint",

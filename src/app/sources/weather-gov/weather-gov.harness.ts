@@ -1,4 +1,4 @@
-import { expectRequest, SlTestRequest } from '@s-libs/ng-jasmine';
+import { expectRequest, SlTestRequest } from '@s-libs/ng-vitest';
 import {
   GridResponse,
   PointResponse,

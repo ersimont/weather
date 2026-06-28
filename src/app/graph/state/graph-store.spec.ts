@@ -16,14 +16,14 @@ describe('GraphStore', () => {
     ({ gov, iq, refresh } = ctx.harnesses);
   });
 
-  it('sets the time zone according to the location', () => {
+  it('sets the time zone according to the location', async () => {
     ctx.initialState.useCurrentLocation = false;
     ctx.initialState.customLocation.search = 'New Zealand';
     ctx.initialState.customLocation.gpsCoords = [-44, 171];
     ctx.initialState.customLocation.timezone = 'Pacific/Auckland';
     ctx.startTime = new Date('1980-11-04T15:00:00.000Z');
     const { graph } = ctx.harnesses;
-    ctx.run(async () => {
+    await ctx.run(async () => {
       gov.expectPoints([-44, 171]);
       expect(graph.getTimeZone()).toBe('Pacific/Auckland');
 
@@ -37,43 +37,43 @@ describe('GraphStore', () => {
   });
 
   describe('light boxing', () => {
-    it('updates with location', () => {
+    it('updates with location', async () => {
       ctx.startTime = new Date('1980-11-04T15:00:00.000Z');
       ctx.currentLocation = [144, -122];
       ctx.initialState.useCurrentLocation = true;
-      ctx.run(() => {
-        iq.flushReverse([144, -122]);
+      await ctx.run(async () => {
+        await iq.flushReverse([144, -122]);
         gov.expectPoints([144, -122]);
         const graphState = new GraphStateHarness(ctx);
-        expect(graphState.getNightBoxes()[0]).toEqual([
+        expect(graphState.getLightBoxes()[0]).toEqual([
           342018680094, 342066743247,
         ]);
 
         ctx.currentLocation = [10, -20];
-        refresh.trigger();
-        iq.flushReverse([10, -20]);
+        await refresh.trigger();
+        await iq.flushReverse([10, -20]);
         gov.expectPoints([10, -20]);
-        expect(graphState.getNightBoxes()[0]).toEqual([
+        expect(graphState.getLightBoxes()[0]).toEqual([
           341997047135, 342039376657,
         ]);
       });
     });
 
-    it('updates with time', () => {
+    it('updates with time', async () => {
       ctx.startTime = new Date('1980-11-04T15:00:00.000Z');
       ctx.currentLocation = [144, -122];
       ctx.initialState.useCurrentLocation = true;
-      ctx.run(() => {
-        iq.flushReverse([144, -122]);
+      await ctx.run(async () => {
+        await iq.flushReverse([144, -122]);
         gov.expectPoints([144, -122]);
         const graphState = new GraphStateHarness(ctx);
-        expect(graphState.getNightBoxes()[0]).toEqual([
+        expect(graphState.getLightBoxes()[0]).toEqual([
           342018680094, 342066743247,
         ]);
 
-        jasmine.clock().mockDate(new Date('1980-11-05T15:00:00.000Z'));
-        new GraphStoreHarness(ctx).triggerAnnotationUpdate();
-        expect(graphState.getNightBoxes()[0]).toEqual([
+        vi.setSystemTime(new Date('1980-11-05T15:00:00.000Z'));
+        await new GraphStoreHarness(ctx).triggerAnnotationUpdate();
+        expect(graphState.getLightBoxes()[0]).toEqual([
           342105021125, 342153202383,
         ]);
       });
@@ -81,41 +81,41 @@ describe('GraphStore', () => {
   });
 
   describe('now line', () => {
-    it('updates with time', () => {
+    it('updates with time', async () => {
       ctx.startTime = new Date('1980-11-04T15:00:00.000Z');
-      ctx.run(() => {
+      await ctx.run(async () => {
         const graphState = new GraphStateHarness(ctx);
         expect(graphState.getNowLine()).toEqual(342198000000);
 
-        ctx.tick(1, 'min');
+        await ctx.tick(1, 'min');
         expect(graphState.getNowLine()).toEqual(342198060000);
       });
     });
   });
 
   describe('range', () => {
-    it('updates with time', () => {
+    it('updates with time', async () => {
       ctx.startTime = new Date('1980-11-04T15:00:00.000Z');
-      ctx.run(() => {
+      await ctx.run(async () => {
         const graphState = new GraphStateHarness(ctx);
         expect(graphState.getRange()).toEqual([342192600000, 342279000000]);
 
-        ctx.tick(1, 'min');
+        await ctx.tick(1, 'min');
         expect(graphState.getRange()).toEqual([342192660000, 342279060000]);
       });
     });
   });
 
   describe('boundary', () => {
-    it('updates with time', () => {
+    it('updates with time', async () => {
       ctx.startTime = new Date('1980-11-04T15:00:00.000Z');
-      ctx.run(() => {
+      await ctx.run(async () => {
         const graphState = new GraphStateHarness(ctx);
         expect(graphState.getBoundaries()).toEqual([
           342111600000, 342889200000,
         ]);
 
-        ctx.tick(1, 'min');
+        await ctx.tick(1, 'min');
         expect(graphState.getBoundaries()).toEqual([
           342111660000, 342889260000,
         ]);
