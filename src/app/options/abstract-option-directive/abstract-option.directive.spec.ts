@@ -9,8 +9,8 @@ describe('AbstractOptionDirective', () => {
     ctx = new WeatherGraphContext();
   });
 
-  it('fires a close event', () => {
-    ctx.run(async () => {
+  it('fires a close event', async () => {
+    await ctx.run(async () => {
       const events = new EventTrackingServiceHarness();
       await ctx.cleanUpFreshInit();
 
@@ -22,8 +22,8 @@ describe('AbstractOptionDirective', () => {
     });
   });
 
-  it('fires an open event', () => {
-    ctx.run(async () => {
+  it('fires an open event', async () => {
+    await ctx.run(async () => {
       const events = new EventTrackingServiceHarness();
       await ctx.cleanUpFreshInit();
 

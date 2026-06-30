@@ -13,14 +13,14 @@ import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 export class WeatherGovHarness {
   constructor(private ctx: WeatherGraphContext) {}
 
-  flushFixture(gpsCoordinates = this.ctx.currentLocation): void {
-    this.expectPoints(gpsCoordinates).flush(pointResponse);
-    this.expectGrid().flush(gridResponse);
+  async flushFixture(gpsCoordinates = this.ctx.currentLocation): Promise<void> {
+    await this.expectPoints(gpsCoordinates).flush(pointResponse);
+    await this.expectGrid().flush(gridResponse);
   }
 
-  flushNotAvailable(): void {
-    this.expectPoints().flush(pointResponse);
-    this.expectGrid().flushError(404, { body: notAvailableResponse });
+  async flushNotAvailable(): Promise<void> {
+    await this.expectPoints().flush(pointResponse);
+    await this.expectGrid().flushError(404, { body: notAvailableResponse });
   }
 
   expectPoints(

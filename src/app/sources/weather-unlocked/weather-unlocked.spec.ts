@@ -13,9 +13,9 @@ describe('WeatherUnlocked', () => {
     ctx.harnesses.state.setShowing(SourceId.WEATHER_UNLOCKED);
   });
 
-  it('can cancel its request', () => {
+  it('can cancel its request', async () => {
     ctx.harnesses.state.setCustomLocation();
-    ctx.run(async () => {
+    await ctx.run(async () => {
       const sources = await ctx.getHarness(SourceOptionsComponentHarness);
       await sources.toggle('Weather Unlocked');
       expect(unlocked.expectForecast().isCancelled()).toBe(true);
@@ -25,9 +25,9 @@ describe('WeatherUnlocked', () => {
     });
   });
 
-  it('rounds gps coordinates to 3 decimal places', () => {
+  it('rounds gps coordinates to 3 decimal places', async () => {
     ctx.harnesses.state.setCustomLocation([12.3456, 65.4321]);
-    ctx.run(() => {
+    await ctx.run(() => {
       unlocked.expectForecast([12.346, 65.432]);
     });
   });

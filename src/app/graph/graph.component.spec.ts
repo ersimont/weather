@@ -49,7 +49,7 @@ describe('GraphComponent', () => {
       state.setShowing(SourceId.WEATHER_GOV, SourceId.WEATHER_UNLOCKED);
       await ctx.run(async () => {
         await iq.flushReverse();
-        gov.flushFixture();
+        await gov.flushFixture();
         unlocked.flushDefault();
 
         expect(graph.getTooltipFooter(SourceId.WEATHER_GOV)).toBe(

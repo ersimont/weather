@@ -17,50 +17,50 @@ describe('WeatherGov', () => {
     ({ errors, gov, refresh, state } = ctx.harnesses);
   });
 
-  it('can cancel the first request', () => {
+  it('can cancel the first request', async () => {
     state.setCustomLocation();
-    ctx.run(async () => {
+    await ctx.run(async () => {
       const sources = await ctx.getHarness(SourceOptionsComponentHarness);
       await sources.toggle('Weather.gov');
       expect(gov.expectPoints().isCancelled()).toBe(true);
 
       await sources.toggle('Weather.gov');
-      gov.flushFixture();
+      await gov.flushFixture();
     });
   });
 
-  it('can cancel the second request', () => {
+  it('can cancel the second request', async () => {
     state.setCustomLocation();
-    ctx.run(async () => {
+    await ctx.run(async () => {
       const sources = await ctx.getHarness(SourceOptionsComponentHarness);
-      gov.expectPoints().flush(pointResponse);
+      await gov.expectPoints().flush(pointResponse);
       await sources.toggle('Weather.gov');
       expect(gov.expectGrid().isCancelled()).toBe(true);
 
       await sources.toggle('Weather.gov');
-      gov.flushFixture();
+      await gov.flushFixture();
     });
   });
 
-  it('does not prevent refreshes after error', () => {
+  it('does not prevent refreshes after error', async () => {
     state.setCustomLocation();
-    ctx.run(() => {
-      gov.expectPoints().flushError();
+    await ctx.run(async () => {
+      await gov.expectPoints().flushError();
       errors.expectGeneric();
 
-      refresh.trigger();
-      gov.expectPoints().flush(pointResponse);
-      gov.expectGrid().flushError();
+      await refresh.trigger();
+      await gov.expectPoints().flush(pointResponse);
+      await gov.expectGrid().flushError();
       errors.expectGeneric();
 
-      refresh.trigger();
-      gov.flushFixture();
+      await refresh.trigger();
+      await gov.flushFixture();
     });
   });
 
-  it('rounds gps coordinates to 4 decimal places', () => {
+  it('rounds gps coordinates to 4 decimal places', async () => {
     state.setCustomLocation([12.34567, 76.54321]);
-    ctx.run(() => {
+    await ctx.run(() => {
       gov.expectPoints([12.3457, 76.5432]);
     });
   });

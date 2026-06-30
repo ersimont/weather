@@ -7,8 +7,8 @@ describe('WhatsNewComponent', () => {
     ctx = new WeatherGraphContext();
   });
 
-  it('does not show when there is no upgrade', () => {
-    ctx.run(async () => {
+  it('does not show when there is no upgrade', async () => {
+    await ctx.run(async () => {
       await ctx.cleanUpFreshInit();
 
       expect(await ctx.getAllHarnesses(WhatsNewComponentHarness)).toEqual([]);

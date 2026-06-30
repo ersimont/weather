@@ -23,89 +23,89 @@ describe('AbstractSource', () => {
     ({ iq, errors, gov, unlocked, refresh, state } = ctx.harnesses);
   });
 
-  it('refreshes (only) when showing', () => {
+  it('refreshes (only) when showing', async () => {
     state.setCustomLocation();
-    ctx.run(async () => {
+    await ctx.run(async () => {
       const sources = await ctx.getHarness(SourceOptionsComponentHarness);
 
-      gov.flushFixture();
+      await gov.flushFixture();
 
       await sources.toggle('Weather.gov');
-      refresh.trigger();
+      await refresh.trigger();
       ctx.inject(HttpTestingController).verify();
 
       await sources.toggle('Weather.gov');
-      gov.flushFixture();
+      await gov.flushFixture();
 
-      refresh.trigger();
-      gov.flushFixture();
+      await refresh.trigger();
+      await gov.flushFixture();
     });
   });
 
-  it('retries on next refresh after error', () => {
+  it('retries on next refresh after error', async () => {
     ctx.initialState.useCurrentLocation = true;
-    ctx.run(() => {
-      iq.expectReverse().flushError();
+    await ctx.run(async () => {
+      await iq.expectReverse().flushError();
       errors.expectGeneric();
 
-      refresh.trigger();
-      iq.flushReverse();
-      gov.expectPoints().flushError();
+      await refresh.trigger();
+      await iq.flushReverse();
+      await gov.expectPoints().flushError();
       errors.expectGeneric();
 
-      refresh.trigger();
-      iq.flushReverse();
-      gov.expectPoints().flush(pointResponse);
-      gov.expectGrid().flushError();
+      await refresh.trigger();
+      await iq.flushReverse();
+      await gov.expectPoints().flush(pointResponse);
+      await gov.expectGrid().flushError();
       errors.expectGeneric();
 
-      refresh.trigger();
+      await refresh.trigger();
       iq.expectReverse();
     });
   });
 
   describe('fallback', () => {
-    it('happens invisibly on first app load', () => {
+    it('happens invisibly on first app load', async () => {
       ctx.useInitialState = false;
-      ctx.run(async () => {
+      await ctx.run(async () => {
         await ctx.cleanUpFreshInit();
 
         const locationOptions = await ctx.getHarness(
           LocationOptionsComponentHarness,
         );
         await locationOptions.select('Current');
-        iq.flushReverse();
-        gov.flushNotAvailable();
+        await iq.flushReverse();
+        await gov.flushNotAvailable();
         unlocked.flushDefault();
         errors.verify();
       });
     });
 
-    it('does not happen on refresh', () => {
+    it('does not happen on refresh', async () => {
       ctx.useInitialState = false;
-      ctx.run(async () => {
+      await ctx.run(async () => {
         await ctx.cleanUpFreshInit();
 
         const locationOptions = await ctx.getHarness(
           LocationOptionsComponentHarness,
         );
         await locationOptions.select('Current');
-        iq.flushReverse();
-        gov.flushFixture();
+        await iq.flushReverse();
+        await gov.flushFixture();
 
-        refresh.trigger();
-        iq.flushReverse();
-        gov.flushNotAvailable();
+        await refresh.trigger();
+        await iq.flushReverse();
+        await gov.flushNotAvailable();
         gov.expectNotAvailableError();
       });
     });
 
-    it('does not happen on subsequent app loads', () => {
+    it('does not happen on subsequent app loads', async () => {
       ctx.initialState.useCurrentLocation = true;
       ctx.initialState.allowSourceFallback = false;
-      ctx.run(() => {
-        iq.flushReverse();
-        gov.flushNotAvailable();
+      await ctx.run(async () => {
+        await iq.flushReverse();
+        await gov.flushNotAvailable();
         gov.expectNotAvailableError();
       });
     });

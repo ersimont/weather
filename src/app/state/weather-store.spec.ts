@@ -13,9 +13,9 @@ describe('WeatherStore', () => {
     ({ iq, store } = ctx.harnesses);
   });
 
-  it('persists state changes', () => {
+  it('persists state changes', async () => {
     ctx.initialState.useCurrentLocation = true;
-    ctx.run(async () => {
+    await ctx.run(async () => {
       iq.expectReverse();
 
       const location = await ctx.getHarness(LocationOptionsComponentHarness);
@@ -24,9 +24,9 @@ describe('WeatherStore', () => {
     });
   });
 
-  it('tracks an event when initializing a fresh state', () => {
+  it('tracks an event when initializing a fresh state', async () => {
     ctx.useInitialState = false;
-    ctx.run(async () => {
+    await ctx.run(async () => {
       const events = new EventTrackingServiceHarness();
       const tracked = events.getEvents('initialize_fresh_state');
       expect(tracked.length).toBe(1);
@@ -35,9 +35,9 @@ describe('WeatherStore', () => {
     });
   });
 
-  it('does not track an event if there is saved state', () => {
+  it('does not track an event if there is saved state', async () => {
     ctx.useInitialState = true;
-    ctx.run(async () => {
+    await ctx.run(async () => {
       const events = new EventTrackingServiceHarness();
       await ctx.cleanUpFreshInit();
 

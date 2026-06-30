@@ -15,22 +15,22 @@ describe('LocationIqService', () => {
   });
 
   describe('.forward()', () => {
-    it('handles an error', () => {
+    it('handles an error', async () => {
       ctx.initialState.useCurrentLocation = false;
       ctx.initialState.customLocation.search = 'bad';
-      ctx.run(() => {
-        iq.expectForward('bad').flushError();
+      await ctx.run(async () => {
+        await iq.expectForward('bad').flushError();
         errors.expectGeneric();
 
-        refresh.trigger();
-        iq.expectForward('bad');
+        await refresh.trigger();
+        await iq.expectForward('bad');
       });
     });
 
-    it('can cancel', () => {
+    it('can cancel', async () => {
       ctx.initialState.useCurrentLocation = false;
       ctx.initialState.customLocation.search = 'oops';
-      ctx.run(async () => {
+      await ctx.run(async () => {
         const locationOptions = await ctx.getHarness(
           LocationOptionsComponentHarness,
         );
@@ -42,20 +42,20 @@ describe('LocationIqService', () => {
   });
 
   describe('.reverse()', () => {
-    it('handles an error', () => {
+    it('handles an error', async () => {
       ctx.initialState.useCurrentLocation = true;
-      ctx.run(() => {
-        iq.expectReverse().flushError();
+      await ctx.run(async () => {
+        await iq.expectReverse().flushError();
         errors.expectGeneric();
 
-        refresh.trigger();
+        await refresh.trigger();
         iq.expectReverse();
       });
     });
 
-    it('can cancel', () => {
+    it('can cancel', async () => {
       ctx.initialState.useCurrentLocation = true;
-      ctx.run(async () => {
+      await ctx.run(async () => {
         const location = await ctx.getHarness(LocationOptionsComponentHarness);
         await location.setCustomLocation('New place');
         expect(iq.expectReverse().isCancelled()).toBe(true);
@@ -65,28 +65,28 @@ describe('LocationIqService', () => {
   });
 
   describe('.timezone()', () => {
-    it('handles an error', () => {
+    it('handles an error', async () => {
       ctx.initialState.useCurrentLocation = false;
       ctx.initialState.customLocation.search = 'bad';
-      ctx.run(() => {
-        iq.expectForward('bad').flush([
-          iq.buildLocationResponse({ lat: '6', lon: '1' }),
-        ]);
-        iq.expectTimezone([6, 1]).flushError();
+      await ctx.run(async () => {
+        await iq
+          .expectForward('bad')
+          .flush([iq.buildLocationResponse({ lat: '6', lon: '1' })]);
+        await iq.expectTimezone([6, 1]).flushError();
         errors.expectGeneric();
 
-        refresh.trigger();
+        await refresh.trigger();
         iq.expectTimezone([6, 1]);
       });
     });
 
-    it('can cancel', () => {
+    it('can cancel', async () => {
       ctx.initialState.useCurrentLocation = false;
       ctx.initialState.customLocation.search = 'oops';
-      ctx.run(async () => {
-        iq.expectForward('oops').flush([
-          iq.buildLocationResponse({ lat: '6', lon: '1' }),
-        ]);
+      await ctx.run(async () => {
+        await iq
+          .expectForward('oops')
+          .flush([iq.buildLocationResponse({ lat: '6', lon: '1' })]);
         const locationOptions = await ctx.getHarness(
           LocationOptionsComponentHarness,
         );

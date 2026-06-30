@@ -22,10 +22,10 @@ describe('LocationService', () => {
     ({ errors, gov, graph, iq, refresh, state } = ctx.harnesses);
   });
 
-  it('clears the forecasts when changing whether to use current', () => {
+  it('clears the forecasts when changing whether to use current', async () => {
     state.setCustomLocation([0, 0]);
-    ctx.run(async () => {
-      gov.flushFixture([0, 0]);
+    await ctx.run(async () => {
+      await gov.flushFixture([0, 0]);
       expect(graph.showsData()).toBe(true);
 
       const locationOptions = await ctx.getHarness(
@@ -38,9 +38,9 @@ describe('LocationService', () => {
     });
   });
 
-  it('tracks an event when searching for a new location', () => {
+  it('tracks an event when searching for a new location', async () => {
     state.setCustomLocation();
-    ctx.run(async () => {
+    await ctx.run(async () => {
       const events = new EventTrackingServiceHarness();
       gov.expectPoints();
 
@@ -53,10 +53,10 @@ describe('LocationService', () => {
     });
   });
 
-  it('triggers title changes when changing location', () => {
+  it('triggers title changes when changing location', async () => {
     ctx.initialState.useCurrentLocation = true;
     ctx.initialState.currentLocation.city = 'Starting point';
-    ctx.run(async () => {
+    await ctx.run(async () => {
       iq.expectReverse();
       const location = await ctx.getHarness(LocationOptionsComponentHarness);
       const app = await ctx.getHarness(AppComponentHarness);
@@ -66,50 +66,57 @@ describe('LocationService', () => {
       expect(await app.getTitle()).toBe(app.defaultTitle);
 
       await location.setCustomLocation('new city');
-      iq.expectForward('new city').flush([
-        iq.buildLocationResponse(
-          { lat: '8', lon: '9' },
-          { city: 'The New City of Atlantis' },
-        ),
-      ]);
+      await iq
+        .expectForward('new city')
+        .flush([
+          iq.buildLocationResponse(
+            { lat: '8', lon: '9' },
+            { city: 'The New City of Atlantis' },
+          ),
+        ]);
       expect(await app.getTitle()).toBe('The New City of Atlantis');
       iq.expectTimezone([8, 9]);
 
       await location.select('Current');
       expect(await app.getTitle()).toBe(app.defaultTitle);
-      iq.expectReverse().flush(
-        iq.buildLocationResponse({}, { city: 'The Current City of Atlantis' }),
-      );
+      await iq
+        .expectReverse()
+        .flush(
+          iq.buildLocationResponse(
+            {},
+            { city: 'The Current City of Atlantis' },
+          ),
+        );
       expect(await app.getTitle()).toBe('The Current City of Atlantis');
       gov.expectPoints();
     });
   });
 
-  it('triggers data changes when changing location', () => {
-    ctx.run(async () => {
+  it('triggers data changes when changing location', async () => {
+    await ctx.run(async () => {
       await ctx.cleanUpFreshInit();
       const location = await ctx.getHarness(LocationOptionsComponentHarness);
 
       await location.setCustomLocation('new city');
-      iq.expectForward('new city').flush([
-        iq.buildLocationResponse({ lat: '8', lon: '9' }),
-      ]);
-      iq.flushTimezone([8, 9]);
-      gov.flushFixture([8, 9]);
+      await iq
+        .expectForward('new city')
+        .flush([iq.buildLocationResponse({ lat: '8', lon: '9' })]);
+      await iq.flushTimezone([8, 9]);
+      await gov.flushFixture([8, 9]);
       expect(graph.showsData()).toBe(true);
 
       await location.select('Current');
       expect(graph.showsData()).toBe(false);
-      iq.flushReverse();
-      gov.flushFixture();
+      await iq.flushReverse();
+      await gov.flushFixture();
       expect(graph.showsData()).toBe(true);
     });
   });
 
   describe('using current location', () => {
-    it('allows a reverse lookup to be cancelled', () => {
+    it('allows a reverse lookup to be cancelled', async () => {
       ctx.initialState.useCurrentLocation = true;
-      ctx.run(async () => {
+      await ctx.run(async () => {
         const location = await ctx.getHarness(LocationOptionsComponentHarness);
         await location.setCustomLocation('Montreal');
         expect(iq.expectReverse().isCancelled()).toBe(true);
@@ -117,52 +124,52 @@ describe('LocationService', () => {
       });
     });
 
-    it('clears city after an error fetching current location, and allows refreshing', () => {
+    it('clears city after an error fetching current location, and allows refreshing', async () => {
       const locationStub = ctx.mocks.browser.getCurrentLocation;
       locationStub.mockRejectedValue('not allowed');
       ctx.initialState.useCurrentLocation = true;
       ctx.initialState.currentLocation.city = 'A previous value';
-      ctx.run(async () => {
+      await ctx.run(async () => {
         errors.expect('Location not found');
         const app = await ctx.getHarness(AppComponentHarness);
         expect(await app.getTitle()).toBe(app.defaultTitle);
 
         locationStub.mockResolvedValue(ctx.currentLocation);
-        refresh.trigger();
-        iq.expectReverse().flush(
-          iq.buildLocationResponse({ address: { city: 'restored' } }),
-        );
+        await refresh.trigger();
+        await iq
+          .expectReverse()
+          .flush(iq.buildLocationResponse({ address: { city: 'restored' } }));
         expect(await app.getTitle()).toBe('restored');
-        gov.flushFixture();
+        await gov.flushFixture();
       });
     });
 
-    it('clears the city after an error in the reverse lookup, and allows refreshing', () => {
+    it('clears the city after an error in the reverse lookup, and allows refreshing', async () => {
       ctx.initialState.useCurrentLocation = true;
       ctx.initialState.currentLocation.city = 'A previous value';
-      ctx.run(async () => {
+      await ctx.run(async () => {
         const app = await ctx.getHarness(AppComponentHarness);
 
-        iq.expectReverse().flushError();
+        await iq.expectReverse().flushError();
         errors.expectGeneric();
         expect(await app.getTitle()).toBe(app.defaultTitle);
 
-        refresh.trigger();
-        iq.expectReverse().flush(
-          iq.buildLocationResponse({ address: { city: 'restored' } }),
-        );
+        await refresh.trigger();
+        await iq
+          .expectReverse()
+          .flush(iq.buildLocationResponse({ address: { city: 'restored' } }));
         expect(await app.getTitle()).toBe('restored');
-        gov.flushFixture();
+        await gov.flushFixture();
       });
     });
   });
 
   describe('using custom location', () => {
-    it('clears the forecasts when searching for a new location', () => {
+    it('clears the forecasts when searching for a new location', async () => {
       state.setCustomLocation([0, 0]);
-      ctx.run(async () => {
+      await ctx.run(async () => {
         const location = await ctx.getHarness(LocationOptionsComponentHarness);
-        gov.flushFixture([0, 0]);
+        await gov.flushFixture([0, 0]);
         expect(graph.showsData()).toBe(true);
 
         await location.setCustomLocation('Phoenix');
@@ -172,67 +179,67 @@ describe('LocationService', () => {
       });
     });
 
-    it('clears the timezone when searching for a new location (production bug)', () => {
+    it('clears the timezone when searching for a new location (production bug)', async () => {
       state.setCustomLocation([1, 2]);
-      ctx.run(async () => {
+      await ctx.run(async () => {
         const location = await ctx.getHarness(LocationOptionsComponentHarness);
         gov.expectPoints([1, 2]);
 
         await location.setCustomLocation('city 2');
-        iq.expectForward('city 2').flush([
-          iq.buildLocationResponse({ lat: '3', lon: '4' }),
-        ]);
-        iq.expectTimezone([3, 4]).flushError();
+        await iq
+          .expectForward('city 2')
+          .flush([iq.buildLocationResponse({ lat: '3', lon: '4' })]);
+        await iq.expectTimezone([3, 4]).flushError();
         errors.expectGeneric();
 
-        refresh.trigger();
+        await refresh.trigger();
         iq.expectTimezone([3, 4]); // <- this was not happening
       });
     });
 
-    it('shows a nice message when not found, and can retry', () => {
+    it('shows a nice message when not found, and can retry', async () => {
       ctx.initialState.useCurrentLocation = false;
       ctx.initialState.customLocation.search = 'Initial search';
-      ctx.run(async () => {
+      await ctx.run(async () => {
         const location = await ctx.getHarness(LocationOptionsComponentHarness);
-        iq.expectForward('Initial search').flushError(404);
+        await iq.expectForward('Initial search').flushError(404);
         errors.expect('Location not found');
 
         await location.setCustomLocation('a place');
-        iq.expectForward('a place').flushError(500);
+        await iq.expectForward('a place').flushError(500);
         errors.expectGeneric();
 
-        refresh.trigger();
-        iq.expectForward('a place').flush([
-          iq.buildLocationResponse({ lat: '12', lon: '-89' }),
-        ]);
-        iq.flushTimezone([12, -89]);
-        gov.flushFixture([12, -89]);
+        await refresh.trigger();
+        await iq
+          .expectForward('a place')
+          .flush([iq.buildLocationResponse({ lat: '12', lon: '-89' })]);
+        await iq.flushTimezone([12, -89]);
+        await gov.flushFixture([12, -89]);
       });
     });
 
-    it("reuses gps coordinates & timezone when the search hasn't changed", () => {
+    it("reuses gps coordinates & timezone when the search hasn't changed", async () => {
       state.setCustomLocation([45.4972, -73.6104]);
-      ctx.run(async () => {
+      await ctx.run(async () => {
         const location = await ctx.getHarness(LocationOptionsComponentHarness);
 
         // no call to locationIq
-        gov.flushFixture([45.4972, -73.6104]);
+        await gov.flushFixture([45.4972, -73.6104]);
 
         await location.select('Current');
-        iq.flushReverse();
-        gov.flushFixture();
+        await iq.flushReverse();
+        await gov.flushFixture();
 
         await location.select('Custom');
         // no call to locationIq
-        gov.flushFixture([45.4972, -73.6104]);
+        await gov.flushFixture([45.4972, -73.6104]);
       });
     });
 
-    it('picks up from the time zone if that was the only piece missing', () => {
+    it('picks up from the time zone if that was the only piece missing', async () => {
       state.setCustomLocation([45.4972, -73.6104]);
       ctx.initialState.customLocation.timezone = undefined;
-      ctx.run(async () => {
+      await ctx.run(async () => {
         const location = await ctx.getHarness(LocationOptionsComponentHarness);
 
         // no forward search
@@ -242,10 +249,10 @@ describe('LocationService', () => {
         iq.expectReverse();
 
         await location.select('Custom');
-        iq.expectTimezone([45.4972, -73.6104]).flushError();
+        await iq.expectTimezone([45.4972, -73.6104]).flushError();
         errors.expectGeneric();
 
-        refresh.trigger();
+        await refresh.trigger();
         iq.expectTimezone([45.4972, -73.6104]);
       });
     });

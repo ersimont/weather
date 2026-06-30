@@ -10,9 +10,9 @@ describe('LocationOptionsComponent', () => {
     ({ iq } = ctx.harnesses);
   });
 
-  it('updates the radio button when entering a new location', () => {
+  it('updates the radio button when entering a new location', async () => {
     ctx.initialState.useCurrentLocation = true;
-    ctx.run(async () => {
+    await ctx.run(async () => {
       const location = await ctx.getHarness(LocationOptionsComponentHarness);
       await location.ensureExpanded();
       expect(await location.getSelected()).toBe('Current');

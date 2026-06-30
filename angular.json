@@ -108,7 +108,10 @@
         },
         "test": {
           "builder": "@angular/build:unit-test",
-          "options": { "browsers": ["chromium"] }
+          "options": {
+            "browsers": ["chromium"],
+            "runnerConfig": true
+          }
         },
         "lint": {
           "builder": "@angular-eslint/builder:lint",

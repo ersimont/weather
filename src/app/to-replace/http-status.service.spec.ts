@@ -31,8 +31,8 @@ describe('HttpStatusService', () => {
     controller = ctx.inject(HttpTestingController);
   });
 
-  it('tracks in flight requests', () => {
-    ctx.run(() => {
+  it('tracks in flight requests', async () => {
+    await ctx.run(() => {
       http.get('url1').subscribe();
       expect(status.hasInFlightRequest()).toBe(true);
       http.get('url2').subscribe();
@@ -51,8 +51,8 @@ describe('HttpStatusService', () => {
     });
   });
 
-  it('handles errors', () => {
-    ctx.run(() => {
+  it('handles errors', async () => {
+    await ctx.run(() => {
       http.get('url1').subscribe({ error: noop });
       expect(status.hasInFlightRequest()).toBe(true);
       controller.expectOne('url1').flush('', { status: 500, statusText: '' });
@@ -60,8 +60,8 @@ describe('HttpStatusService', () => {
     });
   });
 
-  it('handles cancelled requests', () => {
-    ctx.run(() => {
+  it('handles cancelled requests', async () => {
+    await ctx.run(() => {
       const subscription = http.get('url1').subscribe();
       expect(status.hasInFlightRequest()).toBe(true);
       subscription.unsubscribe();

@@ -16,12 +16,12 @@ describe('unitInfo', () => {
     ({ crossing, graph, state } = ctx.harnesses);
   });
 
-  it('rounds MM precipitation to 1 decimal place', () => {
+  it('rounds MM precipitation to 1 decimal place', async () => {
     state.setCustomLocation();
     state.setShowing(SourceId.VISUAL_CROSSING);
     ctx.initialState.units.amount = AmountUnit.MM;
-    ctx.run(() => {
-      crossing
+    await ctx.run(async () => {
+      await crossing
         .expectForecast()
         .flush(
           crossing.buildResponse(

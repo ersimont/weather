@@ -42,7 +42,7 @@ describe('SnackBarErrorService', () => {
   // xdescribe('.handleError()', () => {
   //   describe('with an Error object', () => {
   //     it('tracks an event', () => {
-  //       ctx.run(() => {
+  //       await ctx.run(() => {
   //         errorHandler.handleError(new Error('present'));
   //         expect(events.getErrors()).toEqual(['present']);
   //       });
@@ -52,7 +52,7 @@ describe('SnackBarErrorService', () => {
   //   describe("with an 'unhandled rejection'", () => {
   //     it('tracks an event', () => {
   //       const error = generateUncaughtPromiseError('track me');
-  //       ctx.run(() => {
+  //       await ctx.run(() => {
   //         errorHandler.handleError(error);
   //         expect(events.getErrors()).toEqual(['track me']);
   //       });
@@ -61,7 +61,7 @@ describe('SnackBarErrorService', () => {
   //
   //   describe('with a string', () => {
   //     it('tracks an event', () => {
-  //       ctx.run(() => {
+  //       await ctx.run(() => {
   //         errorHandler.handleError("I'm a string");
   //         expect(events.getErrors()).toEqual(["I'm a string"]);
   //       });

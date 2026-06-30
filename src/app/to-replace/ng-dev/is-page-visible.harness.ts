@@ -1,5 +1,5 @@
 import { AngularContext } from '@s-libs/ng-vitest';
-import { Mock, onTestFinished } from 'vitest';
+import { Mock } from 'vitest';
 
 /**
  * Use to control {@link isPageVisible$()} in tests. Create only one per test, before anything calls `isPageVisible$()`.
@@ -35,21 +35,16 @@ export class IsPageVisibleHarness {
       .mockReturnValue('visible');
 
     const { addEventListener } = document;
-    const addSpy = vi
-      .spyOn(document, 'addEventListener')
-      .mockImplementation((type, listener, options) => {
+    vi.spyOn(document, 'addEventListener').mockImplementation(
+      (type, listener, options) => {
         if (type === 'visibilitychange') {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- we know that `isPageVisible$()` will only call this with a function
           this.#listeners.push(listener as VoidFunction);
         } else {
           addEventListener.call(document, type, listener, options);
         }
-      });
-
-    onTestFinished(() => {
-      this.#visibilityState.mockRestore();
-      addSpy.mockRestore();
-    });
+      },
+    );
   }
 
   /**
@@ -60,6 +55,8 @@ export class IsPageVisibleHarness {
     for (const listener of this.#listeners) {
       listener();
     }
-    await AngularContext.getCurrent()?.tick();
+    if (AngularContext.getCurrent()?.isRunning()) {
+      await AngularContext.getCurrent()?.tick();
+    }
   }
 }

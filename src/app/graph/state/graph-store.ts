@@ -17,7 +17,6 @@ import { Condition } from 'app/state/condition';
 import { GpsCoords, Location } from 'app/state/location';
 import { ViewRange } from 'app/state/viewRange';
 import { WeatherStore } from 'app/state/weather-store';
-import { logToReduxDevtoolsExtension } from 'app/to-replace/js-core/redux/log-to-redux-devtools-extension';
 import { observeStore } from 'app/to-replace/signal-store/observe-store';
 import { combineLatest, interval } from 'rxjs';
 import { filter, map, startWith, take } from 'rxjs/operators';
@@ -33,15 +32,11 @@ export class GraphStore extends mixInInjectableSuperclass(
     super(new GraphState());
     this.#manageOptions();
     this.#manageData();
-
-    logToReduxDevtoolsExtension(() => this.state, {
-      name: 'GraphStore',
-      autoPause: true,
-    });
   }
 
   #manageOptions(): void {
     const now$ = interval(60_000).pipe(startWith(0), map(Date.now));
+
     const viewRange$ = observeStore(this.#weatherStore('viewRange'));
     this.subscribeTo(
       combineLatest([now$, viewRange$]).pipe(delayOnMicrotaskQueue()),
@@ -49,6 +44,7 @@ export class GraphStore extends mixInInjectableSuperclass(
         this.#updateRange(now, range);
       },
     );
+
     const location$ = toObservable(this.#locationService.location);
     this.subscribeTo(
       combineLatest([now$, location$]).pipe(delayOnMicrotaskQueue()),
@@ -62,18 +58,18 @@ export class GraphStore extends mixInInjectableSuperclass(
     );
   }
 
-  #updateAnnotations(now: number, gpsCoords: GpsCoords | undefined): void {
-    const nightBoxes = gpsCoords ? buildLightBoxes(now, gpsCoords) : [];
-    const annotations = [...nightBoxes, buildNowLine(now)];
-    this('options')('plugins')('annotation').nonNull.assign({ annotations });
-  }
-
   #updateRange(now: number, range: ViewRange): void {
     range = mapValues(range, (value) => now + value);
     this('options')('scales')('x').nonNull.assign(range);
     this('options')('plugins')('zoom')('limits')('x').nonNull.assign(
       getMinMax(now),
     );
+  }
+
+  #updateAnnotations(now: number, gpsCoords: GpsCoords | undefined): void {
+    const nightBoxes = gpsCoords ? buildLightBoxes(now, gpsCoords) : [];
+    const annotations = [...nightBoxes, buildNowLine(now)];
+    this('options')('plugins')('annotation').nonNull.assign({ annotations });
   }
 
   #updateTimezone({ timezone }: Location): void {

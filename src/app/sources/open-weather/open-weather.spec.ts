@@ -19,20 +19,20 @@ describe('OpenWeather', () => {
     ctx.harnesses.state.setShowing(SourceId.OPEN_WEATHER);
   });
 
-  it('handles errors', () => {
+  it('handles errors', async () => {
     state.setCustomLocation();
-    ctx.run(() => {
-      openWeather.expectForecast().flushError();
+    await ctx.run(async () => {
+      await openWeather.expectForecast().flushError();
       errors.expectGeneric();
 
-      refresh.trigger();
+      await refresh.trigger();
       openWeather.expectForecast();
     });
   });
 
-  it('can cancel its request', () => {
+  it('can cancel its request', async () => {
     state.setCustomLocation();
-    ctx.run(async () => {
+    await ctx.run(async () => {
       const sources = await ctx.getHarness(SourceOptionsComponentHarness);
       await sources.toggle('OpenWeather');
       expect(openWeather.expectForecast().isCancelled()).toBe(true);

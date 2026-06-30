@@ -3,15 +3,8 @@ import { convertTime } from '@s-libs/js-core';
 import { cache, isPageVisible$ } from '@s-libs/rxjs-core';
 import { LocationService } from 'app/misc-services/location.service';
 import { EventTrackingService } from 'app/to-replace/mixpanel-core/event-tracking.service';
-import { interval, Observable } from 'rxjs';
-import {
-  filter,
-  map,
-  skip,
-  startWith,
-  switchMap,
-  throttleTime,
-} from 'rxjs/operators';
+import { interval, Observable, throttleTime } from 'rxjs';
+import { filter, map, skip, startWith, switchMap } from 'rxjs/operators';
 
 export const refreshMillis = convertTime(30, 'min', 'ms');
 

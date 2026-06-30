@@ -14,18 +14,18 @@ describe('VisualCrossing', () => {
     ctx.harnesses.state.setCustomLocation();
   });
 
-  it('handles errors', () => {
-    ctx.run(() => {
-      crossing.expectForecast().flushError();
+  it('handles errors', async () => {
+    await ctx.run(async () => {
+      await crossing.expectForecast().flushError();
       ctx.harnesses.errors.expectGeneric();
 
-      ctx.harnesses.refresh.trigger();
+      await ctx.harnesses.refresh.trigger();
       crossing.expectForecast();
     });
   });
 
-  it('can cancel its request', () => {
-    ctx.run(async () => {
+  it('can cancel its request', async () => {
+    await ctx.run(async () => {
       const sources = await ctx.getHarness(SourceOptionsComponentHarness);
       await sources.toggle('Visual Crossing');
       expect(crossing.expectForecast().isCancelled()).toBe(true);
@@ -35,10 +35,10 @@ describe('VisualCrossing', () => {
     });
   });
 
-  it('converts wind speed to knots', () => {
-    ctx.run(() => {
+  it('converts wind speed to knots', async () => {
+    await ctx.run(async () => {
       const date = 1633233600000;
-      crossing.expectForecast().flush(
+      await crossing.expectForecast().flush(
         crossing.buildResponse(
           {},
           {
