@@ -1,3 +1,4 @@
+import { convertTime } from '@s-libs/js-core';
 import { Env } from './env';
 
 // This file can be replaced during build by using the `fileReplacements` array.
@@ -9,4 +10,5 @@ export const environment: Env = {
   paintGraph: true,
   pwa: false,
   storeDevtools: true,
+  refreshMillis: convertTime(30, 'min', 'ms'),
 };

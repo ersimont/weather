@@ -6,4 +6,5 @@ interface Env {
   paintGraph: boolean;
   pwa: boolean;
   storeDevtools: boolean;
+  refreshMillis: number;
 }

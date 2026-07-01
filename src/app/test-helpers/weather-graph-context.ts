@@ -64,6 +64,7 @@ export class WeatherGraphContext extends ComponentContext<AppComponent> {
     });
   }
 
+  // TODO: needed since switching to vitest?
   async cleanUpFreshInit(): Promise<void> {
     await this.harnesses.init.cleanUpFreshInit();
   }

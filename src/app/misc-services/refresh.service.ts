@@ -1,12 +1,18 @@
 import { inject, Service } from '@angular/core';
-import { convertTime } from '@s-libs/js-core';
+import { environment } from '@env';
 import { cache, isPageVisible$ } from '@s-libs/rxjs-core';
 import { LocationService } from 'app/misc-services/location.service';
 import { EventTrackingService } from 'app/to-replace/mixpanel-core/event-tracking.service';
-import { interval, Observable, throttleTime } from 'rxjs';
-import { filter, map, skip, startWith, switchMap } from 'rxjs/operators';
-
-export const refreshMillis = convertTime(30, 'min', 'ms');
+import {
+  filter,
+  interval,
+  map,
+  Observable,
+  skip,
+  startWith,
+  switchMap,
+  throttleTime,
+} from 'rxjs';
 
 @Service()
 export class RefreshService {
@@ -21,7 +27,7 @@ export class RefreshService {
 
   #buildRefresh$(): Observable<unknown> {
     const focus$ = isPageVisible$().pipe(skip(1), startWith(undefined));
-    const interval$ = interval(refreshMillis).pipe(
+    const interval$ = interval(environment.refreshMillis).pipe(
       map(() => 'interval_refresh'),
       startWith('focus_refresh'),
     );
@@ -31,7 +37,7 @@ export class RefreshService {
         focus$.pipe(
           switchMap(() => interval$),
           filter(() => document.visibilityState === 'visible'),
-          throttleTime(refreshMillis),
+          throttleTime(environment.refreshMillis * 0.9),
         ),
       ),
       switchMap((source) => {

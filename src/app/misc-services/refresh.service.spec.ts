@@ -1,9 +1,11 @@
 import { HttpTestingController } from '@angular/common/http/testing';
+import { environment } from '@env';
 import { LocationIqServiceHarness } from 'app/misc-services/location-iq.service.harness';
-import { refreshMillis } from 'app/misc-services/refresh.service';
 import { LocationOptionsComponentHarness } from 'app/options/location-options/location-options.component.harness';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 import { EventTrackingServiceHarness } from 'app/to-replace/mixpanel-core/event-tracking.service.harness';
+
+const { refreshMillis } = environment;
 
 describe('RefreshService', () => {
   let ctx: WeatherGraphContext;
@@ -15,15 +17,13 @@ describe('RefreshService', () => {
     ({ iq } = ctx.harnesses);
   });
 
-  it('refreshes after 30 minutes, with an event', async () => {
+  it('refreshes periodically, with an event', async () => {
     ctx.initialState.useCurrentLocation = true;
     await ctx.run(async () => {
       const events = new EventTrackingServiceHarness();
       iq.expectReverse();
 
-      console.log('--------------');
       await ctx.tick(refreshMillis - 1);
-      console.log('--------------');
       http.verify();
       expect(events.getEvents('interval_refresh').length).toBe(0);
 
@@ -85,6 +85,19 @@ describe('RefreshService', () => {
       await ctx.isPageVisibleHarness.setVisible(false);
       await ctx.isPageVisibleHarness.setVisible(true);
       http.verify();
+    });
+  });
+
+  it('gives a little wiggle room to the cooldown', async () => {
+    // When the cooldown exactly matched `refreshMillis`, then in real life it would often skip every other refresh. E.g. if delay between firing the interval and triggering the throttle is a little quicker this time, it'll run into the throttle.
+    ctx.initialState.useCurrentLocation = true;
+    await ctx.run(async () => {
+      iq.expectReverse();
+
+      await ctx.tick(refreshMillis - 100);
+      await ctx.isPageVisibleHarness.setVisible(false);
+      await ctx.isPageVisibleHarness.setVisible(true);
+      iq.expectReverse();
     });
   });
 

@@ -1,3 +1,4 @@
+import { convertTime } from '@s-libs/js-core';
 import { Env } from './env';
 
 export const environment: Env = {
@@ -7,6 +8,7 @@ export const environment: Env = {
   paintGraph: false,
   pwa: false,
   storeDevtools: false,
+  refreshMillis: convertTime(1.5, 'm', 'ms'),
 };
 
 // faster
