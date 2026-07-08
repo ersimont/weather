@@ -28,7 +28,7 @@ export class BugsnagService {
         (backend[method] as Func)(...args);
       },
       (err: unknown) => {
-        console.error(`Error triggering BugSnag.${method}`, err);
+        console.error(`Error triggering Bugsnag.${method}`, err);
       },
     );
   }

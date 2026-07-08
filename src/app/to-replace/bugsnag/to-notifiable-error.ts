@@ -1,6 +1,5 @@
 import { NotifiableError } from '@bugsnag/js';
-import { isDefined } from '@s-libs/js-core';
-import { isString } from '@s-libs/micro-dash';
+import { isNil, isString } from '@s-libs/micro-dash';
 
 export function toNotifiableError(error: unknown): NotifiableError {
   if (isNotifiableError(error)) {
@@ -12,7 +11,7 @@ export function toNotifiableError(error: unknown): NotifiableError {
 
 function isNotifiableError(error: any): error is NotifiableError {
   return (
-    isDefined(error) &&
+    !isNil(error) &&
     (isString(error) ||
       (isString(error.name) && isString(error.message)) ||
       (isString(error.errorClass) && isString(error.errorMessage)))
