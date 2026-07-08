@@ -6,6 +6,10 @@ import { Env } from './env';
 // The list of file replacements can be found in `angular.json`.
 
 export const environment: Env = {
+  // bugsnagConfig: {
+  //   apiKey: 'ed6690791c812d163fb92d4ad7a21ef4',
+  //   releaseStage: 'development',
+  // },
   eventTrackingConfig: { log: true },
   paintGraph: true,
   pwa: false,

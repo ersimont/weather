@@ -1,6 +1,7 @@
 import { ErrorHandler, inject, Provider, Service } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { LazyBugsnag } from 'app/to-replace/bugsnag/lazy-bugsnag';
+import { BugsnagService } from 'app/to-replace/bugsnag/bugsnag.service';
+import { toNotifiableError } from 'app/to-replace/bugsnag/to-notifiable-error';
 
 export function provideErrorHandler(): Provider {
   return { provide: ErrorHandler, useExisting: SnackBarErrorService };
@@ -9,20 +10,18 @@ export function provideErrorHandler(): Provider {
 @Service()
 export class SnackBarErrorService implements ErrorHandler {
   readonly #matSnackBar = inject(MatSnackBar);
+  readonly #bugsnag = inject(BugsnagService, { optional: true });
 
-  handleError(error: any, { logUnexpected = true } = {}): void {
-    if (error.rejection) {
-      error = error.rejection;
-    }
-
+  handleError(error: unknown, { logUnexpected = true } = {}): void {
     if (logUnexpected) {
-      LazyBugsnag.isStarted().then((isStarted) => {
-        if (isStarted) {
-          LazyBugsnag.notify(error);
-        } else {
-          console.error(error);
-        }
-      });
+      if (typeof error === 'object' && error !== null && 'rejection' in error) {
+        error = error.rejection;
+      }
+      if (this.#bugsnag) {
+        this.#bugsnag.notify(toNotifiableError(error));
+      } else {
+        console.error(error);
+      }
     }
     this.show('There was an unexpected error');
   }

@@ -1,19 +1,13 @@
 import { ErrorHandler, Provider } from '@angular/core';
-import { BugsnagConfig, LazyBugsnag } from './lazy-bugsnag';
+import { CONFIG } from 'app/to-replace/bugsnag/bugsnag-config';
+import { BugsnagErrorHandler } from 'app/to-replace/bugsnag/bugsnag-error-handler';
+import { BugsnagService } from 'app/to-replace/bugsnag/bugsnag.service';
+import { BugsnagConfig } from './bugsnag-config';
 
-export function provideBugsnag(config: BugsnagConfig): Provider {
-  LazyBugsnag.start({
-    collectUserIp: false,
-    generateAnonymousId: false,
-    ...config,
-  });
-  return {
-    provide: ErrorHandler,
-    useValue: {
-      handleError: (error: any): void => {
-        console.error(error);
-        LazyBugsnag.notify(error);
-      },
-    },
-  };
+export function provideBugsnag(config: BugsnagConfig): Provider[] {
+  return [
+    { provide: CONFIG, useValue: config },
+    BugsnagService,
+    { provide: ErrorHandler, useExisting: BugsnagErrorHandler },
+  ];
 }
