@@ -32,14 +32,14 @@ export interface Timeframe {
 
 @Service()
 export class WeatherUnlocked extends AbstractSource {
-  #httpClient = inject(HttpClient);
+  readonly #httpClient = inject(HttpClient);
 
   constructor() {
     super(SourceId.WEATHER_UNLOCKED);
   }
 
   fetch(gpsCoords: GpsCoords): Observable<Forecast> {
-    return this.fetchForecast(gpsCoords).pipe(
+    return this.#fetchForecast(gpsCoords).pipe(
       map((res) => {
         const forecast: Forecast = {};
         for (const day of res.Days) {
@@ -52,7 +52,7 @@ export class WeatherUnlocked extends AbstractSource {
     );
   }
 
-  private fetchForecast(gpsCoords: GpsCoords): Observable<ForecastResponse> {
+  #fetchForecast(gpsCoords: GpsCoords): Observable<ForecastResponse> {
     return this.#httpClient.get<ForecastResponse>(
       // weather unlocked docs say to use 3 decimal places
       `${endpoint}/${gpsCoords.map((coord) => round(coord, 3)).join(',')}`,

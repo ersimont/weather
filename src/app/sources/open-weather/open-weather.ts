@@ -45,17 +45,17 @@ export interface Timeframe {
 
 @Service()
 export class OpenWeather extends AbstractSource {
-  #httpClient = inject(HttpClient);
+  readonly #httpClient = inject(HttpClient);
 
   constructor() {
     super(SourceId.OPEN_WEATHER);
   }
 
   protected fetch(gpsCoords: GpsCoords): Observable<Forecast> {
-    return this.fetchForecast(gpsCoords).pipe(map(extractForecast));
+    return this.#fetchForecast(gpsCoords).pipe(map(extractForecast));
   }
 
-  private fetchForecast(gpsCoords: GpsCoords): Observable<ForecastResponse> {
+  #fetchForecast(gpsCoords: GpsCoords): Observable<ForecastResponse> {
     return this.#httpClient.get<ForecastResponse>(endpoint, {
       params: {
         lat: gpsCoords[0].toString(),

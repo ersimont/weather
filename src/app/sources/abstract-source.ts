@@ -13,21 +13,21 @@ import { SnackBarErrorService } from 'app/to-replace/snack-bar-error.service';
 import { NEVER, Observable } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 
-export const notAvailableHere = Symbol();
+export const notAvailableHere = Symbol('not available here');
 
 export abstract class AbstractSource extends InjectableSuperclass {
-  #errorService = inject(SnackBarErrorService);
-  #locationService = inject(LocationService);
-  #refreshService = inject(RefreshService);
-  #show$: Observable<boolean>;
+  readonly #store = inject(WeatherStore);
+  readonly #errorService = inject(SnackBarErrorService);
+  readonly #locationService = inject(LocationService);
+  readonly #refreshService = inject(RefreshService);
 
-  private store = inject(WeatherStore);
-  private sourceStore: Store<Source>;
+  readonly #show$: Observable<boolean>;
+  readonly #sourceStore: Store<Source>;
 
   constructor(key: SourceId) {
     super();
-    this.sourceStore = this.store('sources')(key);
-    this.#show$ = observeStore(this.sourceStore('show'));
+    this.#sourceStore = this.#store('sources')(key);
+    this.#show$ = observeStore(this.#sourceStore('show'));
   }
 
   initialize(fallback?: SourceId): void {
@@ -39,8 +39,6 @@ export abstract class AbstractSource extends InjectableSuperclass {
       this.#setForecast,
     );
   }
-
-  protected abstract fetch(gpsCoords: GpsCoords): Observable<Forecast>;
 
   #refresh(show: boolean, fallback?: SourceId): Observable<Forecast> {
     if (!show) {
@@ -60,11 +58,11 @@ export abstract class AbstractSource extends InjectableSuperclass {
   #handleError(error: any, fallback: SourceId | undefined): void {
     if (error !== notAvailableHere) {
       this.#errorService.handleError(error, { logUnexpected: false });
-    } else if (fallback && this.store('allowSourceFallback').state) {
-      this.sourceStore('show').state = false;
-      this.store('sources')(fallback)('show').state = true;
+    } else if (fallback && this.#store('allowSourceFallback').state) {
+      this.#sourceStore('show').state = false;
+      this.#store('sources')(fallback)('show').state = true;
     } else {
-      const label = this.sourceStore('label').state;
+      const label = this.#sourceStore('label').state;
       this.#errorService.show(
         `${label} is not available here. Try another source (in the settings).`,
       );
@@ -72,7 +70,9 @@ export abstract class AbstractSource extends InjectableSuperclass {
   }
 
   #setForecast(forecast: Forecast): void {
-    this.store('allowSourceFallback').state = false;
-    this.sourceStore('forecast').state = forecast;
+    this.#store('allowSourceFallback').state = false;
+    this.#sourceStore('forecast').state = forecast;
   }
+
+  protected abstract fetch(gpsCoords: GpsCoords): Observable<Forecast>;
 }

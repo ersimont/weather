@@ -34,30 +34,30 @@ interface GridConditionInfo {
 
 @Service()
 export class WeatherGov extends AbstractSource {
-  #httpClient = inject(HttpClient);
+  readonly #httpClient = inject(HttpClient);
 
   constructor() {
     super(SourceId.WEATHER_GOV);
   }
 
   fetch(gpsCoords: [number, number]): Observable<Forecast> {
-    return this.fetchPoint(gpsCoords).pipe(
-      switchMap((pointResponse) => this.fetchZone(pointResponse)),
+    return this.#fetchPoint(gpsCoords).pipe(
+      switchMap((pointResponse) => this.#fetchZone(pointResponse)),
       map(extractForecast),
       catchError((err) => {
         if (
           get(err, ['error', 'type']) ===
           'https://api.weather.gov/problems/InvalidPoint'
         ) {
-          return throwError(notAvailableHere);
+          return throwError(() => notAvailableHere);
         } else {
-          return throwError(err);
+          return throwError(() => err);
         }
       }),
     );
   }
 
-  private fetchPoint(gpsCoords: GpsCoords): Observable<PointResponse> {
+  #fetchPoint(gpsCoords: GpsCoords): Observable<PointResponse> {
     const endpoint = `https://api.weather.gov/points`;
     return this.#httpClient.get<PointResponse>(
       // weather.gov seems to redirect to a URL w/ GPS rounded to 4 decimal places. So we'll save the extra request.
@@ -65,7 +65,7 @@ export class WeatherGov extends AbstractSource {
     );
   }
 
-  private fetchZone(point: PointResponse): Observable<GridResponse> {
+  #fetchZone(point: PointResponse): Observable<GridResponse> {
     return this.#httpClient.get<GridResponse>(
       point.properties.forecastGridData,
     );

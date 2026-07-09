@@ -32,14 +32,14 @@ export interface Hour {
 
 @Service()
 export class VisualCrossing extends AbstractSource {
-  #httpClient = inject(HttpClient);
+  readonly #httpClient = inject(HttpClient);
 
   constructor() {
     super(SourceId.VISUAL_CROSSING);
   }
 
   fetch(gpsCoords: GpsCoords): Observable<Forecast> {
-    return this.fetchTimeline(gpsCoords).pipe(
+    return this.#fetchTimeline(gpsCoords).pipe(
       map((res) => {
         const forecast: Forecast = {};
         for (const day of res.days) {
@@ -52,7 +52,7 @@ export class VisualCrossing extends AbstractSource {
     );
   }
 
-  private fetchTimeline(gpsCoords: GpsCoords): Observable<TimelineResponse> {
+  #fetchTimeline(gpsCoords: GpsCoords): Observable<TimelineResponse> {
     return this.#httpClient.get<TimelineResponse>(
       `${endpoint}/${gpsCoords.join(',')}`,
       { params: { unitGroup: 'metric', include: 'hours' } },
