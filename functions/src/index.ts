@@ -1,32 +1,35 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * import {onCall} from "firebase-functions/v2/https";
- * import {onDocumentWritten} from "firebase-functions/v2/firestore";
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
+import { onRequest } from 'firebase-functions/v2/https';
 
-import {setGlobalOptions} from "firebase-functions";
-import {onRequest} from "firebase-functions/https";
-import * as logger from "firebase-functions/logger";
+// E.g.: {
+//   "path": "/location-iq/",
+//   "baseUrl": "https://us1.locationiq.com/",
+//   "params": { "key": "abc123" }
+// }
+interface Route {
+  path: string;
+  baseUrl: string;
+  params: Record<string, string>;
+}
 
-// Start writing functions
-// https://firebase.google.com/docs/functions/typescript
+export const api = onRequest({ secrets: ['ROUTES'] }, async (req, res) => {
+  const config: Route[] = JSON.parse(process.env.ROUTES!);
+  const route = config.find(({ path }) => req.path.startsWith(path));
+  if (!route) {
+    console.error('Route not found:', req.path);
+    res.status(404).json({ error: 'Route not found' });
+    return;
+  }
 
-// For cost control, you can set the maximum number of containers that can be
-// running at the same time. This helps mitigate the impact of unexpected
-// traffic spikes by instead downgrading performance. This limit is a
-// per-function limit. You can override the limit for each function using the
-// `maxInstances` option in the function's options, e.g.
-// `onRequest({ maxInstances: 5 }, (req, res) => { ... })`.
-// NOTE: setGlobalOptions does not apply to functions using the v1 API. V1
-// functions should each use functions.runWith({ maxInstances: 10 }) instead.
-// In the v1 API, each function can only serve one request per container, so
-// this will be the maximum concurrent request count.
-setGlobalOptions({ maxInstances: 10 });
+  const query = req.query as Record<string, string>;
+  const params = new URLSearchParams({ ...route.params, ...query });
+  const url = `${req.path.replace(route.path, route.baseUrl)}?${params}`;
 
-// export const helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    res.status(response.status).json(data);
+  } catch (error: any) {
+    console.error({ error, path: route.path, query: req.query });
+    res.status(500).json({ error: error.message });
+  }
+});

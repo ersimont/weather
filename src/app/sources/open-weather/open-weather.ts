@@ -14,8 +14,7 @@ import { map } from 'rxjs/operators';
 // API docs:
 // https://openweathermap.org/forecast5
 
-const endpoint =
-  'https://us-central1-proxic.cloudfunctions.net/api/openweathermap/data/2.5/forecast';
+const endpoint = '/api/openweathermap/data/2.5/forecast';
 
 export interface ForecastResponse {
   list: Timeframe[];

@@ -13,8 +13,7 @@ import { map } from 'rxjs/operators';
 // https://www.visualcrossing.com/weather/weather-data-services#/timeline
 
 const endpoint =
-  'https://us-central1-proxic.cloudfunctions.net/api/visual-crossing/VisualCrossingWebServices/rest/services/timeline';
-// 'http://localhost:8080/visual-crossing/VisualCrossingWebServices/rest/services/timeline';
+  '/api/visual-crossing/VisualCrossingWebServices/rest/services/timeline';
 
 export interface TimelineResponse {
   days: Array<{ hours: Hour[] }>;

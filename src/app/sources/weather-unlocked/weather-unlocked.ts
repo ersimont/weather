@@ -12,8 +12,7 @@ import { map } from 'rxjs/operators';
 // API docs:
 // https://developer.weatherunlocked.com/documentation/localweather/resources
 
-const endpoint =
-  'https://us-central1-proxic.cloudfunctions.net/api/weather-unlocked/api/forecast';
+const endpoint = '/api/weather-unlocked/api/forecast';
 
 export interface ForecastResponse {
   Days: Array<{ Timeframes: Timeframe[] }>;
