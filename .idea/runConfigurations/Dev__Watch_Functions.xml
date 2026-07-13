@@ -1,9 +1,9 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="PWA dev server" type="js.build_tools.npm">
-    <package-json value="$PROJECT_DIR$/package.json" />
+  <configuration default="false" name="Dev: Watch Functions" type="js.build_tools.npm">
+    <package-json value="$PROJECT_DIR$/functions/package.json" />
     <command value="run" />
     <scripts>
-      <script value="pwa-dev-server" />
+      <script value="build:watch" />
     </scripts>
     <node-interpreter value="project" />
     <envs />

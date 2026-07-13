@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint --quiet",
-    "backend": "firebase emulators:start --only functions,hosting",
+    "emulate": "firebase emulators:start --only functions,hosting",
     "deploy-staging": "ts-node --project scripts/tsconfig.json scripts/deploy staging",
     "deploy": "ts-node --project scripts/tsconfig.json scripts/deploy production",
     "prettier-all": "prettier --write \"**/*.{css,html,js,json,md,scss,ts,yml}\"",

@@ -1,11 +1,10 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Test Coverage" type="js.build_tools.npm">
+  <configuration default="false" name="Dev: Emulate" type="js.build_tools.npm">
     <package-json value="$PROJECT_DIR$/package.json" />
     <command value="run" />
     <scripts>
-      <script value="test" />
+      <script value="emulate" />
     </scripts>
-    <arguments value="-- --browsers=Chrome --no-watch --code-coverage" />
     <node-interpreter value="project" />
     <envs />
     <method v="2" />

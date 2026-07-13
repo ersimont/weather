@@ -1,0 +1,8 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Dev: All" type="CompoundRunConfigurationType">
+    <toRun name="Dev: Emulate" type="js.build_tools.npm" />
+    <toRun name="Dev: Watch App" type="js.build_tools.npm" />
+    <toRun name="Dev: Watch Functions" type="js.build_tools.npm" />
+    <method v="2" />
+  </configuration>
+</component>
