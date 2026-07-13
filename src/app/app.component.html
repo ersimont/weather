@@ -36,6 +36,8 @@
     </div>
   </mat-sidenav>
   <mat-sidenav-content>
-    <app-graph />
+    @defer (on immediate) {
+      <app-graph />
+    }
   </mat-sidenav-content>
 </mat-sidenav-container>
