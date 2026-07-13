@@ -1,5 +1,5 @@
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
-import { EventTrackingServiceHarness } from 'app/to-replace/mixpanel-core/event-tracking.service.harness';
+import { MixpanelServiceHarness } from 'app/to-replace/mixpanel-core/mixpanel.service.harness';
 import { v11Default } from 'app/upgrade/upgrade.service.fixutures';
 
 describe('WhatsNewService', () => {
@@ -11,9 +11,8 @@ describe('WhatsNewService', () => {
   it('tracks an event when shown', async () => {
     ctx.initialState = v11Default;
     await ctx.run(async () => {
-      const events = new EventTrackingServiceHarness();
-      const tracked = events.getEvents('show_whats_new');
-      expect(tracked.length).toBe(1);
+      const events = new MixpanelServiceHarness();
+      await events.expectOne('show_whats_new', { category: 'initialization' });
     });
   });
 });

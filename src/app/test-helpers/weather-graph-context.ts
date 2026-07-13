@@ -17,7 +17,7 @@ import { GpsCoords } from 'app/state/location';
 import { WeatherState } from 'app/state/weather-state';
 import { WeatherStateHarness } from 'app/state/weather-state.harness';
 import { WeatherStoreHarness } from 'app/state/weather-store.harness';
-import { eventTrackingTestProviders } from 'app/to-replace/mixpanel-core/event-tracking.service.harness';
+import { mixpanelTestProviders } from 'app/to-replace/mixpanel-core/mixpanel.service.harness';
 import { IsPageVisibleHarness } from 'app/to-replace/ng-dev/is-page-visible.harness';
 import { SnackBarErrorServiceHarness } from 'app/to-replace/snack-bar-error.service.harness';
 
@@ -47,7 +47,7 @@ export class WeatherGraphContext extends ComponentContext<AppComponent> {
 
   constructor() {
     super(AppComponent, {
-      providers: [appConfig.providers, eventTrackingTestProviders],
+      providers: [appConfig.providers, mixpanelTestProviders],
     });
 
     this.mocks.browser.getCurrentLocation.mockImplementation(

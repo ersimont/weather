@@ -1,11 +1,13 @@
 import { InjectionToken, Type } from '@angular/core';
 
-export class AsyncBackend<T> {
+export class LazyBackendSuperclass<T> {
   constructor(protected impl: T) {}
 
-  static createToken<T extends AsyncBackend<unknown>>(
+  static createToken<T extends LazyBackendSuperclass<unknown>>(
     type: Type<T>,
-    loadImpl: () => Promise<T extends AsyncBackend<infer B> ? B : never>,
+    loadImpl: () => Promise<
+      T extends LazyBackendSuperclass<infer B> ? B : never
+    >,
   ): InjectionToken<Promise<T>> {
     return new InjectionToken('', {
       factory: async (): Promise<T> => {

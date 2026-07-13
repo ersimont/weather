@@ -6,7 +6,7 @@ export const environment: Env = {
     apiKey: 'ed6690791c812d163fb92d4ad7a21ef4',
     releaseStage: 'production',
   },
-  eventTrackingConfig: { mixpanelToken: '53b4b0d1e6878184d85fe7be14affed4' },
+  mixpanelConfig: { token: '53b4b0d1e6878184d85fe7be14affed4' },
   paintGraph: true,
   pwa: true,
   storeDevtools: false,

@@ -2,7 +2,7 @@ import { inject, Service } from '@angular/core';
 import { mixInInjectableSuperclass } from '@s-libs/ng-core';
 import { PersistentStore } from '@s-libs/signal-store';
 import { logToReduxDevtoolsExtension } from 'app/to-replace/js-core/redux/log-to-redux-devtools-extension';
-import { EventTrackingService } from 'app/to-replace/mixpanel-core/event-tracking.service';
+import { MixpanelService } from 'app/to-replace/mixpanel-core/mixpanel.service';
 import { UpgradeService } from 'app/upgrade/upgrade.service';
 import { WeatherState } from './weather-state';
 
@@ -11,7 +11,7 @@ export class WeatherStore extends mixInInjectableSuperclass(
   PersistentStore,
 )<WeatherState> {
   constructor() {
-    const eventTrackingService = inject(EventTrackingService);
+    const eventTrackingService = inject(MixpanelService);
     const upgradeService = inject(UpgradeService);
 
     const freshState = new WeatherState();

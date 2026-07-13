@@ -5,7 +5,7 @@ import { LocationOptionsComponentHarness } from 'app/options/location-options/lo
 import { WeatherGovHarness } from 'app/sources/weather-gov/weather-gov.harness';
 import { WeatherStateHarness } from 'app/state/weather-state.harness';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
-import { EventTrackingServiceHarness } from 'app/to-replace/mixpanel-core/event-tracking.service.harness';
+import { MixpanelServiceHarness } from 'app/to-replace/mixpanel-core/mixpanel.service.harness';
 import { SnackBarErrorServiceHarness } from 'app/to-replace/snack-bar-error.service.harness';
 
 describe('AppComponent', () => {
@@ -21,23 +21,23 @@ describe('AppComponent', () => {
 
   it('tracks an event when opening the about popup', async () => {
     await ctx.run(async () => {
-      const events = new EventTrackingServiceHarness();
+      const events = new MixpanelServiceHarness();
       await ctx.cleanUpFreshInit();
 
       const app = await ctx.getHarness(AppComponentHarness);
       await app.openAbout();
-      expect(events.getEvents('click_about').length).toBe(1);
+      await events.expectOne('click_about', { category: 'navigate' });
     });
   });
 
   it('tracks an event when opening the privacy policy', async () => {
     await ctx.run(async () => {
-      const events = new EventTrackingServiceHarness();
+      const events = new MixpanelServiceHarness();
       await ctx.cleanUpFreshInit();
 
       const app = await ctx.getHarness(AppComponentHarness);
       await app.openPrivacyPolicy();
-      expect(events.getEvents('click_privacy_policy').length).toBe(1);
+      await events.expectOne('click_privacy_policy', { category: 'navigate' });
     });
   });
 

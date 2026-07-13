@@ -1,14 +1,15 @@
 import { inject, Injectable } from '@angular/core';
-import { BrowserConfig, BugsnagStatic, NotifiableError } from '@bugsnag/js';
+import { NotifiableError } from '@bugsnag/js';
+import { BugsnagBackend } from 'app/to-replace/bugsnag/bugsnag-backend';
 import { CONFIG } from 'app/to-replace/bugsnag/bugsnag-config';
-import { AsyncBackend } from 'app/to-replace/ng-dev/async-backend';
+import { EagerBridge } from 'app/to-replace/ng-dev/eager-bridge';
 
 @Injectable()
 export class BugsnagService {
-  #backendPromise = inject(BugsnagBackend.token);
+  #backend = new EagerBridge(BugsnagBackend.token);
 
   constructor() {
-    this.#trigger('start', {
+    this.#backend.fireAndForget('start', {
       collectUserIp: false,
       generateAnonymousId: false,
       ...inject(CONFIG),
@@ -16,39 +17,6 @@ export class BugsnagService {
   }
 
   notify(error: NotifiableError): void {
-    this.#trigger('notify', error);
-  }
-
-  #trigger<M extends BackendMethod>(
-    method: M,
-    ...args: Parameters<BugsnagBackend[M]>
-  ): void {
-    this.#backendPromise.then(
-      (backend) => {
-        (backend[method] as Func)(...args);
-      },
-      (err: unknown) => {
-        console.error(`Error triggering Bugsnag.${method}`, err);
-      },
-    );
+    this.#backend.fireAndForget('notify', error);
   }
 }
-
-export class BugsnagBackend extends AsyncBackend<BugsnagStatic> {
-  static token = AsyncBackend.createToken(BugsnagBackend, async () =>
-    import('@bugsnag/js').then((m) => m.default),
-  );
-
-  start(config: BrowserConfig): void {
-    this.impl.start(config);
-  }
-
-  notify(error: NotifiableError): void {
-    this.impl.notify(error);
-  }
-}
-
-type Func = (...args: any[]) => any;
-type BackendMethod = keyof {
-  [K in keyof BugsnagBackend as BugsnagBackend[K] extends Func ? K : never]: 1;
-};

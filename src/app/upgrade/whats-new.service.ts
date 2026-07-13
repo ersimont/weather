@@ -1,11 +1,11 @@
 import { inject, Service } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { EventTrackingService } from 'app/to-replace/mixpanel-core/event-tracking.service';
+import { MixpanelService } from 'app/to-replace/mixpanel-core/mixpanel.service';
 import { WhatsNewComponent } from 'app/upgrade/whats-new.component';
 
 @Service()
 export class WhatsNewService {
-  private eventTrackingService = inject(EventTrackingService);
+  private eventTrackingService = inject(MixpanelService);
   private matDialog = inject(MatDialog);
 
   private features: string[] = [];

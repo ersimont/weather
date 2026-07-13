@@ -1,7 +1,7 @@
 import { LocationOptionsComponentHarness } from 'app/options/location-options/location-options.component.harness';
 import { UnitOptionsComponentHarness } from 'app/options/unit-options/unit-options.component.harness';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
-import { EventTrackingServiceHarness } from 'app/to-replace/mixpanel-core/event-tracking.service.harness';
+import { MixpanelServiceHarness } from 'app/to-replace/mixpanel-core/mixpanel.service.harness';
 
 describe('AbstractOptionDirective', () => {
   let ctx: WeatherGraphContext;
@@ -11,25 +11,27 @@ describe('AbstractOptionDirective', () => {
 
   it('fires a close event', async () => {
     await ctx.run(async () => {
-      const events = new EventTrackingServiceHarness();
+      const events = new MixpanelServiceHarness();
       await ctx.cleanUpFreshInit();
 
       const locationOptions = await ctx.getHarness(
         LocationOptionsComponentHarness,
       );
       await locationOptions.collapse();
-      expect(events.getEvents('close_location_options').length).toBe(1);
+      await events.expectOne('close_location_options', {
+        category: 'navigate',
+      });
     });
   });
 
   it('fires an open event', async () => {
     await ctx.run(async () => {
-      const events = new EventTrackingServiceHarness();
+      const events = new MixpanelServiceHarness();
       await ctx.cleanUpFreshInit();
 
       const locationOptions = await ctx.getHarness(UnitOptionsComponentHarness);
       await locationOptions.expand();
-      expect(events.getEvents('open_unit_options').length).toBe(1);
+      await events.expectOne('open_unit_options', { category: 'navigate' });
     });
   });
 });

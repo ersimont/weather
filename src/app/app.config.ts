@@ -8,7 +8,7 @@ import { provideServiceWorker } from '@angular/service-worker';
 import { environment } from '@env';
 import { provideBugsnag } from 'app/to-replace/bugsnag/provide-bugsnag';
 import { trackHttpStatus } from 'app/to-replace/http-status.service';
-import { provideEventTracking } from 'app/to-replace/mixpanel-core/event-tracking-config';
+import { provideMixpanel } from 'app/to-replace/mixpanel-core/provide-mixpanel';
 import { provideErrorHandler } from 'app/to-replace/snack-bar-error.service';
 
 export const appConfig: ApplicationConfig = {
@@ -25,6 +25,6 @@ export const appConfig: ApplicationConfig = {
     provideErrorHandler(),
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { autoFocus: 'dialog' } },
     environment.bugsnagConfig ? provideBugsnag(environment.bugsnagConfig) : [],
-    provideEventTracking(environment.eventTrackingConfig),
+    provideMixpanel(environment.mixpanelConfig),
   ],
 };

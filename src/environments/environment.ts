@@ -10,7 +10,7 @@ export const environment: Env = {
   //   apiKey: 'ed6690791c812d163fb92d4ad7a21ef4',
   //   releaseStage: 'development',
   // },
-  eventTrackingConfig: { log: true },
+  mixpanelConfig: { log: true },
   paintGraph: true,
   pwa: false,
   storeDevtools: true,

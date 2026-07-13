@@ -1,7 +1,7 @@
 import { NotifiableError } from '@bugsnag/js';
 import { TestCall } from '@s-libs/ng-vitest';
+import { BugsnagBackend } from 'app/to-replace/bugsnag/bugsnag-backend';
 import { BugsnagConfig } from 'app/to-replace/bugsnag/bugsnag-config';
-import { BugsnagBackend } from 'app/to-replace/bugsnag/bugsnag.service';
 import { ServiceHarnessSuperclass } from 'app/to-replace/ng-dev/service-harness-superclass';
 import { MockAsyncBackendKit } from 'app/to-replace/ng-vitest/mock-async-backend-kit';
 

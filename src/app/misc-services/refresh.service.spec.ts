@@ -3,7 +3,7 @@ import { environment } from '@env';
 import { LocationIqServiceHarness } from 'app/misc-services/location-iq.service.harness';
 import { LocationOptionsComponentHarness } from 'app/options/location-options/location-options.component.harness';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
-import { EventTrackingServiceHarness } from 'app/to-replace/mixpanel-core/event-tracking.service.harness';
+import { MixpanelServiceHarness } from 'app/to-replace/mixpanel-core/mixpanel.service.harness';
 
 const { refreshMillis } = environment;
 
@@ -20,16 +20,16 @@ describe('RefreshService', () => {
   it('refreshes periodically, with an event', async () => {
     ctx.initialState.useCurrentLocation = true;
     await ctx.run(async () => {
-      const events = new EventTrackingServiceHarness();
+      const events = new MixpanelServiceHarness();
       iq.expectReverse();
 
       await ctx.tick(refreshMillis - 1);
       http.verify();
-      expect(events.getEvents('interval_refresh').length).toBe(0);
+      await events.expectNone('interval_refresh');
 
       await ctx.tick(1);
       iq.expectReverse();
-      expect(events.getEvents('interval_refresh').length).toBe(1);
+      await events.expectOne('interval_refresh', { category: 'refresh' });
     });
   });
 
@@ -105,13 +105,13 @@ describe('RefreshService', () => {
     ctx.initialState.useCurrentLocation = true;
     await ctx.isPageVisibleHarness.setVisible(false);
     await ctx.run(async () => {
-      const events = new EventTrackingServiceHarness();
+      const events = new MixpanelServiceHarness();
       http.verify();
-      expect(events.getEvents('focus_refresh').length).toBe(0);
+      await events.expectNone('focus_refresh');
 
       await ctx.isPageVisibleHarness.setVisible(true);
       iq.expectReverse();
-      expect(events.getEvents('focus_refresh').length).toBe(1);
+      await events.expectOne('focus_refresh', { category: 'refresh' });
     });
   });
 

@@ -2,7 +2,7 @@ import { LocationIqServiceHarness } from 'app/misc-services/location-iq.service.
 import { LocationOptionsComponentHarness } from 'app/options/location-options/location-options.component.harness';
 import { WeatherStoreHarness } from 'app/state/weather-store.harness';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
-import { EventTrackingServiceHarness } from 'app/to-replace/mixpanel-core/event-tracking.service.harness';
+import { MixpanelServiceHarness } from 'app/to-replace/mixpanel-core/mixpanel.service.harness';
 
 describe('WeatherStore', () => {
   let ctx: WeatherGraphContext;
@@ -27,9 +27,10 @@ describe('WeatherStore', () => {
   it('tracks an event when initializing a fresh state', async () => {
     ctx.useInitialState = false;
     await ctx.run(async () => {
-      const events = new EventTrackingServiceHarness();
-      const tracked = events.getEvents('initialize_fresh_state');
-      expect(tracked.length).toBe(1);
+      const events = new MixpanelServiceHarness();
+      await events.expectOne('initialize_fresh_state', {
+        category: 'initialization',
+      });
 
       await ctx.cleanUpFreshInit();
     });
@@ -38,10 +39,10 @@ describe('WeatherStore', () => {
   it('does not track an event if there is saved state', async () => {
     ctx.useInitialState = true;
     await ctx.run(async () => {
-      const events = new EventTrackingServiceHarness();
+      const events = new MixpanelServiceHarness();
       await ctx.cleanUpFreshInit();
 
-      expect(events.getEvents('initialize_fresh_state').length).toBe(0);
+      await events.expectNone('initialize_fresh_state');
     });
   });
 });

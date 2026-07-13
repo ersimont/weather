@@ -16,7 +16,7 @@ import { getDefaultChartOptions } from 'app/graph/chartjs-options';
 import { GraphStore } from 'app/graph/state/graph-store';
 import { conditionInfo } from 'app/state/condition';
 import { WeatherStore } from 'app/state/weather-store';
-import { EventTrackingService } from 'app/to-replace/mixpanel-core/event-tracking.service';
+import { MixpanelService } from 'app/to-replace/mixpanel-core/mixpanel.service';
 import {
   Chart,
   Filler,
@@ -65,7 +65,7 @@ export class GraphComponent extends InjectableSuperclass {
     });
   }, 3000);
 
-  readonly #eventTrackingService = inject(EventTrackingService);
+  readonly #eventTrackingService = inject(MixpanelService);
   readonly #graphStore = inject(GraphStore);
   readonly #injector = inject(Injector);
   readonly #locale = inject(LOCALE_ID);

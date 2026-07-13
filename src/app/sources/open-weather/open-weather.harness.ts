@@ -23,8 +23,7 @@ export class OpenWeatherHarness {
   expectForecast(
     gpsCoords = this.ctx.currentLocation,
   ): SlTestRequest<ForecastResponse> {
-    const url =
-      'https://us-central1-proxic.cloudfunctions.net/api/openweathermap/data/2.5/forecast';
+    const url = '/api/openweathermap/data/2.5/forecast';
     const params = {
       lat: gpsCoords[0].toString(),
       lon: gpsCoords[1].toString(),

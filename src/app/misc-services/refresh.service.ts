@@ -2,7 +2,7 @@ import { inject, Service } from '@angular/core';
 import { environment } from '@env';
 import { cache, isPageVisible$ } from '@s-libs/rxjs-core';
 import { LocationService } from 'app/misc-services/location.service';
-import { EventTrackingService } from 'app/to-replace/mixpanel-core/event-tracking.service';
+import { MixpanelService } from 'app/to-replace/mixpanel-core/mixpanel.service';
 import {
   filter,
   interval,
@@ -18,7 +18,7 @@ import {
 export class RefreshService {
   refresh$: Observable<unknown>;
 
-  #eventTrackingService = inject(EventTrackingService);
+  #eventTrackingService = inject(MixpanelService);
   #locationService = inject(LocationService);
 
   constructor() {

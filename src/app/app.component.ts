@@ -14,7 +14,7 @@ import { LocationService } from 'app/misc-services/location.service';
 import { ViewRange } from 'app/state/viewRange';
 import { WeatherStore } from 'app/state/weather-store';
 import { HttpStatusService } from 'app/to-replace/http-status.service';
-import { EventTrackingService } from 'app/to-replace/mixpanel-core/event-tracking.service';
+import { MixpanelService } from 'app/to-replace/mixpanel-core/mixpanel.service';
 import { GraphComponent } from './graph/graph.component';
 import { OptionsComponent } from './options/options.component';
 
@@ -41,7 +41,7 @@ export class AppComponent extends InjectableSuperclass {
 
   private readonly sidenav = viewChild.required(MatSidenav);
 
-  readonly #eventTrackingService = inject(EventTrackingService);
+  readonly #eventTrackingService = inject(MixpanelService);
   readonly #locationService = inject(LocationService);
   readonly #matDialog = inject(MatDialog);
   readonly #store = inject(WeatherStore);

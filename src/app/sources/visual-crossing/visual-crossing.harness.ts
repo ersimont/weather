@@ -31,7 +31,7 @@ export class VisualCrossingHarness {
   expectForecast(
     gpsCoords = this.ctx.currentLocation,
   ): SlTestRequest<TimelineResponse> {
-    const url = `https://us-central1-proxic.cloudfunctions.net/api/visual-crossing/VisualCrossingWebServices/rest/services/timeline/${gpsCoords.join(
+    const url = `/api/visual-crossing/VisualCrossingWebServices/rest/services/timeline/${gpsCoords.join(
       ',',
     )}`;
     return expectRequest('GET', url, {

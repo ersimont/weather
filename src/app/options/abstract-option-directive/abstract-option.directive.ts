@@ -8,7 +8,7 @@ import {
 import { MatExpansionPanelHeader } from '@angular/material/expansion';
 import { InjectableSuperclass } from '@s-libs/ng-core';
 import { WeatherStore } from 'app/state/weather-store';
-import { EventTrackingService } from 'app/to-replace/mixpanel-core/event-tracking.service';
+import { MixpanelService } from 'app/to-replace/mixpanel-core/mixpanel.service';
 import { fromEvent } from 'rxjs';
 
 @Directive()
@@ -19,7 +19,7 @@ export abstract class AbstractOptionDirective extends InjectableSuperclass {
   private readonly headerEl = viewChild.required(MatExpansionPanelHeader, {
     read: ElementRef,
   });
-  readonly #eventTrackingService = inject(EventTrackingService);
+  readonly #eventTrackingService = inject(MixpanelService);
 
   protected abstract optionType: string;
 

@@ -6,7 +6,7 @@ import { LocationOptionsComponentHarness } from 'app/options/location-options/lo
 import { WeatherGovHarness } from 'app/sources/weather-gov/weather-gov.harness';
 import { WeatherStateHarness } from 'app/state/weather-state.harness';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
-import { EventTrackingServiceHarness } from 'app/to-replace/mixpanel-core/event-tracking.service.harness';
+import { MixpanelServiceHarness } from 'app/to-replace/mixpanel-core/mixpanel.service.harness';
 import { SnackBarErrorServiceHarness } from 'app/to-replace/snack-bar-error.service.harness';
 
 describe('LocationService', () => {
@@ -41,13 +41,15 @@ describe('LocationService', () => {
   it('tracks an event when searching for a new location', async () => {
     state.setCustomLocation();
     await ctx.run(async () => {
-      const events = new EventTrackingServiceHarness();
+      const events = new MixpanelServiceHarness();
       gov.expectPoints();
 
       const location = await ctx.getHarness(LocationOptionsComponentHarness);
       await location.setCustomLocation('Neverland');
-      expect(events.getEvents('change_custom_search').length).toBe(1);
-      expect(events.getEvents('change_current_selection').length).toBe(0);
+      await events.expectOne('change_custom_search', {
+        category: 'change_location',
+      });
+      await events.expectNone('change_current_selection');
 
       iq.expectForward('Neverland');
     });
