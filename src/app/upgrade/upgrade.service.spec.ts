@@ -4,6 +4,7 @@ import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 import {
   defaultState,
   v11Default,
+  v12Default,
 } from 'app/upgrade/upgrade.service.fixutures';
 import { WhatsNewComponentHarness } from 'app/upgrade/whats-new.component.harness';
 
@@ -21,14 +22,27 @@ describe('UpgradeService', () => {
     await ctx.run(async () => {
       const actual = store.getPersistedState();
 
-      expect(
-        actual,
-        'Default state changed. You need to handle it in the upgrade service. Check the console for what was in the store.',
-      ).toEqual(defaultState);
       if (!isEqual(actual, defaultState)) {
         console.log(actual);
+        expect.fail(
+          'Default state changed. You need to handle it in the upgrade service. Check the console for what was in the store.',
+        );
       }
       expect(await ctx.getAllHarnesses(WhatsNewComponentHarness)).toEqual([]);
+
+      await ctx.cleanUpFreshInit();
+    });
+  });
+
+  it('upgrades from v12', async () => {
+    ctx.initialState = v12Default;
+    await ctx.run(async () => {
+      expect(store.getPersistedState()).toEqual(defaultState);
+      const whatsNew = await ctx.getHarness(WhatsNewComponentHarness);
+      console.log(await whatsNew.getFeatures());
+      expect(await whatsNew.getFeatures()).toContain(
+        'Weather Unlocked is no longer available. They shut down their API.',
+      );
 
       await ctx.cleanUpFreshInit();
     });
@@ -39,9 +53,10 @@ describe('UpgradeService', () => {
     await ctx.run(async () => {
       expect(store.getPersistedState()).toEqual(defaultState);
       const whatsNew = await ctx.getHarness(WhatsNewComponentHarness);
-      expect(await whatsNew.getFeatures()).toEqual([
+      console.log(await whatsNew.getFeatures());
+      expect(await whatsNew.getFeatures()).toContain(
         'Tomorrow.io is no longer available.',
-      ]);
+      );
 
       await ctx.cleanUpFreshInit();
     });

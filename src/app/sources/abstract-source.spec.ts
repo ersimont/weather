@@ -3,9 +3,9 @@ import { LocationIqServiceHarness } from 'app/misc-services/location-iq.service.
 import { RefreshServiceHarness } from 'app/misc-services/refresh.service.harness';
 import { LocationOptionsComponentHarness } from 'app/options/location-options/location-options.component.harness';
 import { SourceOptionsComponentHarness } from 'app/options/source-options/source-options.component.harness';
+import { OpenWeatherHarness } from 'app/sources/open-weather/open-weather.harness';
 import { pointResponse } from 'app/sources/weather-gov/weather-gov.fixtures';
 import { WeatherGovHarness } from 'app/sources/weather-gov/weather-gov.harness';
-import { WeatherUnlockedHarness } from 'app/sources/weather-unlocked/weather-unlocked.harness';
 import { WeatherStateHarness } from 'app/state/weather-state.harness';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 import { SnackBarErrorServiceHarness } from 'app/to-replace/snack-bar-error.service.harness';
@@ -15,12 +15,12 @@ describe('AbstractSource', () => {
   let errors: SnackBarErrorServiceHarness;
   let iq: LocationIqServiceHarness;
   let gov: WeatherGovHarness;
-  let unlocked: WeatherUnlockedHarness;
+  let openWeather: OpenWeatherHarness;
   let refresh: RefreshServiceHarness;
   let state: WeatherStateHarness;
   beforeEach(() => {
     ctx = new WeatherGraphContext();
-    ({ iq, errors, gov, unlocked, refresh, state } = ctx.harnesses);
+    ({ iq, errors, gov, openWeather, refresh, state } = ctx.harnesses);
   });
 
   it('refreshes (only) when showing', async () => {
@@ -76,7 +76,7 @@ describe('AbstractSource', () => {
         await locationOptions.select('Current');
         await iq.flushReverse();
         await gov.flushNotAvailable();
-        unlocked.flushDefault();
+        openWeather.flushDefault();
         errors.verify();
       });
     });

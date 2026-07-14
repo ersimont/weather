@@ -12,7 +12,6 @@ import { RefreshServiceHarness } from 'app/misc-services/refresh.service.harness
 import { OpenWeatherHarness } from 'app/sources/open-weather/open-weather.harness';
 import { VisualCrossingHarness } from 'app/sources/visual-crossing/visual-crossing.harness';
 import { WeatherGovHarness } from 'app/sources/weather-gov/weather-gov.harness';
-import { WeatherUnlockedHarness } from 'app/sources/weather-unlocked/weather-unlocked.harness';
 import { GpsCoords } from 'app/state/location';
 import { WeatherState } from 'app/state/weather-state';
 import { WeatherStateHarness } from 'app/state/weather-state.harness';
@@ -42,7 +41,6 @@ export class WeatherGraphContext extends ComponentContext<AppComponent> {
     refresh: new RefreshServiceHarness(this),
     state: new WeatherStateHarness(this),
     store: new WeatherStoreHarness(),
-    unlocked: new WeatherUnlockedHarness(this),
   };
 
   constructor() {

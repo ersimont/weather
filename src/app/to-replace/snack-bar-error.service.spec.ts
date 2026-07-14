@@ -2,7 +2,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSnackBarHarness } from '@angular/material/snack-bar/testing';
 import { AngularContext } from '@s-libs/ng-vitest';
 import {
-  provideErrorHandler,
+  provideSnackBarErrorHandler,
   SnackBarErrorService,
 } from 'app/to-replace/snack-bar-error.service';
 
@@ -10,7 +10,7 @@ class TestContext extends AngularContext {
   constructor() {
     super({
       imports: [MatSnackBarModule],
-      providers: [provideErrorHandler()],
+      providers: [provideSnackBarErrorHandler()],
     });
   }
 

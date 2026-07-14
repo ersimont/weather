@@ -4,7 +4,6 @@ export enum SourceId {
   OPEN_WEATHER = 'openWeather',
   VISUAL_CROSSING = 'visualCrossing',
   WEATHER_GOV = 'weatherGov',
-  WEATHER_UNLOCKED = 'weatherUnlocked',
 }
 
 export class Source {

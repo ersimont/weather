@@ -37,6 +37,6 @@
   @include shaped-toggle(circle(50%));
 }
 
-.weatherUnlocked {
-  @include shaped-toggle(polygon(0% 90%, 50% 0%, 100% 90%));
-}
+//.weatherUnlocked {
+//  @include shaped-toggle(polygon(0% 90%, 50% 0%, 100% 90%));
+//}

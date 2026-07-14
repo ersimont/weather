@@ -31,7 +31,7 @@ describe('VisualCrossing', () => {
       expect(crossing.expectForecast().isCancelled()).toBe(true);
 
       await sources.toggle('Visual Crossing');
-      crossing.flushDefault();
+      await crossing.flushDefault();
     });
   });
 

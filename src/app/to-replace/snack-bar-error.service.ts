@@ -3,7 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { BugsnagService } from 'app/to-replace/bugsnag/bugsnag.service';
 import { toNotifiableError } from 'app/to-replace/bugsnag/to-notifiable-error';
 
-export function provideErrorHandler(): Provider {
+export function provideSnackBarErrorHandler(): Provider {
   return { provide: ErrorHandler, useExisting: SnackBarErrorService };
 }
 

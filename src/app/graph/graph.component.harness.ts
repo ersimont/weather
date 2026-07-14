@@ -17,7 +17,6 @@ const sourceOrder = [
   SourceId.OPEN_WEATHER,
   SourceId.VISUAL_CROSSING,
   SourceId.WEATHER_GOV,
-  SourceId.WEATHER_UNLOCKED,
 ];
 const conditionOrder = [
   Condition.TEMP,

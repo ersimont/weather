@@ -11,7 +11,7 @@ import { AboutComponent } from 'app/misc-components/about/about.component';
 import { PrivacyPolicyComponent } from 'app/misc-components/privacy-policy/privacy-policy.component';
 import { InitService } from 'app/misc-services/init.service';
 import { LocationService } from 'app/misc-services/location.service';
-import { ViewRange } from 'app/state/viewRange';
+import { ViewRange } from 'app/state/view-range';
 import { WeatherStore } from 'app/state/weather-store';
 import { HttpStatusService } from 'app/to-replace/http-status.service';
 import { MixpanelService } from 'app/to-replace/mixpanel-core/mixpanel.service';

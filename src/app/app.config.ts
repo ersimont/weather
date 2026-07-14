@@ -9,7 +9,7 @@ import { environment } from '@env';
 import { provideBugsnag } from 'app/to-replace/bugsnag/provide-bugsnag';
 import { trackHttpStatus } from 'app/to-replace/http-status.service';
 import { provideMixpanel } from 'app/to-replace/mixpanel-core/provide-mixpanel';
-import { provideErrorHandler } from 'app/to-replace/snack-bar-error.service';
+import { provideSnackBarErrorHandler } from 'app/to-replace/snack-bar-error.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -22,7 +22,7 @@ export const appConfig: ApplicationConfig = {
 
     // additions
     provideHttpClient(withInterceptors([trackHttpStatus])),
-    provideErrorHandler(),
+    provideSnackBarErrorHandler(),
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { autoFocus: 'dialog' } },
     environment.bugsnagConfig ? provideBugsnag(environment.bugsnagConfig) : [],
     provideMixpanel(environment.mixpanelConfig),

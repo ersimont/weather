@@ -15,7 +15,7 @@ import { GraphState } from 'app/graph/state/graph-state';
 import { LocationService } from 'app/misc-services/location.service';
 import { Condition } from 'app/state/condition';
 import { GpsCoords, Location } from 'app/state/location';
-import { ViewRange } from 'app/state/viewRange';
+import { ViewRange } from 'app/state/view-range';
 import { WeatherStore } from 'app/state/weather-store';
 import { observeStore } from 'app/to-replace/signal-store/observe-store';
 import { combineLatest, interval } from 'rxjs';

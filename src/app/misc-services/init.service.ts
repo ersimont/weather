@@ -7,7 +7,6 @@ import { LocationService } from 'app/misc-services/location.service';
 import { OpenWeather } from 'app/sources/open-weather/open-weather';
 import { VisualCrossing } from 'app/sources/visual-crossing/visual-crossing';
 import { WeatherGov } from 'app/sources/weather-gov/weather-gov';
-import { WeatherUnlocked } from 'app/sources/weather-unlocked/weather-unlocked';
 import { SourceId } from 'app/state/source';
 import { WhatsNewService } from 'app/upgrade/whats-new.service';
 
@@ -20,14 +19,12 @@ export class InitService {
   private openWeather = inject(OpenWeather);
   private visualCrossing = inject(VisualCrossing);
   private weatherGov = inject(WeatherGov);
-  private weatherUnlocked = inject(WeatherUnlocked);
   private whatsNewService = inject(WhatsNewService);
 
   initializeApp(): void {
     this.openWeather.initialize();
     this.visualCrossing.initialize();
-    this.weatherGov.initialize(SourceId.WEATHER_UNLOCKED);
-    this.weatherUnlocked.initialize();
+    this.weatherGov.initialize(SourceId.OPEN_WEATHER);
     this.matIconRegistry.addSvgIconSetLiteral(
       this.domSanitizer.bypassSecurityTrustHtml(icons),
     );

@@ -24,8 +24,8 @@ export class VisualCrossingHarness {
     }),
   );
 
-  flushDefault(): void {
-    this.expectForecast().flush(this.buildResponse());
+  async flushDefault(): Promise<void> {
+    await this.expectForecast().flush(this.buildResponse());
   }
 
   expectForecast(
