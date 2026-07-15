@@ -62,11 +62,6 @@ export class WeatherGraphContext extends ComponentContext<AppComponent> {
     });
   }
 
-  // TODO: needed since switching to vitest?
-  async cleanUpFreshInit(): Promise<void> {
-    await this.harnesses.init.cleanUpFreshInit();
-  }
-
   protected override async init(): Promise<void> {
     if (this.useInitialState) {
       localStorage.setItem('weather', JSON.stringify(this.initialState));

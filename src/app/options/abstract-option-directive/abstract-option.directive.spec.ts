@@ -12,8 +12,6 @@ describe('AbstractOptionDirective', () => {
   it('fires a close event', async () => {
     await ctx.run(async () => {
       const events = new MixpanelServiceHarness();
-      await ctx.cleanUpFreshInit();
-
       const locationOptions = await ctx.getHarness(
         LocationOptionsComponentHarness,
       );
@@ -27,8 +25,6 @@ describe('AbstractOptionDirective', () => {
   it('fires an open event', async () => {
     await ctx.run(async () => {
       const events = new MixpanelServiceHarness();
-      await ctx.cleanUpFreshInit();
-
       const locationOptions = await ctx.getHarness(UnitOptionsComponentHarness);
       await locationOptions.expand();
       await events.expectOne('open_unit_options', { category: 'navigate' });

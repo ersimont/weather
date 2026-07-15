@@ -22,8 +22,6 @@ describe('AppComponent', () => {
   it('tracks an event when opening the about popup', async () => {
     await ctx.run(async () => {
       const events = new MixpanelServiceHarness();
-      await ctx.cleanUpFreshInit();
-
       const app = await ctx.getHarness(AppComponentHarness);
       await app.openAbout();
       await events.expectOne('click_about', { category: 'navigate' });
@@ -33,8 +31,6 @@ describe('AppComponent', () => {
   it('tracks an event when opening the privacy policy', async () => {
     await ctx.run(async () => {
       const events = new MixpanelServiceHarness();
-      await ctx.cleanUpFreshInit();
-
       const app = await ctx.getHarness(AppComponentHarness);
       await app.openPrivacyPolicy();
       await events.expectOne('click_privacy_policy', { category: 'navigate' });
@@ -46,7 +42,6 @@ describe('AppComponent', () => {
     await ctx.run(async () => {
       const app = await ctx.getHarness(AppComponentHarness);
       const graphState = new GraphStateHarness(ctx);
-      await ctx.cleanUpFreshInit();
 
       await app.snapToRange('three-days');
       expect(graphState.getRange()).toEqual([1592706600000, 1592965800000]);

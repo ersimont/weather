@@ -68,8 +68,6 @@ describe('AbstractSource', () => {
     it('happens invisibly on first app load', async () => {
       ctx.useInitialState = false;
       await ctx.run(async () => {
-        await ctx.cleanUpFreshInit();
-
         const locationOptions = await ctx.getHarness(
           LocationOptionsComponentHarness,
         );
@@ -84,8 +82,6 @@ describe('AbstractSource', () => {
     it('does not happen on refresh', async () => {
       ctx.useInitialState = false;
       await ctx.run(async () => {
-        await ctx.cleanUpFreshInit();
-
         const locationOptions = await ctx.getHarness(
           LocationOptionsComponentHarness,
         );

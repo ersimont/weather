@@ -29,8 +29,6 @@ describe('UpgradeService', () => {
         );
       }
       expect(await ctx.getAllHarnesses(WhatsNewComponentHarness)).toEqual([]);
-
-      await ctx.cleanUpFreshInit();
     });
   });
 
@@ -43,8 +41,6 @@ describe('UpgradeService', () => {
       expect(await whatsNew.getFeatures()).toContain(
         'Weather Unlocked is no longer available. They shut down their API.',
       );
-
-      await ctx.cleanUpFreshInit();
     });
   });
 
@@ -57,8 +53,6 @@ describe('UpgradeService', () => {
       expect(await whatsNew.getFeatures()).toContain(
         'Tomorrow.io is no longer available.',
       );
-
-      await ctx.cleanUpFreshInit();
     });
   });
 });

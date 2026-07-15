@@ -31,8 +31,6 @@ describe('WeatherStore', () => {
       await events.expectOne('initialize_fresh_state', {
         category: 'initialization',
       });
-
-      await ctx.cleanUpFreshInit();
     });
   });
 
@@ -40,8 +38,6 @@ describe('WeatherStore', () => {
     ctx.useInitialState = true;
     await ctx.run(async () => {
       const events = new MixpanelServiceHarness();
-      await ctx.cleanUpFreshInit();
-
       await events.expectNone('initialize_fresh_state');
     });
   });

@@ -9,8 +9,6 @@ describe('WhatsNewComponent', () => {
 
   it('does not show when there is no upgrade', async () => {
     await ctx.run(async () => {
-      await ctx.cleanUpFreshInit();
-
       expect(await ctx.getAllHarnesses(WhatsNewComponentHarness)).toEqual([]);
     });
   });

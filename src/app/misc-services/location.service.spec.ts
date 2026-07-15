@@ -96,7 +96,6 @@ describe('LocationService', () => {
 
   it('triggers data changes when changing location', async () => {
     await ctx.run(async () => {
-      await ctx.cleanUpFreshInit();
       const location = await ctx.getHarness(LocationOptionsComponentHarness);
 
       await location.setCustomLocation('new city');
