@@ -3,6 +3,8 @@ import {
   PointResponse,
 } from 'app/sources/weather-gov/weather-gov';
 
+/* eslint-disable max-lines */
+
 export const pointResponse: PointResponse = {
   properties: {
     forecastGridData: 'https://api.weather.gov/gridpoints/GRR/45,10',

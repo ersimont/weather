@@ -23,7 +23,7 @@ describe('LocationIqService', () => {
         errors.expectGeneric();
 
         await refresh.trigger();
-        await iq.expectForward('bad');
+        iq.expectForward('bad');
       });
     });
 

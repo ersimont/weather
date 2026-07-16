@@ -11,17 +11,17 @@ import {
 } from 'chart.js';
 
 const pointStyles: Record<SourceId, PointStyle> = {
+  [SourceId.OPEN_MATEO]: 'triangle',
   [SourceId.OPEN_WEATHER]: 'rectRot',
   [SourceId.VISUAL_CROSSING]: 'crossRot',
   [SourceId.WEATHER_GOV]: 'circle',
-  // [SourceId.WEATHER_UNLOCKED]: 'triangle',
 };
 
 const radii: Record<SourceId, number> = {
+  [SourceId.OPEN_MATEO]: 6,
   [SourceId.OPEN_WEATHER]: 5,
   [SourceId.VISUAL_CROSSING]: 7,
   [SourceId.WEATHER_GOV]: 4,
-  // [SourceId.WEATHER_UNLOCKED]: 6,
 };
 
 export function buildDatasets(

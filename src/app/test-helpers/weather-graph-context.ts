@@ -9,6 +9,7 @@ import { BrowserService } from 'app/misc-services/browser.service';
 import { InitServiceHarness } from 'app/misc-services/init.service.harness';
 import { LocationIqServiceHarness } from 'app/misc-services/location-iq.service.harness';
 import { RefreshServiceHarness } from 'app/misc-services/refresh.service.harness';
+import { OpenMateoHarness } from 'app/sources/open-mateo/open-mateo.harness';
 import { OpenWeatherHarness } from 'app/sources/open-weather/open-weather.harness';
 import { VisualCrossingHarness } from 'app/sources/visual-crossing/visual-crossing.harness';
 import { WeatherGovHarness } from 'app/sources/weather-gov/weather-gov.harness';
@@ -37,6 +38,7 @@ export class WeatherGraphContext extends ComponentContext<AppComponent> {
     graph: new GraphComponentHarness(this),
     init: new InitServiceHarness(this),
     iq: new LocationIqServiceHarness(this),
+    mateo: new OpenMateoHarness(this),
     openWeather: new OpenWeatherHarness(this),
     refresh: new RefreshServiceHarness(this),
     state: new WeatherStateHarness(this),

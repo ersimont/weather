@@ -1,32 +1,32 @@
 import { RefreshServiceHarness } from 'app/misc-services/refresh.service.harness';
 import { SourceOptionsComponentHarness } from 'app/options/source-options/source-options.component.harness';
-import { OpenWeatherHarness } from 'app/sources/open-weather/open-weather.harness';
+import { OpenMateoHarness } from 'app/sources/open-mateo/open-mateo.harness';
 import { SourceId } from 'app/state/source';
 import { WeatherStateHarness } from 'app/state/weather-state.harness';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 import { SnackBarErrorServiceHarness } from 'app/to-replace/snack-bar-error.service.harness';
 
-describe('OpenWeather', () => {
+describe('OpenMateo', () => {
   let ctx: WeatherGraphContext;
-  let openWeather: OpenWeatherHarness;
+  let mateo: OpenMateoHarness;
   let errors: SnackBarErrorServiceHarness;
   let refresh: RefreshServiceHarness;
   let state: WeatherStateHarness;
   beforeEach(() => {
     ctx = new WeatherGraphContext();
-    ({ errors, openWeather, refresh, state } = ctx.harnesses);
+    ({ errors, mateo, refresh, state } = ctx.harnesses);
 
-    ctx.harnesses.state.setShowing(SourceId.OPEN_WEATHER);
+    ctx.harnesses.state.setShowing(SourceId.OPEN_MATEO);
   });
 
   it('handles errors', async () => {
     state.setCustomLocation();
     await ctx.run(async () => {
-      await openWeather.expectForecast().flushError();
+      await mateo.expectForecast().flushError();
       errors.expectGeneric();
 
       await refresh.trigger();
-      openWeather.expectForecast();
+      mateo.expectForecast();
     });
   });
 
@@ -34,11 +34,11 @@ describe('OpenWeather', () => {
     state.setCustomLocation();
     await ctx.run(async () => {
       const sources = await ctx.getHarness(SourceOptionsComponentHarness);
-      await sources.toggle('OpenWeather');
-      expect(openWeather.expectForecast().isCancelled()).toBe(true);
+      await sources.toggle('Open-Mateo');
+      expect(mateo.expectForecast().isCancelled()).toBe(true);
 
-      await sources.toggle('OpenWeather');
-      await openWeather.flushDefault();
+      await sources.toggle('Open-Mateo');
+      await mateo.flushDefault();
     });
   });
 });

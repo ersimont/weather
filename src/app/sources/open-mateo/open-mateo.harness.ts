@@ -1,17 +1,19 @@
 import { createBuilder } from '@s-libs/js-core';
 import { expectRequest, SlTestRequest } from '@s-libs/ng-vitest';
+import { ForecastResponse } from 'app/sources/open-mateo/open-mateo';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
-import { ForecastResponse, Timeframe } from './open-weather';
 
-export class OpenWeatherHarness {
-  buildTimeframe = createBuilder<Timeframe>(() => ({
-    clouds: { all: 0 },
-    dt: Date.now(),
-    main: { feels_like: 0, humidity: 0, temp: 0 },
-    wind: { speed: 0 },
-  }));
+export class OpenMateoHarness {
   buildForecastResponse = createBuilder<ForecastResponse>(() => ({
-    list: [this.buildTimeframe()],
+    hourly: {
+      time: [Date.now()],
+      temperature_2m: [0],
+      dew_point_2m: [0],
+      apparent_temperature: [0],
+      precipitation: [0],
+      wind_speed_10m: [0],
+      cloud_cover: [0],
+    },
   }));
 
   constructor(private ctx: WeatherGraphContext) {}
@@ -23,11 +25,16 @@ export class OpenWeatherHarness {
   expectForecast(
     gpsCoords = this.ctx.currentLocation,
   ): SlTestRequest<ForecastResponse> {
-    const url = '/api/openweathermap/data/2.5/forecast';
+    const url = 'https://api.open-meteo.com/v1/forecast';
     const params = {
-      lat: gpsCoords[0].toString(),
-      lon: gpsCoords[1].toString(),
-      units: 'metric',
+      latitude: gpsCoords[0].toString(),
+      longitude: gpsCoords[1].toString(),
+      hourly:
+        'temperature_2m,dew_point_2m,apparent_temperature,precipitation,wind_speed_10m,cloud_cover',
+      past_days: '1',
+      forecast_days: '9',
+      timeformat: 'unixtime',
+      wind_speed_unit: 'kn',
     };
     return expectRequest<ForecastResponse>('GET', url, { params });
   }

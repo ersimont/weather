@@ -14,6 +14,7 @@ import {
 import { DeepRequired } from 'utility-types';
 
 const sourceOrder = [
+  SourceId.OPEN_MATEO,
   SourceId.OPEN_WEATHER,
   SourceId.VISUAL_CROSSING,
   SourceId.WEATHER_GOV,

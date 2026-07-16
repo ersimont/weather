@@ -17,5 +17,8 @@ module.exports = tseslint.config(...slibs, {
 
     // This causes a stack overflow bug inside eslint. Try again after upgrades.
     '@typescript-eslint/no-unnecessary-type-assertion': 'off',
+
+    // a lot of APIs require snake_case params
+    camelcase: 'off',
   },
 });

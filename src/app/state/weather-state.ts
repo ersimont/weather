@@ -14,6 +14,7 @@ export class WeatherState {
 
   allowSourceFallback = true;
   sources: Record<SourceId, Source> = {
+    openMateo: new Source('Open-Mateo', false),
     openWeather: new Source('OpenWeather', false),
     visualCrossing: new Source('Visual Crossing', false),
     weatherGov: new Source('Weather.gov', true),

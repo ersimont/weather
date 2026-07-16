@@ -7,8 +7,6 @@ import {
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 
 export class VisualCrossingHarness {
-  constructor(private ctx: WeatherGraphContext) {}
-
   buildHour = createBuilder<Hour>(() => ({
     datetimeEpoch: 1633233600,
     temp: 19.9,
@@ -23,6 +21,8 @@ export class VisualCrossingHarness {
       days: [{ hours: [options.hour || this.buildHour()] }],
     }),
   );
+
+  constructor(private ctx: WeatherGraphContext) {}
 
   async flushDefault(): Promise<void> {
     await this.expectForecast().flush(this.buildResponse());

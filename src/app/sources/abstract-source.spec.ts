@@ -74,7 +74,7 @@ describe('AbstractSource', () => {
         await locationOptions.select('Current');
         await iq.flushReverse();
         await gov.flushNotAvailable();
-        openWeather.flushDefault();
+        await openWeather.flushDefault();
         errors.verify();
       });
     });

@@ -37,9 +37,12 @@ describe('UpgradeService', () => {
     await ctx.run(async () => {
       expect(store.getPersistedState()).toEqual(defaultState);
       const whatsNew = await ctx.getHarness(WhatsNewComponentHarness);
-      console.log(await whatsNew.getFeatures());
-      expect(await whatsNew.getFeatures()).toContain(
-        'Weather Unlocked is no longer available. They shut down their API.',
+      const features = await whatsNew.getFeatures();
+      expect(features).toEqual(
+        expect.arrayContaining([
+          'Weather Unlocked is no longer available. They shut down their API.',
+          'You can get forecasts from Open-Mateo. Find it in the Sources section of your settings.',
+        ]),
       );
     });
   });
@@ -49,7 +52,6 @@ describe('UpgradeService', () => {
     await ctx.run(async () => {
       expect(store.getPersistedState()).toEqual(defaultState);
       const whatsNew = await ctx.getHarness(WhatsNewComponentHarness);
-      console.log(await whatsNew.getFeatures());
       expect(await whatsNew.getFeatures()).toContain(
         'Tomorrow.io is no longer available.',
       );

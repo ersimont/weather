@@ -4,5 +4,7 @@
 - Fix: Tooltips can have multiple data sources, but only cites one of them
 - It gives weird errors when you are offline. - Kira
 - Consider new sources:
-  - Open-Mateo
-  - WeatherAPI
+  - https://www.xweather.com/docs/weather-api/endpoints/forecasts
+  - https://developers.google.com/maps/documentation/weather/hourly-forecast?hl=en
+  - https://developer.apple.com/documentation/weatherkitrestapi/get-api-v1-weather-_language_-_latitude_-_longitude_
+  - https://pirate-weather.apiable.io/products/weatherdata/plans

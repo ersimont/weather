@@ -6,6 +6,7 @@ export const v13Default: any = {
   customLocation: { search: '' },
   allowSourceFallback: true,
   sources: {
+    openMateo: { label: 'Open-Mateo', show: false, forecast: {} },
     openWeather: { label: 'OpenWeather', show: false, forecast: {} },
     visualCrossing: { label: 'Visual Crossing', show: false, forecast: {} },
     weatherGov: { label: 'Weather.gov', show: true, forecast: {} },

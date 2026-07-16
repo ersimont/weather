@@ -10,6 +10,10 @@
   }
 }
 
+.openMateo {
+  @include shaped-toggle(polygon(0% 90%, 50% 0%, 100% 90%));
+}
+
 .openWeather {
   @include shaped-toggle(polygon(0% 50%, 50% 0%, 100% 50%, 50% 100%));
 }
@@ -36,7 +40,3 @@
 .weatherGov {
   @include shaped-toggle(circle(50%));
 }
-
-//.weatherUnlocked {
-//  @include shaped-toggle(polygon(0% 90%, 50% 0%, 100% 90%));
-//}

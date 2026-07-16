@@ -23,20 +23,20 @@ import {
 
 @Service()
 export class LocationService extends InjectableSuperclass {
-  readonly #browserService = inject(BrowserService);
-  readonly #errorService = inject(SnackBarErrorService);
-  readonly #eventTrackingService = inject(MixpanelService);
-  readonly #locationIqService = inject(LocationIqService);
-  readonly #store = inject(WeatherStore);
-
   readonly location = this.#computeLocation();
-  readonly refreshableChange$ = observeStore(this.#store).pipe(
+  readonly refreshableChange$ = observeStore(inject(WeatherStore)).pipe(
     map((state) => [state.useCurrentLocation, state.customLocation.search]),
     distinctUntilChanged(isEqual),
     skip(1),
     map(() => undefined),
   );
   readonly askForLocation$ = new Subject<void>();
+
+  readonly #browserService = inject(BrowserService);
+  readonly #errorService = inject(SnackBarErrorService);
+  readonly #eventTrackingService = inject(MixpanelService);
+  readonly #locationIqService = inject(LocationIqService);
+  readonly #store = inject(WeatherStore);
 
   setUseCurrentLocation(value: boolean): void {
     this.#clearForecasts();
