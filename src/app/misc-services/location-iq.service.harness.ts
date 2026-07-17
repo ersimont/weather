@@ -45,7 +45,7 @@ export class LocationIqServiceHarness {
   expectForward(search: string): SlTestRequest<ForwardResponse> {
     return expectRequest<ForwardResponse>(
       'GET',
-      'https://us-central1-proxic.cloudfunctions.net/api/location-iq/v1/search.php',
+      '/api/location-iq/v1/search.php',
       {
         params: {
           q: search,
@@ -64,7 +64,7 @@ export class LocationIqServiceHarness {
   ): SlTestRequest<LocationResponse> {
     return expectRequest<LocationResponse>(
       'GET',
-      'https://us-central1-proxic.cloudfunctions.net/api/location-iq/v1/reverse.php',
+      '/api/location-iq/v1/reverse.php',
       {
         params: {
           lat: gpsCoords[0].toString(),
@@ -81,7 +81,7 @@ export class LocationIqServiceHarness {
   expectTimezone(gpsCoords: GpsCoords): SlTestRequest<TimezoneResponse> {
     return expectRequest<TimezoneResponse>(
       'GET',
-      'https://us-central1-proxic.cloudfunctions.net/api/location-iq/v1/timezone.php',
+      '/api/location-iq/v1/timezone.php',
       {
         params: { lat: gpsCoords[0].toString(), lon: gpsCoords[1].toString() },
       },

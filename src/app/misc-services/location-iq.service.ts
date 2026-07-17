@@ -4,8 +4,7 @@ import { GpsCoords, Location } from 'app/state/location';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-const baseUrl =
-  'https://us-central1-proxic.cloudfunctions.net/api/location-iq/v1';
+const baseUrl = '/api/location-iq/v1';
 const commonParams = {
   format: 'json',
   addressdetails: '1',
