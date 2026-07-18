@@ -1,1 +1,6 @@
-{ "compilerOptions": { "module": "CommonJS", "allowJs": true } }
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "types": ["node"]
+  }
+}

@@ -44,4 +44,5 @@ __screenshots__/
 Thumbs.db
 
 # Additions after scaffolding
+.firebase/
 firebase-debug.log
