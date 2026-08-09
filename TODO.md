@@ -1,4 +1,3 @@
-- Switch to mixpanel
 - Theme chooser for light/dark/system
 - Add link to issue tracker for user feedback
 - Fix: Tooltips can have multiple data sources, but only cites one of them

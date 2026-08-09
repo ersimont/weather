@@ -2,7 +2,7 @@ import { isEqual } from '@s-libs/micro-dash';
 import { TestCall } from '@s-libs/ng-vitest';
 import { MockAsyncBackendKit } from 'app/to-replace/ng-vitest/mock-async-backend-kit';
 import { Dict } from 'mixpanel-browser';
-import { ServiceHarnessSuperclass } from '../ng-dev/service-harness-superclass';
+import { ServiceHarnessSuperclass } from '../ng-vitest/service-harness-superclass';
 import { MixpanelBackend } from './mixpanel-backend';
 
 type TrackFn = MixpanelBackend['track'];

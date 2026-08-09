@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { mapKeys, snakeCase } from '@s-libs/micro-dash';
-import { EagerBridge } from 'app/to-replace/ng-dev/eager-bridge';
+import { EagerBridge } from 'app/to-replace/ng-dev/lazy/eager-bridge';
 import { MixpanelBackend } from './mixpanel-backend';
 import { MixpanelConfig } from './mixpanel-config';
 
