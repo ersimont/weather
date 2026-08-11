@@ -14,15 +14,17 @@ import {
   VersionedObject,
 } from 'app/to-replace/js-core/persistence/migrations';
 
+type MaybeLazy<T> = T | (() => T);
+
 export interface PersistenceConfig<
   S,
   P extends VersionedObject = VersionedObject,
 > {
   dbName: string;
-  buildDefaultState: () => S;
+  freshState: MaybeLazy<S>;
   hydrate: (initialState: S) => Signal<S>;
-  migrations?: Migrations<P>;
-  codec?: PersistenceCodec<S, P>;
+  migrations?: MaybeLazy<Migrations<P>>;
+  codec?: MaybeLazy<Codec<S, P>>;
   onPreHydrateError?: (err: unknown, persistedState?: P) => S;
 }
 
@@ -32,7 +34,7 @@ export function providePersistence<
 >(config: PersistenceConfig<S, P>): EnvironmentProviders {
   return provideAppInitializer(async () => {
     const injector = inject(Injector);
-    const codec = config.codec ?? identityCodec;
+    const codec = resolve(config.codec ?? identityCodec, injector);
     let persistence: AsyncPersistence<P>;
     let persisted: P | undefined;
     let initialState: S;
@@ -41,19 +43,19 @@ export function providePersistence<
       persisted = await persistence.get();
 
       if (persisted && config.migrations) {
-        persisted = config.migrations.run(persisted);
+        persisted = resolve(config.migrations, injector).run(persisted);
       }
       if (persisted) {
         initialState = codec.decode(persisted);
       } else {
-        initialState = config.buildDefaultState();
+        initialState = resolve(config.freshState, injector);
       }
     } catch (e) {
       if (config.onPreHydrateError) {
         initialState = config.onPreHydrateError(e, persisted);
       } else {
         console.error('Error getting initial state - using default', e);
-        initialState = config.buildDefaultState();
+        initialState = resolve(config.freshState, injector);
       }
     }
 
@@ -66,19 +68,27 @@ export function providePersistence<
   });
 }
 
-export interface PersistenceCodec<State, Persisted> {
+function resolve<T>(maybeLazy: MaybeLazy<T>, injector: Injector): T {
+  if (typeof maybeLazy === 'function') {
+    return runInInjectionContext(injector, maybeLazy as () => T);
+  } else {
+    return maybeLazy;
+  }
+}
+
+export interface Codec<State, Persisted> {
   /**
    * Convert from the format that is kept in the store to what is persisted.
    */
-  encode: (state: State) => Persisted;
+  encode: (decoded: State) => Persisted;
 
   /**
    * Convert from the format that is persisted to what is kept in the store.
    */
-  decode: (persisted: Persisted) => State;
+  decode: (encoded: Persisted) => State;
 }
 
-const identityCodec: PersistenceCodec<any, any> = {
+const identityCodec: Codec<any, any> = {
   decode: identity,
   encode: identity,
 };

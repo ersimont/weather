@@ -6,6 +6,7 @@ import {
 import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { provideServiceWorker } from '@angular/service-worker';
 import { environment } from '@env';
+import { storeProviders } from 'app/state/weather-store';
 import { provideBugsnag } from 'app/to-replace/bugsnag/provide-bugsnag';
 import { trackHttpStatus } from 'app/to-replace/http-status.service';
 import { provideMixpanel } from 'app/to-replace/mixpanel-core/provide-mixpanel';
@@ -22,9 +23,10 @@ export const appConfig: ApplicationConfig = {
 
     // additions
     provideHttpClient(withInterceptors([trackHttpStatus])),
+    provideMixpanel(environment.mixpanelConfig),
     provideSnackBarErrorHandler(),
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { autoFocus: 'dialog' } },
     environment.bugsnagConfig ? provideBugsnag(environment.bugsnagConfig) : [],
-    provideMixpanel(environment.mixpanelConfig),
+    storeProviders,
   ],
 };

@@ -1,31 +1,23 @@
-import { inject, Service } from '@angular/core';
-import { mixInInjectableSuperclass } from '@s-libs/ng-core';
-import { PersistentStore } from '@s-libs/signal-store';
-import { logToReduxDevtoolsExtension } from 'app/to-replace/js-core/redux/log-to-redux-devtools-extension';
+import { inject } from '@angular/core';
+import { RootStore } from '@s-libs/signal-store';
 import { MixpanelService } from 'app/to-replace/mixpanel-core/mixpanel.service';
+import { providePersistentStore } from 'app/to-replace/signal-store/provide-persistent-store';
 import { UpgradeService } from 'app/upgrade/upgrade.service';
 import { WeatherState } from './weather-state';
 
-@Service()
-export class WeatherStore extends mixInInjectableSuperclass(
-  PersistentStore,
-)<WeatherState> {
-  constructor() {
-    const eventTrackingService = inject(MixpanelService);
-    const upgradeService = inject(UpgradeService);
+export class WeatherStore extends RootStore<WeatherState> {}
 
-    const freshState = new WeatherState();
-    super('weather', freshState, { migrator: upgradeService });
-
-    if (this.state === freshState) {
-      eventTrackingService.track('initialize_fresh_state', {
-        category: 'initialization',
-      });
-    }
-
-    logToReduxDevtoolsExtension(() => this.state, {
-      name: 'WeatherStore',
-      autoPause: true,
+export const storeProviders = providePersistentStore<
+  WeatherState,
+  WeatherState
+>({
+  type: WeatherStore,
+  dbName: 'weather-store',
+  freshState: () => {
+    inject(MixpanelService).track('initialize_fresh_state', {
+      category: 'initialization',
     });
-  }
-}
+    return new WeatherState();
+  },
+  migrations: () => inject(UpgradeService),
+});

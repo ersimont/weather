@@ -20,10 +20,14 @@ describe('UpgradeService', () => {
   it('defaults to a fresh, up-to-date state', async () => {
     ctx.useInitialState = false;
     await ctx.run(async () => {
-      const actual = store.getPersistedState();
+      const actual = await store.getPersistedState();
 
       if (!isEqual(actual, defaultState)) {
-        console.log(actual);
+        console.log(
+          JSON.stringify(actual, (_, v) =>
+            v === undefined ? '__UU__' : v,
+          ).replace(/"__UU__"/gu, 'undefined'),
+        );
         expect.fail(
           'Default state changed. You need to handle it in the upgrade service. Check the console for what was in the store.',
         );
@@ -35,7 +39,7 @@ describe('UpgradeService', () => {
   it('upgrades from v12', async () => {
     ctx.initialState = v12Default;
     await ctx.run(async () => {
-      expect(store.getPersistedState()).toEqual(defaultState);
+      expect(await store.getPersistedState()).toEqual(defaultState);
       const whatsNew = await ctx.getHarness(WhatsNewComponentHarness);
       const features = await whatsNew.getFeatures();
       expect(features).toEqual(
@@ -50,7 +54,7 @@ describe('UpgradeService', () => {
   it('upgrades from v11', async () => {
     ctx.initialState = v11Default;
     await ctx.run(async () => {
-      expect(store.getPersistedState()).toEqual(defaultState);
+      expect(await store.getPersistedState()).toEqual(defaultState);
       const whatsNew = await ctx.getHarness(WhatsNewComponentHarness);
       expect(await whatsNew.getFeatures()).toContain(
         'Tomorrow.io is no longer available.',

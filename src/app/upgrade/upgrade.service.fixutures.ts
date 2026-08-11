@@ -2,8 +2,18 @@
 export const v13Default: any = {
   _version: 13,
   useCurrentLocation: false,
-  currentLocation: { search: '' },
-  customLocation: { search: '' },
+  currentLocation: {
+    search: '',
+    gpsCoords: undefined,
+    city: undefined,
+    timezone: undefined,
+  },
+  customLocation: {
+    search: '',
+    gpsCoords: undefined,
+    city: undefined,
+    timezone: undefined,
+  },
   allowSourceFallback: true,
   sources: {
     openMateo: { label: 'Open-Mateo', show: false, forecast: {} },

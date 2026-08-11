@@ -20,7 +20,8 @@ describe('WeatherStore', () => {
 
       const location = await ctx.getHarness(LocationOptionsComponentHarness);
       await location.select('Custom');
-      expect(store.getPersistedState().useCurrentLocation).toBe(false);
+      const state = await store.getPersistedState();
+      expect(state.useCurrentLocation).toBe(false);
     });
   });
 

@@ -5,6 +5,7 @@ import {
   signal,
   WritableSignal,
 } from '@angular/core';
+import { noop } from '@s-libs/micro-dash';
 import { AngularContext } from '@s-libs/ng-vitest';
 import { AsyncPersistence } from 'app/to-replace/js-core/persistence/async-persistence';
 import {
@@ -12,6 +13,7 @@ import {
   VersionedObject,
 } from 'app/to-replace/js-core/persistence/migrations';
 import {
+  Codec,
   PersistenceConfig,
   providePersistence,
 } from 'app/to-replace/ng-core/provide-persistence';
@@ -28,10 +30,10 @@ describe('providePersistence()', () => {
   > extends AngularContext {
     signal!: WritableSignal<CounterState>;
 
-    constructor(config: Partial<PersistenceConfig<CounterState, P>>) {
+    constructor(config: Partial<PersistenceConfig<CounterState, P>> = {}) {
       const fullConfig: PersistenceConfig<CounterState, P> = {
         dbName: 'theKey',
-        buildDefaultState: () => new CounterState(),
+        freshState: new CounterState(),
         hydrate: (initialState) => {
           this.signal = signal(initialState);
           return this.signal;
@@ -47,71 +49,105 @@ describe('providePersistence()', () => {
     await persistence.clear();
   });
 
-  describe('starter simplest form', () => {
-    let ctx: CounterContext;
-    beforeEach(async () => {
-      ctx = new CounterContext({});
-    });
+  // I went back & forth on whether to save the initial state. I think it's useful so that callers can use `buildDefaultState()` as an indication that it's a brand-new user who has never visited the page before.
+  it('persists changes, including initial state', async () => {
+    const ctx = new CounterContext();
+    await ctx.run(async () => {
+      await ctx.tick();
+      expect(await persistence.get()).toEqual(new CounterState());
 
-    it('builds the default when nothing is saved', async () => {
+      const newState = new CounterState(1);
+      ctx.signal.set(newState);
+      await ctx.tick();
+      expect(await persistence.get()).toEqual(newState);
+    });
+  });
+
+  describe('freshState', () => {
+    it('used when nothing is saved', async () => {
+      const ctx = new CounterContext();
       await ctx.run(async () => {
         expect(ctx.signal()).toEqual(new CounterState());
       });
     });
 
-    // I went back & forth on whether to save the initial state. I think it's useful so that callers can use `buildDefaultState()` as an indication that it's a brand-new user who has never visited the page before.
-    it('persists changes, including initial state', async () => {
-      await ctx.run(async () => {
-        await ctx.tick();
-        expect(await persistence.get()).toEqual(new CounterState());
-
-        const newState = { _version: 1, count: 1 };
-        ctx.signal.set(newState);
-        await ctx.tick();
-        expect(await persistence.get()).toEqual(newState);
+    it('can inject dependencies', async () => {
+      const state = new CounterState();
+      const ctx = new CounterContext({
+        freshState: (): CounterState => {
+          expect(inject(PLATFORM_ID)).toBeDefined();
+          return state;
+        },
+      });
+      await ctx.run(() => {
+        expect(ctx.signal()).toBe(state);
       });
     });
 
-    it('hydrates with saved state', async () => {
-      const persisted = { _version: 1, count: 8 };
+    it('not called when something is persisted', async () => {
+      await persistence.put(new CounterState());
+      const freshState = vi.fn();
+      const ctx = new CounterContext({ freshState });
+      await ctx.run(async () => {
+        expect(freshState).not.toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe('hydrate', () => {
+    it('receives the persisted state', async () => {
+      const persisted = new CounterState();
       await persistence.put(persisted);
+      const ctx = new CounterContext();
       await ctx.run(async () => {
         expect(ctx.signal()).toEqual(persisted);
       });
     });
-  });
 
-  it('allows injecting dependencies in `hydrate`', async () => {
-    let injected: unknown;
-    const ctx = new CounterContext({
-      hydrate: (): Signal<CounterState> => {
-        injected = inject(PLATFORM_ID);
-        return signal(new CounterState());
-      },
-    });
-    await ctx.run(() => {
-      expect(injected).toBeDefined();
+    it('can inject dependencies', async () => {
+      const ctx = new CounterContext({
+        hydrate: (): Signal<CounterState> => {
+          expect(inject(PLATFORM_ID)).toBeDefined();
+          return signal(new CounterState());
+        },
+      });
+      await ctx.run(noop);
     });
   });
 
   describe('migrations', () => {
-    let ctx: CounterContext;
+    let migrations: Migrations<CounterState>;
     beforeEach(() => {
-      const migrations = new Migrations<CounterState>(2);
+      migrations = new Migrations<CounterState>(2);
       migrations.register(1, (state) => ({ ...state, _version: 2 }));
-      ctx = new CounterContext({ migrations });
     });
 
-    it('runs when needed', async () => {
+    it('run when needed', async () => {
       await persistence.put(new CounterState());
+      const ctx = new CounterContext({ migrations });
       await ctx.run(async () => {
         expect(ctx.signal()._version).toBe(2);
       });
     });
 
     it('is OK with no persisted state', async () => {
+      const ctx = new CounterContext({ migrations });
       await ctx.run(async () => {
         expect(ctx.signal()).toEqual(new CounterState());
+      });
+    });
+
+    it('can inject dependencies', async () => {
+      await persistence.put(new CounterState());
+      let injected: unknown;
+      const ctx = new CounterContext({
+        migrations: (): Migrations<CounterState> => {
+          injected = inject(PLATFORM_ID);
+          return migrations;
+        },
+      });
+      await ctx.run(async () => {
+        expect(injected).toBeDefined();
       });
     });
   });
@@ -122,31 +158,22 @@ describe('providePersistence()', () => {
       COUNT: number;
     }
 
-    let ctx: CounterContext<Persisted>;
+    let codec: Codec<CounterState, Persisted>;
     beforeEach(() => {
-      ctx = new CounterContext({
-        codec: {
-          encode: (state: CounterState): Persisted => ({
-            _version: state._version,
-            COUNT: state.count,
-          }),
-          decode: (persisted: Persisted): CounterState => ({
-            _version: persisted._version,
-            count: persisted.COUNT,
-          }),
-        },
-      });
-    });
-
-    it('decodes', async () => {
-      await persistence.put({ _version: 1, COUNT: 1 });
-      await ctx.run(async () => {
-        await ctx.tick();
-        expect(ctx.signal()).toEqual({ _version: 1, count: 1 });
-      });
+      codec = {
+        encode: (state: CounterState): Persisted => ({
+          _version: state._version,
+          COUNT: state.count,
+        }),
+        decode: (persisted: Persisted): CounterState => ({
+          _version: persisted._version,
+          count: persisted.COUNT,
+        }),
+      };
     });
 
     it('encodes', async () => {
+      const ctx = new CounterContext({ codec });
       await ctx.run(async () => {
         ctx.signal.set({ _version: 1, count: 1 });
         await ctx.tick();
@@ -154,10 +181,30 @@ describe('providePersistence()', () => {
       });
     });
 
+    it('decodes', async () => {
+      await persistence.put({ _version: 1, COUNT: 1 });
+      const ctx = new CounterContext({ codec });
+      await ctx.run(async () => {
+        await ctx.tick();
+        expect(ctx.signal()).toEqual({ _version: 1, count: 1 });
+      });
+    });
+
     it('is OK with no persisted state', async () => {
+      const ctx = new CounterContext({ codec });
       await ctx.run(async () => {
         expect(ctx.signal()).toEqual(new CounterState());
       });
+    });
+
+    it('can inject dependencies', async () => {
+      const ctx = new CounterContext({
+        codec: (): Codec<CounterState, Persisted> => {
+          expect(inject(PLATFORM_ID)).toBeDefined();
+          return codec;
+        },
+      });
+      await ctx.run(noop);
     });
   });
 

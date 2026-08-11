@@ -66,9 +66,9 @@ export class WeatherGraphContext extends ComponentContext<AppComponent> {
 
   protected override async init(): Promise<void> {
     if (this.useInitialState) {
-      localStorage.setItem('weather', JSON.stringify(this.initialState));
+      await this.harnesses.store.setPersistedState(this.initialState);
     } else {
-      localStorage.removeItem('weather');
+      await this.harnesses.store.clear();
     }
 
     await super.init();

@@ -5,8 +5,10 @@ import { Source, SourceId } from 'app/state/source';
 import { Units } from 'app/state/units';
 import { ViewRange } from 'app/state/view-range';
 
+export const STATE_VERSION = 13;
+
 export class WeatherState {
-  _version = 13;
+  _version = STATE_VERSION;
 
   useCurrentLocation = false;
   currentLocation = new Location();

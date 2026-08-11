@@ -49,11 +49,10 @@ describe('VisualCrossing', () => {
           },
         ),
       );
-      expect(
-        ctx.harnesses.store.getPersistedState().sources.visualCrossing.forecast[
-          date
-        ].wind,
-      ).toBe(0.5399568034557235);
+      const state = await ctx.harnesses.store.getPersistedState();
+      expect(state.sources.visualCrossing.forecast[date].wind).toBe(
+        0.5399568034557235,
+      );
     });
   });
 });

@@ -17,7 +17,7 @@ describe('providePersistentStore()', () => {
     const providers = providePersistentStore({
       dbName: 'theKey',
       type: EmptyStore,
-      buildDefaultState: () => new EmptyState(),
+      freshState: () => new EmptyState(),
     });
 
     const ctx = new AngularContext({ providers });
