@@ -14,6 +14,11 @@ export const storeProviders = providePersistentStore<
   type: WeatherStore,
   dbName: 'weather-store',
   freshState: () => {
+    const legacyString = localStorage.getItem('weather');
+    if (legacyString) {
+      return inject(UpgradeService).run(JSON.parse(legacyString));
+    }
+
     inject(MixpanelService).track('initialize_fresh_state', {
       category: 'initialization',
     });
