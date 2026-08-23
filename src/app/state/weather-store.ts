@@ -1,4 +1,4 @@
-import { inject } from '@angular/core';
+import { ErrorHandler, inject } from '@angular/core';
 import { RootStore } from '@s-libs/signal-store';
 import { MixpanelService } from 'app/to-replace/mixpanel-core/mixpanel.service';
 import { providePersistentStore } from 'app/to-replace/signal-store/provide-persistent-store';
@@ -14,9 +14,13 @@ export const storeProviders = providePersistentStore<
   type: WeatherStore,
   dbName: 'weather-store',
   freshState: () => {
-    const legacyString = localStorage.getItem('weather');
-    if (legacyString) {
-      return inject(UpgradeService).run(JSON.parse(legacyString));
+    try {
+      const legacyString = localStorage.getItem('weather');
+      if (legacyString) {
+        return inject(UpgradeService).run(JSON.parse(legacyString));
+      }
+    } catch (e) {
+      inject(ErrorHandler).handleError(e);
     }
 
     inject(MixpanelService).track('initialize_fresh_state', {

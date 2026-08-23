@@ -1,6 +1,7 @@
 import { WeatherStoreHarness } from 'app/state/weather-store.harness';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
 import { MixpanelServiceHarness } from 'app/to-replace/mixpanel-core/mixpanel.service.harness';
+import { SnackBarErrorServiceHarness } from 'app/to-replace/snack-bar-error.service.harness';
 import {
   defaultState,
   v12Default,
@@ -8,10 +9,11 @@ import {
 
 describe('storeProviders', () => {
   let ctx: WeatherGraphContext;
+  let errors: SnackBarErrorServiceHarness;
   let store: WeatherStoreHarness;
   beforeEach(() => {
     ctx = new WeatherGraphContext();
-    ({ store } = ctx.harnesses);
+    ({ errors, store } = ctx.harnesses);
   });
 
   it('tracks an event when initializing a fresh state', async () => {
@@ -36,6 +38,16 @@ describe('storeProviders', () => {
     ctx.useInitialState = false;
     localStorage.setItem('weather', JSON.stringify(v12Default));
     await ctx.run(async () => {
+      expect(await store.getPersistedState()).toEqual(defaultState);
+    });
+    localStorage.removeItem('weather');
+  });
+
+  it('gracefully handles an error migrating from legacy localStorage', async () => {
+    ctx.useInitialState = false;
+    localStorage.setItem('weather', 'not valid JSON');
+    await ctx.run(async () => {
+      errors.expectGeneric();
       expect(await store.getPersistedState()).toEqual(defaultState);
     });
     localStorage.removeItem('weather');
