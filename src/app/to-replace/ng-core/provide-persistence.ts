@@ -1,6 +1,7 @@
 import {
   effect,
   EnvironmentProviders,
+  ErrorHandler,
   inject,
   Injector,
   provideAppInitializer,
@@ -24,7 +25,7 @@ export interface PersistenceConfig<
   freshState: MaybeLazy<S>;
   hydrate: (initialState: S) => Signal<S>;
   migrations?: MaybeLazy<Migrations<P>>;
-  codec?: MaybeLazy<Codec<S, P>>;
+  codec?: MaybeLazy<PersistenceCodec<S, P>>;
   onPreHydrateError?: (err: unknown, persistedState?: P) => S;
 }
 
@@ -54,7 +55,7 @@ export function providePersistence<
       if (config.onPreHydrateError) {
         initialState = config.onPreHydrateError(e, persisted);
       } else {
-        console.error('Error getting initial state - using default', e);
+        injector.get(ErrorHandler).handleError(e);
         initialState = resolve(config.freshState, injector);
       }
     }
@@ -76,7 +77,7 @@ function resolve<T>(maybeLazy: MaybeLazy<T>, injector: Injector): T {
   }
 }
 
-export interface Codec<State, Persisted> {
+export interface PersistenceCodec<State, Persisted> {
   /**
    * Convert from the format that is kept in the store to what is persisted.
    */
@@ -88,7 +89,7 @@ export interface Codec<State, Persisted> {
   decode: (encoded: Persisted) => State;
 }
 
-const identityCodec: Codec<any, any> = {
+const identityCodec: PersistenceCodec<any, any> = {
   decode: identity,
   encode: identity,
 };

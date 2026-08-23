@@ -1,10 +1,12 @@
 import {
+  ErrorHandler,
   inject,
   PLATFORM_ID,
   Signal,
   signal,
   WritableSignal,
 } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import { noop } from '@s-libs/micro-dash';
 import { AngularContext } from '@s-libs/ng-vitest';
 import { AsyncPersistence } from 'app/to-replace/js-core/persistence/async-persistence';
@@ -13,7 +15,7 @@ import {
   VersionedObject,
 } from 'app/to-replace/js-core/persistence/migrations';
 import {
-  Codec,
+  PersistenceCodec,
   PersistenceConfig,
   providePersistence,
 } from 'app/to-replace/ng-core/provide-persistence';
@@ -28,6 +30,7 @@ describe('providePersistence()', () => {
   class CounterContext<
     P extends VersionedObject = CounterState,
   > extends AngularContext {
+    // eslint-disable-next-line @angular-eslint/prefer-signals -- init is delayed
     signal!: WritableSignal<CounterState>;
 
     constructor(config: Partial<PersistenceConfig<CounterState, P>> = {}) {
@@ -158,7 +161,7 @@ describe('providePersistence()', () => {
       COUNT: number;
     }
 
-    let codec: Codec<CounterState, Persisted>;
+    let codec: PersistenceCodec<CounterState, Persisted>;
     beforeEach(() => {
       codec = {
         encode: (state: CounterState): Persisted => ({
@@ -199,7 +202,7 @@ describe('providePersistence()', () => {
 
     it('can inject dependencies', async () => {
       const ctx = new CounterContext({
-        codec: (): Codec<CounterState, Persisted> => {
+        codec: (): PersistenceCodec<CounterState, Persisted> => {
           expect(inject(PLATFORM_ID)).toBeDefined();
           return codec;
         },
@@ -227,12 +230,12 @@ describe('providePersistence()', () => {
       await persistence.put(new CounterState());
     });
 
-    it('logs and uses default state by when undefined', async () => {
-      const error = vi.spyOn(console, 'error');
+    it('when undefined, passes to error handler and uses default', async () => {
+      const handleError = vi.fn();
+      TestBed.overrideProvider(ErrorHandler, { useValue: { handleError } });
       const ctx = new ErrorContext({});
       await ctx.run(async () => {
-        expect(error).toHaveBeenCalledExactlyOnceWith(
-          'Error getting initial state - using default',
+        expect(handleError).toHaveBeenCalledExactlyOnceWith(
           ctx.migrationError,
         );
         expect(ctx.signal()).toEqual(new CounterState());

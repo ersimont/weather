@@ -9,7 +9,6 @@ import { WhatsNewService } from 'app/upgrade/whats-new.service';
 
 @Service()
 export class UpgradeService extends Migrations<WeatherState> {
-  // readonly #errorService = inject(SnackBarErrorService);
   readonly #whatsNewService = inject(WhatsNewService);
 
   constructor() {
