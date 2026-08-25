@@ -40,40 +40,43 @@
     },
     {
       "type": "npm",
-      "script": "test -- --include ${relativeFile}",
-      "label": "Current Test File",
-      "problemMatcher": []
-    },
-    {
-      "type": "npm",
       "script": "build:watch",
       "path": "functions/",
-      "label": "Watch Functions",
       "isBackground": true,
       "problemMatcher": []
     },
     {
       "type": "npm",
       "script": "watch",
-      "label": "Watch App",
       "isBackground": true,
       "problemMatcher": []
     },
     {
       "type": "npm",
       "script": "emulate",
-      "label": "Emulate",
       "isBackground": true,
       "problemMatcher": []
     },
     {
       "label": "Dev: All",
-      "dependsOn": [
-        "Watch Functions",
-        "Watch App",
-        "Emulate"
-      ],
+      "dependsOn": ["Watch Functions", "Watch App", "Emulate"],
       "dependsOrder": "parallel",
+      "problemMatcher": []
+    },
+    {
+      "type": "npm",
+      "script": "test -- --include ${relativeFile}",
+      "label": "Test: Current File",
+      "problemMatcher": []
+    },
+    {
+      "type": "npm",
+      "script": "deploy-staging",
+      "problemMatcher": []
+    },
+    {
+      "type": "npm",
+      "script": "deploy",
       "problemMatcher": []
     }
   ]
