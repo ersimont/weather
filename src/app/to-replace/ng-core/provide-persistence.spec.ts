@@ -7,18 +7,20 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { Deferred } from '@s-libs/js-core';
 import { noop } from '@s-libs/micro-dash';
-import { AngularContext } from '@s-libs/ng-vitest';
+import { AngularContext, expectSingleCallAndReset } from '@s-libs/ng-vitest';
 import { AsyncPersistence } from 'app/to-replace/js-core/persistence/async-persistence';
 import {
   Migrations,
   VersionedObject,
 } from 'app/to-replace/js-core/persistence/migrations';
 import {
+  PERSISTENCE_TYPE,
   PersistenceCodec,
   PersistenceConfig,
   providePersistence,
-} from 'app/to-replace/ng-core/provide-persistence';
+} from './provide-persistence';
 
 describe('providePersistence()', () => {
   class CounterState {
@@ -45,28 +47,51 @@ describe('providePersistence()', () => {
       };
       super({ providers: [providePersistence(fullConfig)] });
     }
+
+    async setCount(value: number): Promise<void> {
+      this.signal.set(new CounterState(value));
+      await this.tick();
+    }
   }
 
   const persistence = new AsyncPersistence('theKey');
-  beforeEach(async () => {
-    await persistence.clear();
-  });
+  beforeEach(async () => persistence.clear());
 
-  // I went back & forth on whether to save the initial state. I think it's useful so that callers can use `buildDefaultState()` as an indication that it's a brand-new user who has never visited the page before.
-  it('persists changes, including initial state', async () => {
-    const ctx = new CounterContext();
-    await ctx.run(async () => {
-      await ctx.tick();
-      expect(await persistence.get()).toEqual(new CounterState());
+  describe('persistence', () => {
+    // I went back & forth on whether to save the initial state. I think it's useful so that callers can use `buildDefaultState()` as an indication that it's a brand-new user who has never visited the page before.
+    it('persists changes, including initial state', async () => {
+      const ctx = new CounterContext();
+      await ctx.run(async () => {
+        await ctx.tick();
+        expect(await persistence.get()).toEqual(new CounterState());
 
-      const newState = new CounterState(1);
-      ctx.signal.set(newState);
-      await ctx.tick();
-      expect(await persistence.get()).toEqual(newState);
+        await ctx.setCount(1);
+        expect(await persistence.get()).toEqual(new CounterState(1));
+      });
+    });
+
+    it('debounces saves while the previous one is pending', async () => {
+      const deferred = new Deferred<void>();
+      const put = vi.fn().mockReturnValue(deferred.promise);
+      class MockPersistence extends AsyncPersistence<CounterState> {
+        override put = put;
+      }
+      TestBed.overrideProvider(PERSISTENCE_TYPE, { useValue: MockPersistence });
+      const ctx = new CounterContext();
+      await ctx.run(async () => {
+        await ctx.tick();
+        await ctx.setCount(1);
+        await ctx.setCount(2);
+        expectSingleCallAndReset(put, new CounterState());
+
+        deferred.resolve();
+        await ctx.tick();
+        expectSingleCallAndReset(put, new CounterState(2));
+      });
     });
   });
 
-  describe('freshState', () => {
+  describe('config.freshState', () => {
     it('used when nothing is saved', async () => {
       const ctx = new CounterContext();
       await ctx.run(async () => {
@@ -97,7 +122,7 @@ describe('providePersistence()', () => {
     });
   });
 
-  describe('hydrate', () => {
+  describe('config.hydrate', () => {
     it('receives the persisted state', async () => {
       const persisted = new CounterState();
       await persistence.put(persisted);
@@ -118,7 +143,7 @@ describe('providePersistence()', () => {
     });
   });
 
-  describe('migrations', () => {
+  describe('config.migrations', () => {
     let migrations: Migrations<CounterState>;
     beforeEach(() => {
       migrations = new Migrations<CounterState>(2);
@@ -155,7 +180,7 @@ describe('providePersistence()', () => {
     });
   });
 
-  describe('codec', () => {
+  describe('config.codec', () => {
     interface Persisted {
       _version: number;
       COUNT: number;
@@ -211,7 +236,7 @@ describe('providePersistence()', () => {
     });
   });
 
-  describe('onPreHydrateError', () => {
+  describe('config.onPreHydrateError', () => {
     class ErrorContext extends CounterContext {
       migrationError = new Error();
 
@@ -235,9 +260,7 @@ describe('providePersistence()', () => {
       TestBed.overrideProvider(ErrorHandler, { useValue: { handleError } });
       const ctx = new ErrorContext({});
       await ctx.run(async () => {
-        expect(handleError).toHaveBeenCalledExactlyOnceWith(
-          ctx.migrationError,
-        );
+        expect(handleError).toHaveBeenCalledExactlyOnceWith(ctx.migrationError);
         expect(ctx.signal()).toEqual(new CounterState());
       });
     });

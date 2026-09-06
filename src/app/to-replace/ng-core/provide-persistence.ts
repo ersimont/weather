@@ -1,12 +1,13 @@
 import {
-  effect,
   EnvironmentProviders,
   ErrorHandler,
   inject,
+  InjectionToken,
   Injector,
   provideAppInitializer,
   runInInjectionContext,
   Signal,
+  Type,
 } from '@angular/core';
 import { identity } from '@s-libs/micro-dash';
 import { AsyncPersistence } from 'app/to-replace/js-core/persistence/async-persistence';
@@ -14,6 +15,7 @@ import {
   Migrations,
   VersionedObject,
 } from 'app/to-replace/js-core/persistence/migrations';
+import { debounceWhileHandling } from './debounce-while-handling';
 
 type MaybeLazy<T> = T | (() => T);
 
@@ -29,6 +31,10 @@ export interface PersistenceConfig<
   onPreHydrateError?: (err: unknown, persistedState?: P) => S;
 }
 
+export const PERSISTENCE_TYPE = new InjectionToken('persistence constructor', {
+  factory: (): Type<AsyncPersistence<any>> => AsyncPersistence,
+});
+
 export function providePersistence<
   S,
   P extends VersionedObject = VersionedObject,
@@ -40,7 +46,7 @@ export function providePersistence<
     let persisted: P | undefined;
     let initialState: S;
     try {
-      persistence = new AsyncPersistence<P>(config.dbName);
+      persistence = new (inject(PERSISTENCE_TYPE))(config.dbName);
       persisted = await persistence.get();
 
       if (persisted && config.migrations) {
@@ -61,10 +67,9 @@ export function providePersistence<
     }
 
     runInInjectionContext(injector, () => {
-      const toPersist = config.hydrate(initialState);
-      effect(() => {
-        persistence.put(codec.encode(toPersist()));
-      });
+      debounceWhileHandling(config.hydrate(initialState), async (state) =>
+        persistence.put(codec.encode(state)),
+      );
     });
   });
 }
