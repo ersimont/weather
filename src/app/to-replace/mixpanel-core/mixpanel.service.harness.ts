@@ -1,13 +1,13 @@
 import { isEqual } from '@s-libs/micro-dash';
 import { TestCall } from '@s-libs/ng-vitest';
-import { MockAsyncBackendKit } from 'app/to-replace/ng-vitest/mock-async-backend-kit';
+import { MockBackendKit } from 'app/to-replace/ng-vitest/mock-backend-kit';
 import { Dict } from 'mixpanel-browser';
 import { ServiceHarnessSuperclass } from '../ng-vitest/service-harness-superclass';
 import { MixpanelBackend } from './mixpanel-backend';
 
 type TrackFn = MixpanelBackend['track'];
 
-const mockBackendKit = new MockAsyncBackendKit(MixpanelBackend);
+const mockBackendKit = new MockBackendKit(MixpanelBackend);
 export const mixpanelTestProviders = mockBackendKit.providers;
 
 export class MixpanelServiceHarness extends ServiceHarnessSuperclass {

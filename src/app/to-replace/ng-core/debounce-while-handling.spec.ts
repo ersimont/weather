@@ -1,4 +1,9 @@
-import { Injector, runInInjectionContext, signal } from '@angular/core';
+import {
+  EffectRef,
+  Injector,
+  runInInjectionContext,
+  signal,
+} from '@angular/core';
 import { Deferred } from '@s-libs/js-core';
 import { noop } from '@s-libs/micro-dash';
 import { AngularContext, expectSingleCallAndReset } from '@s-libs/ng-vitest';
@@ -7,11 +12,12 @@ import { debounceWhileHandling } from './debounce-while-handling';
 describe('debounceWhileHandling()', () => {
   class TestContext extends AngularContext {
     handle = vi.fn().mockResolvedValue(undefined);
+    effectRef!: EffectRef;
     readonly #input = signal(0);
 
     override async init(): Promise<void> {
       runInInjectionContext(this.inject(Injector), () => {
-        debounceWhileHandling(this.#input, this.handle);
+        this.effectRef = debounceWhileHandling(this.#input, this.handle);
       });
       await super.init();
       await this.tick();
@@ -58,5 +64,14 @@ describe('debounceWhileHandling()', () => {
     });
 
     window.removeEventListener('unhandledrejection', noop);
+  });
+
+  it('can be cancelled', async () => {
+    const ctx = new TestContext();
+    await ctx.run(async () => {
+      ctx.effectRef.destroy();
+      await ctx.setInput(1);
+      expect(ctx.handle).not.toHaveBeenCalled();
+    });
   });
 });

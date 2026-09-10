@@ -2,10 +2,10 @@ import { NotifiableError } from '@bugsnag/js';
 import { TestCall } from '@s-libs/ng-vitest';
 import { BugsnagBackend } from 'app/to-replace/bugsnag/bugsnag-backend';
 import { BugsnagConfig } from 'app/to-replace/bugsnag/bugsnag-config';
-import { MockAsyncBackendKit } from 'app/to-replace/ng-vitest/mock-async-backend-kit';
+import { MockBackendKit } from 'app/to-replace/ng-vitest/mock-backend-kit';
 import { ServiceHarnessSuperclass } from 'app/to-replace/ng-vitest/service-harness-superclass';
 
-const mockBackendKit = new MockAsyncBackendKit(BugsnagBackend);
+const mockBackendKit = new MockBackendKit(BugsnagBackend);
 export const bugSnagTestProviders = mockBackendKit.providers;
 
 export class BugsnagServiceHarness extends ServiceHarnessSuperclass {

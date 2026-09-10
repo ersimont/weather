@@ -7,16 +7,15 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { Deferred } from '@s-libs/js-core';
 import { noop } from '@s-libs/micro-dash';
-import { AngularContext, expectSingleCallAndReset } from '@s-libs/ng-vitest';
+import { AngularContext, AsyncMethodController } from '@s-libs/ng-vitest';
 import { AsyncPersistence } from 'app/to-replace/js-core/persistence/async-persistence';
 import {
   Migrations,
   VersionedObject,
 } from 'app/to-replace/js-core/persistence/migrations';
 import {
-  PERSISTENCE_TYPE,
+  BACKEND,
   PersistenceCodec,
   PersistenceConfig,
   providePersistence,
@@ -52,6 +51,11 @@ describe('providePersistence()', () => {
       this.signal.set(new CounterState(value));
       await this.tick();
     }
+
+    protected override async init(): Promise<void> {
+      await super.init();
+      await this.tick();
+    }
   }
 
   const persistence = new AsyncPersistence('theKey');
@@ -62,7 +66,6 @@ describe('providePersistence()', () => {
     it('persists changes, including initial state', async () => {
       const ctx = new CounterContext();
       await ctx.run(async () => {
-        await ctx.tick();
         expect(await persistence.get()).toEqual(new CounterState());
 
         await ctx.setCount(1);
@@ -71,23 +74,37 @@ describe('providePersistence()', () => {
     });
 
     it('debounces saves while the previous one is pending', async () => {
-      const deferred = new Deferred<void>();
-      const put = vi.fn().mockReturnValue(deferred.promise);
-      class MockPersistence extends AsyncPersistence<CounterState> {
-        override put = put;
-      }
-      TestBed.overrideProvider(PERSISTENCE_TYPE, { useValue: MockPersistence });
       const ctx = new CounterContext();
       await ctx.run(async () => {
-        await ctx.tick();
-        await ctx.setCount(1);
-        await ctx.setCount(2);
-        expectSingleCallAndReset(put, new CounterState());
+        const put = new AsyncMethodController(ctx.inject(BACKEND), 'put');
 
-        deferred.resolve();
-        await ctx.tick();
-        expectSingleCallAndReset(put, new CounterState(2));
+        await ctx.setCount(1);
+        const call1 = put.expectOne([new CounterState(1)]);
+
+        await ctx.setCount(2);
+        await ctx.setCount(3);
+        put.verify();
+
+        await call1.flush();
+        put.expectOne([new CounterState(3)]);
+        put.verify();
       });
+    });
+
+    it('stops after error', async () => {
+      window.addEventListener('unhandledrejection', noop);
+
+      const ctx = new CounterContext();
+      await ctx.run(async () => {
+        const put = new AsyncMethodController(ctx.inject(BACKEND), 'put');
+        await ctx.setCount(1);
+        await put.expectOne([new CounterState(1)]).error('');
+
+        await ctx.setCount(2);
+        put.verify();
+      });
+
+      window.removeEventListener('unhandledrejection', noop);
     });
   });
 
@@ -213,7 +230,6 @@ describe('providePersistence()', () => {
       await persistence.put({ _version: 1, COUNT: 1 });
       const ctx = new CounterContext({ codec });
       await ctx.run(async () => {
-        await ctx.tick();
         expect(ctx.signal()).toEqual({ _version: 1, count: 1 });
       });
     });
@@ -295,6 +311,41 @@ describe('providePersistence()', () => {
       await ctx.run(async () => {
         expect(onError).not.toHaveBeenCalled();
       });
+    });
+  });
+
+  describe('config.onSaveError', () => {
+    it('receives errors during save', async () => {
+      const onSaveError = vi.fn(noop);
+      const ctx = new CounterContext({ onSaveError });
+      await ctx.run(async () => {
+        const put = new AsyncMethodController(ctx.inject(BACKEND), 'put');
+        const theError = new Error('unique message');
+
+        await ctx.setCount(1);
+        await put.expectOne([new CounterState(1)]).error(theError);
+
+        expect(onSaveError).toHaveBeenCalledWith(theError);
+      });
+    });
+
+    it('rethrows by default', async () => {
+      const unhandler = vi.fn(noop);
+      window.addEventListener('unhandledrejection', unhandler);
+
+      const ctx = new CounterContext();
+      await ctx.run(async () => {
+        const put = new AsyncMethodController(ctx.inject(BACKEND), 'put');
+        const theError = new Error('unique message');
+
+        await ctx.setCount(1);
+        await put.expectOne([new CounterState(1)]).error(theError);
+
+        expect(unhandler).toHaveBeenCalledWith(
+          expect.objectContaining({ reason: theError }),
+        );
+      });
+      window.removeEventListener('unhandledrejection', unhandler);
     });
   });
 });

@@ -1,7 +1,7 @@
 import { inject, InjectionToken, Provider, Type } from '@angular/core';
 import { createMockObject, MockObject } from '@s-libs/ng-vitest';
 
-export class MockAsyncBackendKit<T> {
+export class MockBackendKit<T> {
   token: InjectionToken<MockObject<T>>;
   providers: Provider[];
 

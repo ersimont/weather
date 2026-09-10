@@ -4,10 +4,10 @@ import {
   inject,
   InjectionToken,
   Injector,
+  makeEnvironmentProviders,
   provideAppInitializer,
   runInInjectionContext,
   Signal,
-  Type,
 } from '@angular/core';
 import { identity } from '@s-libs/micro-dash';
 import { AsyncPersistence } from 'app/to-replace/js-core/persistence/async-persistence';
@@ -29,56 +29,89 @@ export interface PersistenceConfig<
   migrations?: MaybeLazy<Migrations<P>>;
   codec?: MaybeLazy<PersistenceCodec<S, P>>;
   onPreHydrateError?: (err: unknown, persistedState?: P) => S;
+  onSaveError?: (err: unknown) => void;
 }
 
-export const PERSISTENCE_TYPE = new InjectionToken('persistence constructor', {
-  factory: (): Type<AsyncPersistence<any>> => AsyncPersistence,
-});
+export const BACKEND = new InjectionToken<AsyncPersistence<any>>(
+  'persistence backend',
+);
 
 export function providePersistence<
   S,
   P extends VersionedObject = VersionedObject,
 >(config: PersistenceConfig<S, P>): EnvironmentProviders {
-  return provideAppInitializer(async () => {
-    const injector = inject(Injector);
-    const codec = resolve(config.codec ?? identityCodec, injector);
-    let persistence: AsyncPersistence<P>;
+  const backend = new AsyncPersistence<P>(config.dbName);
+  return makeEnvironmentProviders([
+    provideAppInitializer(async () => {
+      const p = new Persister<S, P>(config, backend);
+      const signal = await p.hydrate();
+      p.persist(signal);
+    }),
+    { provide: BACKEND, useValue: backend },
+  ]);
+}
+
+class Persister<S, P extends VersionedObject> {
+  #injector = inject(Injector);
+  #codec: PersistenceCodec<S, P>;
+
+  constructor(
+    private config: PersistenceConfig<S, P>,
+    private backend: AsyncPersistence<P>,
+  ) {
+    this.#codec = this.#resolve(config.codec ?? identityCodec);
+  }
+
+  async hydrate(): Promise<Signal<S>> {
     let persisted: P | undefined;
     let initialState: S;
     try {
-      persistence = new (inject(PERSISTENCE_TYPE))(config.dbName);
-      persisted = await persistence.get();
+      persisted = await this.backend.get();
 
-      if (persisted && config.migrations) {
-        persisted = resolve(config.migrations, injector).run(persisted);
+      if (persisted && this.config.migrations) {
+        persisted = this.#resolve(this.config.migrations).run(persisted);
       }
       if (persisted) {
-        initialState = codec.decode(persisted);
+        initialState = this.#codec.decode(persisted);
       } else {
-        initialState = resolve(config.freshState, injector);
+        initialState = this.#resolve(this.config.freshState);
       }
     } catch (e) {
-      if (config.onPreHydrateError) {
-        initialState = config.onPreHydrateError(e, persisted);
+      if (this.config.onPreHydrateError) {
+        initialState = this.config.onPreHydrateError(e, persisted);
       } else {
-        injector.get(ErrorHandler).handleError(e);
-        initialState = resolve(config.freshState, injector);
+        this.#injector.get(ErrorHandler).handleError(e);
+        initialState = this.#resolve(this.config.freshState);
       }
     }
+    return runInInjectionContext(this.#injector, () =>
+      this.config.hydrate(initialState),
+    );
+  }
 
-    runInInjectionContext(injector, () => {
-      debounceWhileHandling(config.hydrate(initialState), async (state) =>
-        persistence.put(codec.encode(state)),
-      );
+  persist(signal: Signal<S>): void {
+    runInInjectionContext(this.#injector, () => {
+      const effectRef = debounceWhileHandling(signal, async (state) => {
+        try {
+          await this.backend.put(this.#codec.encode(state));
+        } catch (e) {
+          effectRef.destroy();
+          if (this.config.onSaveError) {
+            this.config.onSaveError(e);
+          } else {
+            throw e;
+          }
+        }
+      });
     });
-  });
-}
+  }
 
-function resolve<T>(maybeLazy: MaybeLazy<T>, injector: Injector): T {
-  if (typeof maybeLazy === 'function') {
-    return runInInjectionContext(injector, maybeLazy as () => T);
-  } else {
-    return maybeLazy;
+  #resolve<T>(maybeLazy: MaybeLazy<T>): T {
+    if (typeof maybeLazy === 'function') {
+      return runInInjectionContext(this.#injector, maybeLazy as () => T);
+    } else {
+      return maybeLazy;
+    }
   }
 }
 

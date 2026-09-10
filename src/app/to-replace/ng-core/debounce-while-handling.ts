@@ -1,13 +1,13 @@
-import { effect, Signal } from '@angular/core';
+import { effect, EffectRef, Signal } from '@angular/core';
 
 export function debounceWhileHandling<T>(
   input: Signal<T>,
   handle: (value: T) => Promise<void>,
-): void {
+): EffectRef {
   let nextValue: T;
   let inFlight = false;
   let queued = false;
-  effect(() => {
+  return effect(() => {
     nextValue = input();
     if (inFlight) {
       queued = true;
