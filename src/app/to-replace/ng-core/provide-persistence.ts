@@ -9,11 +9,8 @@ import {
   Signal,
 } from '@angular/core';
 import { identity } from '@s-libs/micro-dash';
-import { AsyncPersistence } from 'app/to-replace/js-core/persistence/async-persistence';
-import {
-  Migrations,
-  VersionedObject,
-} from 'app/to-replace/js-core/persistence/migrations';
+import { AsyncPersistence } from '../js-core/persistence/async-persistence';
+import { Migrations, VersionedObject } from '../js-core/persistence/migrations';
 import { debounceWhileHandling } from './debounce-while-handling';
 
 type MaybeLazy<T> = T | (() => T);
@@ -77,30 +74,32 @@ class Persister<S, P extends VersionedObject> {
         initialState = this.#resolve(this.config.freshState);
       }
     } catch (e) {
-      if (this.config.onPreHydrateError) {
-        initialState = this.config.onPreHydrateError(e, persisted);
-      } else {
-        this.#injector.get(ErrorHandler).handleError(e);
-        initialState = this.#resolve(this.config.freshState);
-      }
+      this.#withInjection(() => {
+        if (this.config.onPreHydrateError) {
+          initialState = this.config.onPreHydrateError(e, persisted);
+        } else {
+          inject(ErrorHandler).handleError(e);
+          initialState = this.#resolve(this.config.freshState);
+        }
+      });
     }
-    return runInInjectionContext(this.#injector, () =>
-      this.config.hydrate(initialState),
-    );
+    return this.#withInjection(() => this.config.hydrate(initialState));
   }
 
   persist(signal: Signal<S>): void {
-    runInInjectionContext(this.#injector, () => {
+    this.#withInjection(() => {
       const effectRef = debounceWhileHandling(signal, async (state) => {
         try {
           await this.#backend.put(this.#codec.encode(state));
         } catch (e) {
           effectRef.destroy();
-          if (this.config.onSaveError) {
-            this.config.onSaveError(e);
-          } else {
-            throw e;
-          }
+          this.#withInjection(() => {
+            if (this.config.onSaveError) {
+              this.config.onSaveError(e);
+            } else {
+              throw e;
+            }
+          });
         }
       });
     });
@@ -108,10 +107,14 @@ class Persister<S, P extends VersionedObject> {
 
   #resolve<T>(maybeLazy: MaybeLazy<T>): T {
     if (typeof maybeLazy === 'function') {
-      return runInInjectionContext(this.#injector, maybeLazy as () => T);
+      return this.#withInjection(maybeLazy as () => T);
     } else {
       return maybeLazy;
     }
+  }
+
+  #withInjection<T>(fn: () => T): T {
+    return runInInjectionContext(this.#injector, fn);
   }
 }
 

@@ -64,9 +64,9 @@
       "problemMatcher": []
     },
     {
+      "label": "Test: Current File",
       "type": "npm",
       "script": "test -- --include ${relativeFile}",
-      "label": "Test: Current File",
       "problemMatcher": []
     },
     {

@@ -13,10 +13,7 @@ import {
   AsyncMethodController,
   MockController,
 } from '@s-libs/ng-vitest';
-import {
-  Migrations,
-  VersionedObject,
-} from 'app/to-replace/js-core/persistence/migrations';
+import { Migrations, VersionedObject } from '../js-core/persistence/migrations';
 import {
   MockPersistenceBackend,
   provideMockPersistence,
@@ -287,6 +284,7 @@ describe('providePersistence()', () => {
           throw this.migrationError;
         });
         super({ migrations, ...config });
+        this.initialState = new CounterState(-1);
       }
     }
 
@@ -294,7 +292,6 @@ describe('providePersistence()', () => {
       const handleError = vi.fn();
       TestBed.overrideProvider(ErrorHandler, { useValue: { handleError } });
       const ctx = new ErrorContext({});
-      ctx.initialState = new CounterState(2);
       await ctx.run(async () => {
         expect(handleError).toHaveBeenCalledExactlyOnceWith(ctx.migrationError);
         expect(ctx.signal()).toEqual(new CounterState());
@@ -304,7 +301,6 @@ describe('providePersistence()', () => {
     it('receives the thrown error and persisted object', async () => {
       const onError = vi.fn();
       const ctx = new ErrorContext({ onPreHydrateError: onError });
-      ctx.initialState = new CounterState();
       await ctx.run(async () => {
         expect(onError).toHaveBeenCalledExactlyOnceWith(
           ctx.migrationError,
@@ -318,21 +314,32 @@ describe('providePersistence()', () => {
       const ctx = new ErrorContext({
         onPreHydrateError: (): CounterState => newState,
       });
-      ctx.initialState = new CounterState();
       await ctx.run(async () => {
         expect(ctx.signal()).toBe(newState);
       });
     });
 
     it('has no effect when there is no error', async () => {
-      const onError = vi.fn();
+      const onPreHydrateError = vi.fn();
       const ctx = new ErrorContext({
-        onPreHydrateError: onError,
+        onPreHydrateError,
         migrations: undefined,
       });
-      ctx.initialState = new CounterState();
       await ctx.run(async () => {
-        expect(onError).not.toHaveBeenCalled();
+        expect(onPreHydrateError).not.toHaveBeenCalled();
+      });
+    });
+
+    it('can inject dependencies', async () => {
+      let platformId: unknown;
+      const ctx = new ErrorContext({
+        onPreHydrateError: (): CounterState => {
+          platformId = inject(PLATFORM_ID);
+          return new CounterState();
+        },
+      });
+      await ctx.run(async () => {
+        expect(platformId).toBeDefined();
       });
     });
   });
@@ -370,6 +377,23 @@ describe('providePersistence()', () => {
       });
 
       window.removeEventListener('unhandledrejection', unhandler);
+    });
+
+    it('can inject dependencies', async () => {
+      let platformId: unknown;
+      const ctx = new CounterContext({
+        onSaveError: (): void => {
+          platformId = inject(PLATFORM_ID);
+        },
+      });
+      await ctx.run(async () => {
+        const put = new AsyncMethodController(ctx.getPersistence(), 'put');
+
+        await ctx.setCount(1);
+        await put.expectOne([new CounterState(1)]).error('blah');
+
+        expect(platformId).toBeDefined();
+      });
     });
   });
 });
