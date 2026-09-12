@@ -10,10 +10,14 @@ import {
 describe('storeProviders', () => {
   let ctx: WeatherGraphContext;
   let errors: SnackBarErrorServiceHarness;
-  let store: WeatherStoreHarness;
   beforeEach(() => {
     ctx = new WeatherGraphContext();
-    ({ errors, store } = ctx.harnesses);
+    ({ errors } = ctx.harnesses);
+
+    localStorage.removeItem('weather');
+  });
+  afterEach(() => {
+    localStorage.removeItem('weather');
   });
 
   it('tracks an event when initializing a fresh state', async () => {
@@ -38,18 +42,19 @@ describe('storeProviders', () => {
     ctx.useInitialState = false;
     localStorage.setItem('weather', JSON.stringify(v12Default));
     await ctx.run(async () => {
-      expect(await store.getPersistedState()).toEqual(defaultState);
+      const store = new WeatherStoreHarness();
+      expect(await store.getPersisted()).toEqual(defaultState);
     });
-    localStorage.removeItem('weather');
   });
 
   it('gracefully handles an error migrating from legacy localStorage', async () => {
     ctx.useInitialState = false;
     localStorage.setItem('weather', 'not valid JSON');
     await ctx.run(async () => {
+      const store = new WeatherStoreHarness();
+
       errors.expectGeneric();
-      expect(await store.getPersistedState()).toEqual(defaultState);
+      expect(await store.getPersisted()).toEqual(defaultState);
     });
-    localStorage.removeItem('weather');
   });
 });

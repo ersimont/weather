@@ -2,6 +2,7 @@ import { SourceOptionsComponentHarness } from 'app/options/source-options/source
 import { VisualCrossingHarness } from 'app/sources/visual-crossing/visual-crossing.harness';
 import { SourceId } from 'app/state/source';
 import { WeatherGraphContext } from 'app/test-helpers/weather-graph-context';
+import { WeatherStoreHarness } from '../../state/weather-store.harness';
 
 describe('VisualCrossing', () => {
   let ctx: WeatherGraphContext;
@@ -37,6 +38,8 @@ describe('VisualCrossing', () => {
 
   it('converts wind speed to knots', async () => {
     await ctx.run(async () => {
+      const store = new WeatherStoreHarness();
+
       const date = 1633233600000;
       await crossing.expectForecast().flush(
         crossing.buildResponse(
@@ -49,7 +52,7 @@ describe('VisualCrossing', () => {
           },
         ),
       );
-      const state = await ctx.harnesses.store.getPersistedState();
+      const state = await store.getPersisted();
       expect(state.sources.visualCrossing.forecast[date].wind).toBe(
         0.5399568034557235,
       );

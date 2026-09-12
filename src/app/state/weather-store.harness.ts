@@ -1,20 +1,13 @@
 import { WeatherState } from 'app/state/weather-state';
-import { AsyncPersistence } from 'app/to-replace/js-core/persistence/async-persistence';
+import { MockPersistenceBackend } from '../to-replace/ng-vitest/provide-persistence.harness';
 
 export class WeatherStoreHarness {
-  #persistence = new AsyncPersistence<WeatherState>('weather-store');
+  #persistence: MockPersistenceBackend<WeatherState> =
+    MockPersistenceBackend.get('weather-store');
 
-  async setPersistedState(state: WeatherState): Promise<void> {
-    await this.#persistence.put(state);
-  }
-
-  async getPersistedState(): Promise<WeatherState> {
+  async getPersisted(): Promise<WeatherState> {
     const state = await this.#persistence.get();
     assert(state);
     return state;
-  }
-
-  async clear(): Promise<void> {
-    await this.#persistence.clear();
   }
 }

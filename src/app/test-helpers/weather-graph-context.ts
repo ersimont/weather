@@ -16,10 +16,10 @@ import { WeatherGovHarness } from 'app/sources/weather-gov/weather-gov.harness';
 import { GpsCoords } from 'app/state/location';
 import { WeatherState } from 'app/state/weather-state';
 import { WeatherStateHarness } from 'app/state/weather-state.harness';
-import { WeatherStoreHarness } from 'app/state/weather-store.harness';
 import { mixpanelTestProviders } from 'app/to-replace/mixpanel-core/mixpanel.service.harness';
 import { IsPageVisibleHarness } from 'app/to-replace/ng-dev/is-page-visible.harness';
 import { SnackBarErrorServiceHarness } from 'app/to-replace/snack-bar-error.service.harness';
+import { provideMockPersistence } from '../to-replace/ng-vitest/provide-persistence.harness';
 
 export class WeatherGraphContext extends ComponentContext<AppComponent> {
   initialState = new WeatherState();
@@ -42,19 +42,24 @@ export class WeatherGraphContext extends ComponentContext<AppComponent> {
     openWeather: new OpenWeatherHarness(this),
     refresh: new RefreshServiceHarness(this),
     state: new WeatherStateHarness(this),
-    store: new WeatherStoreHarness(),
   };
 
   constructor() {
     super(AppComponent, {
-      providers: [appConfig.providers, mixpanelTestProviders],
+      providers: [
+        appConfig.providers,
+        mixpanelTestProviders,
+        provideMockPersistence(() => {
+          console.log('providing pre-stored state', this.useInitialState);
+          return this.useInitialState ? this.initialState : undefined;
+        }),
+      ],
     });
 
     this.mocks.browser.getCurrentLocation.mockImplementation(
       async () => this.currentLocation,
     );
     TestBed.overrideProvider(BrowserService, { useValue: this.mocks.browser });
-    this.harnesses.errors.install();
     this.assignWrapperStyles({
       width: '400px',
       height: '600px',
@@ -65,12 +70,7 @@ export class WeatherGraphContext extends ComponentContext<AppComponent> {
   }
 
   protected override async init(): Promise<void> {
-    if (this.useInitialState) {
-      await this.harnesses.store.setPersistedState(this.initialState);
-    } else {
-      await this.harnesses.store.clear();
-    }
-
+    this.harnesses.errors.install();
     await super.init();
   }
 
@@ -88,10 +88,5 @@ export class WeatherGraphContext extends ComponentContext<AppComponent> {
     await this.tick(0);
 
     await super.cleanUp();
-
-    // // https://github.com/angular/components/blob/b612fc42895e47377b353e773d4ba3517c0991e1/src/material/dialog/dialog.spec.ts#L80
-    // this.inject(OverlayContainer).ngOnDestroy();
-    // await this.tick(1); // the CDK queues this up for its FocusManager
-    // await this.tick(150); // material ripple effect
   }
 }

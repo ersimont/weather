@@ -10,18 +10,17 @@ import { WhatsNewComponentHarness } from 'app/upgrade/whats-new.component.harnes
 
 describe('UpgradeService', () => {
   let ctx: WeatherGraphContext;
-  let store: WeatherStoreHarness;
   beforeEach(() => {
     ctx = new WeatherGraphContext();
-    ({ store } = ctx.harnesses);
   });
 
   // This is a sanity check that will not catch any change that should necessitate an upgrade. But it will catch some.
   it('defaults to a fresh, up-to-date state', async () => {
     ctx.useInitialState = false;
     await ctx.run(async () => {
-      const actual = await store.getPersistedState();
+      const store = new WeatherStoreHarness();
 
+      const actual = await store.getPersisted();
       if (!isEqual(actual, defaultState)) {
         console.log(
           JSON.stringify(actual, (_, v) =>
@@ -39,7 +38,9 @@ describe('UpgradeService', () => {
   it('upgrades from v12', async () => {
     ctx.initialState = v12Default;
     await ctx.run(async () => {
-      expect(await store.getPersistedState()).toEqual(defaultState);
+      const store = new WeatherStoreHarness();
+
+      expect(await store.getPersisted()).toEqual(defaultState);
       const whatsNew = await ctx.getHarness(WhatsNewComponentHarness);
       const features = await whatsNew.getFeatures();
       expect(features).toEqual(
@@ -54,7 +55,9 @@ describe('UpgradeService', () => {
   it('upgrades from v11', async () => {
     ctx.initialState = v11Default;
     await ctx.run(async () => {
-      expect(await store.getPersistedState()).toEqual(defaultState);
+      const store = new WeatherStoreHarness();
+
+      expect(await store.getPersisted()).toEqual(defaultState);
       const whatsNew = await ctx.getHarness(WhatsNewComponentHarness);
       expect(await whatsNew.getFeatures()).toContain(
         'Tomorrow.io is no longer available.',

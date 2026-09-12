@@ -4,7 +4,6 @@ import {
   inject,
   InjectionToken,
   Injector,
-  makeEnvironmentProviders,
   provideAppInitializer,
   runInInjectionContext,
   Signal,
@@ -32,33 +31,34 @@ export interface PersistenceConfig<
   onSaveError?: (err: unknown) => void;
 }
 
-export const BACKEND = new InjectionToken<AsyncPersistence<any>>(
-  'persistence backend',
+export const BACKEND_FACTORY = new InjectionToken(
+  'persistence backend factory',
+  {
+    factory:
+      () =>
+      (dbName: string): AsyncPersistence<any> =>
+        new AsyncPersistence(dbName),
+  },
 );
 
 export function providePersistence<
   S,
   P extends VersionedObject = VersionedObject,
 >(config: PersistenceConfig<S, P>): EnvironmentProviders {
-  const backend = new AsyncPersistence<P>(config.dbName);
-  return makeEnvironmentProviders([
-    provideAppInitializer(async () => {
-      const p = new Persister<S, P>(config, backend);
-      const signal = await p.hydrate();
-      p.persist(signal);
-    }),
-    { provide: BACKEND, useValue: backend },
-  ]);
+  return provideAppInitializer(async () => {
+    const p = new Persister<S, P>(config);
+    const signal = await p.hydrate();
+    p.persist(signal);
+  });
 }
 
 class Persister<S, P extends VersionedObject> {
+  #backend: AsyncPersistence<P>;
   #injector = inject(Injector);
   #codec: PersistenceCodec<S, P>;
 
-  constructor(
-    private config: PersistenceConfig<S, P>,
-    private backend: AsyncPersistence<P>,
-  ) {
+  constructor(private config: PersistenceConfig<S, P>) {
+    this.#backend = inject(BACKEND_FACTORY)(config.dbName);
     this.#codec = this.#resolve(config.codec ?? identityCodec);
   }
 
@@ -66,7 +66,7 @@ class Persister<S, P extends VersionedObject> {
     let persisted: P | undefined;
     let initialState: S;
     try {
-      persisted = await this.backend.get();
+      persisted = await this.#backend.get();
 
       if (persisted && this.config.migrations) {
         persisted = this.#resolve(this.config.migrations).run(persisted);
@@ -93,7 +93,7 @@ class Persister<S, P extends VersionedObject> {
     runInInjectionContext(this.#injector, () => {
       const effectRef = debounceWhileHandling(signal, async (state) => {
         try {
-          await this.backend.put(this.#codec.encode(state));
+          await this.#backend.put(this.#codec.encode(state));
         } catch (e) {
           effectRef.destroy();
           if (this.config.onSaveError) {
